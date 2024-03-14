@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+// for local
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// for neon
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("DATABASE_URL_PROD")
+//   // uncomment next line if you use Prisma <5.10
+//   directUrl = env("DATABASE_URL_UNPOOLED_PROD")
+// }
+
+// /*
+// |--------------------------------------------------------------------------
+// | Enum Value
+// |--------------------------------------------------------------------------
+// */
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum RoleUser {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum Semester {
+  GANJIL
+  GENAP
+}
+
+enum Grade {
+  FIRST
+  SECOND
+  THIRD
+}
+
+// /*
+// |--------------------------------------------------------------------------
+// | Model
+// |--------------------------------------------------------------------------
+// */
+
+model Student {
+  id         String   @id @default(uuid())
+  name       String
+  nisn       String   @unique
+  nis        String   @unique
+  nik        String   @unique
+  gender     Gender
+  address    String
+  birthdate  DateTime
+  birthplace String
+  avatar     String
+  password   String
+  role       RoleUser @default(STUDENT)
+  idClass    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  class  Class    @relation(fields: [idClass], references: [id])
+  result Result[]
+}
+
+model Class {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  grade        Grade
+  academicYear String
+  startDate    DateTime
+  endDate      DateTime
+  semester     Semester
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student Student[]
+  teacher TeacherOnClass[]
+}
+
+model Teacher {
+  id        String   @id @default(uuid())
+  name      String
+  nuptk     String   @unique
+  email     String   @unique
+  password  String
+  avatar    String
+  role      RoleUser @default(TEACHER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherOnClass TeacherOnClass[]
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      RoleUser @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subject {
+  id        String   @id @default(uuid())
+  name      String
+  shortName String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacherOnClass TeacherOnClass[]
+}
+
+model TeacherOnClass {
+  id        String @id @default(uuid())
+  teacherId String
+  classId   String
+  subjectId String
+
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  result Result[]
+}
+
+model Result {
+  id               String @id @default(uuid())
+  studentId        String
+  teacherOnClassId String
+
+  kkm                  Float
+  knowledgeScore       Float
+  skillsScore          Float
+  predicatKnowledge    String
+  predicatSkill        String
+  descriptionSkill     String
+  descriptionKnowledge String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacherOnClass TeacherOnClass @relation(fields: [teacherOnClassId], references: [id], onDelete: Cascade)
+}
