@@ -23,9 +23,6 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
 
   return (
     <div
-      // isOpen={isOpen}
-      // onRequestClose={closeModal}
-      // contentLabel="Add Modal"
       className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}
       id="add-modal"
     >

@@ -39,13 +39,8 @@ const AddClassModal = ({ isOpen, closeModal }) => {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={closeModal}
-      contentLabel="Add Modal"
-      style={customStyles}
-    >
-      <div className="modal-dialog" style={{ margin: '0px', padding: '0' }}>
+    <div className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}>
+      <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
             <button
@@ -115,7 +110,7 @@ const AddClassModal = ({ isOpen, closeModal }) => {
           </div>
         </div>
       </div>
-    </Modal>
+    </div>
   )
 }
 

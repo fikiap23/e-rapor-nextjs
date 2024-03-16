@@ -1,17 +1,5 @@
 import React, { useState } from 'react'
-import Modal from 'react-modal'
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    margin: '0px',
-    padding: '0px',
-  },
-}
+
 const AddModal = ({ isOpen, closeModal }) => {
   const [nip, setNip] = useState('')
   const [nama, setNama] = useState('')
@@ -42,72 +30,69 @@ const AddModal = ({ isOpen, closeModal }) => {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={closeModal}
-      contentLabel="Add Modal"
-      style={customStyles}
-    >
-      <div className="modal-dialog" style={{ margin: '0px', padding: '0' }}>
-        <div className="modal-header">
-          <h4 className="modal-title">Guru</h4>
-          <button className="close" onClick={closeModal}>
-            &times;
-          </button>
-        </div>
-        <div className="modal-body">
-          <form role="form" onSubmit={handleSubmit}>
-            <div className="box-body">
-              <div className="form-group">
-                <label htmlFor="nip">NIP atau NIK</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="nip"
-                  name="nip"
-                  placeholder="Masukan Nip atau Nik"
-                  value={nip}
-                  onChange={handleNipChange}
-                  required
-                />
+    <div className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h4 className="modal-title">Guru</h4>
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
+          </div>
+          <div className="modal-body">
+            <form role="form" onSubmit={handleSubmit}>
+              <div className="box-body">
+                <div className="form-group">
+                  <label htmlFor="nip">NIP atau NIK</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="nip"
+                    name="nip"
+                    placeholder="Masukan Nip atau Nik"
+                    value={nip}
+                    onChange={handleNipChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="nama">Nama</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="nama"
+                    name="nama"
+                    placeholder="Masukan Nama"
+                    value={nama}
+                    onChange={handleNamaChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Jenis Kelamin</label>
+                  <select
+                    required
+                    name="jk"
+                    className="form-control"
+                    value={jenisKelamin}
+                    onChange={handleJenisKelaminChange}
+                  >
+                    <option value="">--- Pilih Jenis Kelamin ---</option>
+                    <option value="pria">Pria</option>
+                    <option value="wanita">Wanita</option>
+                  </select>
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="nama">Nama</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="nama"
-                  name="nama"
-                  placeholder="Masukan Nama"
-                  value={nama}
-                  onChange={handleNamaChange}
-                  required
-                />
+              <div className="modal-footer">
+                <button type="submit" className="btn btn-primary">
+                  Simpan
+                </button>
               </div>
-              <div className="form-group">
-                <label>Jenis Kelamin</label>
-                <select
-                  required
-                  name="jk"
-                  className="form-control"
-                  value={jenisKelamin}
-                  onChange={handleJenisKelaminChange}
-                >
-                  <option value="">--- Pilih Jenis Kelamin ---</option>
-                  <option value="pria">Pria</option>
-                  <option value="wanita">Wanita</option>
-                </select>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button type="submit" className="btn btn-primary">
-                Simpan
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </Modal>
+    </div>
   )
 }
 
