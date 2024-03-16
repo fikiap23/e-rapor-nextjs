@@ -5,3 +5,15 @@
 @import url('admin-lte/dist/css/AdminLTE.min.css');
 @import url('admin-lte/dist/css/skins/_all-skins.min.css');
 /* @import url('admin-lte/dist/css/adminlte.css'); */
+
+.animated_form {
+    /* background-color: aqua; */
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.3s ease-out;
+  }
+  
+  .animated_form.show {
+    max-height: 500px;
+  }
+  
