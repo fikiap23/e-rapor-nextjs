@@ -6,5 +6,6 @@ const TeacherPage = () => {
     <>
       <TeacherView />
     </>
-
+  )
+}
 export default TeacherPage
