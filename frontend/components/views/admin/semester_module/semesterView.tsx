@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
-import AddYearModal from './addYearModal'
+import AddSemesterModal from './addSemesterModal'
 
-const YearView = () => {
+const SemesterView = () => {
   const dummyData = [
     {
       id: 1,
@@ -113,11 +113,11 @@ const YearView = () => {
           </div>
         </section>
       </div>
-      <AddYearModal
+      <AddSemesterModal
         isOpen={isOpenAddModal}
         closeModal={closeModal}
-      ></AddYearModal>
+      ></AddSemesterModal>
     </>
   )
 }
-export default YearView
+export default SemesterView

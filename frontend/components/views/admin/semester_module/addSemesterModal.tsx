@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
-import Modal from 'react-modal'
-const AddYearModal = ({ isOpen, closeModal }) => {
+const AddSemesterModal = ({ isOpen, closeModal }) => {
   const [formValues, setFormValues] = useState({
     tahun: '',
     semester: '',
@@ -129,4 +128,4 @@ const AddYearModal = ({ isOpen, closeModal }) => {
   )
 }
 
-export default AddYearModal
+export default AddSemesterModal

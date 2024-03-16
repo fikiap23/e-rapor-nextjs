@@ -48,8 +48,8 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/admin/year">
-              <i className="fa fa-calendar"></i> <span>Tahun</span>
+            <Link href="/admin/semester">
+              <i className="fa fa-calendar"></i> <span>Semester</span>
             </Link>
           </li>
           <li>
