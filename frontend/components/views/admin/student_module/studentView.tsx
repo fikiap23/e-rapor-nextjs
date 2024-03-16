@@ -100,15 +100,12 @@ const StudentView = () => {
                               <td>{item.nama}</td>
                               <td>
                                 <a className="btn btn-success btn-sm">
-                                  <span className="glyphicon glyphicon-edit"></span>{' '}
-                                  Edit
+                                  {/* <span className="glyphicon glyphicon-edit"></span> Edit */}
+                                  <i className="icon fa fa-edit"></i>
                                 </a>
-                                <button
-                                  className="btn btn-danger btn-sm"
-                                  onClick={() => deleteSiswa(item.id)}
-                                >
-                                  <span className="glyphicon glyphicon-remove"></span>{' '}
-                                  Delete
+                                <button style={{ marginRight: '2px', marginLeft: '2px' }} className="btn btn-danger btn-sm" onClick={() => deleteSiswa(item.id)}>
+                                  {/* <span className="glyphicon glyphicon-remove"></span> Delete */}
+                                  <i className="icon fa fa-trash"></i>
                                 </button>
                               </td>
                             </tr>
