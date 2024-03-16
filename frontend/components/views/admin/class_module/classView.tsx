@@ -1,16 +1,24 @@
 'use client'
 import { useState } from 'react'
 import AddClassModal from './addClassModal'
+import Link from 'next/link'
+import TabTableClass from './tabTableClass'
+import TabInputStudent from './addStudentToClassView'
 
 export default function ClassView() {
   const Rombel = [
-    { id: 1, tingkat: 'Usia 2-3', rombel: 'Rombel A1' },
-    { id: 2, tingkat: 'Usia 3-4', rombel: 'Rombel B1' },
-    { id: 3, tingkat: 'Usia 4-5', rombel: 'Rombel C1' },
+    { id: 1, tingkat: 'Usia 2-3', rombel: 'Rombel A1', kuota: 10, terisi: 5 },
+    { id: 2, tingkat: 'Usia 3-4', rombel: 'Rombel B1', kuota: 20, terisi: 10 },
+    { id: 3, tingkat: 'Usia 4-5', rombel: 'Rombel C1', kuota: 30, terisi: 15 },
   ]
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('view')
 
+  const handleTabChange = (tab: any) => {
+    setActiveTab(tab)
+    // console.log(tab);
+  }
   const openModal = () => {
     setIsModalOpen(true)
   }
@@ -38,54 +46,19 @@ export default function ClassView() {
                     <i className="fa fa-home"></i> Data Rombel
                   </h3>
                 </div>
-                <div className="box-body">
-                  <div style={{ margin: '0 20px 20px 20px' }}>
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      data-toggle="modal"
-                      data-target="#add-modal"
-                      onClick={openModal}
-                    >
-                      <span className="glyphicon glyphicon-plus"></span>
-                      Tambah
-                    </button>
-                  </div>
-                  <table
-                    id="Rombel"
-                    className="table table-bordered table-striped"
-                  >
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Kelompok Usia</th>
-                        <th>Rombel</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Rombel.map((item, index) => (
-                        <tr key={item.id}>
-                          <td>{index + 1}</td>
-                          <td>{item.tingkat}</td>
-                          <td>{item.rombel}</td>
-                          <td>
-                            <a href="#" className="btn btn-success btn-sm">
-                              <span className="glyphicon glyphicon-pencil"></span>
-                              Edit
-                            </a>
-                            <button
-                              className="btn btn-danger btn-sm"
-                              // onClick={() => deleteRombel(item.id)}
-                            >
-                              <span className="glyphicon glyphicon-remove"></span>
-                              Hapus
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="nav-tabs-pills">
+                  <ul className="nav nav-tabs">
+                    <li className={activeTab === 'view' ? 'active' : ''}>
+                      <Link href="" onClick={() => handleTabChange('view')}>
+                        Kelola Rombel
+                      </Link>
+                    </li>
+                    <li className={activeTab === 'input' ? 'active' : ''}></li>
+                  </ul>
+                  {activeTab === 'view' && (
+                    <TabTableClass rombel={Rombel} openModal={openModal} />
+                  )}
+                  {activeTab === 'input' && <TabInputStudent rombel={Rombel} />}
                 </div>
               </div>
             </div>

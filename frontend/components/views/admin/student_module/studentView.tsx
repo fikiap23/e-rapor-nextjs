@@ -1,28 +1,27 @@
-"use client"
-import { useState } from 'react';
-import Swal from 'sweetalert2';
-import TabInputSiswa from './TabInputStudent';
-import Link from 'next/link';
+'use client'
+import { useState } from 'react'
+import Swal from 'sweetalert2'
+import TabInputSiswa from './TabInputStudent'
+import Link from 'next/link'
 
 const StudentView = () => {
-  const [activeTab, setActiveTab] = useState("view");
+  const [activeTab, setActiveTab] = useState('view')
 
   const handleTabChange = (tab: any) => {
-    setActiveTab(tab);
+    setActiveTab(tab)
     // console.log(tab);
-
-  };
+  }
 
   const siswa = [
     { id: 1, nis: '123', nisn: '456', nama: 'John Doe' },
     { id: 2, nis: '789', nisn: '012', nama: 'Jane Doe' },
     { id: 3, nis: '345', nisn: '678', nama: 'Alice Smith' },
-  ];
+  ]
 
   const deleteSiswa = (id: number) => {
-    handleDelete();
-    console.log(`Menghapus siswa dengan id ${id}`);
-  };
+    handleDelete()
+    console.log(`Menghapus siswa dengan id ${id}`)
+  }
 
   const handleDelete = () => {
     Swal.fire({
@@ -32,23 +31,15 @@ const StudentView = () => {
       showCancelButton: true,
       confirmButtonText: 'Ya, hapus!',
       cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Data Dihapus!',
-          'Siswa telah dihapus.',
-          'success'
-        );
+        Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Dibatalkan',
-          'Tidak ada perubahan pada data siswa.',
-          'error'
-        );
+        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
       }
-    });
-  };
+    })
+  }
 
   return (
     <div className="content-wrapper">
@@ -63,19 +54,31 @@ const StudentView = () => {
       {/* Main content */}
       <section className="content">
         <div className="callout callout-info">
-          <h4><i className="icon fa fa-info-circle"></i> Informasi Penting !!!</h4>
-          <p>Untuk Login Siswa gunakan <b>USERNAME dan password NIS </b></p>
+          <h4>
+            <i className="icon fa fa-info-circle"></i> Informasi Penting !!!
+          </h4>
+          <p>
+            Untuk Login Siswa gunakan <b>USERNAME dan password NIS </b>
+          </p>
         </div>
         <div className="row">
           <div className="col-md-12">
             {/* {action === "view" && ( */}
             <div className="nav-tabs-custom">
               <ul className="nav nav-tabs">
-                <li className={activeTab === "view" ? "active" : ""}><Link href="" onClick={() => handleTabChange("view")}>Lihat Siswa</Link></li>
-                <li className={activeTab === "input" ? "active" : ""}><Link href="" onClick={() => handleTabChange("input")}>Input Siswa</Link></li>
+                <li className={activeTab === 'view' ? 'active' : ''}>
+                  <Link href="" onClick={() => handleTabChange('view')}>
+                    Lihat Siswa
+                  </Link>
+                </li>
+                <li className={activeTab === 'input' ? 'active' : ''}>
+                  <Link href="" onClick={() => handleTabChange('input')}>
+                    Input Siswa
+                  </Link>
+                </li>
               </ul>
               <div className="tab-content">
-                {activeTab === "view" && (
+                {activeTab === 'view' && (
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
                       <table id="siswa" className="table table-hover">
@@ -97,10 +100,15 @@ const StudentView = () => {
                               <td>{item.nama}</td>
                               <td>
                                 <a className="btn btn-success btn-sm">
-                                  <span className="glyphicon glyphicon-edit"></span> Edit
+                                  <span className="glyphicon glyphicon-edit"></span>{' '}
+                                  Edit
                                 </a>
-                                <button className="btn btn-danger btn-sm" onClick={() => deleteSiswa(item.id)}>
-                                  <span className="glyphicon glyphicon-remove"></span> Delete
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  onClick={() => deleteSiswa(item.id)}
+                                >
+                                  <span className="glyphicon glyphicon-remove"></span>{' '}
+                                  Delete
                                 </button>
                               </td>
                             </tr>
@@ -110,8 +118,7 @@ const StudentView = () => {
                     </div>
                   </div>
                 )}
-                {activeTab === "input" && <TabInputSiswa />}
-
+                {activeTab === 'input' && <TabInputSiswa />}
               </div>
             </div>
             {/* )} */}
@@ -120,7 +127,7 @@ const StudentView = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default StudentView;
+export default StudentView

@@ -53,11 +53,6 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="/admin/ekstra">
-              <i className="fa fa-edit"></i> <span>Ekstrakurikuler</span>
-            </a>
-          </li>
-          <li>
             <a href="/admin/set-Rombel">
               <i className="fa fa-user-plus"></i> <span>Kelompok Rombel</span>
             </a>

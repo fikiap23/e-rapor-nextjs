@@ -15,6 +15,7 @@ const customStyles = {
 }
 const AddClassModal = ({ isOpen, closeModal }) => {
   const [tingkat, setTingkat] = useState('')
+  const [kuota, setKuota] = useState('')
   const [nama, setNama] = useState('')
 
   const kelompokUsia = [
@@ -33,6 +34,7 @@ const AddClassModal = ({ isOpen, closeModal }) => {
     // Reset form setelah submit
     setTingkat('')
     setNama('')
+    setKuota('')
     closeModal()
   }
 
@@ -87,6 +89,19 @@ const AddClassModal = ({ isOpen, closeModal }) => {
                     name="nama"
                     value={nama}
                     onChange={(e) => setNama(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="nama">Kuota</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="nama"
+                    name="nama"
+                    value={kuota}
+                    onChange={(e) => setKuota(e.target.value)}
                     required
                   />
                 </div>
