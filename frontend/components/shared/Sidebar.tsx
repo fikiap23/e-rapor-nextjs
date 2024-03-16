@@ -48,9 +48,9 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="/admin/tahun">
+            <Link href="/admin/year">
               <i className="fa fa-calendar"></i> <span>Tahun</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a href="/admin/set-Rombel">

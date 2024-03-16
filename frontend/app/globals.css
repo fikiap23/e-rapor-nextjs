@@ -23,3 +23,8 @@
 .swal2-modal {
   margin-top: 0 !important;
 }
+
+.show-modal {
+  display: block;
+  padding-right: 17px;
+}
