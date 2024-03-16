@@ -6,7 +6,7 @@ const Footer = () => {
         <b>Version</b> 1.0.0
       </div>
       <strong>
-        <center>&copy; UIN</center>
+        <center>&copy; 2024 UIN</center>
       </strong>
     </footer>
   )

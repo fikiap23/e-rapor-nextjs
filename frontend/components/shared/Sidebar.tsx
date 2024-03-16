@@ -21,13 +21,13 @@ const Sidebar = () => {
         </div>
         <ul className="sidebar-menu" data-widget="tree">
           <li className="active">
-            <a href="/admin">
+            <a href="/dashboard">
               {' '}
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </a>
           </li>
           <li>
-            <a href="/admin/guru">
+            <a href="/dashboard/guru">
               <i className="fa fa-user"></i> <span>Guru</span>
             </a>
           </li>
