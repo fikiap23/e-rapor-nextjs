@@ -53,20 +53,8 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="/admin/set-Rombel">
-              <i className="fa fa-user-plus"></i> <span>Kelompok Rombel</span>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/set-matpel">
-              <i className="fa fa-book"></i>{' '}
-              <span>Kelompok Mata Pelajaran</span>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/set-wali-Rombel">
-              <i className="fa fa-user-secret"></i>{' '}
-              <span>Kelompok Wali Rombel</span>
+            <a href="/admin/school">
+              <i className="fa fa-building"></i> <span>Sekolah</span>
             </a>
           </li>
         </ul>
