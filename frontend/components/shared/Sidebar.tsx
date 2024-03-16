@@ -43,9 +43,9 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="/admin/kelas">
-              <i className="fa fa-home"></i> <span>Kelas</span>
-            </a>
+            <Link href="/admin/class">
+              <i className="fa fa-home"></i> <span>Rombel</span>
+            </Link>
           </li>
           <li>
             <a href="/admin/tahun">
@@ -53,13 +53,8 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="/admin/ekstra">
-              <i className="fa fa-edit"></i> <span>Ekstrakurikuler</span>
-            </a>
-          </li>
-          <li>
-            <a href="/admin/set-kelas">
-              <i className="fa fa-user-plus"></i> <span>Kelompok Kelas</span>
+            <a href="/admin/set-Rombel">
+              <i className="fa fa-user-plus"></i> <span>Kelompok Rombel</span>
             </a>
           </li>
           <li>
@@ -69,9 +64,9 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="/admin/set-wali-kelas">
+            <a href="/admin/set-wali-Rombel">
               <i className="fa fa-user-secret"></i>{' '}
-              <span>Kelompok Wali Kelas</span>
+              <span>Kelompok Wali Rombel</span>
             </a>
           </li>
         </ul>
