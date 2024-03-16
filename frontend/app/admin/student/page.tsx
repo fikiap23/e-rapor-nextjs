@@ -1,12 +1,12 @@
-import SiswaView from '@/components/views/admin/siswaView';
+import StudentView from '@/components/views/admin/student_module/studentView';
 import React from 'react';
 
-const SiswaPage = () => {
+const StudentPage = () => {
   return (
     <>
-      <SiswaView />
+      <StudentView />
     </>
   );
 };
 
-export default SiswaPage;
+export default StudentPage;

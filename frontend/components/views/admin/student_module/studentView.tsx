@@ -1,10 +1,10 @@
 "use client"
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import TabInputSiswa from './TabInputSiswa';
+import TabInputSiswa from './TabInputStudent';
 import Link from 'next/link';
 
-const SiswaView = () => {
+const StudentView = () => {
   const [activeTab, setActiveTab] = useState("view");
 
   const handleTabChange = (tab: any) => {
@@ -123,4 +123,4 @@ const SiswaView = () => {
   );
 };
 
-export default SiswaView;
+export default StudentView;

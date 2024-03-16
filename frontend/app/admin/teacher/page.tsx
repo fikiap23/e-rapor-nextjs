@@ -1,4 +1,4 @@
-import TeacherView from '@/components/views/admin/guru/teacherView';
+import TeacherView from '@/components/views/admin/teacher_module/teacherView';
 import React from 'react';
 
 const TeacherPage = () => {
