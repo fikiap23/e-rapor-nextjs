@@ -118,15 +118,17 @@ const TeacherView = () => {
                         </small>
                       </td>
                       <td>
-                        <button className="btn btn-success btn-sm edit">
-                          <span className="glyphicon glyphicon-pencil"></span>{' '}
-                          Edit
+                        <button style={{ marginRight: '2px', marginLeft: '2px' }} className="btn btn-success btn-sm edit">
+                          {/* <span className="glyphicon glyphicon-pencil"></span>{' '}
+                          Edit */}
+                          <i className="icon fa fa-edit"></i>
                         </button>
-                        <button className="btn btn-danger btn-sm">
-                          <span className="glyphicon glyphicon-remove"></span>{' '}
-                          Delete
+                        <button style={{ marginRight: '2px', marginLeft: '2px' }} className="btn btn-danger btn-sm">
+                          {/* <span className="glyphicon glyphicon-remove"></span>{' '}
+                          Delete */}
+                          <i className="icon fa fa-trash"></i>
                         </button>
-                        <button className="btn btn-primary btn-sm">
+                        <button style={{ marginRight: '2px', marginLeft: '2px' }} className="btn btn-primary btn-sm">
                           <span className="glyphicon glyphicon-user"></span>{' '}
                           Nonactive User
                         </button>
@@ -147,17 +149,19 @@ const TeacherView = () => {
                           style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-success btn-sm edit"
                         >
-                          <span className="glyphicon glyphicon-pencil"></span>{' '}
-                          Edit
+                          {/* <span className="glyphicon glyphicon-pencil"></span>{' '}
+                          Edit */}
+                          <i className="icon fa fa-edit"></i>
                         </button>
                         <button
                           style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-danger btn-sm"
                         >
-                          <span className="glyphicon glyphicon-remove"></span>{' '}
-                          Delete
+                          {/* <span className="glyphicon glyphicon-remove"></span>{' '} */}
+                          <i className="icon fa fa-trash"></i>
                         </button>
                         <button
+                          style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-primary btn-sm"
                           onClick={handleNonactiveUserClick}
                         >
