@@ -4,6 +4,7 @@ import AddClassModal from './addClassModal'
 import Link from 'next/link'
 import TabTableClass from './tabTableClass'
 import TabInputStudent from './addStudentToClassView'
+import SetClass from './setClass'
 
 export default function ClassView() {
   const Rombel = [
@@ -53,12 +54,19 @@ export default function ClassView() {
                         Kelola Rombel
                       </Link>
                     </li>
-                    <li className={activeTab === 'input' ? 'active' : ''}></li>
+                    <li className={activeTab === 'view_rombel' ? 'active' : ''}>
+                      <Link
+                        href=""
+                        onClick={() => handleTabChange('view_rombel')}
+                      >
+                        Lihat Rombel
+                      </Link>
+                    </li>
                   </ul>
                   {activeTab === 'view' && (
                     <TabTableClass rombel={Rombel} openModal={openModal} />
                   )}
-                  {activeTab === 'input' && <TabInputStudent rombel={Rombel} />}
+                  {activeTab === 'view_rombel' && <SetClass />}
                 </div>
               </div>
             </div>
