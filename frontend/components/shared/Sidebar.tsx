@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 const Sidebar = () => {
@@ -21,25 +22,25 @@ const Sidebar = () => {
         </div>
         <ul className="sidebar-menu" data-widget="tree">
           <li className="active">
-            <a href="/dashboard">
+            <Link href="/admin">
               {' '}
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/dashboard/guru">
+            <Link href="/admin/teacher">
               <i className="fa fa-user"></i> <span>Guru</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/admin/siswa">
+            <Link href="/admin/student">
               <i className="fa fa-users"></i> <span>Siswa</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/admin/mata-pelajaran">
+            <Link href="/admin/mata-pelajaran">
               <i className="fa fa-link"></i> <span>Mata Pelajaran</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a href="/admin/kelas">

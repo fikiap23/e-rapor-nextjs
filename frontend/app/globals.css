@@ -5,6 +5,7 @@
 @import url('admin-lte/dist/css/AdminLTE.min.css');
 @import url('admin-lte/dist/css/skins/_all-skins.min.css');
 /* @import url('admin-lte/dist/css/adminlte.css'); */
+
 .example-modal .modal {
   position: relative;
   top: auto;
