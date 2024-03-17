@@ -49,9 +49,9 @@ const TableLecture = () => {
             <td>
               <a
                 href={`/teacher/lecture/${item.KelasId}`}
-                className="btn btn-success btn-sm"
+                className="btn btn-primary btn-sm"
               >
-                <span className="fa fa-eye"></span> Input Nilai
+                <span className="fa fa-edit"></span> Input Nilai
               </a>
             </td>
           </tr>
