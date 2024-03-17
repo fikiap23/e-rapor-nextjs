@@ -1,7 +1,7 @@
 import HistoryView from '@/components/views/teacher/history_module/historyView'
 import React from 'react'
 
-const DashboardPage = () => {
+const HistoryPage = () => {
   return (
     <>
       <HistoryView />
@@ -9,4 +9,4 @@ const DashboardPage = () => {
   )
 }
 
-export default DashboardPage
+export default HistoryPage
