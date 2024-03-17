@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from 'next/link'
 
 const SidebarTeacher = () => {
   return (
@@ -38,7 +38,7 @@ const SidebarTeacher = () => {
             </Link>
           </li>
           <li>
-            <a href="/wali-kelas/input-absen">
+            <a href="/teacher/absence">
               <i className="fa fa-calendar"></i> <span>Input Absen</span>
             </a>
           </li>
