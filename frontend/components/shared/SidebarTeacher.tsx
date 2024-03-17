@@ -26,8 +26,8 @@ const SidebarTeacher = () => {
             </a>
           </li>
           <li>
-            <a href="/wali-kelas/matpel-diampuh">
-              <i className="fa fa-book"></i> <span>Mapel Diampu</span>
+            <a href="/teacher/lecture">
+              <i className="fa fa-book"></i> <span>Rombel Diampu</span>
             </a>
           </li>
           <li>
