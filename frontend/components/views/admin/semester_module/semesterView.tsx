@@ -10,7 +10,7 @@ const SemesterView = () => {
       kepala_sekolah: 'John Doe',
       tgl_raport: '2022-01-01',
       semester: 'Ganjil',
-      status: 'Active',
+      status: 'Aktif',
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ const SemesterView = () => {
       kepala_sekolah: 'Jane Doe',
       tgl_raport: '2023-01-01',
       semester: 'Genap',
-      status: 'Inactive',
+      status: 'Nonaktif',
     },
     {
       id: 3,
@@ -26,7 +26,7 @@ const SemesterView = () => {
       kepala_sekolah: 'Alice Smith',
       tgl_raport: '2024-01-01',
       semester: 'Ganjil',
-      status: 'Active',
+      status: 'Aktif',
     },
   ]
 
@@ -88,20 +88,31 @@ const SemesterView = () => {
                           <td>{item.semester}</td>
                           <td>
                             <span
-                              className={`label bg-${
-                                item.status === 'Active' ? 'green' : 'red'
-                              }`}
+                              className={`label bg-${item.status === 'Aktif' ? 'green' : 'red'
+                                }`}
                             >
                               {item.status}
                             </span>
                           </td>
                           <td>
-                            <button className="btn btn-success btn-sm">
-                              Edit
+                            <button className="btn btn-primary btn-sm">
+                              <i className="icon fa fa-edit"></i>
                             </button>
-                            <button className="btn btn-info btn-sm">
-                              Active
-                            </button>
+                            {item.status === 'Nonaktif' ? (
+                              <button
+                                className="btn btn-success btn-sm"
+                                style={{ marginLeft: '5px' }}
+                              >
+                                <span className="glyphicon glyphicon-user"></span> Aktifkan User
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-danger btn-sm"
+                                style={{ marginLeft: '5px' }}
+                              >
+                                <span className="glyphicon glyphicon-user"></span> Nonaktifkan User
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))}

@@ -27,6 +27,11 @@ function LearningObjectivesInput() {
     const handleMingguChange = (event: any) => {
         setMinggu(event.target.value);
     };
+
+    const [date, setDate] = useState<string>('');
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(event.target.value);
+    };
     return (
         <div className="active tab-pane" id="input-subject" style={{ padding: '20px' }}>
             <div className="box-body">
@@ -50,7 +55,21 @@ function LearningObjectivesInput() {
                                 ))}
                             </select>
                         </div>
+
+                        <div className="form-group" style={{ width: '20%' }}>
+                            <label htmlFor="date">Tanggal</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                id="date"
+                                name="date"
+                                value={date}
+                                onChange={handleDateChange}
+                                required
+                            />
+                        </div>
                     </div>
+
                     {inputs.map((input, index) => (
                         <div className="row" key={input.id}>
                             <div className="form-group">

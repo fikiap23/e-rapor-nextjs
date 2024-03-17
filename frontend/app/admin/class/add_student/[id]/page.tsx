@@ -8,8 +8,9 @@ const AddStudentToClassPage = () => {
   // console.log(id)
   return (
     <>
-      {' '}
-      <AddStudentToClassView id={id} />{' '}
+      {/* {' '} */}
+      <AddStudentToClassView id={id} />
+      {/* {' '} */}
     </>
   )
 }

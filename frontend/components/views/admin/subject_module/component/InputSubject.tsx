@@ -19,6 +19,15 @@ function InputSubject() {
         setMinggu(event.target.value);
     };
 
+    const [date, setDate] = useState<string>('');
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(event.target.value);
+    };
+
+    const [dateResource, setDateResource] = useState<string>('');
+    const handleDateResourceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDateResource(event.target.value);
+    };
     return (
         <div className="nav-tabs-custom">
             <ul className="nav nav-tabs">
@@ -61,6 +70,20 @@ function InputSubject() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    <div className="form-group" style={{ width: '20%' }}>
+                                        <label htmlFor="date">Tanggal</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            id="date"
+                                            name="date"
+                                            value={date}
+                                            onChange={handleDateChange}
+                                            required
+                                        />
+                                    </div>
+
                                     <div className="form-group">
                                         <label htmlFor="nis" className="control-label"><i>Gunakan koma(,) jika banyak sebagai contoh `Buku, pensil`</i></label>
                                         <textarea name="nis" className="form-control" placeholder="Masukan Alat dan Bahan" id="nis" required ></textarea>
@@ -98,6 +121,20 @@ function InputSubject() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    <div className="form-group" style={{ width: '20%' }}>
+                                        <label htmlFor="dateResource">Tanggal</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            id="dateResource"
+                                            name="dateResource"
+                                            value={dateResource}
+                                            onChange={handleDateResourceChange}
+                                            required
+                                        />
+                                    </div>
+
                                     <div className="form-group">
                                         <label htmlFor="nis" className="control-label"><i>Gunakan koma(,) jika banyak sebagai contoh `Buku Anak kelas 5, Buku LKS`</i></label>
                                         <textarea name="nis" className="form-control" placeholder="Masukan Sumber" id="nis" required ></textarea>

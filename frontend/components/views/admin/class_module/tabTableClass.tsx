@@ -33,23 +33,24 @@ export default function TabTableClass({ rombel, openModal }) {
               <td>{item.rombel}</td>
               <td>{`${item.terisi}/${item.kuota}`}</td>
               <td style={{ display: 'flex', gap: '5px' }}>
-                <a href="#" className="btn btn-primary btn-sm">
-                  <span className="glyphicon glyphicon-pencil"></span>
-                  Edit
-                </a>
+                <button
+                  style={{ marginRight: '2px', marginLeft: '2px' }}
+                  className="btn btn-primary btn-sm edit"
+                >
+                  <i className="icon fa fa-edit"></i>
+                </button>
                 <Link
                   className="btn btn-success btn-sm"
                   href={`/admin/class/add_student/${item.id}`}
                 >
-                  <span className="glyphicon glyphicon-plus"></span>
+                  <span className="glyphicon glyphicon-plus"></span> 
                   Daftarkan Siswa
                 </Link>
                 <button
                   className="btn btn-danger btn-sm"
-                  // onClick={() => deleteRombel(item.id)}
+                // onClick={() => deleteRombel(item.id)}
                 >
-                  <span className="glyphicon glyphicon-remove"></span>
-                  Hapus
+                  <i className="icon fa fa-trash"></i>
                 </button>
               </td>
             </tr>

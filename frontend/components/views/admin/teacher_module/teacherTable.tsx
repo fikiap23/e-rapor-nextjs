@@ -45,8 +45,7 @@ const TeacherTable = () => {
                 <td>{item.guru}</td>
                 <td>
                   <button className="btn btn-danger btn-sm">
-                    <span className="glyphicon glyphicon-remove"></span>
-                    Hapus
+                    <i className="icon fa fa-trash"></i>
                   </button>
                 </td>
               </tr>
