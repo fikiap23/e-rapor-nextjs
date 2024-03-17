@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 const SidebarTeacher = () => {
   return (
     <aside className="main-sidebar">
@@ -20,20 +22,20 @@ const SidebarTeacher = () => {
 
         <ul className="sidebar-menu" data-widget="tree">
           <li>
-            <a href="/wali-kelas">
+            <Link href="/teacher">
               {' '}
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/teacher/lecture">
+            <Link href="/teacher/lecture">
               <i className="fa fa-book"></i> <span>Rombel Diampu</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/wali-kelas/riwayat">
+            <Link href="/teacher/history">
               <i className="fa fa-bookmark"></i> <span>Riwayat Mengajar</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a href="/wali-kelas/input-absen">
