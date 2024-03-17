@@ -63,7 +63,7 @@ const SidebarTeacher = () => {
             </a>
           </li>
           <li className="active">
-            <a href="/wali-kelas/raport">
+            <a href="/teacher/raport">
               <i className="fa fa-print"></i> <span>Cetak Raport</span>
             </a>
           </li>
