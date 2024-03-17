@@ -1,13 +1,14 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import TabSchool from './component/tabSchool'
+import InputSchool from './component/InputSchool'
 
 function SchoolView() {
   const [activeTab, setActiveTab] = useState('view')
 
   const handleTabChange = (tab: any) => {
     setActiveTab(tab)
-    // console.log(tab);
   }
   return (
     <div className="content-wrapper">
@@ -37,73 +38,9 @@ function SchoolView() {
                     </Link>
                   </li>
                 </ul>
-                <div className="active tab-pane" id="input-sekolah">
-                  <div className="box-body">
-                    <form
-                      role="form"
-                      action="/admin/sekolah/create"
-                      method="POST"
-                    >
-                      <div className="row">
-                        <div className="form-group">
-                          <label
-                            htmlFor="nama_sekolah"
-                            className="control-label"
-                          >
-                            Nama Sekolah
-                          </label>
-                          <input
-                            type="text"
-                            name="nama_sekolah"
-                            className="form-control"
-                            id="nama_sekolah"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group">
-                          <label
-                            htmlFor="alamat_sekolah"
-                            className="control-label"
-                          >
-                            Alamat Sekolah
-                          </label>
-                          <input
-                            type="text"
-                            name="alamat_sekolah"
-                            className="form-control"
-                            id="alamat_sekolah"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group">
-                          <label
-                            htmlFor="no_telp_sekolah"
-                            className="control-label"
-                          >
-                            No. Telp Sekolah
-                          </label>
-                          <input
-                            type="number"
-                            name="no_telp_sekolah"
-                            className="form-control"
-                            id="no_telp_sekolah"
-                          />
-                        </div>
-                      </div>
-                      <div className="box-footer">
-                        <button
-                          type="submit"
-                          className="btn btn-primary pull-left"
-                        >
-                          Simpan
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                <div className="tab-content">
+                  {activeTab === 'view' && <TabSchool />}
+                  {activeTab === 'input' && <InputSchool />}
                 </div>
               </div>
             </div>

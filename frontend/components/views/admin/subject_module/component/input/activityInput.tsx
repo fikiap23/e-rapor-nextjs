@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 
-function ActivityGoalsInput() {
+function ActivityInput() {
     const [inputs, setInputs] = useState([{ id: 0, value: '' }]);
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,15 +23,30 @@ function ActivityGoalsInput() {
     };
 
     const [minggu, setMinggu] = useState('');
-
     const handleMingguChange = (event: any) => {
         setMinggu(event.target.value);
     };
+
+    const [day, setDay] = useState<string>('');
+    const handleDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setDay(event.target.value);
+    };
+
+    const weekdays = [
+        'Minggu',
+        'Senin',
+        'Selasa',
+        'Rabu',
+        'Kamis',
+        'Jumat',
+        'Sabtu'
+    ];
 
     const [date, setDate] = useState<string>('');
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDate(event.target.value);
     };
+
     return (
         <div className="active tab-pane" id="input-subject" style={{ padding: '20px' }}>
             <div className="box-body">
@@ -57,6 +72,24 @@ function ActivityGoalsInput() {
                         </div>
 
                         <div className="form-group" style={{ width: '20%' }}>
+                            <label htmlFor="day">Hari</label>
+                            <select
+                                className="form-control"
+                                id="day"
+                                name="day"
+                                value={day}
+                                onChange={handleDayChange}
+                                required
+                            >
+                                <option value="">Pilih Hari</option>
+                                {weekdays.map((weekday, index) => (
+                                    <option key={index} value={weekday}>
+                                        {weekday}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group" style={{ width: '20%' }}>
                             <label htmlFor="date">Tanggal</label>
                             <input
                                 type="date"
@@ -73,7 +106,7 @@ function ActivityGoalsInput() {
                     {inputs.map((input, index) => (
                         <div className="row" key={input.id}>
                             <div className="form-group">
-                                <label htmlFor={`input-${input.id}`} className="control-label">Tujuan Kegiatan {index + 1}</label>
+                                <label htmlFor={`input-${input.id}`} className="control-label">Kegiatan {index + 1}</label>
                                 <div className="input-group" style={{ width: '50%' }}>
                                     <input
                                         type="text"
@@ -119,4 +152,4 @@ function ActivityGoalsInput() {
     )
 }
 
-export default ActivityGoalsInput
+export default ActivityInput

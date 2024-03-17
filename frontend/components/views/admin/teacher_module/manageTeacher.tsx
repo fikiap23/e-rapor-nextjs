@@ -65,7 +65,7 @@ const ManageTeacher = () => {
               <td>
                 <button
                   style={{ marginRight: '2px', marginLeft: '2px' }}
-                  className="btn btn-success btn-sm edit"
+                  className="btn btn-primary btn-sm edit"
                 >
                   {/* <span className="glyphicon glyphicon-pencil"></span>{' '}
                           Edit */}
@@ -81,7 +81,7 @@ const ManageTeacher = () => {
                 </button>
                 <button
                   style={{ marginRight: '2px', marginLeft: '2px' }}
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-warning btn-sm"
                 >
                   <span className="glyphicon glyphicon-user"></span> Nonactive
                   User
@@ -99,7 +99,7 @@ const ManageTeacher = () => {
               <td>
                 <button
                   style={{ marginRight: '2px', marginLeft: '2px' }}
-                  className="btn btn-success btn-sm edit"
+                  className="btn btn-primary btn-sm edit"
                 >
                   {/* <span className="glyphicon glyphicon-pencil"></span>{' '}
                           Edit */}
@@ -114,10 +114,10 @@ const ManageTeacher = () => {
                 </button>
                 <button
                   style={{ marginRight: '2px', marginLeft: '2px' }}
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-success btn-sm"
                   onClick={handleNonactiveUserClick}
                 >
-                  <span className="glyphicon glyphicon-user"></span> Nonactive
+                  <span className="glyphicon glyphicon-user"></span> Active
                   User
                 </button>
               </td>

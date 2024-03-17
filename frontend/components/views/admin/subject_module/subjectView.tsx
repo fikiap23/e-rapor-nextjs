@@ -4,6 +4,7 @@ import { useState } from 'react'
 import AddSubjectModal from './component/addSubjectModal'
 import Link from 'next/link'
 import InputSubject from './component/InputSubject'
+import ActivitiesView from './component/activitiesView'
 
 const SubjectView = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,7 +27,7 @@ const SubjectView = () => {
     const handleDelete = () => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
-            text: 'Anda akan menghapuskan modul ajar!',
+            text: 'Anda akan menghapus siswa!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, hapus!',
@@ -34,13 +35,9 @@ const SubjectView = () => {
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Hapus berhasil!',
-                    'Modul ajar telah dihapus.',
-                    'success'
-                )
+                Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Dibatalkan', 'Tidak ada perubahan', 'error')
+                Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
             }
         })
     }
@@ -111,7 +108,7 @@ const SubjectView = () => {
                                                             <button
                                                                 style={{ marginRight: '2px', marginLeft: '2px' }}
                                                                 type="button"
-                                                                className="btn btn-success"
+                                                                className="btn btn-primary"
                                                             // onClick={handleDelete}
                                                             >
                                                                 <i className="icon fa fa-edit"></i>
@@ -136,7 +133,7 @@ const SubjectView = () => {
                                                             <button
                                                                 style={{ marginRight: '2px', marginLeft: '2px' }}
                                                                 type="button"
-                                                                className="btn btn-success"
+                                                                className="btn btn-primary"
                                                             // onClick={handleDelete}
                                                             >
                                                                 <i className="icon fa fa-edit"></i>
@@ -227,7 +224,7 @@ const SubjectView = () => {
                                                                     <button
                                                                         style={{ marginRight: '2px', marginLeft: '2px' }}
                                                                         type="button"
-                                                                        className="btn btn-success"
+                                                                        className="btn btn-primary"
                                                                     // onClick={handleDelete}
                                                                     >
                                                                         <i className="icon fa fa-edit"></i>
@@ -249,83 +246,8 @@ const SubjectView = () => {
                                         </div>
                                     </div>)}
                                 {activeTab === "activitiesTab" && (
-                                    <div className="active tab-pane" id="activity">
-                                        <div className="box-body table-responsive no-padding">
-                                            <div style={{ margin: '0 20px 20px 20px' }}>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-success"
-                                                    onClick={openModal}
-                                                >
-                                                    <i className="icon fa fa-plus"></i> Tambah
-                                                </button>
-                                                {/* <span style={{color: 'red', fontStyle: 'italic', marginLeft: '10px'}}>*modul ajar belum lengkap sampai 14 minggu</span> */}
-                                            </div>
-                                            <table id="siswa" className="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Minggu</th>
-                                                        <th>Topik</th>
-                                                        <th>Sub Topik</th>
-                                                        <th>Kata Kunci</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>lorem  ipsum A</td>
-                                                        <td>Identitasku</td>
-                                                        <td>Namaku, identitasku</td>
-                                                        <td>lurator</td>
-                                                        <td>
-                                                            <button
-                                                                style={{ marginRight: '2px', marginLeft: '2px' }}
-                                                                type="button"
-                                                                className="btn btn-success"
-                                                            // onClick={handleDelete}
-                                                            >
-                                                                <i className="icon fa fa-edit"></i>
-                                                            </button>
-
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-danger"
-                                                                onClick={handleDelete}
-                                                            >
-                                                                <i className="icon fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>lorem  ipsum A</td>
-                                                        <td>Identitasku</td>
-                                                        <td>Namaku, identitasku</td>
-                                                        <td>lurator</td>
-                                                        <td>
-                                                            <button
-                                                                style={{ marginRight: '2px', marginLeft: '2px' }}
-                                                                type="button"
-                                                                className="btn btn-success"
-                                                            // onClick={handleDelete}
-                                                            >
-                                                                <i className="icon fa fa-edit"></i>
-                                                            </button>
-
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-danger"
-                                                                onClick={handleDelete}
-                                                            >
-                                                                <i className="icon fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>)}
+                                    <ActivitiesView />
+                                )}
                             </div>
                         </div>
                         {/* )} */}

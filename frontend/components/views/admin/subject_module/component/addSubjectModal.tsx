@@ -1,30 +1,30 @@
 import React, { useState } from 'react'
 
 const AddModal = ({ isOpen, closeModal }) => {
-  const [nip, setNip] = useState('')
-  const [nama, setNama] = useState('')
-  const [jenisKelamin, setJenisKelamin] = useState('')
+  const [topic, setTopic] = useState('')
+  const [sub, setSub] = useState('')
+  const [keyword, setKeyword] = useState('')
 
-  const handleNipChange = (event) => {
-    setNip(event.target.value)
+  const handletopicChange = (event) => {
+    setTopic(event.target.value)
   }
 
-  const handleNamaChange = (event) => {
-    setNama(event.target.value)
+  const handlesubChange = (event) => {
+    setSub(event.target.value)
   }
 
-  const handleJenisKelaminChange = (event) => {
-    setJenisKelamin(event.target.value)
+  const handleKeywordChange = (event) => {
+    setKeyword(event.target.value)
   }
 
+ 
   const handleSubmit = (event) => {
     event.preventDefault()
     // Lakukan sesuatu dengan data yang disimpan
     // ...
     // Setelah itu, reset nilai input
-    setNip('')
-    setNama('')
-    setJenisKelamin('')
+    setTopic('')
+    setSub('')
     // Tutup modal
     closeModal()
   }
@@ -34,6 +34,13 @@ const AddModal = ({ isOpen, closeModal }) => {
   const handleMingguChange = (event) => {
     setMinggu(event.target.value)
   }
+
+  const [date, setDate] = useState<string>('');
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
 
   return (
     <div className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}>
@@ -67,44 +74,57 @@ const AddModal = ({ isOpen, closeModal }) => {
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="nip">Topik</label>
+                <div className="form-group" style={{ width: '30%' }}>
+                  <label htmlFor="date">Tanggal</label>
                   <input
-                    type="number"
+                    type="date"
                     className="form-control"
-                    id="nip"
-                    name="nip"
-                    placeholder="Masukan Nip atau Nik"
-                    value={nip}
-                    onChange={handleNipChange}
+                    id="date"
+                    name="date"
+                    value={date}
+                    onChange={handleDateChange}
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="nama">Sub Topik</label>
+                  <label htmlFor="topic">Topik</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="nama"
-                    name="nama"
-                    placeholder="Masukan Nama"
-                    value={nama}
-                    onChange={handleNamaChange}
+                    id="topic"
+                    name="topic"
+                    placeholder="Masukan Topik"
+                    value={topic}
+                    onChange={handletopicChange}
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="nama">Kata Kunci</label>
+                  <label htmlFor="sub">Sub Topik</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="nama"
-                    name="nama"
-                    placeholder="Masukan Nama"
-                    value={nama}
-                    onChange={handleNamaChange}
+                    id="sub"
+                    name="sub"
+                    placeholder="Masukan Sub Topik"
+                    value={sub}
+                    onChange={handlesubChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="keyword">Kata Kunci</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="keyword"
+                    name="keyword"
+                    placeholder="Masukan Kata Kunci"
+                    value={keyword}
+                    onChange={handleKeywordChange}
                     required
                   />
                 </div>
