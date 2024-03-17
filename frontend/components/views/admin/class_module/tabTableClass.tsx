@@ -7,8 +7,8 @@ export default function TabTableClass({ rombel, openModal }) {
         <button
           type="button"
           className="btn btn-success"
-          data-toggle="modal"
-          data-target="#add-modal"
+          // data-toggle="modal"
+          // data-target="#add-modal"
           onClick={openModal}
         >
           <span className="glyphicon glyphicon-plus"></span>
@@ -43,12 +43,12 @@ export default function TabTableClass({ rombel, openModal }) {
                   className="btn btn-success btn-sm"
                   href={`/admin/class/add_student/${item.id}`}
                 >
-                  <span className="glyphicon glyphicon-plus"></span> 
+                  <span className="glyphicon glyphicon-plus"></span>
                   Daftarkan Siswa
                 </Link>
                 <button
                   className="btn btn-danger btn-sm"
-                // onClick={() => deleteRombel(item.id)}
+                  // onClick={() => deleteRombel(item.id)}
                 >
                   <i className="icon fa fa-trash"></i>
                 </button>
