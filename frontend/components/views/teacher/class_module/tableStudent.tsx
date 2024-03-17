@@ -1,3 +1,6 @@
+'use client'
+import { useState } from 'react'
+import AddNilaiModal from './inputNilaiModal'
 const StudentTable = () => {
   const kelompokSiswa = [
     {
@@ -26,36 +29,49 @@ const StudentTable = () => {
     },
   ]
 
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
+
+  const openModal = () => {
+    setIsOpenAddModal(true)
+  }
+
+  const closeModal = () => {
+    setIsOpenAddModal(false)
+  }
+
   return (
-    <table className="table table-bordered table-striped" id="kelompok_siswa">
-      <thead>
-        <tr>
-          <th className="text-center">No</th>
-          <th className="text-center">NIS</th>
-          <th className="text-center">Nama Siswa</th>
-          <th className="text-center">Status Nilai</th>
-          <th className="text-center">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {kelompokSiswa.map((item, index) => (
-          <tr key={index} className="text-center">
-            <td>{index + 1}</td>
-            <td>{item.siswa.nis}</td>
-            <td>{item.siswa.nama}</td>
-            <td>{item.statusNilai}</td>
-            <td>
-              <a
-                href={`/guru/matpel/input-nilai/${item.id}/matpel/cek_matpel.id`}
-                className="btn btn-success btn-sm"
-              >
-                <span className="glyphicon glyphicon-plus"></span> Input Nilai
-              </a>
-            </td>
+    <>
+      <table className="table table-bordered table-striped" id="kelompok_siswa">
+        <thead>
+          <tr>
+            <th className="text-center">No</th>
+            <th className="text-center">NIS</th>
+            <th className="text-center">Nama Siswa</th>
+            <th className="text-center">Status Nilai</th>
+            <th className="text-center">Aksi</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {kelompokSiswa.map((item, index) => (
+            <tr key={index} className="text-center">
+              <td>{index + 1}</td>
+              <td>{item.siswa.nis}</td>
+              <td>{item.siswa.nama}</td>
+              <td>{item.statusNilai}</td>
+              <td>
+                <button onClick={openModal} className="btn btn-success btn-sm">
+                  <span className="glyphicon glyphicon-plus"></span> Input Nilai
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <AddNilaiModal
+        isOpen={isOpenAddModal}
+        closeModal={closeModal}
+      ></AddNilaiModal>
+    </>
   )
 }
 
