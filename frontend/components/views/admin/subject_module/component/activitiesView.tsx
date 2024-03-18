@@ -35,7 +35,6 @@ const ActivitiesView = () => {
 
     const deleteSiswa = (id: number) => {
         handleDelete()
-        // console.log(`Menghapus siswa dengan id ${id}`)
     }
 
     const handleDelete = () => {
