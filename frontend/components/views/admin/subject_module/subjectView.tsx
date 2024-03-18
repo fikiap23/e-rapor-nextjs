@@ -49,16 +49,77 @@ const SubjectView = () => {
 
     }
 
-    // const DummyData = [
-    //     { id: 1, topic: 'lorem  ipsum A', sub_topic: 'Identitasku', status: "lengkap" , keywords: 'Namaku, identitasku' },
-    //     { id: 2, topic: 'lorem  ipsum B', sub_topic: 'Anggota Tubuh ', status: "lengkap" , keywords: 'Anggota tubuh, Jari-jariku, Mata, Bakteri pada gigi, pancaindra, dll' },
-    //     { id: 3, topic: 'lorem  ipsum C', sub_topic: 'Kebutuhanku003', status: "tidak lengkap" , keywords: 'Makanan, minuman, kesehatan, dll' },
-    //     { id: 4, topic: 'lorem  ipsum D', sub_topic: 'Menjaga Kebersihan diri ', status: "lengkap" , keywords: 'Mandi, menyikat gigi, dll' },
-    //     { id: 5, topic: 'lorem  ipsum D', sub_topic: 'Menjaga Kebersihan diri ', status: "lengkap" , keywords: 'Mandi, menyikat gigi, dll' },
-    //     { id: 6, topic: '-', sub_topic: '-', status: "-" , keywords: '-' },
-    //     { id: 7, topic: '-', sub_topic: '-', status: "-" , keywords: '-' },
-    // ];
-    // const [matpelData, setMatpelData] = useState(DummyData);
+    const dataDummy = [
+        {
+            minggu: 1,
+            tujuan_pembelajaran: ["Memahami konsep dasar JavaScript", "Menerapkan konsep dasar dalam pembuatan program sederhana"],
+            capaian_pembelajaran: ["Memahami konsep dasar JavaScript", "Mampu membuat program sederhana menggunakan JavaScript"],
+            tujuan_kegiatan: "Materi pembelajaran, latihan, dan proyek kecil",
+        },
+        {
+            minggu: 2,
+            tujuan_pembelajaran: ["Memahami struktur data dalam JavaScript", "Menggunakan struktur data untuk memecahkan masalah"],
+            capaian_pembelajaran: ["Menguasai berbagai struktur data dalam JavaScript", "Mampu memecahkan masalah menggunakan struktur data yang sesuai"],
+            tujuan_kegiatan: "Pembelajaran konsep, latihan pemrograman",
+        },
+        {
+            minggu: 3,
+            tujuan_pembelajaran: ["Memahami konsep dasar React", "Membangun aplikasi sederhana menggunakan React"],
+            capaian_pembelajaran: ["Menguasai konsep dasar React", "Mampu membuat aplikasi sederhana dengan React"],
+            tujuan_kegiatan: "Pembelajaran React, proyek aplikasi",
+        },
+        {
+            minggu: 4,
+            tujuan_pembelajaran: ["Memahami penggunaan state dan props dalam React", "Menggunakan state dan props dalam pengembangan aplikasi React"],
+            capaian_pembelajaran: ["Menguasai penggunaan state dan props", "Mampu mengimplementasikan state dan props dalam aplikasi React"],
+            tujuan_kegiatan: "Pembelajaran lanjutan React, proyek aplikasi",
+        },
+        {
+            minggu: 5,
+            tujuan_pembelajaran: ["Memahami penggunaan hooks dalam React", "Menggunakan hooks dalam pengembangan aplikasi React"],
+            capaian_pembelajaran: ["Menguasai penggunaan hooks", "Mampu mengimplementasikan hooks dalam aplikasi React"],
+            tujuan_kegiatan: "Pembelajaran hooks, proyek aplikasi",
+        },
+        {
+            minggu: 6,
+            tujuan_pembelajaran: ["Memahami konsep dasar Node.js", "Mengembangkan aplikasi server sederhana menggunakan Node.js"],
+            capaian_pembelajaran: ["Menguasai konsep dasar Node.js", "Mampu membuat aplikasi server sederhana dengan Node.js"],
+            tujuan_kegiatan: "Pembelajaran Node.js, proyek aplikasi",
+        },
+        {
+            minggu: 7,
+            tujuan_pembelajaran: ["Memahami penggunaan Express.js dalam pengembangan web server", "Membangun aplikasi server menggunakan Express.js"],
+            capaian_pembelajaran: ["Menguasai penggunaan Express.js", "Mampu mengimplementasikan Express.js dalam pengembangan aplikasi server"],
+            tujuan_kegiatan: "Pembelajaran Express.js, proyek aplikasi",
+        },
+        {
+            minggu: 8,
+            tujuan_pembelajaran: ["Memahami konsep dasar MongoDB", "Menggunakan MongoDB dalam pengembangan aplikasi web"],
+            capaian_pembelajaran: ["Menguasai konsep dasar MongoDB", "Mampu mengimplementasikan MongoDB dalam aplikasi web"],
+            tujuan_kegiatan: "Pembelajaran MongoDB, proyek aplikasi",
+        },
+        {
+            minggu: 9,
+            tujuan_pembelajaran: ["Mengimplementasikan teknologi-teknologi yang dipelajari dalam proyek akhir", "Menyelesaikan dan mempresentasikan proyek akhir"],
+            capaian_pembelajaran: ["Menguasai penggunaan teknologi-teknologi yang dipelajari", "Mampu menyelesaikan proyek akhir dan mempresentasikannya secara efektif"],
+            tujuan_kegiatan: "Membuat proyek akhir, presentasi proyek akhir",
+        },
+    ];
+
+    function potongString(str: any) {
+        if (str.length > 20) {
+            return str.substring(0, 20) + "...";
+        } else {
+            return str;
+        }
+    }
+
+    const dataDummyTerpotong = dataDummy.map(item => ({
+        minggu: item.minggu,
+        tujuan_pembelajaran: item.tujuan_pembelajaran.map(potongString),
+        capaian_pembelajaran: item.capaian_pembelajaran.map(potongString),
+        tujuan_kegiatan: potongString(item.tujuan_kegiatan),
+    }));
 
 
     return (
@@ -70,7 +131,7 @@ const SubjectView = () => {
                         <div className="nav-tabs-custom">
                             <ul className="nav nav-tabs">
                                 <li className={activeTab === "moduleTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("moduleTab")}>Modul Ajar</Link></li>
-                                <li className={activeTab === "learningOutcomesTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("learningOutcomesTab")}>Capaian Pembelajaran</Link></li>
+                                <li className={activeTab === "learningOutcomesTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("learningOutcomesTab")}>Pembelajaran</Link></li>
                                 <li className={activeTab === "activitiesTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("activitiesTab")}>Kegiatan Inti</Link></li>
                             </ul>
                             <div className="tab-content">
@@ -166,7 +227,6 @@ const SubjectView = () => {
                                                         >
                                                             <i className="icon fa fa-close"></i> Batal
                                                         </button>
-                                                        {/* <span style={{color: 'red', fontStyle: 'italic', marginLeft: '10px'}}>*modul ajar belum lengkap sampai 14 minggu</span> */}
                                                     </div>
                                                     <InputSubject />
                                                 </>
@@ -180,65 +240,64 @@ const SubjectView = () => {
                                                         >
                                                             <i className="icon fa fa-plus"></i> Tambah
                                                         </button>
-                                                        {/* <span style={{color: 'red', fontStyle: 'italic', marginLeft: '10px'}}>*modul ajar belum lengkap sampai 14 minggu</span> */}
+                                                        <span style={{ color: 'red', fontStyle: 'italic', marginLeft: '10px' }}>*modul ajar belum lengkap</span>
                                                     </div>
-                                                    <table id="siswa" className="table table-hover">
+                                                    <table id="siswa" className="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th>Minggu</th>
+                                                                <th className='text-center'>Minggu</th>
                                                                 <th>Tujuan Pembelajaran</th>
+                                                                <th>Capaian Pembelajaran</th>
                                                                 <th>Tujuan Kegiatan</th>
-                                                                <th>Alat & Bahan</th>
-                                                                <th>Peta Konsep</th>
-                                                                <th>Sumber</th>
                                                                 <th>Aksi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td>1</td>
-                                                                <td>
-                                                                    <ol>
-                                                                        <li>lorem  ipsum A</li>
-                                                                        <li>Identitasku</li>
-                                                                        <li>Namaku, identitasku</li>
-                                                                    </ol>
-                                                                </td>
-                                                                <td>
-                                                                    <ol>
-                                                                        <li>lorem  ipsum A</li>
-                                                                        <li>Identitasku</li>
-                                                                        <li>Namaku, identitasku</li>
-                                                                    </ol>
-                                                                </td>
-                                                                <td>Buku, Majalah, Pensil </td>
-                                                                <td>
-                                                                    <ol>
-                                                                        <li>lorem  ipsum A</li>
-                                                                        <li>Identitasku</li>
-                                                                        <li>Namaku, identitasku</li>
-                                                                    </ol>
-                                                                </td>
-                                                                <td>Namaku, identitasku</td>
-                                                                <td>
-                                                                    <button
-                                                                        style={{ marginRight: '2px', marginLeft: '2px' }}
-                                                                        type="button"
-                                                                        className="btn btn-primary"
-                                                                    // onClick={handleDelete}
-                                                                    >
-                                                                        <i className="icon fa fa-edit"></i>
-                                                                    </button>
+                                                            {dataDummyTerpotong.map((item, index) => (
+                                                                <tr key={index}>
+                                                                    <td className='text-center'>{item.minggu}</td>
+                                                                    <td>
+                                                                        <ol>
+                                                                            {item.tujuan_pembelajaran.map((tujuan, idx) => (
+                                                                                <li key={idx}>{tujuan}</li>
+                                                                            ))}
+                                                                        </ol>
+                                                                    </td>
+                                                                    <td>
+                                                                        <ol>
+                                                                            {item.capaian_pembelajaran.map((capaian, idx) => (
+                                                                                <li key={idx}>{capaian}</li>
+                                                                            ))}
+                                                                        </ol>
+                                                                    </td>
+                                                                    <td>{item.tujuan_kegiatan}</td>
+                                                                    <td>
+                                                                        <button
+                                                                            style={{ marginRight: '2px', marginLeft: '2px' }}
+                                                                            type="button"
+                                                                            className="btn btn-info"
+                                                                        >
+                                                                            <i className="icon fa fa-eye"></i>
+                                                                        </button>
 
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-danger"
-                                                                        onClick={handleDelete}
-                                                                    >
-                                                                        <i className="icon fa fa-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
+                                                                        <button
+                                                                            style={{ marginRight: '2px', marginLeft: '2px' }}
+                                                                            type="button"
+                                                                            className="btn btn-danger"
+                                                                        >
+                                                                            <i className="icon fa fa-trash"></i>
+                                                                        </button>
+
+                                                                        <button
+                                                                            style={{ marginRight: '2px', marginLeft: '2px' }}
+                                                                            type="button"
+                                                                            className="btn btn-primary"
+                                                                        >
+                                                                            <i className="icon fa fa-edit"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
                                                         </tbody>
                                                     </table>
                                                 </>
@@ -250,8 +309,6 @@ const SubjectView = () => {
                                 )}
                             </div>
                         </div>
-                        {/* )} */}
-                        {/* {action !== "view" && <TabEditSiswa />} */}
                     </div>
                 </div>
             </section>

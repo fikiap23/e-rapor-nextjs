@@ -4,6 +4,7 @@ import { useState } from "react";
 import LearningObjectivesInput from "./input/learningObjectivesInput";
 import LearningOutcomesInput from "./input/activityGoalsInput";
 import ConceptMapsInput from "./input/conceptMapsInput";
+import LearningAchievementsInput from "./input/learningAchievementsInput";
 
 function InputSubject() {
     const [activeTab, setActiveTab] = useState("learningObjectivesTab");
@@ -32,6 +33,7 @@ function InputSubject() {
         <div className="nav-tabs-custom">
             <ul className="nav nav-tabs">
                 <li className={activeTab === "learningObjectivesTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("learningObjectivesTab")}>Tujuan Pembelajaran</Link></li>
+                <li className={activeTab === "learningAchievementsTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("learningAchievementsTab")}>Capaian Pembelajaran</Link></li>
                 <li className={activeTab === "activityGoalsTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("activityGoalsTab")}>Tujuan Kegiatan</Link></li>
                 <li className={activeTab === "conceptMapsTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("conceptMapsTab")}>Peta Konsep</Link></li>
                 <li className={activeTab === "materialsTab" ? "active" : ""}><Link href="" onClick={() => handleTabChange("materialsTab")}>Alat dan Bahan</Link></li>
@@ -40,6 +42,9 @@ function InputSubject() {
             <div className="tab-content">
                 {activeTab === "learningObjectivesTab" && (
                     <LearningObjectivesInput />
+                )}
+                {activeTab === "learningAchievementsTab" && (
+                    <LearningAchievementsInput />
                 )}
                 {activeTab === "activityGoalsTab" && (
                     <LearningOutcomesInput />
