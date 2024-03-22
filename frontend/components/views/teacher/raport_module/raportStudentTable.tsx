@@ -1,6 +1,5 @@
-// components/RaportTable.js
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const RaportStudentTable = () => {
   const [selectedTahun, setSelectedTahun] = useState(2022)
@@ -45,49 +44,97 @@ const RaportStudentTable = () => {
         item.Siswa.nama.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
+  const [riwayat, setRiwayat] = useState(kelompok_siswa);
+  const [sortAscending, setSortAscending] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState('');
+  const [indexOfFirstItem, setIndexOfFirstItem] = useState(0);
+
+  useEffect(() => {
+    setIndexOfFirstItem((currentPage - 1) * itemsPerPage);
+  }, [currentPage]);
+
+  const handleSort = (key: any) => {
+    const sortedRiwayat = [...riwayat].sort((a, b) => {
+      const valueA = a[key].nama.toUpperCase();
+      const valueB = b[key].nama.toUpperCase();
+      return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+    });
+    setRiwayat(sortedRiwayat);
+    setSortAscending(!sortAscending);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const itemsPerPage = 10;
+  const filteredRiwayat = riwayat.filter(data =>
+    data.Siswa.nama.toLowerCase().includes(filter.toLowerCase()) ||
+    data.Siswa.nis.toLowerCase().includes(filter.toLowerCase()) ||
+    data.rombel.toLowerCase().includes(filter.toLowerCase())
+    // data.MataPelajaran.nama.toLowerCase().includes(filter.toLowerCase()) ||
+    // data.Kelas.nama.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const currentRiwayat = filteredRiwayat.slice(indexOfFirstItem, indexOfFirstItem + itemsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div>
       <div>
-        <select
-          value={selectedTahun}
-          onChange={(e) => setSelectedTahun(e.target.value)}
-        >
-          <option value={2022}>2022</option>
-          <option value={2023}>2023</option>
-          <option value={2024}>2024</option>
-        </select>
-        <select
-          value={selectedRombel}
-          onChange={(e) => setSelectedRombel(e.target.value)}
-        >
-          <option value="">Pilih Rombel</option>
-          <option value="XII A">XII A</option>
-          <option value="XII B">XII B</option>
-          <option value="XII C">XII C</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="form-group" style={{ width: '30%' }}>
+          <select
+            value={selectedTahun}
+            onChange={(e) => setSelectedTahun(e.target.value)}
+          >
+            <option value={2022}>2022</option>
+            <option value={2023}>2023</option>
+            <option value={2024}>2024</option>
+          </select>
+          <select
+            value={selectedRombel}
+            onChange={(e) => setSelectedRombel(e.target.value)}
+          >
+            <option value="">Pilih Rombel</option>
+            <option value="XII A">XII A</option>
+            <option value="XII B">XII B</option>
+            <option value="XII C">XII C</option>
+          </select>
+        </div>
+        <div className="form-group" style={{ width: '30%' }}>
+          {/* <label htmlFor="filter">Cari:</label> */}
+          <input
+            type="text"
+            id="filter"
+            className="form-control"
+            value={filter}
+            placeholder='Masukan pencarian'
+            onChange={handleFilterChange}
+          />
+        </div>
       </div>
       <table className="table table-bordered table-striped" id="raport">
         <thead>
           <tr>
             <th>No</th>
-            <th>NIS</th>
-            <th>Nama</th>
+            {/* <th onClick={() => handleSort('SiswaId')}>No <i className="fa fa-sort"></i></th> */}
+            <th onClick={() => handleSort('Siswa')}>Nis <i className="fa fa-sort"></i></th>
+            <th onClick={() => handleSort('Siswa')}>Nama <i className="fa fa-sort"></i></th>
+            {/* <th onClick={() => handleSort('rombel')}>Rombel <i className="fa fa-sort"></i></th> */}
             <th>Rombel</th>
             <th>Cetak</th>
           </tr>
         </thead>
         <tbody>
-          {filteredSiswa.map((item, index) => (
+          {currentRiwayat.map((item, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{item.Siswa.nis}</td>
               <td>{item.Siswa.nama}</td>
+              
               <td>{item.rombel}</td>
               <td>
                 <a href={''} className="btn btn-success btn-sm" target="_blank">
