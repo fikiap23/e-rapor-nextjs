@@ -1,0 +1,125 @@
+        .body {
+            font-family: arial;
+            font-size: 11pt;
+            width: 8.5in;
+            padding: 10px;
+        }
+
+        .table {
+            border-collapse: collapse;
+            border: solid 1px #999;
+            width: 50%
+        }
+
+        .table_absence {
+            border-collapse: collapse;
+            border: solid 1px #999;
+            width: 50%;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .table,
+        .table_absence tr td,
+        .table,
+        .table_absence tr th {
+            border: solid 1px #000;
+            padding: 3px;
+        }
+
+        .table tr th {
+            font-weight: bold;
+            text-align: center
+        }
+
+        .rgt {
+            text-align: right;
+        }
+
+        .ctr {
+            text-align: center;
+        }
+
+        .tbl {
+            font-weight: bold
+        }
+
+        table tr td {
+            vertical-align: top
+        }
+
+        .font_kecil {
+            font-size: 12px
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+
+        .body_cover {
+            text-align: center;
+            padding-top: 10%;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+        }
+
+        .circle-image {
+            border-radius: 50%;
+            margin-bottom: 5%;
+        }
+
+        .container {
+            text-align: left;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            font-size: 25px;
+            margin-top: 20%;
+            margin-bottom: 20%;
+        }
+
+        .container tr td {
+            padding: 10px;
+        }
+
+        .footer {
+            margin-bottom: 20%;
+        }
+
+
+        .circle-image-school {
+            border-radius: 50%;
+            margin-bottom: 5%;
+            margin-top: 10%;
+        }
+
+        .container-school {
+            text-align: left;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            font-size: 20px;
+            margin-bottom: 20%;
+            padding: 20px;
+        }
+
+        .container-school tr td {
+            padding: 10px;
+        }
+
+        .container-student {
+            text-align: left;
+            display: flex;
+            justify-content: left;
+            width: 100%;
+            font-size: 20px;
+            padding: 20px;
+        }
+
+        .container-student tr td {
+            padding: 7px;
+        }
