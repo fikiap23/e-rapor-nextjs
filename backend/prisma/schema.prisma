@@ -63,6 +63,12 @@ enum HariType {
   MINGGU
 }
 
+enum StatusAbsensi {
+  HADIR
+  IZIN
+  ALPA
+}
+
 // /*
 // |--------------------------------------------------------------------------
 // | Model
@@ -126,7 +132,8 @@ model Murid {
   // Relation
 
   idRombel String?
-  rombel   Rombel? @relation(fields: [idRombel], references: [id])
+  rombel   Rombel?   @relation(fields: [idRombel], references: [id])
+  absensi  Absensi[]
 
   // index
   @@index([id, nis, nisn])
@@ -210,9 +217,20 @@ model JadwalAjar {
   modulAjar   ModulAjar @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
   idRombel    String
   rombel      Rombel    @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  absensi     Absensi[]
 
   // index
   @@index([id, idModulAjar, idRombel])
+}
+
+model Absensi {
+  id           String        @id @default(uuid())
+  status       StatusAbsensi
+  keterangan   String?
+  idJadwalAjar String
+  jadwalAjar   JadwalAjar    @relation(fields: [idJadwalAjar], references: [id], onDelete: Cascade)
+  idMurid      String
+  murid        Murid         @relation(fields: [idMurid], references: [id], onDelete: Cascade)
 }
 
 model PenilaianMingguan {
