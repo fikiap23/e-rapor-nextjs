@@ -1,49 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 const AddModal = ({ isOpen, closeModal }) => {
-  const [topic, setTopic] = useState('')
-  const [sub, setSub] = useState('')
-  const [keyword, setKeyword] = useState('')
+  const [topic, setTopic] = useState("");
+  const [sub, setSub] = useState("");
+  const [keyword, setKeyword] = useState("");
 
-  const handletopicChange = (event) => {
-    setTopic(event.target.value)
-  }
+  const handletopicChange = (event: any) => {
+    setTopic(event.target.value);
+  };
 
   const handlesubChange = (event) => {
-    setSub(event.target.value)
-  }
+    setSub(event.target.value);
+  };
 
   const handleKeywordChange = (event) => {
-    setKeyword(event.target.value)
-  }
+    setKeyword(event.target.value);
+  };
 
- 
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     // Lakukan sesuatu dengan data yang disimpan
     // ...
     // Setelah itu, reset nilai input
-    setTopic('')
-    setSub('')
+    setTopic("");
+    setSub("");
     // Tutup modal
-    closeModal()
-  }
+    closeModal();
+  };
 
-  const [minggu, setMinggu] = useState('')
+  const [minggu, setMinggu] = useState("");
 
   const handleMingguChange = (event) => {
-    setMinggu(event.target.value)
-  }
+    setMinggu(event.target.value);
+  };
 
-  const [date, setDate] = useState<string>('');
+  const [date, setDate] = useState<string>("");
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
   };
 
-
   return (
-    <div className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}>
+    <div className={`modal fade  ${isOpen ? "in show-modal" : ""}`}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -74,7 +72,7 @@ const AddModal = ({ isOpen, closeModal }) => {
                   </select>
                 </div>
 
-                <div className="form-group" style={{ width: '30%' }}>
+                <div className="form-group" style={{ width: "30%" }}>
                   <label htmlFor="date">Tanggal</label>
                   <input
                     type="date"
@@ -139,7 +137,7 @@ const AddModal = ({ isOpen, closeModal }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddModal
+export default AddModal;

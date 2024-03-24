@@ -1,9 +1,13 @@
-@import url('admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css');
-@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
-@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
-@import url('admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css');
-@import url('admin-lte/dist/css/AdminLTE.min.css');
-@import url('admin-lte/dist/css/skins/_all-skins.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css");
+@import url("admin-lte/bower_components/font-awesome/css/font-awesome.min.css");
+@import url("admin-lte/bower_components/font-awesome/css/font-awesome.min.css");
+@import url("admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css");
+@import url("admin-lte/dist/css/AdminLTE.min.css");
+@import url("admin-lte/dist/css/skins/_all-skins.min.css");
 /* @import url('admin-lte/dist/css/adminlte.css'); */
 
 .example-modal .modal {
