@@ -12,40 +12,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// for neon
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("DATABASE_URL_PROD")
-//   // uncomment next line if you use Prisma <5.10
-//   directUrl = env("DATABASE_URL_UNPOOLED_PROD")
-// }
-
 // /*
 // |--------------------------------------------------------------------------
 // | Enum Value
 // |--------------------------------------------------------------------------
 // */
 
-enum Gender {
-  MALE
-  FEMALE
-}
-
-enum RoleUser {
-  ADMIN
-  TEACHER
-  STUDENT
-}
-
-enum Semester {
+enum SemesterType {
   GANJIL
   GENAP
 }
 
-enum Grade {
-  FIRST
-  SECOND
-  THIRD
+enum Role {
+  ADMIN
+  GURU
+}
+
+enum StatusAkun {
+  AKTIF
+  TIDAK_AKTIF
+}
+
+enum JenisKelamin {
+  LAKI_LAKI
+  PEREMPUAN
+}
+
+enum Agama {
+  ISLAM
+  KATOLIK
+  KRISTEN
+  KONGHUCU
+  BUDHA
+  HINDU
+}
+
+enum Nilai {
+  BELUM_BERKEMBANG
+  MULAI_BERKEMBANG
+  SUDAH_BERKEMBANG
+}
+
+enum HariType {
+  SENIN
+  SELASA
+  RABU
+  KAMIS
+  JUMAT
+  SABTU
+  MINGGU
 }
 
 // /*
@@ -54,108 +69,227 @@ enum Grade {
 // |--------------------------------------------------------------------------
 // */
 
-model Student {
-  id         String   @id @default(uuid())
-  name       String
-  nisn       String   @unique
-  nis        String   @unique
-  nik        String   @unique
-  gender     Gender
-  address    String
-  birthdate  DateTime
-  birthplace String
-  avatar     String
-  password   String
-  role       RoleUser @default(STUDENT)
-  idClass    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model User {
+  id       String     @id @default(uuid())
+  username String     @unique
+  email    String?    @unique
+  password String
+  role     Role       @default(ADMIN)
+  status   StatusAkun @default(AKTIF)
+  foto     String?
 
-  class  Class    @relation(fields: [idClass], references: [id])
-  result Result[]
+  // Relation
+  guru Guru?
+
+  // index
+  @@index([id, username, email])
 }
 
-model Class {
-  id           String   @id @default(uuid())
-  name         String   @unique
-  grade        Grade
-  academicYear String
-  startDate    DateTime
-  endDate      DateTime
-  semester     Semester
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Guru {
+  id           String       @id @default(uuid())
+  nip          String       @unique
+  nama         String
+  jenisKelamin JenisKelamin
 
-  student Student[]
-  teacher TeacherOnClass[]
+  // Relation
+  idUser String   @unique
+  user   User     @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  rombel Rombel[]
+  rapor  Rapor[]
+
+  // index
+  @@index([id, nip, idUser])
 }
 
-model Teacher {
-  id        String   @id @default(uuid())
-  name      String
-  nuptk     String   @unique
-  email     String   @unique
-  password  String
-  avatar    String
-  role      RoleUser @default(TEACHER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Murid {
+  id                String              @id @default(uuid())
+  nisn              String              @unique
+  nis               String              @unique
+  nama              String
+  jenisKelamin      JenisKelamin
+  tempatLahir       String?
+  tanggalLahir      DateTime?
+  agama             Agama?
+  alamat            String?
+  tanggalMasuk      DateTime?
+  tinggiBadan       Int?
+  beratBadan        Int?
+  foto              String?
+  namaAyah          String?
+  namaIbu           String?
+  pekerjaanAyah     String?
+  pekerjaanIbu      String?
+  status            StatusAkun          @default(AKTIF)
+  rapor             Rapor?
+  penilaianMingguan PenilaianMingguan[]
 
-  teacherOnClass TeacherOnClass[]
+  // Relation
+
+  idRombel String?
+  rombel   Rombel? @relation(fields: [idRombel], references: [id])
+
+  // index
+  @@index([id, nis, nisn])
 }
 
-model Admin {
-  id        String   @id @default(uuid())
-  name      String
-  username  String   @unique
-  email     String   @unique
-  password  String
-  role      RoleUser @default(ADMIN)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Subject {
-  id        String   @id @default(uuid())
-  name      String
-  shortName String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  teacherOnClass TeacherOnClass[]
-}
-
-model TeacherOnClass {
+model Rombel {
   id        String @id @default(uuid())
-  teacherId String
-  classId   String
-  subjectId String
+  name      String
+  tingkatan Int
 
-  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // Relation
+  idGuru           String?
+  guru             Guru?          @relation(fields: [idGuru], references: [id])
+  idKategoriRombel String
+  kategoriRombel   KategoriRombel @relation(fields: [idKategoriRombel], references: [id])
+  rapor            Rapor[]
+  murid            Murid[]
+  modulAjar        ModulAjar[]
+  jadwalAjar       JadwalAjar[]
 
-  result Result[]
+  // index
+  @@index([id, idGuru, idKategoriRombel])
 }
 
-model Result {
-  id               String @id @default(uuid())
-  studentId        String
-  teacherOnClassId String
+model KategoriRombel {
+  id           String   @id @default(uuid())
+  name         String
+  kelompokUsia String
+  kode         String   @unique
+  rombel       Rombel[]
 
-  kkm                  Float
-  knowledgeScore       Float
-  skillsScore          Float
-  predicatKnowledge    String
-  predicatSkill        String
-  descriptionSkill     String
-  descriptionKnowledge String
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  // index
+  @@index([id, kode])
+}
 
-  student        Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  teacherOnClass TeacherOnClass @relation(fields: [teacherOnClassId], references: [id], onDelete: Cascade)
+model ModulAjar {
+  id                  String              @id @default(uuid())
+  minggu              Int
+  topik               String
+  subtopik            String
+  capaianPembelajaran String
+  startDate           DateTime
+  endDate             DateTime
+  katakunci           String[]
+  tujuanPembelajaran  String[]
+  tujuanKegiatan      String[]
+  alatBahan           String[]
+  petaKonsep          String[]
+  jadwalAjar          JadwalAjar[]
+  penilaianMingguan   PenilaianMingguan[]
+
+  // Relation
+  idMapel  String
+  mapel    Mapel  @relation(fields: [idMapel], references: [id])
+  idRombel String
+  rombel   Rombel @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+
+  // index
+  @@index([id, minggu])
+}
+
+model Mapel {
+  id        String      @id @default(uuid())
+  name      String
+  deskripsi String
+  isAktif   Boolean     @default(true)
+  modulAjar ModulAjar[]
+
+  // index
+  @@index([id, name])
+}
+
+model JadwalAjar {
+  id           String   @id @default(uuid())
+  hari         HariType
+  tanggal      DateTime
+  kegiatanInti String
+
+  // Relation
+  idModulAjar String
+  modulAjar   ModulAjar @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
+  idRombel    String
+  rombel      Rombel    @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+
+  // index
+  @@index([id, idModulAjar, idRombel])
+}
+
+model PenilaianMingguan {
+  id        String @id @default(uuid())
+  nilai     Nilai
+  deskripsi String
+
+  // Relation
+  idModulAjar String
+  modulAjar   ModulAjar @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
+  idMurid     String
+  murid       Murid     @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+
+  // index
+  @@index([id, idModulAjar, idMurid])
+}
+
+model Semester {
+  id               String       @id @default(uuid())
+  jenisSemester    SemesterType
+  tahunAjaranAwal  Int
+  tahunAjaranAkhir Int
+  isAktif          Boolean      @default(false)
+  tglBagiRapor     DateTime
+  rapor            Rapor[]
+
+  // index
+  @@index([id])
+}
+
+model Rapor {
+  id                 String       @id @default(uuid())
+  namaRombel         String
+  tglRapor           DateTime
+  jenisSemester      SemesterType
+  tahunAjaran        Int
+  totalSakit         Int
+  totalIzin          Int
+  totalAlpa          Int
+  catatanPertumbuhan String
+  catatanPancasila   String
+  catatanGuru        String
+  nipKepsek          String
+  namaKepsek         String
+
+  // Relation
+  idSekolah  String
+  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id])
+  idSemester String
+  semester   Semester @relation(fields: [idSemester], references: [id])
+  idMurid    String   @unique
+  murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idGuru     String
+  guru       Guru     @relation(fields: [idGuru], references: [id])
+  idRombel   String
+  rombel     Rombel   @relation(fields: [idRombel], references: [id])
+
+  // index
+  @@index([id, idSekolah, idSemester, idMurid])
+}
+
+model Sekolah {
+  id         String  @id @default(uuid())
+  npsn       String
+  nama       String
+  alamat     String
+  kodePos    String
+  noTelepon  String
+  provinsi   String
+  kota       String
+  kecamatan  String
+  kelurahan  String
+  namaDisdik String
+  namaKapsek String
+  nipKepsek  String
+  rapor      Rapor[]
+
+  // index
+  @@index([id, npsn])
 }

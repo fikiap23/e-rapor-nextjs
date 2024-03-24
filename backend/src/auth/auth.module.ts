@@ -7,6 +7,7 @@ import { JwtStrategy } from './strategy';
 import { MomentModule } from '@ccmos/nestjs-moment';
 import { ConfigModule } from '@nestjs/config';
 import { HelperModule } from '../helpers/helper.module';
+import { AuthRepository } from './auth.repository';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { HelperModule } from '../helpers/helper.module';
     HelperModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, AuthRepository, JwtStrategy],
+  exports: [AuthService, AuthRepository],
 })
-export class AuthModule {}
+export class AuthModule { }

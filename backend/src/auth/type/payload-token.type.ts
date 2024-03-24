@@ -1,8 +1,8 @@
-import { RoleEnum } from '../../helpers/helper';
 
 export type PayloadToken = {
   sub: string;
-  role: RoleEnum;
+  role: string;
   access: string;
   expire: string;
+  idsRombel: any;
 };

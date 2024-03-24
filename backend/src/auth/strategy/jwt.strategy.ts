@@ -18,33 +18,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(payload: any) {
     // check token for student
-    const user = await this.prisma.student.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id: payload.sub,
       },
     });
     if (user) return true;
-    // check token for teacher
-    if (!user) {
-      const userTeacher = await this.prisma.teacher.findUnique({
-        where: {
-          id: payload.sub,
-        },
-      });
-      if (userTeacher) return true;
-    }
 
-    // check token for super admin user
-    if (!user) {
-      const userAdmin = await this.prisma.admin.findUnique({
-        where: {
-          id: payload.sub,
-        },
-      });
-      if (userAdmin) return true;
-    }
-
-    // return true if data not exist
     return false;
   }
 }
