@@ -1,3 +1,3 @@
 export interface LoginResType {
-    access_tokenx: string;
+    access_token: string;
 }

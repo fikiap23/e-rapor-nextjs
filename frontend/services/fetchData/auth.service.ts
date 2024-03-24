@@ -7,7 +7,7 @@ const authService = {
     login: async (userData: LoginReqType) => {
         try {
             const response = await axios.post(`${BASE_URL}/login`, userData);
-            return response.data as LoginResType || response.data;
+            return response.data as LoginResType
         } catch (error: any) {
             throw (error.response.data?.message || "Login Gagal!");
         }

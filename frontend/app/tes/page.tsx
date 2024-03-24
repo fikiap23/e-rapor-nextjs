@@ -11,7 +11,7 @@ const Tespage = () => {
     try {
       const payload = { username, password }
       const result = await authService.login(payload)
-      console.log(`Login result: ${result.access_tokenx}`)
+      console.log(`Login result: ${result.access_token}`)
     } catch (error: any) {
       console.log(`Login error: ${error}`)
       setError(error)
