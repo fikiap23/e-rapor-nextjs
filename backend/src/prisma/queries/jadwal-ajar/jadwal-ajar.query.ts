@@ -35,4 +35,8 @@ export class JadwalAjarQuery extends DbService {
     async deleteById(id: string) {
         return await this.prisma.jadwalAjar.delete({ where: { id } })
     }
+
+    async findByIds(ids: string[]) {
+        return await this.prisma.jadwalAjar.findMany({ where: { id: { in: ids } } })
+    }
 }

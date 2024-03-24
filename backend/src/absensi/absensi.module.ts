@@ -8,6 +8,10 @@ import { AbsensiService } from './absensi.service';
 import { AbsensiRepository } from './absensi.repository';
 import { AbsensiQuery } from '../prisma/queries/absensi/absensi.query.dto';
 import { AbsensiController } from './absensi.controller';
+import { AuthModule } from '../auth/auth.module';
+import { JadwalAjarRepository } from '../jadwal-ajar/jadwal-ajar.repository';
+import { JadwalAjarModule } from '../jadwal-ajar/jadwal-ajar.module';
+import { MuridModule } from '../murid/murid.module';
 
 
 @Module({
@@ -17,6 +21,9 @@ import { AbsensiController } from './absensi.controller';
         MomentModule,
         ConfigModule,
         HelperModule,
+        AuthModule,
+        JadwalAjarModule,
+        MuridModule
     ],
     providers: [AbsensiService, AbsensiRepository, AbsensiQuery],
     controllers: [AbsensiController],

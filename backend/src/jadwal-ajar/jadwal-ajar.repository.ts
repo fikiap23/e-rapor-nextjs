@@ -66,4 +66,10 @@ export class JadwalAjarRepository {
         if (jadwalAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.jadwalAjarQuery.deleteById(id);
     }
+
+    async findByIdsOrThrow(ids: string[]) {
+        const jadwalAjar = await this.jadwalAjarQuery.findByIds(ids);
+        if (ids.length !== jadwalAjar.length) throw new BadRequestException('Sebagian jadwal ajar tidak ditemukan');
+        return jadwalAjar
+    }
 }

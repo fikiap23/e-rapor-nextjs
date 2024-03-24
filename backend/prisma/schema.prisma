@@ -66,6 +66,7 @@ enum HariType {
 enum StatusAbsensi {
   HADIR
   IZIN
+  SAKIT
   ALPA
 }
 
@@ -231,6 +232,9 @@ model Absensi {
   jadwalAjar   JadwalAjar    @relation(fields: [idJadwalAjar], references: [id], onDelete: Cascade)
   idMurid      String
   murid        Murid         @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+
+  // index
+  @@index([id, idJadwalAjar, idMurid])
 }
 
 model PenilaianMingguan {
