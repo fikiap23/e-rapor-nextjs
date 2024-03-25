@@ -250,7 +250,7 @@ const SubjectView = () => {
                                 }}
                                 type="button"
                                 className="btn btn-primary"
-                                // onClick={handleDelete}
+                              // onClick={handleDelete}
                               >
                                 <i className="icon fa fa-edit"></i>
                               </button>
@@ -261,6 +261,17 @@ const SubjectView = () => {
                                 onClick={handleDelete}
                               >
                                 <i className="icon fa fa-trash"></i>
+                              </button>
+
+                              <button
+                                style={{
+                                  marginRight: "2px",
+                                  marginLeft: "2px",
+                                }}
+                                type="button"
+                                className="btn btn-success"
+                              >
+                                <i className="icon fa fa-print"></i>
                               </button>
                             </td>
                           </tr>
@@ -278,7 +289,6 @@ const SubjectView = () => {
                                 }}
                                 type="button"
                                 className="btn btn-primary"
-                                // onClick={handleDelete}
                               >
                                 <i className="icon fa fa-edit"></i>
                               </button>
@@ -289,6 +299,17 @@ const SubjectView = () => {
                                 onClick={handleDelete}
                               >
                                 <i className="icon fa fa-trash"></i>
+                              </button>
+
+                              <button
+                                style={{
+                                  marginRight: "2px",
+                                  marginLeft: "2px",
+                                }}
+                                type="button"
+                                className="btn btn-success"
+                              >
+                                <i className="icon fa fa-print"></i>
                               </button>
                             </td>
                           </tr>

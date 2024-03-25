@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 const RaportStudentTable = () => {
@@ -137,9 +138,9 @@ const RaportStudentTable = () => {
               
               <td>{item.rombel}</td>
               <td>
-                <a href={''} className="btn btn-success btn-sm" target="_blank">
+                <Link href={'/teacher_print'} className="btn btn-success btn-sm" target="_blank">
                   <i className="fa fa-print"></i> Cetak Rapor
-                </a>
+                </Link>
               </td>
             </tr>
           ))}
