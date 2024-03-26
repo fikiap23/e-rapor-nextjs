@@ -259,6 +259,8 @@ model Semester {
   tahunAjaranAkhir Int
   isAktif          Boolean      @default(false)
   tglBagiRapor     DateTime
+  nipKepsek        String
+  namaKepsek       String
   rapor            Rapor[]
 
   // index
@@ -266,34 +268,31 @@ model Semester {
 }
 
 model Rapor {
-  id                 String       @id @default(uuid())
-  namaRombel         String
-  tglRapor           DateTime
-  jenisSemester      SemesterType
-  tahunAjaran        Int
-  totalSakit         Int
-  totalIzin          Int
-  totalAlpa          Int
-  catatanPertumbuhan String
-  catatanPancasila   String
-  catatanGuru        String
-  nipKepsek          String
-  namaKepsek         String
+  id                      String @id @default(uuid())
+  totalSakit              Int?
+  totalIzin               Int?
+  totalAlpa               Int?
+  catatanAgamaBudipekerti String
+  catatanJatiDiri         String
+  catatanLiterasiSains    String
+  catatanPertumbuhan      String
+  catatanPancasila        String
+  catatanGuru             String
 
   // Relation
   idSekolah  String
-  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id])
+  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id], onDelete: Cascade)
   idSemester String
-  semester   Semester @relation(fields: [idSemester], references: [id])
+  semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
   idMurid    String   @unique
   murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
-  idGuru     String
-  guru       Guru     @relation(fields: [idGuru], references: [id])
-  idRombel   String
-  rombel     Rombel   @relation(fields: [idRombel], references: [id])
+  idGuru     String?
+  guru       Guru?    @relation(fields: [idGuru], references: [id], onDelete: SetNull)
+  idRombel   String?
+  rombel     Rombel?  @relation(fields: [idRombel], references: [id], onDelete: SetNull)
 
   // index
-  @@index([id, idSekolah, idSemester, idMurid])
+  @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])
 }
 
 model Sekolah {
