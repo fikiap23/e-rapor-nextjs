@@ -6,6 +6,7 @@ function PrintModule() {
     useEffect(() => {
         window.print();
     }, []);
+
     return (
         <div className='body'>
             <div className="header">
@@ -16,7 +17,6 @@ function PrintModule() {
             </div>
 
             <h6 className='tbl'>A. INFORMASI UMUM</h6>
-
             <div className='container' style={{ border: '2px solid black', width: '100%' }}>
                 <table width="100%" style={{ borderCollapse: 'collapse' }}>
                     <tr>
