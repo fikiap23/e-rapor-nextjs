@@ -1,6 +1,11 @@
+'use client'
+import { useEffect } from 'react';
 import './style_module.css';
 
 function PrintModule() {
+    useEffect(() => {
+        window.print();
+    }, []);
     return (
         <div className='body'>
             <div className="header">
@@ -92,7 +97,7 @@ function PrintModule() {
                 </tr>
             </table>
 
-            <h6 className='tbl' style={{ pageBreakBefore: 'always', marginTop: '5%' }}>C. CURAH IDE KEGIATAN</h6>
+            <h6 className='tbl'>C. CURAH IDE KEGIATAN</h6>
             <div style={{ display: 'flex', marginTop: '10px' }}>
                 <div className="ttd" style={{ marginLeft: '20px' }}>
                     <ol className='dashed-list'>
@@ -113,7 +118,7 @@ function PrintModule() {
                 </div>
             </div>
 
-            <h6 className='tbl'>I. Kegiatan Pembukaan (30 menit)</h6>
+            <h6 className='tbl new-page'>I. Kegiatan Pembukaan (30 menit)</h6>
             <div style={{ display: 'flex', marginTop: '10px' }}>
                 <div className="ttd" style={{ marginLeft: '20px' }}>
                     <ol className='dashed-list'>
@@ -188,7 +193,7 @@ function PrintModule() {
                 </tbody>
             </table>
 
-            <h6 className='tbl' style={{ pageBreakBefore: 'always', marginTop: '5%' }}>III. Istirahat</h6>
+            <h6 className='tbl'>III. Istirahat</h6>
             <div style={{ display: 'flex', marginTop: '10px' }}>
                 <div className="ttd" style={{ marginLeft: '20px' }}>
                     <ol className='dashed-list'>
@@ -202,7 +207,7 @@ function PrintModule() {
                 </div>
             </div>
 
-            <h6 className='tbl'>IV. Kegiatan Penutup</h6>
+            <h6 className='tbl new-page'>IV. Kegiatan Penutup</h6>
             <div style={{ display: 'flex', marginTop: '10px' }}>
                 <div className="ttd" style={{ marginLeft: '20px' }}>
                     <ol className='number-list'>

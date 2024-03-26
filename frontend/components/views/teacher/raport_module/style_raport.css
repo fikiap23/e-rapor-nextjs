@@ -123,3 +123,16 @@
         .container-student tr td {
             padding: 7px;
         }
+
+        @media print {
+            @page {
+                margin-top: 0;
+                margin-bottom: 0;
+                size: portrait;
+            }
+
+            body {
+                padding-top: 72px;
+                padding-bottom: 72px;
+            }
+        }

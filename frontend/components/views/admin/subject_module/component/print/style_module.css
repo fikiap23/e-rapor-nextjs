@@ -3,50 +3,76 @@
             font-size: 9pt;
             width: 11in;
             padding: 10px;
+            background-color: aqua;
         }
 
         .tbl {
             font-weight: bold
         }
-       
+
+        .header {
+            text-align: center;
+        }
+
         p {
             font-size: 9pt;
         }
 
-        ol.dashed-list{
+        ol.dashed-list {
             margin-left: -45px;
         }
 
-        ol.dashed-list li p, .number-list li p {
+        ol.dashed-list li p,
+        .number-list li p {
             margin-left: 5px;
         }
 
-        ol.dashed-list li:nth-child(n+2), .number-list li:nth-child(n+2) {
+        ol.dashed-list li:nth-child(n+2),
+        .number-list li:nth-child(n+2) {
             margin-top: -10px;
         }
 
         ol.dashed-list {
             list-style-type: "-";
         }
-        
+
         ol.number-list {
             list-style-type: decimal;
         }
 
-        ol.number-list{
+        ol.number-list {
             margin-left: -35px;
         }
 
-        .weekly th{
+        .weekly th {
             text-align: center;
         }
-        
-        .weekly tr th, .weekly td {
+
+        .weekly tr th,
+        .weekly td {
             padding: 5px;
             font-size: 11px;
             width: 16.67%;
         }
 
-        .sub li p{
+        .sub li p {
             margin-top: -10px;
+        }
+
+        .new-page {
+            page-break-before: always;
+            margin-top: 5%;
+        }
+
+        @media print {
+            @page {
+                margin-top: 0;
+                margin-bottom: 0;
+                size: landscape;
+            }
+
+            body {
+                padding-top: 72px;
+                padding-bottom: 72px;
+            }
         }
