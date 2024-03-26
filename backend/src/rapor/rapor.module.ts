@@ -8,6 +8,10 @@ import { RaporService } from './rapor.service';
 import { RaporRepository } from './rapor.repositoy';
 import { RaporQuery } from '../prisma/queries/rapor/rapor.query';
 import { RaporController } from './rapor.controller';
+import { AuthModule } from '../auth/auth.module';
+import { SekolahModule } from '../sekolah/sekolah.module';
+import { MuridModule } from '../murid/murid.module';
+import { SemesterModule } from '../semester/semester.module';
 
 
 @Module({
@@ -17,6 +21,10 @@ import { RaporController } from './rapor.controller';
         MomentModule,
         ConfigModule,
         HelperModule,
+        AuthModule,
+        SekolahModule,
+        MuridModule,
+        SemesterModule
     ],
     providers: [RaporService, RaporRepository, RaporQuery],
     controllers: [RaporController],

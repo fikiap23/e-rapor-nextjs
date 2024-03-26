@@ -5,4 +5,5 @@ export type PayloadToken = {
   access: string;
   expire: string;
   idsRombel: any;
+  idGuru: string;
 };

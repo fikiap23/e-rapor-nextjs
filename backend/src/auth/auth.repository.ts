@@ -73,7 +73,8 @@ export class AuthRepository {
                     user.role,
                     TokenType.FULL,
                     '7d',
-                    idsRombel
+                    idsRombel,
+                    guru.id
                 )
             }
 
@@ -125,6 +126,7 @@ export class AuthRepository {
         access: string,
         expire: string,
         idsRombel?: any,
+        idGuru?: string
     ): Promise<{ access_token: string }> {
         //  payload user data for jwt token
         const payload: PayloadToken = {
@@ -132,7 +134,8 @@ export class AuthRepository {
             role: role,
             access: access,
             expire: expire,
-            idsRombel
+            idsRombel,
+            idGuru
         };
 
         // create token with data payload

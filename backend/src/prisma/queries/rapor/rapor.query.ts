@@ -13,7 +13,7 @@ export class RaporQuery extends DbService {
         })
     }
 
-    async create(idSekolah: string, idRombel: string, payload: CreateRaporDto) {
-        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel } })
+    async create(idSekolah: string, idRombel: string, idGuru: string, payload: CreateRaporDto) {
+        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel, idGuru } })
     }
 }

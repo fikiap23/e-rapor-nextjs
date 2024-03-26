@@ -44,7 +44,4 @@ export class CreateRaporDto {
     @IsString()
     @IsNotEmpty()
     idMurid: string;
-
-    @IsString()
-    idGuru: string;
 }

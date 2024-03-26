@@ -23,7 +23,7 @@ export class CreateSemesterDto {
     tglBagiRapor: Date;
 
     @IsString()
-    @IsInt()
+    @IsNotEmpty()
     nipKepsek: string;
 
     @IsNotEmpty()

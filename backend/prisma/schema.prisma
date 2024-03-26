@@ -286,10 +286,10 @@ model Rapor {
   semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
   idMurid    String   @unique
   murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
-  idGuru     String?
-  guru       Guru?    @relation(fields: [idGuru], references: [id], onDelete: SetNull)
-  idRombel   String?
-  rombel     Rombel?  @relation(fields: [idRombel], references: [id], onDelete: SetNull)
+  idGuru     String
+  guru       Guru     @relation(fields: [idGuru], references: [id])
+  idRombel   String
+  rombel     Rombel   @relation(fields: [idRombel], references: [id])
 
   // index
   @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])
