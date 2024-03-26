@@ -34,4 +34,10 @@ export class RaporController {
         const result = await this.raporService.create(req.headers.authorization, dto)
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result)
     }
+
+    @Get('murid/:idMurid')
+    async findOne(@Res() res, @Param('idMurid') idMurid) {
+        const result = await this.raporService.findByIdMurid(idMurid)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
 }

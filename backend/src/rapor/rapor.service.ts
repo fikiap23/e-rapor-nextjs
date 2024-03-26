@@ -11,4 +11,8 @@ export class RaporService {
     async create(token: string, dto: CreateRaporDto) {
         return await this.raporRepository.create(token, dto)
     }
+
+    async findByIdMurid(idMurid: string) {
+        return await this.raporRepository.findByIdMurid(idMurid)
+    }
 }

@@ -41,4 +41,9 @@ export class RaporRepository {
             throw error
         }
     }
+
+    async findByIdMurid(idMurid: string) {
+        await this.muridRepository.findByIdOrThrow(idMurid)
+        return await this.raporQuery.findByIdMurid(idMurid)
+    }
 }
