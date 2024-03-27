@@ -18,6 +18,7 @@ import { JwtGuard, RoleGuard } from '../auth/guard';
 import { Roles } from '../auth/decorator';
 import { Role } from '@prisma/client';
 import { CreateRaporDto } from './dto/create-rapor.dto';
+import { UpdateRaporDto } from './dto/update-rapor.dto';
 
 
 @Controller('rapor')
@@ -39,5 +40,13 @@ export class RaporController {
     async findOne(@Res() res, @Param('idMurid') idMurid) {
         const result = await this.raporService.findByIdMurid(idMurid)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.GURU)
+    @Put(':id')
+    async update(@Body() dto: UpdateRaporDto, @Res() res, @Request() req, @Param('id') id) {
+        await this.raporService.updateById(req.headers.authorization, id, dto)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
     }
 }
