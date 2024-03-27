@@ -138,7 +138,7 @@ const RaportStudentTable = () => {
               
               <td>{item.rombel}</td>
               <td>
-                <Link href={'/teacher_print'} className="btn btn-success btn-sm" target="_blank">
+                <Link href={'/raport_print'} className="btn btn-success btn-sm" target="_blank">
                   <i className="fa fa-print"></i> Cetak Rapor
                 </Link>
               </td>
