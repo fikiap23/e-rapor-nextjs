@@ -2,7 +2,9 @@
 import axios from 'axios';
 import { LoginReqType } from '../types/request/auth.request.type';
 import { LoginResType } from '../types/response/auth.response.type';
-const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/auth`;
+import { apiUrl } from './apiUrls';
+
+const BASE_URL = `${apiUrl}/auth`;
 const authService = {
     login: async (userData: LoginReqType) => {
         try {
