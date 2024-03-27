@@ -26,7 +26,7 @@ export class RaporRepository {
 
     async findByIdMuridAndSemesterOrThrow(idMurid: string, idSemester: string) {
         const data = await this.raporQuery.findByIdMuridAndSemester(idMurid, idSemester);
-        if (!data) throw new BadRequestException('Rapor tidak ditemukan');
+        if (data.length == 0) throw new BadRequestException('Rapor tidak ditemukan');
         return data
     }
 

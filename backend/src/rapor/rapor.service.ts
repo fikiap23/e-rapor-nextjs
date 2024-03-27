@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RaporRepository } from './rapor.repositoy';
 import { CreateRaporDto } from './dto/create-rapor.dto';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
+import { GetRaporDto } from './dto/get-rapor.dto';
 
 @Injectable()
 export class RaporService {
@@ -19,5 +20,9 @@ export class RaporService {
 
     async updateById(token: string, id: string, dto: UpdateRaporDto) {
         return await this.raporRepository.update(token, id, dto)
+    }
+
+    async findByIdMuridAndSemesterOrThrow(dto: GetRaporDto) {
+        return await this.raporRepository.findByIdMuridAndSemesterOrThrow(dto.idMurid, dto.idSemester,)
     }
 }

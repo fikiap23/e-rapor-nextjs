@@ -19,6 +19,7 @@ import { Roles } from '../auth/decorator';
 import { Role } from '@prisma/client';
 import { CreateRaporDto } from './dto/create-rapor.dto';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
+import { GetRaporDto } from './dto/get-rapor.dto';
 
 
 @Controller('rapor')
@@ -34,6 +35,12 @@ export class RaporController {
     async create(@Body() dto: CreateRaporDto, @Res() res, @Request() req) {
         const result = await this.raporService.create(req.headers.authorization, dto)
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result)
+    }
+
+    @Post('read/murid-semester')
+    async findBySemester(@Body() dto: GetRaporDto, @Res() res, @Request() req) {
+        const result = await this.raporService.findByIdMuridAndSemesterOrThrow(dto)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 
     @Get('murid/:idMurid')
