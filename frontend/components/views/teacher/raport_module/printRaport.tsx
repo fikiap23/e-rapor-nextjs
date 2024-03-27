@@ -6,7 +6,7 @@ import Narrative from './narrative';
 import SchoolIdentity from './schoolIdentity';
 import StudentIdentity from './studentIdentity';
 
-const Report = () => {
+const Raport = () => {
     useEffect(() => {
         window.print();
     }, []);
@@ -26,4 +26,4 @@ const Report = () => {
     );
 };
 
-export default Report;
+export default Raport;
