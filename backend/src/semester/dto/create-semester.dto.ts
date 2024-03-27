@@ -1,5 +1,5 @@
 import { SemesterType } from '@prisma/client';
-import { IsBoolean, IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateSemesterDto {
 
     @IsNotEmpty()
@@ -21,4 +21,12 @@ export class CreateSemesterDto {
     @IsNotEmpty()
     @IsDate()
     tglBagiRapor: Date;
+
+    @IsString()
+    @IsNotEmpty()
+    nipKepsek: string;
+
+    @IsNotEmpty()
+    @IsString()
+    namaKepsek: string;
 }
