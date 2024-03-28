@@ -1,6 +1,12 @@
+'use client'
+import { useEffect } from 'react';
 import './style_assesment.css';
 
 function PrintAssesmnet() {
+    useEffect(() => {
+        window.print();
+    }, []);
+
     return (
         <div>
 
