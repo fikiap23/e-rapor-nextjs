@@ -3,10 +3,14 @@ import { apiUrl } from '../apiUrls'
 
 const BASE_URL = `${apiUrl}/guru`
 const teacherService = {
-  create: async (data) => {
+  create: async (data, token) => {
     try {
-      const response = await axios.post(`${BASE_URL}`, data)
-      return response.data
+      const response = await axios.post(`${BASE_URL}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data.data
     } catch (error) {
       throw error.response?.data?.message || 'Guru Gagal Ditambahkan'
     }
@@ -21,7 +25,10 @@ const teacherService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Guru Gagal Ditampilkan'
+      throw (
+        error.response?.data?.message ||
+        'Ada kesalahan saat mengambil data guru'
+      )
     }
   },
 }

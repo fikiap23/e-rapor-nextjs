@@ -4,6 +4,7 @@ import AddGuruModal from './addGuruModal'
 
 const ManageTeacher = ({ listTeacher }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [gurus, setGurus] = useState(listTeacher)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -55,7 +56,7 @@ const ManageTeacher = ({ listTeacher }) => {
             </tr>
           </thead>
           <tbody>
-            {listTeacher.map((teacher, index) => (
+            {gurus.map((teacher, index) => (
               <tr key={teacher.id}>
                 <td>{index + 1}</td>
                 <td>{teacher.nip}</td>
@@ -63,10 +64,10 @@ const ManageTeacher = ({ listTeacher }) => {
                 <td>
                   <small
                     className={`label pull-center ${
-                      teacher.user.status === 'AKTIF' ? 'bg-green' : 'bg-yellow'
+                      teacher.status === 'AKTIF' ? 'bg-green' : 'bg-yellow'
                     }`}
                   >
-                    {teacher.user.status}
+                    {teacher.status}
                   </small>
                 </td>
                 <td>
@@ -103,7 +104,11 @@ const ManageTeacher = ({ listTeacher }) => {
         </table>
       </div>
       {/* add guru */}
-      <AddGuruModal isOpen={isModalOpen} closeModal={closeModal}></AddGuruModal>
+      <AddGuruModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        setGurus={setGurus}
+      ></AddGuruModal>
     </>
   )
 }

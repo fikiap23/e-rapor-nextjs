@@ -11,7 +11,6 @@ export function useGetAllTeacherData(token) {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log(res.data)
       const data = res.data.data
 
       return data

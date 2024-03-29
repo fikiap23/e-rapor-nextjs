@@ -1,9 +1,14 @@
+import useAuth from '@/hooks/useAuth'
+import teacherService from '@/services/teacherService/teacher.service'
 import React, { useState } from 'react'
-
-const AddModal = ({ isOpen, closeModal }) => {
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+const AddModal = ({ isOpen, closeModal, setGurus }) => {
   const [nip, setNip] = useState('')
   const [nama, setNama] = useState('')
   const [jenisKelamin, setJenisKelamin] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const { token } = useAuth()
 
   const handleNipChange = (event) => {
     setNip(event.target.value)
@@ -17,16 +22,33 @@ const AddModal = ({ isOpen, closeModal }) => {
     setJenisKelamin(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    // Lakukan sesuatu dengan data yang disimpan
-    // ...
-    // Setelah itu, reset nilai input
-    setNip('')
-    setNama('')
-    setJenisKelamin('')
-    // Tutup modal
-    closeModal()
+    try {
+      setIsLoading(true)
+      const payload = {
+        nip: nip,
+        nama: nama,
+        jenisKelamin: jenisKelamin,
+      }
+
+      const result = await teacherService.create(payload, token)
+      setGurus((prevGurus) => [...prevGurus, result])
+      toast.success('Guru telah ditambahkan', {
+        position: 'top-right',
+      })
+
+      setNip('')
+      setNama('')
+      setJenisKelamin('')
+      closeModal()
+      isLoading(false)
+    } catch (error) {
+      toast.error(error, {
+        position: 'top-right',
+      })
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -40,7 +62,7 @@ const AddModal = ({ isOpen, closeModal }) => {
             </button>
           </div>
           <div className="modal-body">
-            <form role="form" onSubmit={handleSubmit}>
+            <div role="form">
               <div className="box-body">
                 <div className="form-group">
                   <label htmlFor="nip">NIP atau NIK</label>
@@ -78,17 +100,17 @@ const AddModal = ({ isOpen, closeModal }) => {
                     onChange={handleJenisKelaminChange}
                   >
                     <option value="">--- Pilih Jenis Kelamin ---</option>
-                    <option value="pria">Pria</option>
-                    <option value="wanita">Wanita</option>
+                    <option value="LAKI_LAKI">Pria</option>
+                    <option value="PEREMPUAN">Wanita</option>
                   </select>
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="submit" className="btn btn-primary">
-                  Simpan
+                <button onClick={handleSubmit} className="btn btn-primary">
+                  {isLoading ? 'Menyimpan...' : 'Simpan'}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

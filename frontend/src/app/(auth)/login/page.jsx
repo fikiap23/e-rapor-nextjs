@@ -18,7 +18,6 @@ export default function LoginPage() {
       setIsLoading(true)
       const payload = { username, password }
       const result = await authService.login(payload)
-      console.log(`Login result: ${result.access_token}`)
       const accessToken = result.access_token
 
       setToken(accessToken)
