@@ -20,7 +20,7 @@ export default function LoginPage() {
       const result = await authService.login(payload)
       console.log(`Login result: ${result.access_token}`)
       const accessToken = result.access_token
-
+      
       setToken(accessToken)
       toast.success('Login success', {
         position: 'top-right',
