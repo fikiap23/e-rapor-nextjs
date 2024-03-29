@@ -2,12 +2,15 @@ import { useState } from 'react'
 import Swal from 'sweetalert2'
 import AddGuruModal from './modal/addGuruModal'
 import UpdateGuruModal from './modal/updateGuruModal'
+import teacherService from '@/services/teacherService/teacher.service'
+import useAuth from '@/hooks/useAuth'
 
 const ManageTeacher = ({ listTeacher }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [gurus, setGurus] = useState(listTeacher)
   const [selectedTeacher, setSelectedTeacher] = useState(null)
+  const { token } = useAuth()
 
   const openModal = () => {
     setIsAddModalOpen(true)
@@ -26,7 +29,7 @@ const ManageTeacher = ({ listTeacher }) => {
     setIsUpdateModalOpen(false)
   }
 
-  const handleNonactiveUserClick = () => {
+  const handleNonactiveUserClick = async (idUser, status) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
       text: 'Anda akan mengubah status menjadi Nonactive!',
@@ -35,13 +38,35 @@ const ManageTeacher = ({ listTeacher }) => {
       confirmButtonText: 'Ya, nonaktifkan!',
       cancelButtonText: 'Tidak, batalkan!',
       reverseButtons: true,
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Nonaktifkan!',
-          'Status pengguna telah diubah menjadi Nonactive.',
-          'success'
+        const payload = {
+          status,
+        }
+        const result = await teacherService.updateStatusAkun(
+          token,
+          idUser,
+          payload
         )
+        console.log(result)
+        if (result.message === 'OK') {
+          setGurus(
+            gurus.map((teacher) => {
+              if (teacher.idUser === idUser) {
+                return {
+                  ...teacher,
+                  status,
+                }
+              }
+              return teacher
+            })
+          )
+          Swal.fire(
+            'Update Status!',
+            ` Status pengguna telah diubah menjadi ${status}`,
+            'success'
+          )
+        }
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Dibatalkan', 'Tidak ada perubahan status pengguna.', 'error')
       }
@@ -99,16 +124,21 @@ const ManageTeacher = ({ listTeacher }) => {
                   <button
                     style={{ marginRight: '2px', marginLeft: '2px' }}
                     className={`btn btn-${
-                      teacher.status === 'Aktif' ? 'warning' : 'success'
+                      teacher.status === 'AKTIF' ? 'warning' : 'success'
                     } btn-sm`}
                     onClick={
-                      teacher.status === 'Aktif'
-                        ? handleNonactiveUserClick
-                        : null
+                      teacher.status === 'AKTIF'
+                        ? () =>
+                            handleNonactiveUserClick(
+                              teacher.idUser,
+                              'TIDAK_AKTIF'
+                            )
+                        : () =>
+                            handleNonactiveUserClick(teacher.idUser, 'AKTIF')
                     }
                   >
                     <span className="glyphicon glyphicon-user"></span>{' '}
-                    {teacher.status === 'Aktif' ? 'Nonactive' : 'Active'} User
+                    {teacher.status === 'AKTIF' ? 'Nonactive' : 'Active'} User
                   </button>
                 </td>
               </tr>
