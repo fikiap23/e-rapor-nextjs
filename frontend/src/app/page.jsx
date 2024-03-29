@@ -1,17 +1,17 @@
-'use client'
-import Navbar from '@/components/shared/Navbar'
-import Footer from '@/components/shared/Footer'
-import './tailwind.css'
-import useAuth from '@/hooks/useAuth'
-import getTokenData from '@/lib/getTokenData'
+"use client";
+import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
+import "./tailwind.css";
+import useAuth from "@/hooks/useAuth";
+import getTokenData from "@/lib/getTokenData";
 export default function Home() {
-  const { token } = useAuth()
-  console.log(token)
-  const userData = getTokenData(token)
-  console.log(userData)
+  const { token } = useAuth();
+  console.log(token);
+  const userData = getTokenData(token);
+  console.log(userData);
   return (
     <div>
-      <Navbar />
+      <Navbar role={userData.role} />
       <header className="grid grid-cols-2 bg-blue-500 w-full p-20 gap-10">
         <div className="max-w-2xl">
           <h1 className="text-4xl text-white font-bold">Cari Siswa</h1>
@@ -49,5 +49,5 @@ export default function Home() {
       </header>
       <Footer />
     </div>
-  )
+  );
 }
