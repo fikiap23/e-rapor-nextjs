@@ -1,36 +1,25 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddGroupModal from './modal/addGroupModal'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRombel'
+import UpdateGroupModal from './modal/updateGroupModal'
 
 const AgeGroupView = () => {
-  const dummyData = [
-    {
-      id: 1,
-      tahun: 2022,
-      kepala_sekolah: 'John Doe',
-      tgl_raport: '2022-01-01',
-      semester: 'Ganjil',
-      status: 'Aktif',
-    },
-    {
-      id: 2,
-      tahun: 2023,
-      kepala_sekolah: 'Jane Doe',
-      tgl_raport: '2023-01-01',
-      semester: 'Genap',
-      status: 'Nonaktif',
-    },
-    {
-      id: 3,
-      tahun: 2024,
-      kepala_sekolah: 'Alice Smith',
-      tgl_raport: '2024-01-01',
-      semester: 'Ganjil',
-      status: 'Aktif',
-    },
-  ]
-
+  const { token } = useAuth()
+  const {
+    data: listKategoriRombel,
+    error: errorKategoriRombel,
+    isFetching: isFetchingKategoriRombel,
+  } = useGetAllKategoriRombel(token)
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
+  const [selectedKategori, setSelectedKategori] = useState(null)
+  const [Kategories, setKategories] = useState([])
+
+  useEffect(() => {
+    setKategories(listKategoriRombel)
+  }, [listKategoriRombel])
 
   const openModal = () => {
     setIsOpenAddModal(true)
@@ -38,6 +27,15 @@ const AgeGroupView = () => {
 
   const closeModal = () => {
     setIsOpenAddModal(false)
+  }
+
+  const openUpdateModal = (kategori) => {
+    setSelectedKategori(kategori)
+    setIsOpenUpdateModal(true)
+  }
+
+  const closeModalUpdate = () => {
+    setIsOpenUpdateModal(false)
   }
 
   return (
@@ -49,7 +47,7 @@ const AgeGroupView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-calendar"></i> Data Tahun
+                    <i className="fa fa-calendar"></i> Data Kelompok Usia
                   </h3>
                 </div>
 
@@ -70,55 +68,37 @@ const AgeGroupView = () => {
                     <thead>
                       <tr>
                         <th>No</th>
-                        <th>Tahun</th>
-                        <th>Kepala Sekolah</th>
-                        <th>Tgl Raport</th>
-                        <th>Semester</th>
-                        <th>Status</th>
+                        <th>Nama</th>
+                        <th>Kelompok Usia</th>
+                        <th>Kode</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {dummyData.map((item, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{item.tahun}</td>
-                          <td>{item.kepala_sekolah}</td>
-                          <td>{item.tgl_raport}</td>
-                          <td>{item.semester}</td>
-                          <td>
-                            <span
-                              className={`label bg-${
-                                item.status === 'Aktif' ? 'green' : 'red'
-                              }`}
-                            >
-                              {item.status}
-                            </span>
-                          </td>
-                          <td>
-                            <button className="btn btn-primary btn-sm">
-                              <i className="icon fa fa-edit"></i>
-                            </button>
-                            {item.status === 'Nonaktif' ? (
+                      {!isFetchingKategoriRombel &&
+                        Kategories &&
+                        Kategories.map((item, index) => (
+                          <tr key={item.id}>
+                            <td>{index + 1}</td>
+                            <td>{item.name}</td>
+                            <td>{item.kelompokUsia}</td>
+                            <td>{item.kode}</td>
+                            <td>
                               <button
-                                className="btn btn-success btn-sm"
-                                style={{ marginLeft: '5px' }}
+                                className="btn btn-primary btn-sm"
+                                onClick={() => openUpdateModal(item)}
                               >
-                                <span className="glyphicon glyphicon-user"></span>{' '}
-                                Aktifkan User
+                                <i className="icon fa fa-edit"></i>
                               </button>
-                            ) : (
                               <button
                                 className="btn btn-danger btn-sm"
                                 style={{ marginLeft: '5px' }}
                               >
-                                <span className="glyphicon glyphicon-user"></span>{' '}
-                                Nonaktifkan User
+                                <i className="icon fa fa-trash"></i>
                               </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -130,7 +110,14 @@ const AgeGroupView = () => {
       <AddGroupModal
         isOpen={isOpenAddModal}
         closeModal={closeModal}
+        setKategories={setKategories}
       ></AddGroupModal>
+      <UpdateGroupModal
+        isOpen={isOpenUpdateModal}
+        closeModal={closeModalUpdate}
+        selectedKategori={selectedKategori}
+        token={token}
+      ></UpdateGroupModal>
     </>
   )
 }

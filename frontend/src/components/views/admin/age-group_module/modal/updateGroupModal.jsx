@@ -1,16 +1,31 @@
-import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombelService/rombel.service'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
+
+const UpdateGroupModal = ({
+  isOpen,
+  closeModal,
+  setKategories,
+  selectedKategori,
+  token,
+}) => {
   const [formValues, setFormValues] = useState({
     name: '',
     kelompokUsia: '',
     kode: '',
   })
+  useEffect(() => {
+    if (selectedKategori) {
+      setFormValues({
+        name: selectedKategori.name,
+        kelompokUsia: selectedKategori.kelompokUsia,
+        kode: selectedKategori.kode,
+      })
+    }
+  }, [selectedKategori])
+
   const [isLoading, setIsLoading] = useState(false)
-  const { token } = useAuth()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,20 +36,25 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
     try {
       setIsLoading(true)
       // Tambahkan logika untuk menyimpan data kelas
-      const result = await rombelService.createKategori(token, formValues)
-      if (result.message === 'CREATED') {
-        setKategories((prevGurus) => [...prevGurus, result.data])
-        toast.success('Kategori rombel telah ditambahkan', {
+      const result = await rombelService.updateKategori(
+        token,
+        selectedKategori.id,
+        formValues
+      )
+      console.log(result)
+      if (result.message == 'OK') {
+        console.log('Data kelas diperbarui')
+        setKategories((prevKategories) =>
+          prevKategories.map((k) =>
+            k.id === selectedKategori.id ? result.data : k
+          )
+        )
+        toast.success('Kategori rombel telah diperbarui', {
           position: 'bottom-center',
         })
+        closeModal()
       }
-      // Reset form setelah submit
-      setFormValues({
-        name: '',
-        kelompokUsia: '',
-        kode: '',
-      })
-      closeModal()
+
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -47,7 +67,7 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
   return (
     <div
       className={`modal fade ${isOpen ? 'in show-modal' : ''}`}
-      id="add-modal"
+      id="update-modal"
     >
       <div className="modal-dialog">
         <div className="modal-content">
@@ -61,7 +81,7 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">Tambah Data Kategori Rombel</h4>
+            <h4 className="modal-title">Perbarui Data Kategori Rombel</h4>
           </div>
           <div className="modal-body">
             <div>
@@ -72,7 +92,7 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
                     type="text"
                     className="form-control"
                     name="name"
-                    placeholder="Masukkan Nama"
+                    value={formValues.name}
                     required
                     onChange={handleChange}
                   />
@@ -83,7 +103,7 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
                     type="text"
                     className="form-control"
                     name="kelompokUsia"
-                    placeholder="Masukkan Kelompok Usia"
+                    value={formValues.kelompokUsia}
                     required
                     onChange={handleChange}
                   />
@@ -94,7 +114,7 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
                     type="text"
                     className="form-control"
                     name="kode"
-                    placeholder="Masukkan Kode"
+                    value={formValues.kode}
                     required
                     onChange={handleChange}
                   />
@@ -113,4 +133,4 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
   )
 }
 
-export default AddGroupModal
+export default UpdateGroupModal
