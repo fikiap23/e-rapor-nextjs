@@ -1,0 +1,29 @@
+@import url('admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css');
+@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
+@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
+@import url('admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css');
+@import url('admin-lte/dist/css/AdminLTE.min.css');
+@import url('admin-lte/dist/css/skins/_all-skins.min.css');
+
+.example-modal .modal {
+  position: relative;
+  top: auto;
+  bottom: auto;
+  right: auto;
+  left: auto;
+  display: block;
+  z-index: 1;
+}
+
+.example-modal .modal {
+  background: transparent !important;
+}
+
+.swal2-modal {
+  margin-top: 0 !important;
+}
+
+.show-modal {
+  display: block;
+  padding-right: 17px;
+}

@@ -8,7 +8,7 @@ const authService = {
       const response = await axios.post(`${BASE_URL}/login`, userData);
       return response.data;
     } catch (error) {
-      throw error.response.data?.message || "Login Gagal!";
+      throw error.response?.data?.message || "Login Gagal!";
     }
   },
 };
