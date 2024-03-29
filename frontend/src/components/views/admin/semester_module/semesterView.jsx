@@ -1,44 +1,56 @@
-'use client'
-import { useState } from 'react'
-import AddSemesterModal from './addSemesterModal'
+"use client";
+import { useState, useEffect } from "react";
+import AddSemesterModal from "./addSemesterModal";
+import semesterService from "@/services/semesterService/semester.service";
+import useAuth from "@/hooks/useAuth";
 
 const SemesterView = () => {
+  const { token } = useAuth();
+  const [dataSemester, setDataSemester] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await semesterService.getAll(token);
+      // setDataSemester(data);
+      console.log(data);
+    };
+    fetchData();
+  }, [dataSemester]);
   const dummyData = [
-    {
-      id: 1,
-      tahun: 2022,
-      kepala_sekolah: 'John Doe',
-      tgl_raport: '2022-01-01',
-      semester: 'Ganjil',
-      status: 'Aktif',
-    },
-    {
-      id: 2,
-      tahun: 2023,
-      kepala_sekolah: 'Jane Doe',
-      tgl_raport: '2023-01-01',
-      semester: 'Genap',
-      status: 'Nonaktif',
-    },
-    {
-      id: 3,
-      tahun: 2024,
-      kepala_sekolah: 'Alice Smith',
-      tgl_raport: '2024-01-01',
-      semester: 'Ganjil',
-      status: 'Aktif',
-    },
-  ]
+    // {
+    //   id: 1,
+    //   tahun: 2022,
+    //   kepala_sekolah: 'John Doe',
+    //   tgl_raport: '2022-01-01',
+    //   semester: 'Ganjil',
+    //   status: 'Aktif',
+    // },
+    // {
+    //   id: 2,
+    //   tahun: 2023,
+    //   kepala_sekolah: 'Jane Doe',
+    //   tgl_raport: '2023-01-01',
+    //   semester: 'Genap',
+    //   status: 'Nonaktif',
+    // },
+    // {
+    //   id: 3,
+    //   tahun: 2024,
+    //   kepala_sekolah: 'Alice Smith',
+    //   tgl_raport: '2024-01-01',
+    //   semester: 'Ganjil',
+    //   status: 'Aktif',
+    // },
+  ];
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
   const openModal = () => {
-    setIsOpenAddModal(true)
-  }
+    setIsOpenAddModal(true);
+  };
 
   const closeModal = () => {
-    setIsOpenAddModal(false)
-  }
+    setIsOpenAddModal(false);
+  };
 
   return (
     <>
@@ -54,7 +66,7 @@ const SemesterView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: '0 20px 20px 20px' }}>
+                  <div style={{ margin: "0 20px 20px 20px" }}>
                     <button
                       type="button"
                       className="btn btn-success"
@@ -88,8 +100,9 @@ const SemesterView = () => {
                           <td>{item.semester}</td>
                           <td>
                             <span
-                              className={`label bg-${item.status === 'Aktif' ? 'green' : 'red'
-                                }`}
+                              className={`label bg-${
+                                item.status === "Aktif" ? "green" : "red"
+                              }`}
                             >
                               {item.status}
                             </span>
@@ -98,19 +111,21 @@ const SemesterView = () => {
                             <button className="btn btn-primary btn-sm">
                               <i className="icon fa fa-edit"></i>
                             </button>
-                            {item.status === 'Nonaktif' ? (
+                            {item.status === "Nonaktif" ? (
                               <button
                                 className="btn btn-success btn-sm"
-                                style={{ marginLeft: '5px' }}
+                                style={{ marginLeft: "5px" }}
                               >
-                                <span className="glyphicon glyphicon-user"></span> Aktifkan User
+                                <span className="glyphicon glyphicon-user"></span>{" "}
+                                Aktifkan User
                               </button>
                             ) : (
                               <button
                                 className="btn btn-danger btn-sm"
-                                style={{ marginLeft: '5px' }}
+                                style={{ marginLeft: "5px" }}
                               >
-                                <span className="glyphicon glyphicon-user"></span> Nonaktifkan User
+                                <span className="glyphicon glyphicon-user"></span>{" "}
+                                Nonaktifkan User
                               </button>
                             )}
                           </td>
@@ -129,6 +144,6 @@ const SemesterView = () => {
         closeModal={closeModal}
       ></AddSemesterModal>
     </>
-  )
-}
-export default SemesterView
+  );
+};
+export default SemesterView;

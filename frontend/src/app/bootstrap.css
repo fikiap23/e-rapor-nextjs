@@ -1,9 +1,9 @@
-@import url('admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css');
-@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
-@import url('admin-lte/bower_components/font-awesome/css/font-awesome.min.css');
-@import url('admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css');
-@import url('admin-lte/dist/css/AdminLTE.min.css');
-@import url('admin-lte/dist/css/skins/_all-skins.min.css');
+@import url("admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css");
+@import url("admin-lte/bower_components/font-awesome/css/font-awesome.min.css");
+@import url("admin-lte/bower_components/font-awesome/css/font-awesome.min.css");
+@import url("admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css");
+@import url("admin-lte/dist/css/AdminLTE.min.css");
+@import url("admin-lte/dist/css/skins/_all-skins.min.css");
 
 .example-modal .modal {
   position: relative;
@@ -26,4 +26,12 @@
 .show-modal {
   display: block;
   padding-right: 17px;
+}
+
+.scroll-auto {
+  overflow-y: auto;
+}
+
+.overscroll-auto {
+  overscroll-behavior-y: auto;
 }

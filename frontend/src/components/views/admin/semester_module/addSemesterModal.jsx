@@ -1,29 +1,46 @@
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
+import semesterService from "@/services/semesterService/semester.service";
+import useAuth from "@/hooks/useAuth";
+
 const AddSemesterModal = ({ isOpen, closeModal }) => {
+  const { token } = useAuth();
   const [formValues, setFormValues] = useState({
-    tahun: '',
-    semester: '',
-    kepala_sekolah: '',
-    nip: '',
-    tgl_raport: '',
-  })
+    tahunAjaranAwal: "",
+    tahunAjaranAkhir: "",
+    jenisSemester: "",
+    namaKepsek: "",
+    nipKepsek: "",
+    tglBagiRapor: "",
+    isAktif: false,
+  });
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: checked, // Ubah nilai sesuai dengan status checkbox
+    });
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormValues({ ...formValues, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     // Dummy function for handling form submission
-    console.log('Form values:', formValues)
+    console.log("Form values:", formValues);
     // Add logic for form submission, e.g., sending data to server
-  }
+    await semesterService.create(formValues, token);
+  };
 
   return (
     <div
-      className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}
+      className={`modal fade overscroll-auto scroll-auto  ${
+        isOpen ? "in show-modal" : ""
+      }`}
       id="add-modal"
     >
       <div className="modal-dialog">
@@ -40,55 +57,73 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
             </button>
             <h4 className="modal-title">Tahun</h4>
           </div>
-          <div className="modal-body">
+          <div className="modal-body ">
             <form role="form" onSubmit={handleSubmit}>
-              <div className="box-body">
+              <div className="box-body ">
                 <div className="form-group">
-                  <label>Tahun</label>
-                  <select
+                  <label>Tahun Ajaran Awal</label>
+                  <input
+                    type="number"
+                    required
+                    name="tahunAjaranAwal"
+                    className="form-control"
+                    onChange={handleChange}
+                  />
+                  {/* <select
                     required
                     name="tahun"
                     className="form-control"
                     onChange={handleChange}
                   >
                     <option value="">--- Pilih Tahun ---</option>
-                    <option value="2016-2017">2016-2017</option>
-                    {/* Add other options */}
-                  </select>
+                    <option value="2016-2017">2016-2017</option> */}
+                  {/* Add other options */}
+                  {/* </select> */}
+                </div>
+                <div className="form-group">
+                  <label>Tahun Ajaran Akhir</label>
+                  <input
+                    type="number"
+                    required
+                    name="tahunAjaranAkhir"
+                    className="form-control"
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Semester</label>
                   <select
                     required
-                    name="semester"
+                    name="jenisSemester"
                     className="form-control"
                     onChange={handleChange}
                   >
                     <option value="">--- Pilih Semester ---</option>
-                    <option value="Satu">Satu</option>
+                    <option value="GANJIL">Ganjil</option>
+                    <option value="GENAP">Genap</option>
                     {/* Add other options */}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="kepala_sekolah">Kepala Sekolah</label>
+                  <label htmlFor="namaKepsek">Kepala Sekolah</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="kepala_sekolah"
-                    name="kepala_sekolah"
-                    placeholder="Masukan Kepala Sekolah"
+                    id="namaKepsek"
+                    name="namaKepsek"
+                    placeholder="Masukkan Nama Kepala Sekolah"
                     required
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="nip">NIP</label>
+                  <label htmlFor="nipKepsek">NIP</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="nip"
-                    name="nip"
-                    placeholder="Masukan Nip"
+                    id="nipKepsek"
+                    name="nipKepsek"
+                    placeholder="Masukkan NIP"
                     required
                     onChange={handleChange}
                   />
@@ -104,12 +139,22 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
                     <input
                       type="date"
                       required
-                      name="tgl_raport"
+                      name="tglBagiRapor"
                       className="form-control pull-right"
-                      id="inputDatepickerTglLahir"
+                      id="tglBagiRapor"
                       onChange={handleChange}
                     />
                   </div>
+                </div>
+                <div className="form-group flex gap-3">
+                  <label htmlFor="isAktif"> Status Aktif</label>
+                  <input
+                    type="checkbox"
+                    name="isAktif"
+                    checked={formValues.isAktif}
+                    onChange={handleCheckboxChange}
+                    className="w-6 h-6 border-solid border-2 border-sky-500"
+                  />
                 </div>
               </div>
               <div className="box-footer">
@@ -122,7 +167,7 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddSemesterModal
+export default AddSemesterModal;
