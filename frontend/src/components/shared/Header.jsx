@@ -1,16 +1,24 @@
 'use client'
+import useAuth from '@/hooks/useAuth'
 import React, { useState } from 'react'
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const { removeToken } = useAuth()
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
 
+  const handleLogout = () => {
+    removeToken()
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    window.location.reload()
+  }
+
   return (
     <header className="main-header">
-      <a href="#" className="logo">
+      <a href="/" className="logo">
         <span className="logo-mini">
           <b>E</b>-R
         </span>
@@ -53,9 +61,12 @@ const Header = () => {
                 </li>
                 <li className="user-footer">
                   <div className="pull-right">
-                    <a href="/logout" className="btn btn-default btn-flat">
+                    <button
+                      className="btn btn-default btn-flat"
+                      onClick={handleLogout}
+                    >
                       Sign Out
-                    </a>
+                    </button>
                   </div>
                 </li>
               </ul>
