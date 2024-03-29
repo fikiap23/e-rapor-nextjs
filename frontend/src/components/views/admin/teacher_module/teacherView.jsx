@@ -1,7 +1,6 @@
 'use client'
 import Swal from 'sweetalert2'
 import { useState } from 'react'
-import AddGuruModal from './addGuruModal'
 import Link from 'next/link'
 import ManageTeacher from './manageTeacher'
 import TeacherTable from './teacherTable'

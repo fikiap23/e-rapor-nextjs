@@ -16,6 +16,20 @@ const teacherService = {
     }
   },
 
+  update: async (token, id, data) => {
+    try {
+      console.log(id)
+      const response = await axios.put(`${BASE_URL}/bypass/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Guru Gagal Diupdate'
+    }
+  },
+
   getAll: async (token) => {
     try {
       const response = await axios.get(`${BASE_URL}`, {

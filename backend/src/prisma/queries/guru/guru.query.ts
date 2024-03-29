@@ -41,12 +41,32 @@ export class GuruQuery extends DbService {
     }
 
     async updateById(id: string, data: UpdateGuruDto) {
-        return this.prisma.guru.update({
+        const guru = await this.prisma.guru.update({
             where: {
                 id
             },
-            data
+            data,
+            include: {
+                user: {
+                    select: {
+                        status: true,
+                        email: true,
+                        foto: true,
+                    }
+                }
+            }
         })
+
+        return {
+            id: guru.id,
+            idUser: guru.idUser,
+            nama: guru.nama,
+            nip: guru.nip,
+            jenisKelamin: guru.jenisKelamin,
+            status: guru.user.status,
+            email: guru.user.email,
+            foto: guru.user.foto
+        }
     }
 
     async findById(id: string) {

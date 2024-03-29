@@ -1,17 +1,29 @@
 import { useState } from 'react'
 import Swal from 'sweetalert2'
-import AddGuruModal from './addGuruModal'
+import AddGuruModal from './modal/addGuruModal'
+import UpdateGuruModal from './modal/updateGuruModal'
 
 const ManageTeacher = ({ listTeacher }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [gurus, setGurus] = useState(listTeacher)
+  const [selectedTeacher, setSelectedTeacher] = useState(null)
 
   const openModal = () => {
-    setIsModalOpen(true)
+    setIsAddModalOpen(true)
   }
 
   const closeModal = () => {
-    setIsModalOpen(false)
+    setIsAddModalOpen(false)
+  }
+
+  const openUpdateModal = (teacher) => {
+    setSelectedTeacher(teacher)
+    setIsUpdateModalOpen(true)
+  }
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false)
   }
 
   const handleNonactiveUserClick = () => {
@@ -74,6 +86,7 @@ const ManageTeacher = ({ listTeacher }) => {
                   <button
                     style={{ marginRight: '2px', marginLeft: '2px' }}
                     className="btn btn-primary btn-sm edit"
+                    onClick={() => openUpdateModal(teacher)}
                   >
                     <i className="icon fa fa-edit"></i>
                   </button>
@@ -105,10 +118,17 @@ const ManageTeacher = ({ listTeacher }) => {
       </div>
       {/* add guru */}
       <AddGuruModal
-        isOpen={isModalOpen}
+        isOpen={isAddModalOpen}
         closeModal={closeModal}
         setGurus={setGurus}
       ></AddGuruModal>
+      {/* update guru */}
+      <UpdateGuruModal
+        setGurus={setGurus}
+        closeModal={closeUpdateModal}
+        isOpen={isUpdateModalOpen}
+        teacherData={selectedTeacher}
+      ></UpdateGuruModal>
     </>
   )
 }
