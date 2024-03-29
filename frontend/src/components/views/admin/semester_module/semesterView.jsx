@@ -1,56 +1,32 @@
-"use client";
-import { useState, useEffect } from "react";
-import AddSemesterModal from "./addSemesterModal";
-import semesterService from "@/services/semesterService/semester.service";
-import useAuth from "@/hooks/useAuth";
+'use client'
+import { useState, useEffect } from 'react'
+import AddSemesterModal from './addSemesterModal'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllSemesterData } from '@/services/semesterService/useSemester'
 
 const SemesterView = () => {
-  const { token } = useAuth();
-  const [dataSemester, setDataSemester] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await semesterService.getAll(token);
-      // setDataSemester(data);
-      console.log(data);
-    };
-    fetchData();
-  }, [dataSemester]);
-  const dummyData = [
-    // {
-    //   id: 1,
-    //   tahun: 2022,
-    //   kepala_sekolah: 'John Doe',
-    //   tgl_raport: '2022-01-01',
-    //   semester: 'Ganjil',
-    //   status: 'Aktif',
-    // },
-    // {
-    //   id: 2,
-    //   tahun: 2023,
-    //   kepala_sekolah: 'Jane Doe',
-    //   tgl_raport: '2023-01-01',
-    //   semester: 'Genap',
-    //   status: 'Nonaktif',
-    // },
-    // {
-    //   id: 3,
-    //   tahun: 2024,
-    //   kepala_sekolah: 'Alice Smith',
-    //   tgl_raport: '2024-01-01',
-    //   semester: 'Ganjil',
-    //   status: 'Aktif',
-    // },
-  ];
+  const { token } = useAuth()
+  const [dataSemester, setDataSemester] = useState([])
+  const {
+    data: listSemester,
+    error: errorSemester,
+    isFetching: isFetchingSemester,
+  } = useGetAllSemesterData(token)
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  useEffect(() => {
+    setDataSemester(listSemester)
+    console.log(listSemester)
+  }, [listSemester])
+
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
 
   const openModal = () => {
-    setIsOpenAddModal(true);
-  };
+    setIsOpenAddModal(true)
+  }
 
   const closeModal = () => {
-    setIsOpenAddModal(false);
-  };
+    setIsOpenAddModal(false)
+  }
 
   return (
     <>
@@ -66,7 +42,7 @@ const SemesterView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: "0 20px 20px 20px" }}>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
                     <button
                       type="button"
                       className="btn btn-success"
@@ -91,46 +67,34 @@ const SemesterView = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {dummyData.map((item, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{item.tahun}</td>
-                          <td>{item.kepala_sekolah}</td>
-                          <td>{item.tgl_raport}</td>
-                          <td>{item.semester}</td>
-                          <td>
-                            <span
-                              className={`label bg-${
-                                item.status === "Aktif" ? "green" : "red"
-                              }`}
-                            >
-                              {item.status}
-                            </span>
-                          </td>
-                          <td>
-                            <button className="btn btn-primary btn-sm">
-                              <i className="icon fa fa-edit"></i>
-                            </button>
-                            {item.status === "Nonaktif" ? (
-                              <button
-                                className="btn btn-success btn-sm"
-                                style={{ marginLeft: "5px" }}
+                      {!isFetchingSemester &&
+                        dataSemester &&
+                        dataSemester.map((item, index) => (
+                          <tr key={item.id}>
+                            <td>{index + 1}</td>
+                            <td>{`${item.tahunAjaranAwal}-${item.tahunAjaranAkhir}`}</td>
+                            <td>{item.namaKepsek}</td>
+                            <td>{item.tglBagiRapor}</td>
+                            <td>{item.jenisSemester}</td>
+                            <td>
+                              <span
+                                className={`label bg-${
+                                  item.isAktif ? 'green' : 'red'
+                                }`}
                               >
-                                <span className="glyphicon glyphicon-user"></span>{" "}
-                                Aktifkan User
+                                {item.isAktif ? 'Aktif' : 'Nonaktif'}
+                              </span>
+                            </td>
+                            <td>
+                              <button className="btn btn-primary btn-sm">
+                                <i className="icon fa fa-edit"></i>
                               </button>
-                            ) : (
-                              <button
-                                className="btn btn-danger btn-sm"
-                                style={{ marginLeft: "5px" }}
-                              >
-                                <span className="glyphicon glyphicon-user"></span>{" "}
-                                Nonaktifkan User
+                              <button className="btn btn-danger btn-sm">
+                                <i className="icon fa fa-trash"></i>
                               </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -144,6 +108,6 @@ const SemesterView = () => {
         closeModal={closeModal}
       ></AddSemesterModal>
     </>
-  );
-};
-export default SemesterView;
+  )
+}
+export default SemesterView
