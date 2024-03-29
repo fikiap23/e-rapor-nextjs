@@ -1,41 +1,43 @@
-"use client";
-import { useState } from "react";
-import authService from "@/services/auth.service";
-import "../../tailwind.css";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
-import useAuth from "@/hooks/useAuth";
+'use client'
+import { useState } from 'react'
+import authService from '@/services/auth.service'
+import '../../tailwind.css'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/navigation'
+import useAuth from '@/hooks/useAuth'
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { push } = useRouter();
-  const { token, setToken } = useAuth();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const { push } = useRouter()
+  const { token, setToken } = useAuth()
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
-      const payload = { username, password };
-      const result = await authService.login(payload);
-      console.log(`Login result: ${result.access_token}`);
-      const accessToken = result.access_token;
+      setIsLoading(true)
+      const payload = { username, password }
+      const result = await authService.login(payload)
+      console.log(`Login result: ${result.access_token}`)
+      const accessToken = result.access_token
 
-      setToken(accessToken);
-      toast.success("Login success", {
-        position: "top-right",
-      });
+      setToken(accessToken)
+      // simpan  ke cookie
+      document.cookie = `token=${accessToken};path=/;max-age=3600`
+      toast.success('Login success', {
+        position: 'top-right',
+      })
       // Redirect to home
-      push("/");
-      setIsLoading(false);
+      push('/')
+      setIsLoading(false)
     } catch (error) {
       toast.error(error, {
-        position: "top-right",
-      });
-      console.log(`Login error: ${error}`);
-      setIsLoading(false);
+        position: 'top-right',
+      })
+      console.log(`Login error: ${error}`)
+      setIsLoading(false)
     }
-  };
+  }
   return (
     <>
       <div className="h-screen md:flex">
@@ -112,7 +114,7 @@ export default function LoginPage() {
               onClick={handleSubmit}
               className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2"
             >
-              {isLoading ? "Loading..." : "Login"}
+              {isLoading ? 'Loading...' : 'Login'}
             </button>
             <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">
               Forgot Password ?
@@ -121,5 +123,5 @@ export default function LoginPage() {
         </div>
       </div>
     </>
-  );
+  )
 }
