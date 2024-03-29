@@ -115,6 +115,7 @@ const AgeGroupView = () => {
       <UpdateGroupModal
         isOpen={isOpenUpdateModal}
         closeModal={closeModalUpdate}
+        setKategories={setKategories}
         selectedKategori={selectedKategori}
         token={token}
       ></UpdateGroupModal>
