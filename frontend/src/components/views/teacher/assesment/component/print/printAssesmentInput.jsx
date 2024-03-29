@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import './style_assesment_input.css';
 
 function PrintAssesmnetInput() {
-    // useEffect(() => {
-    //     window.print();
-    // }, []);
+    useEffect(() => {
+        window.print();
+    }, []);
 
     return (
         <div>
