@@ -1,17 +1,17 @@
-import Footer from '@/components/shared/Footer'
-import Header from '@/components/shared/Header'
-import Sidebar from '@/components/shared/Sidebar'
-import '../bootstrap.css'
-import React from 'react'
+import Footer from "@/components/shared/Footer";
+import Header from "@/components/shared/Header";
+import Sidebar from "@/components/shared/Sidebar";
+import "../bootstrap.css";
+import React from "react";
 const AboutLayout = ({ children }) => {
   return (
     <>
-      <Header></Header>
-      <Sidebar></Sidebar>
+      <Header />
+      <Sidebar />
       <div>{children}</div>
-      <Footer></Footer>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default AboutLayout
+export default AboutLayout;
