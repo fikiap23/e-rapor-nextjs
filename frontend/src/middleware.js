@@ -12,12 +12,17 @@ export function middleware(request) {
 
   // Differentiate routes based on user role
   const { pathname } = request.nextUrl
-  if (pathname.startsWith('/admin' || '/admin/')) {
+  if (pathname.startsWith('/admin' || '/admin/' || '/login' || '/')) {
     if (userData.role !== 'ADMIN') {
       // Redirect unauthorized users (non-admins) to a specific page (e.g., teacher dashboard)
       return NextResponse.redirect(new URL('/teacher', request.url))
     }
-  } else if (pathname.startsWith('/teacher') || '/teacher/') {
+  } else if (
+    pathname.startsWith('/teacher') ||
+    '/teacher/' ||
+    '/login' ||
+    '/'
+  ) {
     if (userData.role !== 'TEACHER') {
       // Redirect unauthorized users (non-teachers) to a specific page (e.g., admin dashboard or login)
       return NextResponse.redirect(new URL('/admin', request.url))
@@ -29,5 +34,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/teacher/:path*'],
+  matcher: ['/admin/:path*', '/teacher/:path*', '/'],
 }
