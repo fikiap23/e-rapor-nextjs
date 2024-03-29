@@ -1,27 +1,24 @@
 "use client";
-import { login } from "@/services/authServices";
+import authService from "@/services/auth.service";
 import React, { useState } from "react";
 
 const LoginPage = () => {
   const [data, setData] = useState({});
-  const handleChange = (event: any) => {
+  const handleChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(data);
-    try {
-      login(data);
-    } catch (error) {
-      console.log(error);
-    }
+    const result = await authService.login(data);
+    console.log(result);
   };
   return (
-    <div className="w-full h-full bg-blue-600">
+    <div className="w-full h-full bg-blue-600 mx-auto px-11 md:px-0">
       <div className="flex justify-center items-center h-full">
         <section className=" bg-white rounded-3xl p-10">
-          <h1 className="font-bold text-center">Login</h1>
+          <h1 className="font-bold text-center mb-11">School Management</h1>
           <form
             action=""
             className="flex flex-col gap-3"
