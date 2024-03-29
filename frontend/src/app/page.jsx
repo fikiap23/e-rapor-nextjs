@@ -3,9 +3,12 @@ import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
 import './tailwind.css'
 import useAuth from '@/hooks/useAuth'
+import getTokenData from '@/lib/getTokenData'
 export default function Home() {
   const { token } = useAuth()
   console.log(token)
+  const userData = getTokenData(token)
+  console.log(userData)
   return (
     <div>
       <Navbar />
