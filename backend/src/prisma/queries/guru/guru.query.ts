@@ -18,21 +18,55 @@ export class GuruQuery extends DbService {
     }
 
     async create(idUser: string, data: CreateGuruDto) {
-        return await this.prisma.guru.create({
+        const guru = await this.prisma.guru.create({
             data: {
                 idUser,
                 ...data
+            },
+            include: {
+                user: true
             }
         })
+
+        return {
+            id: guru.id,
+            idUser: guru.idUser,
+            nama: guru.nama,
+            nip: guru.nip,
+            jenisKelamin: guru.jenisKelamin,
+            status: guru.user.status,
+            email: guru.user.email,
+            foto: guru.user.foto
+        }
     }
 
     async updateById(id: string, data: UpdateGuruDto) {
-        return this.prisma.guru.update({
+        const guru = await this.prisma.guru.update({
             where: {
                 id
             },
-            data
+            data,
+            include: {
+                user: {
+                    select: {
+                        status: true,
+                        email: true,
+                        foto: true,
+                    }
+                }
+            }
         })
+
+        return {
+            id: guru.id,
+            idUser: guru.idUser,
+            nama: guru.nama,
+            nip: guru.nip,
+            jenisKelamin: guru.jenisKelamin,
+            status: guru.user.status,
+            email: guru.user.email,
+            foto: guru.user.foto
+        }
     }
 
     async findById(id: string) {
@@ -45,7 +79,7 @@ export class GuruQuery extends DbService {
 
     async findAll(dto: GuruQueryDto) {
         if (!dto.status && !dto.search) {
-            return await this.prisma.guru.findMany({
+            const gurus = await this.prisma.guru.findMany({
                 include: {
                     user: {
                         select: {
@@ -56,8 +90,22 @@ export class GuruQuery extends DbService {
                     }
                 }
             })
+            // format data
+            return gurus.map(item => {
+                return {
+                    id: item.id,
+                    idUser: item.idUser,
+                    nama: item.nama,
+                    nip: item.nip,
+                    jenisKelamin: item.jenisKelamin,
+                    status: item.user.status,
+                    email: item.user.email,
+                    foto: item.user.foto,
+                }
+            })
+
         } else {
-            return await this.prisma.guru.findMany({
+            const gurus = await this.prisma.guru.findMany({
                 where: {
                     AND: [
                         {
@@ -90,6 +138,18 @@ export class GuruQuery extends DbService {
                             foto: true,
                         }
                     }
+                }
+            })
+
+            // format data
+            return gurus.map(item => {
+                return {
+                    nama: item.nama,
+                    nip: item.nip,
+                    jenisKelamin: item.jenisKelamin,
+                    status: item.user.status,
+                    email: item.user.email,
+                    foto: item.user.foto,
                 }
             })
         }

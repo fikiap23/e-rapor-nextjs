@@ -4,26 +4,35 @@ import getTokenData from './lib/getTokenData'
 export function middleware(request) {
   const cookies = request.cookies.get('token')
   const userData = getTokenData(cookies?.value)
-
-  if (!userData || (userData?.role != 'ADMIN' && userData?.role != 'TEACHER')) {
+  const { pathname } = request.nextUrl
+  console.log(pathname)
+  if (!userData || (userData?.role != 'ADMIN' && userData?.role != 'GURU')) {
     // Redirect to login or unauthorized page if no valid token is found
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
+  if (userData?.role === 'GURU' && pathname === '/') {
+    return NextResponse.redirect(new URL('/teacher', request.url))
+  } else if (userData?.role === 'ADMIN' && pathname === '/') {
+    return NextResponse.redirect(new URL('/admin', request.url))
+  }
+
+  if (
+    (userData?.role === 'GURU' || userData?.role === 'ADMIN') &&
+    pathname === '/login'
+  ) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   // Differentiate routes based on user role
-  const { pathname } = request.nextUrl
-  if (pathname.startsWith('/admin' || '/admin/' || '/login' || '/')) {
+
+  if (pathname.startsWith('/admin' || '/admin/')) {
     if (userData.role !== 'ADMIN') {
       // Redirect unauthorized users (non-admins) to a specific page (e.g., teacher dashboard)
       return NextResponse.redirect(new URL('/teacher', request.url))
     }
-  } else if (
-    pathname.startsWith('/teacher') ||
-    '/teacher/' ||
-    '/login' ||
-    '/'
-  ) {
-    if (userData.role !== 'TEACHER') {
+  } else if (pathname.startsWith('/teacher') || '/teacher/') {
+    if (userData.role !== 'GURU') {
       // Redirect unauthorized users (non-teachers) to a specific page (e.g., admin dashboard or login)
       return NextResponse.redirect(new URL('/admin', request.url))
     }
