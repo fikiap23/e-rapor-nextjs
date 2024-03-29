@@ -5,10 +5,10 @@ export default function Navbar() {
         <a className="font-bold" href="/">
           School Management
         </a>
-        <a className="bg-blue rounded-full py-2 px-6" href="/auth/login">
+        <a className="bg-blue rounded-full py-2 px-6" href="/login">
           Log in
         </a>
       </div>
     </nav>
-  );
+  )
 }
