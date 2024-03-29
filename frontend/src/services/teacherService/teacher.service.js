@@ -44,6 +44,19 @@ const teacherService = {
     }
   },
 
+  delete: async (token, id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Guru Gagal Dihapus'
+    }
+  },
+
   getAll: async (token) => {
     try {
       const response = await axios.get(`${BASE_URL}`, {

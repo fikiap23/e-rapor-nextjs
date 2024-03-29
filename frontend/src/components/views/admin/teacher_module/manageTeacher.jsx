@@ -73,6 +73,29 @@ const ManageTeacher = ({ listTeacher }) => {
     })
   }
 
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus data guru ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const deleteResult = await teacherService.delete(token, id)
+        console.log(deleteResult)
+        if (deleteResult.message === 'OK') {
+          setGurus((prevGurus) => prevGurus.filter((guru) => guru.id !== id))
+          Swal.fire('Terhapus!', 'Data guru telah berhasil dihapus.', 'success')
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Dibatalkan', 'Data guru tidak terhapus.', 'error')
+      }
+    })
+  }
+
   return (
     <>
       <div className="box-body">
@@ -118,6 +141,7 @@ const ManageTeacher = ({ listTeacher }) => {
                   <button
                     style={{ marginRight: '2px', marginLeft: '2px' }}
                     className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(teacher.id)}
                   >
                     <i className="icon fa fa-trash"></i>
                   </button>
