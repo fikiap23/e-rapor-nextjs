@@ -12,6 +12,8 @@ import { JadwalAjarModule } from './jadwal-ajar/jadwal-ajar.module';
 import { NilaiMingguanModule } from './nilai-mingguan/nilai-mingguan.module';
 import { SemesterModule } from './semester/semester.module';
 import { SekolahModule } from './sekolah/sekolah.module';
+import { AbsensiModule } from './absensi/absensi.module';
+import { RaporModule } from './rapor/rapor.module';
 
 @Module({
   imports: [
@@ -26,7 +28,9 @@ import { SekolahModule } from './sekolah/sekolah.module';
     JadwalAjarModule,
     NilaiMingguanModule,
     SemesterModule,
-    SekolahModule
+    SekolahModule,
+    AbsensiModule,
+    RaporModule
   ],
   controllers: [],
   providers: [],
