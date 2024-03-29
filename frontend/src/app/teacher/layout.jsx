@@ -1,7 +1,7 @@
 import Footer from '@/components/shared/Footer'
 import Header from '@/components/shared/Header'
 import SidebarTeacher from '@/components/shared/SidebarTeacher'
-
+import '../bootstrap.css'
 import React from 'react'
 const AboutLayout = ({ children }) => {
   return (

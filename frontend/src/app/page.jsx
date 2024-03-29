@@ -1,7 +1,7 @@
-import Link from "next/link";
-import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
-
+import Link from 'next/link'
+import Navbar from '@/components/shared/Navbar'
+import Footer from '@/components/shared/Footer'
+import './tailwind.css'
 export default function Home() {
   return (
     <div>
@@ -43,5 +43,5 @@ export default function Home() {
       </header>
       <Footer />
     </div>
-  );
+  )
 }
