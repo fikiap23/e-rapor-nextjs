@@ -40,7 +40,7 @@ export default function LoginPage() {
     <>
       <div className="h-screen md:flex">
         <div className="relative overflow-hidden md:flex w-1/2 bg-[url('https://ensys.bekasikota.go.id/uploads/galeri/69915167/69915167-6f268633-60ed-45fc-8e23-6d9b0fa5e33e.jpeg?1639816268')] bg-no-repeat bg-cover bg-center justify-around items-center hidden">
-          <div>
+          <div className="bg-white/30 backdrop-blur-sm p-8 rounded-xl drop-shadow-xl">
             <h1 className="text-white font-bold text-4xl font-sans">
               Taman Karya
             </h1>
