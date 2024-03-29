@@ -4,6 +4,8 @@ import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRombel'
 import UpdateGroupModal from './modal/updateGroupModal'
+import Swal from 'sweetalert2'
+import rombelService from '@/services/rombelService/rombel.service'
 
 const AgeGroupView = () => {
   const { token } = useAuth()
@@ -36,6 +38,38 @@ const AgeGroupView = () => {
 
   const closeModalUpdate = () => {
     setIsOpenUpdateModal(false)
+  }
+
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus data kelompok usia ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const deleteResult = await rombelService.deleteKategori(token, id)
+          if (deleteResult.message === 'OK') {
+            setKategories((prevKategories) =>
+              prevKategories.filter((k) => k.id !== id)
+            )
+            Swal.fire(
+              'Terhapus!',
+              'Data kelompok telah berhasil dihapus.',
+              'success'
+            )
+          }
+        } catch (error) {
+          Swal.fire('Terjadi Kesalahan', error, 'error')
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Dibatalkan', 'Data kelompok tidak terhapus.', 'error')
+      }
+    })
   }
 
   return (
@@ -93,6 +127,7 @@ const AgeGroupView = () => {
                               <button
                                 className="btn btn-danger btn-sm"
                                 style={{ marginLeft: '5px' }}
+                                onClick={() => handleDelete(item.id)}
                               >
                                 <i className="icon fa fa-trash"></i>
                               </button>

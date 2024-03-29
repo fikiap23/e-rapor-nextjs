@@ -101,4 +101,12 @@ export class RombelController {
         const result = await this.rombelService.findOneRombel(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
+
+    @Delete('kategori/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async deleteKategori(@Res() res, @Param('id') id) {
+        await this.rombelService.deleteKategoriRombel(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
+    }
 }

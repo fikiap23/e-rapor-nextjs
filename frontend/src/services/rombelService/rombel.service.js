@@ -13,7 +13,7 @@ const rombelService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Login Gagal!'
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
     }
   },
 
@@ -26,7 +26,20 @@ const rombelService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Login Gagal!'
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+    }
+  },
+
+  deleteKategori: async (token, id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL_KATEGORI}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
     }
   },
 }
