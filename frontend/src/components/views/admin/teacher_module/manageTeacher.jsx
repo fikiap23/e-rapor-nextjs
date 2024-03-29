@@ -32,10 +32,10 @@ const ManageTeacher = ({ listTeacher }) => {
   const handleNonactiveUserClick = async (idUser, status) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan mengubah status menjadi Nonactive!',
+      text: `Anda akan ${status} pengguna ini!`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Ya, nonaktifkan!',
+      confirmButtonText: `Ya, ${status}!`,
       cancelButtonText: 'Tidak, batalkan!',
       reverseButtons: true,
     }).then(async (result) => {

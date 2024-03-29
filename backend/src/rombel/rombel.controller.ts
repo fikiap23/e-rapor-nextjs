@@ -55,13 +55,6 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
-    @Get(':id')
-    @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN, Role.GURU)
-    async findOneRombel(@Res() res, @Param('id') id) {
-        const result = await this.rombelService.findOneRombel(id);
-        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -99,5 +92,21 @@ export class RombelController {
     async findOneKategoriRombel(@Res() res, @Param('id') id) {
         const result = await this.rombelService.findOneKategoriRombel(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get(':id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async findOneRombel(@Res() res, @Param('id') id) {
+        const result = await this.rombelService.findOneRombel(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Delete('kategori/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async deleteKategori(@Res() res, @Param('id') id) {
+        await this.rombelService.deleteKategoriRombel(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }
 }

@@ -20,28 +20,6 @@ const TeacherView = () => {
     setActiveTab(tab)
   }
 
-  const handleNonactiveUserClick = () => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Anda akan mengubah status menjadi Nonactive!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, nonaktifkan!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          'Nonaktifkan!',
-          'Status pengguna telah diubah menjadi Nonactive.',
-          'success'
-        )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan status pengguna.', 'error')
-      }
-    })
-  }
-
   return (
     <div className="content-wrapper" id="guru">
       <section className="content">

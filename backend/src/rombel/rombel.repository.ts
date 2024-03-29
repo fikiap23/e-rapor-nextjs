@@ -93,4 +93,14 @@ export class RombelRepository {
     async findAllKategoriRombel() {
         return await this.rombelQuery.findAllKategoriRombel()
     }
+
+    async delecteKategoriRombel(id: string) {
+        try {
+            // check kategori rombel exist
+            await this.findKategoriRombelOrThrowById(id);
+            return await this.rombelQuery.deleteKategoriRombelById(id)
+        } catch (error) {
+            throw new BadRequestException("Gagal menghapus Kategori Kelompok Usia masih digunakan dalam Rombel");
+        }
+    }
 }

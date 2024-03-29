@@ -39,6 +39,10 @@ export class RombelQuery extends DbService {
         return await this.prisma.rombel.update({ where: { id }, data: payload })
     }
 
+    async deleteRombelById(id: string) {
+        return await this.prisma.rombel.delete({ where: { id } })
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel Query
@@ -63,5 +67,9 @@ export class RombelQuery extends DbService {
 
     async findAllKategoriRombel() {
         return await this.prisma.kategoriRombel.findMany()
+    }
+
+    async deleteKategoriRombelById(id: string) {
+        return await this.prisma.kategoriRombel.delete({ where: { id } })
     }
 }

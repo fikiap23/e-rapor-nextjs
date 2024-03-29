@@ -45,4 +45,8 @@ export class RombelService {
     async findOneKategoriRombel(id: string) {
         return await this.rombelRepository.findKategoriRombelOrThrowById(id)
     }
+
+    async deleteKategoriRombel(id: string) {
+        return await this.rombelRepository.delecteKategoriRombel(id)
+    }
 }

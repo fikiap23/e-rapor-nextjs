@@ -63,9 +63,9 @@ const SidebarTeacher = () => {
             </Link>
           </li>
           <li className="active">
-            <a href="/teacher/raport">
+            <Link href="/teacher/raport">
               <i className="fa fa-print"></i> <span>Cetak Raport</span>
-            </a>
+            </Link>
           </li>
         </ul>
       </section>
