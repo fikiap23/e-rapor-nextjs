@@ -55,13 +55,6 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
-    @Get(':id')
-    @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN, Role.GURU)
-    async findOneRombel(@Res() res, @Param('id') id) {
-        const result = await this.rombelService.findOneRombel(id);
-        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -98,6 +91,14 @@ export class RombelController {
     @Roles(Role.ADMIN, Role.GURU)
     async findOneKategoriRombel(@Res() res, @Param('id') id) {
         const result = await this.rombelService.findOneKategoriRombel(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get(':id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async findOneRombel(@Res() res, @Param('id') id) {
+        const result = await this.rombelService.findOneRombel(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 }

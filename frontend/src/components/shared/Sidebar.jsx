@@ -43,6 +43,11 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link href="/admin/age-group">
+              <i className="fa fa-group"></i> <span>Kelompok Usia</span>
+            </Link>
+          </li>
+          <li>
             <Link href="/admin/class">
               <i className="fa fa-home"></i> <span>Rombel</span>
             </Link>
