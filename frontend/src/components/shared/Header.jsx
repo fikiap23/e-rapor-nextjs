@@ -1,6 +1,13 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 
 const Header = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen)
+  }
+
   return (
     <header className="main-header">
       <a href="#" className="logo">
@@ -22,8 +29,12 @@ const Header = () => {
         </a>
         <div className="navbar-custom-menu">
           <ul className="nav navbar-nav">
-            <li className="dropdown user user-menu">
-              <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+            <li
+              className={`dropdown user user-menu ${
+                isDropdownOpen ? 'open' : ''
+              }`}
+            >
+              <a href="#" className="dropdown-toggle" onClick={toggleDropdown}>
                 <img
                   src="https://picsum.photos/200"
                   className="user-image"
