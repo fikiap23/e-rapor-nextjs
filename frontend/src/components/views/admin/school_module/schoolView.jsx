@@ -1,17 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SchoolForm from './component/schoolForm'
 import useAuth from '@/hooks/useAuth'
 import { useSekolah } from '@/services/sekolahService/useSekolah'
 
 function SchoolView() {
-  const [activeTab, setActiveTab] = useState('view')
   const { token } = useAuth()
   const { data: sekolahData, error, isFetching } = useSekolah(token)
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab)
-  }
   return (
     <div className="content-wrapper">
       <section className="content">
@@ -27,9 +23,15 @@ function SchoolView() {
         <div className="row">
           <div className="col-md-12">
             <div className="box box-solid box-primary">
-              {isFetching && <div>Loading...</div>}
-              {error && <div>{error}</div>}
-              {!isFetching && sekolahData && (
+              {error && (
+                <div className="alert alert-danger">
+                  {'Data sekolah tidak ditemukan.'}{' '}
+                  <strong className="ml-2 text-white ">
+                    {'Hubungi Teknisi'}
+                  </strong>
+                </div>
+              )}
+              {!isFetching && !error && sekolahData && (
                 <SchoolForm sekolahData={sekolahData} token={token} />
               )}
             </div>
