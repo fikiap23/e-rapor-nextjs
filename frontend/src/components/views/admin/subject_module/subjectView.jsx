@@ -6,9 +6,12 @@ import useAuth from '@/hooks/useAuth'
 import { useMapels } from '@/services/mapelService/useMapel'
 import Loading from '@/components/shared/Loading'
 import mapelService from '@/services/mapelService/mapel.service'
+import UpdateSubjectModal from './component/updateSubjectModal'
 
 const SubjectView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const [selectedMapel, setSelectedMapel] = useState(null)
   const { token } = useAuth()
   const {
     data: listMapel,
@@ -23,6 +26,15 @@ const SubjectView = () => {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const openUpdateModal = (mapel) => {
+    setSelectedMapel(mapel)
+    setIsUpdateModalOpen(true)
+  }
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false)
   }
 
   const handleDelete = (id) => {
@@ -136,6 +148,7 @@ const SubjectView = () => {
                                 }}
                                 type="button"
                                 className="btn btn-primary"
+                                onClick={openUpdateModal.bind(this, mapel)}
                               >
                                 <i className="icon fa fa-edit"></i>
                               </button>
@@ -164,6 +177,14 @@ const SubjectView = () => {
         refetchMapel={refetchMapel}
         token={token}
       ></AddSubjectModal>
+
+      <UpdateSubjectModal
+        isOpen={isUpdateModalOpen}
+        closeModal={closeUpdateModal}
+        token={token}
+        refetchMapel={refetchMapel}
+        initialValues={selectedMapel}
+      ></UpdateSubjectModal>
     </div>
   )
 }

@@ -19,7 +19,7 @@ const mapelService = {
   update: async (token, id, data) => {
     try {
       console.log(id)
-      const response = await axios.put(`${BASE_URL}/bypass/${id}`, data, {
+      const response = await axios.put(`${BASE_URL}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
