@@ -47,6 +47,16 @@ export class RombelRepository {
         return await this.rombelQuery.updateRombelById(id, dto)
     }
 
+    async deleteRombelById(id: string) {
+        try {
+            // check rombel exist
+            await this.findRombelByIdOrThrow(id);
+            return await this.rombelQuery.deleteRombelById(id)
+        } catch (error) {
+            throw new BadRequestException("Gagal menghapus Rombel, Rombel masih digunakan dalam Sistem");
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel FUNCTIONS

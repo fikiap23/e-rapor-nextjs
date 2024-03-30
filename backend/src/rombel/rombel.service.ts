@@ -25,6 +25,10 @@ export class RombelService {
         return await this.rombelRepository.updateRombelById(id, dto)
     }
 
+    async deleteRombelById(id: string) {
+        return await this.rombelRepository.deleteRombelById(id)
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel Service

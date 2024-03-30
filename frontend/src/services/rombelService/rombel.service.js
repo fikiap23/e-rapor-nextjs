@@ -26,7 +26,7 @@ const rombelService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+      throw error.response?.data?.message || 'Gagal Diupdate!'
     }
   },
 
@@ -39,7 +39,7 @@ const rombelService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+      throw error.response?.data?.message || 'Gagal Di Hapus!'
     }
   },
 
@@ -65,7 +65,20 @@ const rombelService = {
       })
       return response.data
     } catch (error) {
-      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+      throw error.response?.data?.message || 'Gagal Di Update!'
+    }
+  },
+
+  deleteRombel: async (token, id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Di Hapus!'
     }
   },
 }

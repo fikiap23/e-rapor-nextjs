@@ -2,10 +2,50 @@
 import Link from 'next/link'
 import UpdateClassModal from './modal/updateClassModal'
 import { useState } from 'react'
-
+import rombelService from '@/services/rombelService/rombel.service'
+import useAuth from '@/hooks/useAuth'
+import Swal from 'sweetalert2'
 export default function TabTableClass({ rombels, openModal, setRombels }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRombel, setSelectedRombel] = useState(null)
+  const { token } = useAuth()
+
+  const handleDelete = (idRombel) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Data rombel akan dihapus permanen.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        rombelService
+          .deleteRombel(token, idRombel)
+          .then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Data rombel telah dihapus',
+              position: 'bottom-center',
+            })
+            setRombels((prevRombels) =>
+              prevRombels.filter((rombel) => rombel.id !== idRombel)
+            )
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: error,
+              position: 'bottom-center',
+            })
+          })
+      }
+    })
+  }
+
   return (
     <div className="box-body">
       <div style={{ margin: '0 20px 20px 20px' }}>
@@ -50,7 +90,7 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
                 </Link>
                 <button
                   className="btn btn-danger btn-sm"
-                  // onClick={() => deleteRombel(item.id)}
+                  onClick={() => handleDelete(item.id)}
                 >
                   <i className="icon fa fa-trash"></i>
                 </button>
