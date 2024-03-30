@@ -1,5 +1,5 @@
-export default function SetClass() {
-  const kelas = [
+export default function SetClass({ rombels }) {
+  const rombel = [
     {
       id: 1,
       tingkat: 'Usia 2-3',
@@ -60,13 +60,13 @@ export default function SetClass() {
         { id: 3, nis: '789', nama: 'Alice' },
       ],
     },
-    // tambahkan data kelas lainnya jika diperlukan
+    // tambahkan data rombel lainnya jika diperlukan
   ]
   return (
     <section className="content">
       <div className="row">
-        {kelas.map((kelas) => (
-          <div key={kelas.id} className="col-sm-4">
+        {rombels.map((rombel) => (
+          <div key={rombel.id} className="col-sm-4">
             <div
               className="box box-solid box-primary"
               style={{
@@ -80,7 +80,7 @@ export default function SetClass() {
                   className="box-title"
                   style={{ float: 'left', margin: '0', marginTop: '8px' }}
                 >
-                  {kelas.nama}
+                  {rombel.name}
                 </h3>
                 <button className="btn btn-default" style={{ float: 'right' }}>
                   Lihat Siswa
@@ -97,7 +97,7 @@ export default function SetClass() {
                     </tr>
                   </thead>
                   <tbody>
-                    {kelas.siswa.map((siswa, index) => (
+                    {rombel.murid.map((siswa, index) => (
                       <tr key={siswa.id} className="text-center">
                         <td>{index + 1}</td>
                         <td>{siswa.nis}</td>

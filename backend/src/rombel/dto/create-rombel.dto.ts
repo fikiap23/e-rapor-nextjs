@@ -11,7 +11,7 @@ export class CreateRombelDto {
 
     @IsInt()
     @IsNotEmpty()
-    tingkatan: number;
+    kuota: number;
 
     @IsNotEmpty()
     idKategoriRombel: string

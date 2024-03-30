@@ -104,9 +104,17 @@ export class RombelController {
 
     @Delete('kategori/:id')
     @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN, Role.GURU)
+    @Roles(Role.ADMIN)
     async deleteKategori(@Res() res, @Param('id') id) {
         await this.rombelService.deleteKategoriRombel(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
+    }
+
+    @Delete(':id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async deleteRombel(@Res() res, @Param('id') id) {
+        await this.rombelService.deleteRombelById(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }
 }

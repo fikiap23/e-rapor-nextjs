@@ -11,28 +11,62 @@ import { UpdateRombelDto } from '../../../rombel/dto/update-rombel.dto';
 export class RombelQuery extends DbService {
 
     async create(payload: CreateRombelDto) {
-        return await this.prisma.rombel.create({ data: payload })
+        const rombel = await this.prisma.rombel.create({ data: payload })
+        return await this.findRombelById(rombel.id)
     }
 
     async findAllRombel() {
-        return await this.prisma.rombel.findMany({
+        const rombels = await this.prisma.rombel.findMany({
             include: {
-                kategoriRombel: true
+                kategoriRombel: true,
+                murid: true
+            }
+        })
+
+        return rombels.map(rombel => {
+            return {
+                id: rombel.id,
+                name: rombel.name,
+                kuota: rombel.kuota,
+                coutMurid: rombel.murid.length,
+                isFull: rombel.isFull,
+                idKategoriRombel: rombel.idKategoriRombel,
+                kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+                kodeKelompokUsia: rombel.kategoriRombel.kode,
+                murid: rombel.murid
             }
         })
     }
 
-    async findRombelByTingkatanAndIdKategoriRombel(idKategoriRombel: string, tingkatan: number) {
+    async findRombelByNameAndIdKategoriRombel(idKategoriRombel: string, name: string) {
         return await this.prisma.rombel.findMany({
             where: {
-                tingkatan,
+                name,
                 idKategoriRombel: idKategoriRombel
             }
         })
     }
 
     async findRombelById(id: string) {
-        return await this.prisma.rombel.findUnique({ where: { id } })
+        const rombel = await this.prisma.rombel.findUnique({
+            where: { id },
+            include: {
+                kategoriRombel: true,
+                murid: true
+            }
+        })
+
+        return {
+            id: rombel.id,
+            name: rombel.name,
+            kuota: rombel.kuota,
+            isFull: rombel.isFull,
+            coutMurid: rombel.murid.length,
+            idKategoriRombel: rombel.idKategoriRombel,
+            kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+            kodeKelompokUsia: rombel.kategoriRombel.kode,
+            murid: rombel.murid
+        }
     }
 
     async updateRombelById(id: string, payload: UpdateRombelDto) {

@@ -15,9 +15,9 @@ export class RombelRepository {
             // check guru exist
             await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
         }
-        // check name and tingkatan rombel exist
-        const rombel = await this.rombelQuery.findRombelByTingkatanAndIdKategoriRombel(dto.idKategoriRombel, dto.tingkatan);
-        if (rombel.length > 0) throw new BadRequestException('Tingkatan Rombel sudah ada');
+        // check name and name rombel exist
+        const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
+        if (rombel.length > 0) throw new BadRequestException('Rombel sudah ada');
         await this.findKategoriRombelOrThrowById(dto.idKategoriRombel)
         return await this.rombelQuery.create(dto)
     }
@@ -39,12 +39,22 @@ export class RombelRepository {
             // check guru exist
             await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
         }
-        // check name and tingkatan rombel exist
-        if (dto.tingkatan && dto.tingkatan !== existRombel.tingkatan) {
-            const rombel = await this.rombelQuery.findRombelByTingkatanAndIdKategoriRombel(dto.idKategoriRombel, dto.tingkatan);
-            if (rombel.length > 0) throw new BadRequestException('Tingkatan Rombel sudah ada');
+        // check name and name rombel exist
+        if (dto.name && dto.name !== existRombel.name) {
+            const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
+            if (rombel.length > 0) throw new BadRequestException('Rombel sudah ada');
         }
         return await this.rombelQuery.updateRombelById(id, dto)
+    }
+
+    async deleteRombelById(id: string) {
+        try {
+            // check rombel exist
+            await this.findRombelByIdOrThrow(id);
+            return await this.rombelQuery.deleteRombelById(id)
+        } catch (error) {
+            throw new BadRequestException("Gagal menghapus Rombel, Rombel masih digunakan dalam Sistem");
+        }
     }
 
     /*
