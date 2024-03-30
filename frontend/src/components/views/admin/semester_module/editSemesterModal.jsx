@@ -1,19 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import semesterService from "@/services/semesterService/semester.service";
 import useAuth from "@/hooks/useAuth";
 
-const AddSemesterModal = ({ isOpen, closeModal }) => {
+const EditSemesterModal = ({ isOpen, closeModal, id }) => {
   const { token } = useAuth();
-  const [formValues, setFormValues] = useState({
-    tahunAjaranAwal: "",
-    tahunAjaranAkhir: "",
-    jenisSemester: "",
-    namaKepsek: "",
-    nipKepsek: "",
-    tglBagiRapor: "",
-    isAktif: false,
-  });
+  const [formValues, setFormValues] = useState({});
+
+  useEffect(() => {}, []);
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -160,4 +154,4 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
   );
 };
 
-export default AddSemesterModal;
+export default EditSemesterModal;
