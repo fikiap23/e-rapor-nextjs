@@ -28,6 +28,11 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
             position: 'bottom-center',
           })
           setRombels((prevRombels) => [...prevRombels, result.data])
+          setKuota('')
+          setNoRombel('')
+          setKelompokUsia('')
+          setSelectedKelompokUsia('')
+          setKodeKelompokUsia('')
           closeModal()
         })
         .catch((error) => {
@@ -44,13 +49,15 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
 
   const handleKelompokUsiaChange = (e) => {
     setNoRombel('')
+    setKodeKelompokUsia('')
     const selectedKelompokUsia = listKategoriRombel.find(
       (item) => item.id === e.target.value
     )
+    if (!selectedKelompokUsia) return
     setSelectedKelompokUsia(selectedKelompokUsia)
     setKelompokUsia(e.target.value)
     setKodeKelompokUsia(selectedKelompokUsia.kode)
-    setNoRombel(selectedKelompokUsia.kode + noRombel)
+    setNoRombel(selectedKelompokUsia.kode)
   }
 
   return (
