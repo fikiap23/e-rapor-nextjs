@@ -1,18 +1,24 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddClassModal from './addClassModal'
 import Link from 'next/link'
 import TabTableClass from './tabTableClass'
-import TabInputStudent from './addStudentToClassView'
 import SetClass from './setClass'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllRombel } from '@/services/rombelService/useRombel'
 
 export default function ClassView() {
-  const Rombel = [
-    { id: 1, tingkat: 'Usia 2-3', rombel: 'Rombel A1', kuota: 10, terisi: 5 },
-    { id: 2, tingkat: 'Usia 3-4', rombel: 'Rombel B1', kuota: 20, terisi: 10 },
-    { id: 3, tingkat: 'Usia 4-5', rombel: 'Rombel C1', kuota: 30, terisi: 15 },
-  ]
+  const [rombels, setRombels] = useState([])
+  const { token } = useAuth()
+  const {
+    data: listRombel,
+    error: errorSRombel,
+    isFetching: isFetchingSRombel,
+  } = useGetAllRombel(token)
 
+  useEffect(() => {
+    setRombels(listRombel)
+  }, [listRombel])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('view')
 
@@ -63,9 +69,12 @@ export default function ClassView() {
                       </Link>
                     </li>
                   </ul>
-                  {activeTab === 'view' && (
-                    <TabTableClass rombel={Rombel} openModal={openModal} />
-                  )}
+                  {activeTab === 'view' &&
+                    (isFetchingSRombel ? (
+                      <div>Loading...</div>
+                    ) : (
+                      <TabTableClass rombel={rombels} openModal={openModal} />
+                    ))}
                   {activeTab === 'view_rombel' && <SetClass />}
                 </div>
               </div>
