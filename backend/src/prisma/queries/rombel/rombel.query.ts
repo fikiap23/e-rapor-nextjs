@@ -15,9 +15,25 @@ export class RombelQuery extends DbService {
     }
 
     async findAllRombel() {
-        return await this.prisma.rombel.findMany({
+        const rombels = await this.prisma.rombel.findMany({
             include: {
-                kategoriRombel: true
+                kategoriRombel: true,
+                murid: true
+            }
+        })
+
+        return rombels.map(rombel => {
+            return {
+                id: rombel.id,
+                name: rombel.name,
+                kode: rombel.tingkatan,
+                tingkatan: rombel.tingkatan,
+                kuota: rombel.kuota,
+                coutMurid: rombel.murid.length,
+                isFull: rombel.isFull,
+                idKategoriRombel: rombel.idKategoriRombel,
+                kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+                kodeKelompokUsia: rombel.kategoriRombel.kode
             }
         })
     }
@@ -32,7 +48,26 @@ export class RombelQuery extends DbService {
     }
 
     async findRombelById(id: string) {
-        return await this.prisma.rombel.findUnique({ where: { id } })
+        const rombel = await this.prisma.rombel.findUnique({
+            where: { id },
+            include: {
+                kategoriRombel: true,
+                murid: true
+            }
+        })
+
+        return {
+            id: rombel.id,
+            name: rombel.name,
+            kode: rombel.tingkatan,
+            tingkatan: rombel.tingkatan,
+            kuota: rombel.kuota,
+            isFull: rombel.isFull,
+            coutMurid: rombel.murid.length,
+            idKategoriRombel: rombel.idKategoriRombel,
+            kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+            kodeKelompokUsia: rombel.kategoriRombel.kode
+        }
     }
 
     async updateRombelById(id: string, payload: UpdateRombelDto) {
