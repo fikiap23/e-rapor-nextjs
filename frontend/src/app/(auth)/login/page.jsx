@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
 import useAuth from '@/hooks/useAuth'
+import getTokenData from '@/lib/getTokenData'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -19,10 +20,13 @@ export default function LoginPage() {
       const payload = { username, password }
       const result = await authService.login(payload)
       const accessToken = result.access_token
+      const jwtPayload = getTokenData(accessToken)
 
       setToken(accessToken)
       // simpan  ke cookie
-      document.cookie = `token=${accessToken};path=/;max-age=3600`
+      const now = Math.floor(Date.now() / 1000)
+      const expireInSeconds = jwtPayload.exp - now
+      document.cookie = `token=${accessToken};path=/;max-age=${expireInSeconds}`
       toast.success('Login success', {
         position: 'top-right',
       })
