@@ -141,11 +141,10 @@ model Murid {
 }
 
 model Rombel {
-  id        String  @id @default(uuid())
-  name      String
-  tingkatan Int
-  kuota     Int     @default(0)
-  isFull    Boolean @default(false)
+  id     String  @id @default(uuid())
+  name   String  @unique
+  kuota  Int     @default(0)
+  isFull Boolean @default(false)
 
   // Relation
   idGuru           String?
@@ -158,7 +157,7 @@ model Rombel {
   jadwalAjar       JadwalAjar[]
 
   // index
-  @@index([id, idGuru, idKategoriRombel])
+  @@index([id, idGuru, idKategoriRombel, name])
 }
 
 model KategoriRombel {

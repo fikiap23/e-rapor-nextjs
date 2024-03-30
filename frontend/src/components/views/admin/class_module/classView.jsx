@@ -90,6 +90,7 @@ export default function ClassView() {
         <AddClassModal
           isOpen={isModalOpen}
           closeModal={closeModal}
+          setRombels={setRombels}
         ></AddClassModal>
       </div>
     </>

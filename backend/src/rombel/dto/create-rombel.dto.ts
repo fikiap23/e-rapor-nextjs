@@ -11,10 +11,6 @@ export class CreateRombelDto {
 
     @IsInt()
     @IsNotEmpty()
-    tingkatan: number;
-
-    @IsInt()
-    @IsNotEmpty()
     kuota: number;
 
     @IsNotEmpty()

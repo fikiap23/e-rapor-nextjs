@@ -11,7 +11,8 @@ import { UpdateRombelDto } from '../../../rombel/dto/update-rombel.dto';
 export class RombelQuery extends DbService {
 
     async create(payload: CreateRombelDto) {
-        return await this.prisma.rombel.create({ data: payload })
+        const rombel = await this.prisma.rombel.create({ data: payload })
+        return await this.findRombelById(rombel.id)
     }
 
     async findAllRombel() {
@@ -26,8 +27,6 @@ export class RombelQuery extends DbService {
             return {
                 id: rombel.id,
                 name: rombel.name,
-                kode: rombel.tingkatan,
-                tingkatan: rombel.tingkatan,
                 kuota: rombel.kuota,
                 coutMurid: rombel.murid.length,
                 isFull: rombel.isFull,
@@ -39,10 +38,10 @@ export class RombelQuery extends DbService {
         })
     }
 
-    async findRombelByTingkatanAndIdKategoriRombel(idKategoriRombel: string, tingkatan: number) {
+    async findRombelByNameAndIdKategoriRombel(idKategoriRombel: string, name: string) {
         return await this.prisma.rombel.findMany({
             where: {
-                tingkatan,
+                name,
                 idKategoriRombel: idKategoriRombel
             }
         })
@@ -60,8 +59,6 @@ export class RombelQuery extends DbService {
         return {
             id: rombel.id,
             name: rombel.name,
-            kode: rombel.tingkatan,
-            tingkatan: rombel.tingkatan,
             kuota: rombel.kuota,
             isFull: rombel.isFull,
             coutMurid: rombel.murid.length,
