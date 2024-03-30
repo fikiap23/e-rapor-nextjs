@@ -39,7 +39,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link href="/admin/subject">
-              <i className="fa fa-pencil"></i> <span>Modul Ajar</span>
+              <i className="fa fa-pencil"></i> <span>Mata Pelajaran</span>
             </Link>
           </li>
           <li>
