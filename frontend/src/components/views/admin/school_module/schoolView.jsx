@@ -1,8 +1,6 @@
 'use client'
 import { useState } from 'react'
-import Link from 'next/link'
-import TabSchool from './component/tabSchool'
-import InputSchool from './component/InputSchool'
+import SchoolForm from './component/schoolForm'
 
 function SchoolView() {
   const [activeTab, setActiveTab] = useState('view')
@@ -24,25 +22,8 @@ function SchoolView() {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <div className="nav-tabs-custom">
-              <div className="tab-content">
-                <ul className="nav nav-tabs">
-                  <li className={activeTab === 'view' ? 'active' : ''}>
-                    <Link href="" onClick={() => handleTabChange('view')}>
-                      Lihat Sekolah
-                    </Link>
-                  </li>
-                  <li className={activeTab === 'input' ? 'active' : ''}>
-                    <Link href="" onClick={() => handleTabChange('input')}>
-                      Edit Sekolah
-                    </Link>
-                  </li>
-                </ul>
-                <div className="tab-content">
-                  {activeTab === 'view' && <TabSchool />}
-                  {activeTab === 'input' && <InputSchool />}
-                </div>
-              </div>
+            <div className="box box-solid box-primary">
+              <SchoolForm></SchoolForm>
             </div>
           </div>
         </div>
