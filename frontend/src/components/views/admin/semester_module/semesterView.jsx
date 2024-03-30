@@ -1,47 +1,44 @@
-"use client";
-import { useState, useEffect } from "react";
-import AddSemesterModal from "./addSemesterModal";
-import EditSemesterModal from "./editSemesterModal";
-import useAuth from "@/hooks/useAuth";
-import { useGetAllSemesterData } from "@/services/semesterService/useSemester";
+'use client'
+import { useState } from 'react'
+import AddSemesterModal from './addSemesterModal'
+import EditSemesterModal from './editSemesterModal'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllSemesterData } from '@/services/semesterService/useSemester'
+import Loading from '@/components/shared/Loading'
+import { formatDate } from '@/lib/helperDate'
 
 const SemesterView = () => {
-  const { token } = useAuth();
-  const [dataSemester, setDataSemester] = useState([]);
-  const [selectedSemester, setSelectedSemester] = useState({});
+  const { token } = useAuth()
+  const [selectedSemester, setSelectedSemester] = useState({})
   const {
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
-  } = useGetAllSemesterData(token);
+    refetch: refetchSemester,
+  } = useGetAllSemesterData(token)
 
-  useEffect(() => {
-    setDataSemester(listSemester);
-    console.log(listSemester);
-  }, [listSemester]);
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
 
   const openModalAdd = () => {
-    setIsOpenAddModal(true);
-  };
+    setIsOpenAddModal(true)
+  }
 
   const openModalEdit = (semester) => {
-    setIsOpenEditModal(true);
-    setSelectedSemester(semester);
-  };
+    setSelectedSemester(semester)
+    setIsOpenEditModal(true)
+  }
 
   const closeModalAdd = () => {
-    setIsOpenAddModal(false);
-  };
+    setIsOpenAddModal(false)
+  }
 
   const closeModalEdit = () => {
-    setIsOpenEditModal(false);
-  };
+    setIsOpenEditModal(false)
+  }
 
-  const deleteData = (id) => {};
+  const deleteData = (id) => {}
 
   return (
     <>
@@ -57,7 +54,7 @@ const SemesterView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: "0 20px 20px 20px" }}>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
                     <button
                       type="button"
                       className="btn btn-success"
@@ -66,6 +63,7 @@ const SemesterView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
+                  {isFetchingSemester && <Loading />}
                   <table
                     className="table table-bordered table-striped"
                     id="tahun"
@@ -84,22 +82,22 @@ const SemesterView = () => {
                     </thead>
                     <tbody>
                       {!isFetchingSemester &&
-                        dataSemester &&
-                        dataSemester.map((item, index) => (
+                        listSemester &&
+                        listSemester.map((item, index) => (
                           <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>{`${item.tahunAjaranAwal}-${item.tahunAjaranAkhir}`}</td>
                             <td>{item.namaKepsek}</td>
                             <td>{item.nipKepsek}</td>
-                            <td>{item.tglBagiRapor}</td>
+                            <td>{formatDate(new Date(item.tglBagiRapor))}</td>
                             <td>{item.jenisSemester}</td>
                             <td>
                               <span
                                 className={`label bg-${
-                                  item.isAktif ? "green" : "red"
+                                  item.isAktif ? 'green' : 'red'
                                 }`}
                               >
-                                {item.isAktif ? "Aktif" : "Nonaktif"}
+                                {item.isAktif ? 'Aktif' : 'Nonaktif'}
                               </span>
                             </td>
                             <td>
@@ -130,6 +128,6 @@ const SemesterView = () => {
         semesterData={selectedSemester}
       />
     </>
-  );
-};
-export default SemesterView;
+  )
+}
+export default SemesterView

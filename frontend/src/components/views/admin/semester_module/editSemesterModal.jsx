@@ -1,51 +1,46 @@
-"use client";
-import { useState, useEffect } from "react";
-import semesterService from "@/services/semesterService/semester.service";
-import useAuth from "@/hooks/useAuth";
+'use client'
+import { formatDate } from '@/lib/helperDate'
+import { useEffect, useState } from 'react'
 
 const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
-  const { token } = useAuth();
-  const [dataEdit, setDataEdit] = useState({
-    tahunAjaranAwal: "",
-    tahunAjaranAkhir: "",
-    jenisSemester: "",
-    namaKepsek: "",
-    nipKepsek: "",
-    tglBagiRapor: "",
-    isAktif: false,
-  });
+  const [dataEdit, setDataEdit] = useState({})
 
   useEffect(() => {
-    if (isOpen && semesterData) {
-      setDataEdit(semesterData);
+    if (isOpen) {
+      setDataEdit({
+        id: semesterData.id,
+        isAktif: semesterData.isAktif,
+        jenisSemester: semesterData.jenisSemester,
+        tglBagiRapor: formatDate(new Date(semesterData.tglBagiRapor)),
+        namaKepsek: semesterData.namaKepsek,
+        nipKepsek: semesterData.nipKepsek,
+        tahunAjaranAwal: semesterData.tahunAjaranAwal,
+        tahunAjaranAkhir: semesterData.tahunAjaranAkhir,
+      })
     }
-  }, []);
+  }, [semesterData])
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setDataEdit({
-      ...dataEdit,
-      [name]: checked, // Ubah nilai sesuai dengan status checkbox
-    });
-  };
+  const handleToggle = () => {
+    setDataEdit({ ...dataEdit, isAktif: !dataEdit.isAktif })
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDataEdit({ ...dataEdit, [name]: value });
-  };
+    const { name, value } = e.target
+    setDataEdit({ ...dataEdit, [name]: value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // Dummy function for handling form submission
-    console.log("Form values:", dataEdit);
+    console.log('Form values:', dataEdit)
     // Add logic for form submission, e.g., sending data to server
     // await semesterService.update(token, semesterData.id, dataEdit);
-  };
+  }
 
   return (
     <div
       className={`modal fade overscroll-auto scroll-auto  ${
-        isOpen ? "in show-modal" : ""
+        isOpen ? 'in show-modal' : ''
       }`}
       id="add-modal"
     >
@@ -74,7 +69,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                     name="tahunAjaranAwal"
                     className="form-control"
                     onChange={handleChange}
-                    value={dataEdit.tahunAjaranAwal || ""}
+                    value={dataEdit.tahunAjaranAwal || ''}
                   />
                 </div>
                 <div className="form-group">
@@ -85,7 +80,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                     name="tahunAjaranAkhir"
                     className="form-control"
                     onChange={handleChange}
-                    value={dataEdit.tahunAjaranAkhir || ""}
+                    value={dataEdit.tahunAjaranAkhir || ''}
                   />
                 </div>
                 <div className="form-group">
@@ -95,7 +90,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                     name="jenisSemester"
                     className="form-control"
                     onChange={handleChange}
-                    value={dataEdit.jenisSemester || ""}
+                    value={dataEdit.jenisSemester || ''}
                   >
                     <option value="">--- Pilih Semester ---</option>
                     <option value="GANJIL">Ganjil</option>
@@ -113,7 +108,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                     placeholder="Masukkan Nama Kepala Sekolah"
                     required
                     onChange={handleChange}
-                    value={dataEdit.namaKepsek || ""}
+                    value={dataEdit.namaKepsek || ''}
                   />
                 </div>
                 <div className="form-group">
@@ -126,7 +121,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                     placeholder="Masukkan NIP"
                     required
                     onChange={handleChange}
-                    value={dataEdit.nipKepsek || ""}
+                    value={dataEdit.nipKepsek || ''}
                   />
                 </div>
                 <div className="form-group">
@@ -144,21 +139,21 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
                       className="form-control pull-right"
                       id="tglBagiRapor"
                       onChange={handleChange}
-                      value={dataEdit.tglBagiRapor || ""}
+                      value={dataEdit.tglBagiRapor || ''}
                     />
                   </div>
                 </div>
-                <div className="form-group flex gap-3">
-                  <label htmlFor="isAktif"> Status Aktif</label>
-                  <input
-                    type="checkbox"
-                    name="isAktif"
-                    checked={dataEdit.isAktif}
-                    onChange={handleCheckboxChange}
-                    className="w-6 h-6 border-solid border-2 border-sky-500"
-                    id="isAktif"
-                    value={dataEdit.isAktif || ""}
-                  />
+                <div className="form-group">
+                  <label>Status Aktif</label>
+                  <br />
+                  <div onClick={handleToggle} className="switch">
+                    <input
+                      type="checkbox"
+                      name="isAktif"
+                      checked={dataEdit.isAktif}
+                    />
+                    <span className="slider round"></span>
+                  </div>
                 </div>
               </div>
               <div className="box-footer">
@@ -171,7 +166,7 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditSemesterModal;
+export default EditSemesterModal

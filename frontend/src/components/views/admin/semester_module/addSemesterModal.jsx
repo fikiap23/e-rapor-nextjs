@@ -1,45 +1,45 @@
-"use client";
-import { useState } from "react";
-import semesterService from "@/services/semesterService/semester.service";
-import useAuth from "@/hooks/useAuth";
+'use client'
+import { useState } from 'react'
+import semesterService from '@/services/semesterService/semester.service'
+import useAuth from '@/hooks/useAuth'
 
 const AddSemesterModal = ({ isOpen, closeModal }) => {
-  const { token } = useAuth();
+  const { token } = useAuth()
   const [formValues, setFormValues] = useState({
-    tahunAjaranAwal: "",
-    tahunAjaranAkhir: "",
-    jenisSemester: "",
-    namaKepsek: "",
-    nipKepsek: "",
-    tglBagiRapor: "",
+    tahunAjaranAwal: '',
+    tahunAjaranAkhir: '',
+    jenisSemester: '',
+    namaKepsek: '',
+    nipKepsek: '',
+    tglBagiRapor: '',
     isAktif: false,
-  });
+  })
 
   const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
+    const { name, checked } = e.target
     setFormValues({
       ...formValues,
       [name]: checked, // Ubah nilai sesuai dengan status checkbox
-    });
-  };
+    })
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // Dummy function for handling form submission
-    console.log("Form values:", formValues);
+    console.log('Form values:', formValues)
     // Add logic for form submission, e.g., sending data to server
-    await semesterService.create(formValues, token);
-  };
+    await semesterService.create(formValues, token)
+  }
 
   return (
     <div
       className={`modal fade overscroll-auto scroll-auto  ${
-        isOpen ? "in show-modal" : ""
+        isOpen ? 'in show-modal' : ''
       }`}
       id="add-modal"
     >
@@ -157,7 +157,7 @@ const AddSemesterModal = ({ isOpen, closeModal }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddSemesterModal;
+export default AddSemesterModal
