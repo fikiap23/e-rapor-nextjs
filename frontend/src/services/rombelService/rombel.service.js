@@ -55,6 +55,19 @@ const rombelService = {
       throw error.response?.data?.message || 'Gagal Ditambahkan!'
     }
   },
+
+  updateRombel: async (token, id, data) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+    }
+  },
 }
 
 export default rombelService

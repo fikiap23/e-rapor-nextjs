@@ -1,6 +1,11 @@
+'use client'
 import Link from 'next/link'
+import UpdateClassModal from './modal/updateClassModal'
+import { useState } from 'react'
 
-export default function TabTableClass({ rombel, openModal }) {
+export default function TabTableClass({ rombels, openModal, setRombels }) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedRombel, setSelectedRombel] = useState(null)
   return (
     <div className="box-body">
       <div style={{ margin: '0 20px 20px 20px' }}>
@@ -20,7 +25,7 @@ export default function TabTableClass({ rombel, openModal }) {
           </tr>
         </thead>
         <tbody>
-          {rombel.map((item, index) => (
+          {rombels.map((item, index) => (
             <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.kelompokUsia}</td>
@@ -30,6 +35,10 @@ export default function TabTableClass({ rombel, openModal }) {
                 <button
                   style={{ marginRight: '2px', marginLeft: '2px' }}
                   className="btn btn-primary btn-sm edit"
+                  onClick={() => {
+                    setSelectedRombel(item)
+                    setIsModalOpen(true)
+                  }}
                 >
                   <i className="icon fa fa-edit"></i>
                 </button>
@@ -50,6 +59,12 @@ export default function TabTableClass({ rombel, openModal }) {
           ))}
         </tbody>
       </table>
+      <UpdateClassModal
+        setRombels={setRombels}
+        selectedRombel={selectedRombel}
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+      ></UpdateClassModal>
     </div>
   )
 }
