@@ -1,7 +1,14 @@
-import React, { useState } from 'react'
+'use client'
+import sekolahService from '@/services/sekolahService/sekolah.service'
+import React, { useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
 
-function SchoolForm() {
+function SchoolForm({ sekolahData, token }) {
   const [isEditing, setIsEditing] = useState(false)
+  const [formData, setFormData] = useState(sekolahData)
+  useEffect(() => {
+    setFormData(sekolahData)
+  }, [sekolahData])
 
   const handleEditClick = () => {
     setIsEditing(true)
@@ -9,8 +16,41 @@ function SchoolForm() {
   }
 
   const handleSubmit = (event) => {
-    event.preventDefault()
+    try {
+      sekolahService
+        .update(token, formData)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data sekolah telah diperbarui',
+            position: 'bottom-center',
+          })
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
     setIsEditing(false)
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
   }
 
   return (
@@ -19,43 +59,44 @@ function SchoolForm() {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="school_name" className="control-label">
+              <label htmlFor="nama" className="control-label">
                 Nama Sekolah
               </label>
               <input
                 type="text"
-                name="school_name"
+                name="nama"
                 className="form-control"
-                id="school_name"
-                value={'TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL'}
+                id="nama"
+                value={formData.nama}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="school_address" className="control-label">
+              <label htmlFor="alamat" className="control-label">
                 Alamat Sekolah
               </label>
               <textarea
-                name="school_address"
+                name="alamat"
                 className="form-control"
-                id="school_address"
-                value={
-                  'Jl. H. Baping No.100 Kelurahan Ciracas Kecamatan Ciracas Kota Jakarta Timur'
-                }
+                id="alamat"
+                value={formData.alamat}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="no_telp_sekolah" className="control-label">
+              <label htmlFor="noTelepon" className="control-label">
                 No. Telp Sekolah
               </label>
               <input
                 type="number"
-                name="no_telp_sekolah"
+                name="noTelepon"
                 className="form-control"
-                id="no_telp_sekolah"
-                value={'082946246'}
+                id="noTelepon"
+                value={formData.noTelepon}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
@@ -67,107 +108,115 @@ function SchoolForm() {
                 name="npsn"
                 className="form-control"
                 id="npsn"
-                value={'2146517478'}
+                value={formData.npsn}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="ward" className="control-label">
+              <label htmlFor="kelurahan" className="control-label">
                 Kelurahan/Desa
               </label>
               <input
                 type="text"
-                name="ward"
+                name="kelurahan"
                 className="form-control"
-                id="ward"
-                value={'Cakung'}
+                id="kelurahan"
+                value={formData.kelurahan}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="authorities" className="control-label">
+              <label htmlFor="nipKepsek" className="control-label">
                 NIP Kepala Sekolah
               </label>
               <input
                 type="text"
-                name="nipKapsek"
+                name="nipKepsek"
                 className="form-control"
-                id="nipKapsek"
-                value={'19890902'}
+                id="nipKepsek"
+                value={formData.nipKepsek}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
           </div>
 
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="subdistrict" className="control-label">
+              <label htmlFor="kecamatan" className="control-label">
                 Kecamatan
               </label>
               <input
                 type="text"
-                name="subdistrict"
+                name="kecamatan"
                 className="form-control"
-                id="subdistrict"
-                value={'Ujung Menteng'}
+                id="kecamatan"
+                value={formData.kecamatan}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="pos" className="control-label">
+              <label htmlFor="kodePos" className="control-label">
                 Kode Pos
               </label>
               <input
                 type="number"
-                name="pos"
+                name="kodePos"
                 className="form-control"
-                id="pos"
-                value={'123'}
+                id="kodePos"
+                value={formData.kodePos}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="regency" className="control-label">
+              <label htmlFor="kota" className="control-label">
                 Kabupaten
               </label>
               <input
                 type="text"
-                name="regency"
+                name="kota"
                 className="form-control"
-                id="regency"
-                value={'JAKARTA'}
+                id="kota"
+                value={formData.kota}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="province" className="control-label">
+              <label htmlFor="provinsi" className="control-label">
                 Provinsi
               </label>
               <input
                 type="text"
-                name="province"
+                name="provinsi"
                 className="form-control"
-                id="province"
-                value={'DKI Jakarta'}
+                id="provinsi"
+                value={formData.provinsi}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="authorities" className="control-label">
+              <label htmlFor="namaDisdik" className="control-label">
                 Nama Disdik
               </label>
               <input
                 type="text"
-                name="authorities"
+                name="namaDisdik"
                 className="form-control"
-                id="authorities"
-                value={'DINAS PENDIDIKAN DKI JAKARTA (KOTA JAKARTA TIMUR)'}
+                id="namaDisdik"
+                value={formData.namaDisdik}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="authorities" className="control-label">
+              <label htmlFor="namaKapsek" className="control-label">
                 Nama Kepala Sekolah
               </label>
               <input
@@ -175,8 +224,9 @@ function SchoolForm() {
                 name="namaKapsek"
                 className="form-control"
                 id="namaKapsek"
-                value={'SITI NURAINI'}
+                value={formData.namaKapsek}
                 readOnly={!isEditing}
+                onChange={handleInputChange}
               />
             </div>
           </div>
