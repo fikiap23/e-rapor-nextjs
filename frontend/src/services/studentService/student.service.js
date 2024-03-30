@@ -57,6 +57,19 @@ const siswaService = {
     }
   },
 
+  getById: async (id, token) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message || "Gagal mengambil data siswa";
+    }
+  },
+
 };
 
 export default siswaService;

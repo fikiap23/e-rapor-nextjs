@@ -6,6 +6,8 @@ import Link from 'next/link'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllStudentData } from '@/services/studentService/useStudent'
 import Loading from '@/components/shared/Loading'
+import siswaService from '@/services/studentService/student.service'
+import TabUpdateSiswa from './TabUpdateStudent'
 
 const StudentView = () => {
   const { token } = useAuth();
@@ -37,7 +39,7 @@ const StudentView = () => {
       })
       setFilteredDataStudent(sortedStudents.filter(filterStudent))
     }
-  }, [listStudent, searchKeyword, sortBy, sortOrder, refreshTable]) // Jadikan refreshTable sebagai dependensi
+  }, [listStudent, searchKeyword, sortBy, sortOrder, refreshTable])
 
   const filterStudent = (student) => {
     return (
@@ -47,16 +49,12 @@ const StudentView = () => {
     )
   }
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab, id) => {
     setActiveTab(tab)
+    localStorage.setItem('@currentStudentId', id);
   }
 
-  const deleteSiswa = (id) => {
-    handleDelete()
-    console.log(`Menghapus siswa dengan id ${id}`)
-  }
-
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
       text: 'Anda akan menghapus siswa!',
@@ -65,10 +63,11 @@ const StudentView = () => {
       confirmButtonText: 'Ya, hapus!',
       cancelButtonText: 'Tidak, batalkan!',
       reverseButtons: true,
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        await siswaService.delete(token, id);
+        refetchStudents();
         Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
-        setRefreshTable(!refreshTable) // Memperbarui state untuk memuat ulang tabel
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
       }
@@ -77,7 +76,7 @@ const StudentView = () => {
 
   const handleFilterChange = (e) => {
     setSearchKeyword(e.target.value)
-    setCurrentPage(1) // Reset halaman ke halaman pertama saat pencarian diubah
+    setCurrentPage(1)
   }
 
   const handleSort = (field) => {
@@ -114,29 +113,45 @@ const StudentView = () => {
                     Input Siswa
                   </Link>
                 </li>
+                {activeTab === 'update' && (
+                  <li className={activeTab === 'update' ? 'active' : ''}>
+                    <Link href="" onClick={() => handleTabChange('update')}>
+                      Edit Siswa
+                    </Link>
+                  </li>
+                )}
               </ul>
               <div className="tab-content">
                 {activeTab === 'view' && (
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <div className="form-group" style={{ width: '30%' }}>
-                          <input
-                            type="text"
-                            id="filter"
-                            className="form-control"
-                            value={searchKeyword}
-                            placeholder="Masukan pencarian"
-                            onChange={handleFilterChange}
-                          />
-                        </div>
-
+                        {!isFetchingStudent && currentStudents.length === 0 ? (null) : (
+                          <div className="form-group" style={{ width: '30%' }}>
+                            <input
+                              type="text"
+                              id="filter"
+                              className="form-control"
+                              value={searchKeyword}
+                              placeholder="Masukan pencarian"
+                              onChange={handleFilterChange}
+                            />
+                          </div>
+                        )}
                         <div>
                           <button className="btn btn-primary" onClick={refetchStudents}><i className="fa fa-refresh"></i></button>
                         </div>
                       </div>
                       {isFetchingStudent ? (
                         <Loading></Loading>
+                      ) : (!isFetchingStudent && currentStudents.length === 0 ? (
+                        <div className='text-center' style={{ opacity: '0.6' }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24"><path fill="#47a6ff" fill-opacity="0" d="M5 3H12.5V8.5H19V21H5V3Z"><animate fill="freeze" attributeName="fill-opacity" begin="2.38s" dur="0.255s" values="0;0.3" /></path><g fill="none" stroke="#47a6ff" stroke-linecap="round" stroke-linejoin="round"><g stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M13 3L19 9V21H5V3H13"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.02s" values="64;0" /></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M9 13H13"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.7s" dur="0.34s" values="6;0" /></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M9 16H15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="2.04s" dur="0.34s" values="8;0" /></path></g><path stroke-dasharray="14" stroke-dashoffset="14" d="M12.5 3V8.5H19"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.19s" dur="0.34s" values="14;0" /></path></g></svg>
+                          <div style={{ color: 'gray' }}>
+                            <p><b>Data masih kosong</b></p>
+                            <small><b>Silahkan input siswa terlebih dahulu</b></small>
+                          </div>
+                        </div>
                       ) : (
                         <>
                           <table id="siswa" className="table table-hover">
@@ -159,7 +174,7 @@ const StudentView = () => {
                                     <td>{item.nisn}</td>
                                     <td>{item.nama.toUpperCase()}</td>
                                     <td>
-                                      <a className="btn btn-success btn-sm">
+                                      <a className="btn btn-success btn-sm" onClick={() => handleTabChange('update', item.id)}>
                                         <i className="icon fa fa-edit"></i>
                                       </a>
                                       <button
@@ -168,7 +183,7 @@ const StudentView = () => {
                                           marginLeft: '2px',
                                         }}
                                         className="btn btn-danger btn-sm"
-                                        onClick={() => deleteSiswa(item.id)}
+                                        onClick={() => handleDelete(item.id)}
                                       >
                                         <i className="icon fa fa-trash"></i>
                                       </button>
@@ -190,11 +205,18 @@ const StudentView = () => {
                             </ul>
                           </nav>
                         </>
+                      )
                       )}
                     </div>
                   </div>
                 )}
                 {activeTab === 'input' && <TabInputSiswa />}
+                {activeTab === 'update' && (
+                  <div>
+                    <button className='btn btn-danger' onClick={() => handleTabChange('view')}>Batal</button>
+                    <TabUpdateSiswa />
+                  </div>
+                )}
               </div>
             </div>
           </div>
