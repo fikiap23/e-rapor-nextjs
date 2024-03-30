@@ -2,7 +2,7 @@
 import useAuth from '@/hooks/useAuth'
 import React, { useState } from 'react'
 
-const Header = () => {
+const Header = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { removeToken } = useAuth()
 
@@ -30,6 +30,7 @@ const Header = () => {
         <a
           href="#"
           className="sidebar-toggle"
+          onClick={toggleSidebar}
           data-toggle="push-menu"
           role="button"
         >
