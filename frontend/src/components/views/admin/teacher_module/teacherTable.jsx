@@ -5,6 +5,9 @@ import AddGuruToRombelModal from './addGuruToRombelModal'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllRombelWithGuru } from '@/services/rombelService/useRombelGuru'
 import Loading from '@/components/shared/Loading'
+import Swal from 'sweetalert2'
+import rombelService from '@/services/rombelService/rombel.service'
+import { useRombelsNotRelationWithGuru } from '@/services/rombelService/useRombelGuruNotRelation'
 const TeacherTable = () => {
   const { token } = useAuth()
   const {
@@ -13,6 +16,12 @@ const TeacherTable = () => {
     isFetching: isFetchingRombel,
     refetch: refetchRombel,
   } = useGetAllRombelWithGuru(token)
+  const {
+    data: listGuruRombel,
+    error: errorGuruRombel,
+    isFetching: isFetchingGuruRombel,
+    refetch: refetchGuruRombel,
+  } = useRombelsNotRelationWithGuru(token)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -21,6 +30,30 @@ const TeacherTable = () => {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus guru di rombel ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          idGuru: null,
+        }
+        await rombelService.updateRombel(token, id, payload)
+        refetchGuruRombel()
+        refetchRombel()
+        Swal.fire('Data Dihapus!', 'Rombel telah dikosongkan.', 'success')
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data .', 'error')
+      }
+    })
   }
 
   return (
@@ -51,7 +84,10 @@ const TeacherTable = () => {
                   <td>{item.guru?.nip || 'N/A'}</td>
                   <td>{item.guru?.nama || 'N/A'}</td>
                   <td>
-                    <button className="btn btn-danger btn-sm">
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(item.id)}
+                    >
                       <i className="icon fa fa-trash"></i>
                     </button>
                   </td>
@@ -65,6 +101,9 @@ const TeacherTable = () => {
         isOpen={isModalOpen}
         closeModal={closeModal}
         refetch={refetchRombel}
+        refetchGuruRombel={refetchGuruRombel}
+        token={token}
+        listGuruRombel={listGuruRombel}
       ></AddGuruToRombelModal>
     </>
   )

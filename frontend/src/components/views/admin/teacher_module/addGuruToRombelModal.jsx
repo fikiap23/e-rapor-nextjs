@@ -1,31 +1,34 @@
-// components/addGuru.js
-import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombelService/rombel.service'
-import { useRombelsNotRelationWithGuru } from '@/services/rombelService/useRombelGuruNotRelation'
 import React, { useEffect } from 'react'
 import Swal from 'sweetalert2'
-const AddGuruToRombelModal = ({ isOpen, closeModal, refetch }) => {
-  const [gurus, setGurus] = React.useState([])
-  const [rombels, setRombels] = React.useState([])
+const AddGuruToRombelModal = ({
+  isOpen,
+  closeModal,
+  refetch,
+  refetchGuruRombel,
+  token,
+  listGuruRombel,
+}) => {
   const [formData, setFormData] = React.useState({
     idRombel: '',
     idGuru: '',
   })
-
-  const { token } = useAuth()
-  const {
-    data: listGuruRombel,
-    error: errorGuruRombel,
-    isFetching: isFetchingGuruRombel,
-    refetch: refetchGuruRombel,
-  } = useRombelsNotRelationWithGuru(token)
+  const [gurus, setGurus] = React.useState([])
+  const [rombels, setRombels] = React.useState([])
 
   useEffect(() => {
     if (listGuruRombel) {
-      setGurus(listGuruRombel.gurus)
-      setRombels(listGuruRombel.rombels)
+      setGurus(listGuruRombel.gurus || [])
+      setRombels(listGuruRombel.rombels || [])
     }
-  })
+  }, [listGuruRombel])
+
+  const clearForm = () => {
+    setFormData({
+      idRombel: '',
+      idGuru: '',
+    })
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -42,7 +45,9 @@ const AddGuruToRombelModal = ({ isOpen, closeModal, refetch }) => {
               title: 'Data rombel telah diperbarui',
               position: 'bottom-center',
             })
+            clearForm()
             refetch()
+            refetchGuruRombel()
             closeModal()
           })
           .catch((error) => {
@@ -82,78 +87,77 @@ const AddGuruToRombelModal = ({ isOpen, closeModal, refetch }) => {
             </button>
             <h4 className="modal-title">Pilih Guru dan Rombel</h4>
           </div>
-          {!isFetchingGuruRombel && gurus && rombels && (
-            <>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Pilih Rombel</label>
-                  <select
-                    required
-                    name="idRombel"
-                    className="form-control"
-                    onChange={(e) =>
-                      setFormData({ ...formData, idRombel: e.target.value })
-                    }
-                  >
-                    {rombels.length === 0 ? (
-                      <option value="" disabled>
-                        Tidak ada rombel yang kosong
-                      </option>
-                    ) : (
-                      <>
-                        <option value="" className="bg-blue"></option>
-                        {rombels.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </>
-                    )}
-                  </select>
-                </div>
 
-                <div className="form-group">
-                  <label>Pilih Guru</label>
-                  <select
-                    required
-                    name="idGuru"
-                    className="form-control"
-                    onChange={(e) =>
-                      setFormData({ ...formData, idGuru: e.target.value })
-                    }
-                  >
-                    {gurus.length === 0 ? (
-                      <option value="" disabled>
-                        Tidak ada data guru
+          <div className="modal-body">
+            <div className="form-group">
+              <label>Pilih Rombel</label>
+              <select
+                required
+                name="idRombel"
+                className="form-control"
+                value={formData.idRombel}
+                onChange={(e) =>
+                  setFormData({ ...formData, idRombel: e.target.value })
+                }
+              >
+                {rombels.length === 0 ? (
+                  <option value="" disabled>
+                    Tidak ada rombel yang kosong
+                  </option>
+                ) : (
+                  <>
+                    <option value="" className="bg-blue"></option>
+                    {rombels.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
                       </option>
-                    ) : (
-                      <>
-                        <option value="" className="bg-blue"></option>
-                        {gurus.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.nama}
-                          </option>
-                        ))}
-                      </>
-                    )}
-                  </select>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-default pull-left"
-                  data-dismiss="modal"
-                  onClick={closeModal}
-                >
-                  Close
-                </button>
-                <button className="btn btn-primary" onClick={handleSubmit}>
-                  Simpan
-                </button>
-              </div>
-            </>
-          )}
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Pilih Guru</label>
+              <select
+                required
+                name="idGuru"
+                className="form-control"
+                value={formData.idGuru}
+                onChange={(e) =>
+                  setFormData({ ...formData, idGuru: e.target.value })
+                }
+              >
+                {gurus.length === 0 ? (
+                  <option value="" disabled>
+                    Tidak ada data guru
+                  </option>
+                ) : (
+                  <>
+                    <option value="" className="bg-blue"></option>
+                    {gurus.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.nama}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-default pull-left"
+              data-dismiss="modal"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+            <button className="btn btn-primary" onClick={handleSubmit}>
+              Simpan
+            </button>
+          </div>
         </div>
         {/* /.modal-content */}
       </div>
