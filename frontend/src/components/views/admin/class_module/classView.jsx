@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import AddClassModal from './addClassModal'
+import AddClassModal from './modal/addClassModal'
 import Link from 'next/link'
 import TabTableClass from './tabTableClass'
 import SetClass from './setClass'
@@ -75,7 +75,12 @@ export default function ClassView() {
                     ) : (
                       <TabTableClass rombel={rombels} openModal={openModal} />
                     ))}
-                  {activeTab === 'view_rombel' && <SetClass />}
+                  {activeTab === 'view_rombel' &&
+                    (isFetchingSRombel ? (
+                      <div>Loading...</div>
+                    ) : (
+                      <SetClass rombels={rombels} />
+                    ))}
                 </div>
               </div>
             </div>

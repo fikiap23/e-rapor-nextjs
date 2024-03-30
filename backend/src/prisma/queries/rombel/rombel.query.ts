@@ -33,7 +33,8 @@ export class RombelQuery extends DbService {
                 isFull: rombel.isFull,
                 idKategoriRombel: rombel.idKategoriRombel,
                 kelompokUsia: rombel.kategoriRombel.kelompokUsia,
-                kodeKelompokUsia: rombel.kategoriRombel.kode
+                kodeKelompokUsia: rombel.kategoriRombel.kode,
+                murid: rombel.murid
             }
         })
     }
@@ -66,7 +67,8 @@ export class RombelQuery extends DbService {
             coutMurid: rombel.murid.length,
             idKategoriRombel: rombel.idKategoriRombel,
             kelompokUsia: rombel.kategoriRombel.kelompokUsia,
-            kodeKelompokUsia: rombel.kategoriRombel.kode
+            kodeKelompokUsia: rombel.kategoriRombel.kode,
+            murid: rombel.murid
         }
     }
 
