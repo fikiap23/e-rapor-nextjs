@@ -1,17 +1,32 @@
+'use client'
 import Footer from '@/components/shared/Footer'
 import Header from '@/components/shared/Header'
-import SidebarTeacher from '@/components/shared/SidebarTeacher'
+
 import '../bootstrap.css'
-import React from 'react'
-const AboutLayout = ({ children }) => {
+import React, { useState } from 'react'
+import SidebarTeacher from '@/components/shared/SidebarTeacher'
+
+const TeacherLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
+
   return (
-    <>
-      <Header />
-      <SidebarTeacher />
-      <div>{children}</div>
-      <Footer />
-    </>
+    <div
+      className={` skin-blue-light sidebar-mini ${
+        sidebarOpen ? 'sidebar-open' : 'sidebar-collapse'
+      }`}
+    >
+      <div className="wrapper">
+        <Header toggleSidebar={toggleSidebar} />
+        <SidebarTeacher />
+        <div>{children}</div>
+        <Footer />
+      </div>
+    </div>
   )
 }
 
-export default AboutLayout
+export default TeacherLayout
