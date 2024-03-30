@@ -58,9 +58,9 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="/admin/school">
+            <Link href="/admin/school">
               <i className="fa fa-building"></i> <span>Sekolah</span>
-            </a>
+            </Link>
           </li>
         </ul>
       </section>
