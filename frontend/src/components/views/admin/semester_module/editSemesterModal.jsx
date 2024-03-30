@@ -3,31 +3,43 @@ import { useState, useEffect } from "react";
 import semesterService from "@/services/semesterService/semester.service";
 import useAuth from "@/hooks/useAuth";
 
-const EditSemesterModal = ({ isOpen, closeModal, id }) => {
+const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
   const { token } = useAuth();
-  const [formValues, setFormValues] = useState({});
+  const [dataEdit, setDataEdit] = useState({
+    tahunAjaranAwal: "",
+    tahunAjaranAkhir: "",
+    jenisSemester: "",
+    namaKepsek: "",
+    nipKepsek: "",
+    tglBagiRapor: "",
+    isAktif: false,
+  });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (isOpen && semesterData) {
+      setDataEdit(semesterData);
+    }
+  }, []);
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setFormValues({
-      ...formValues,
+    setDataEdit({
+      ...dataEdit,
       [name]: checked, // Ubah nilai sesuai dengan status checkbox
     });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
+    setDataEdit({ ...dataEdit, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Dummy function for handling form submission
-    console.log("Form values:", formValues);
+    console.log("Form values:", dataEdit);
     // Add logic for form submission, e.g., sending data to server
-    await semesterService.create(formValues, token);
+    // await semesterService.update(token, semesterData.id, dataEdit);
   };
 
   return (
@@ -49,7 +61,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">Tahun</h4>
+            <h4 className="modal-title">Edit</h4>
           </div>
           <div className="modal-body ">
             <form role="form" onSubmit={handleSubmit}>
@@ -62,6 +74,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                     name="tahunAjaranAwal"
                     className="form-control"
                     onChange={handleChange}
+                    value={dataEdit.tahunAjaranAwal || ""}
                   />
                 </div>
                 <div className="form-group">
@@ -72,6 +85,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                     name="tahunAjaranAkhir"
                     className="form-control"
                     onChange={handleChange}
+                    value={dataEdit.tahunAjaranAkhir || ""}
                   />
                 </div>
                 <div className="form-group">
@@ -81,6 +95,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                     name="jenisSemester"
                     className="form-control"
                     onChange={handleChange}
+                    value={dataEdit.jenisSemester || ""}
                   >
                     <option value="">--- Pilih Semester ---</option>
                     <option value="GANJIL">Ganjil</option>
@@ -98,6 +113,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                     placeholder="Masukkan Nama Kepala Sekolah"
                     required
                     onChange={handleChange}
+                    value={dataEdit.namaKepsek || ""}
                   />
                 </div>
                 <div className="form-group">
@@ -110,6 +126,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                     placeholder="Masukkan NIP"
                     required
                     onChange={handleChange}
+                    value={dataEdit.nipKepsek || ""}
                   />
                 </div>
                 <div className="form-group">
@@ -127,6 +144,7 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                       className="form-control pull-right"
                       id="tglBagiRapor"
                       onChange={handleChange}
+                      value={dataEdit.tglBagiRapor || ""}
                     />
                   </div>
                 </div>
@@ -135,9 +153,11 @@ const EditSemesterModal = ({ isOpen, closeModal, id }) => {
                   <input
                     type="checkbox"
                     name="isAktif"
-                    checked={formValues.isAktif}
+                    checked={dataEdit.isAktif}
                     onChange={handleCheckboxChange}
                     className="w-6 h-6 border-solid border-2 border-sky-500"
+                    id="isAktif"
+                    value={dataEdit.isAktif || ""}
                   />
                 </div>
               </div>

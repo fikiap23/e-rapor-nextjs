@@ -8,6 +8,7 @@ import { useGetAllSemesterData } from "@/services/semesterService/useSemester";
 const SemesterView = () => {
   const { token } = useAuth();
   const [dataSemester, setDataSemester] = useState([]);
+  const [selectedSemester, setSelectedSemester] = useState({});
   const {
     data: listSemester,
     error: errorSemester,
@@ -27,8 +28,9 @@ const SemesterView = () => {
     setIsOpenAddModal(true);
   };
 
-  const openModalEdit = () => {
+  const openModalEdit = (semester) => {
     setIsOpenEditModal(true);
+    setSelectedSemester(semester);
   };
 
   const closeModalAdd = () => {
@@ -38,6 +40,8 @@ const SemesterView = () => {
   const closeModalEdit = () => {
     setIsOpenEditModal(false);
   };
+
+  const deleteData = (id) => {};
 
   return (
     <>
@@ -101,7 +105,7 @@ const SemesterView = () => {
                             <td>
                               <button
                                 className="btn btn-primary btn-sm"
-                                onClick={openModalEdit}
+                                onClick={() => openModalEdit(item)}
                               >
                                 <i className="icon fa fa-edit"></i>
                               </button>
@@ -120,7 +124,11 @@ const SemesterView = () => {
         </section>
       </div>
       <AddSemesterModal isOpen={isOpenAddModal} closeModal={closeModalAdd} />
-      <EditSemesterModal isOpen={isOpenEditModal} closeModal={closeModalEdit} />
+      <EditSemesterModal
+        isOpen={isOpenEditModal}
+        closeModal={closeModalEdit}
+        semesterData={selectedSemester}
+      />
     </>
   );
 };

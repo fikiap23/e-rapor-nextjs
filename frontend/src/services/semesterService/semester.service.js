@@ -30,20 +30,6 @@ const semesterService = {
     }
   },
 
-  updateStatusAkun: async (token, id, data) => {
-    try {
-      console.log(id);
-      const response = await axios.put(`${apiUrl}/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data?.message || "Semester Gagal Diupdate";
-    }
-  },
-
   delete: async (token, id) => {
     try {
       const response = await axios.delete(`${BASE_URL}/${id}`, {
