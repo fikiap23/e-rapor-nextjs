@@ -1,8 +1,15 @@
 'use client'
 import { formatDate } from '@/lib/helperDate'
+import semesterService from '@/services/semesterService/semester.service'
 import { useEffect, useState } from 'react'
-
-const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
+import Swal from 'sweetalert2'
+const EditSemesterModal = ({
+  isOpen,
+  closeModal,
+  semesterData,
+  token,
+  refetch,
+}) => {
   const [dataEdit, setDataEdit] = useState({})
 
   useEffect(() => {
@@ -29,12 +36,35 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
     setDataEdit({ ...dataEdit, [name]: value })
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    // Dummy function for handling form submission
-    console.log('Form values:', dataEdit)
-    // Add logic for form submission, e.g., sending data to server
-    // await semesterService.update(token, semesterData.id, dataEdit);
+  const handleSubmit = () => {
+    try {
+      semesterService
+        .update(token, dataEdit.id, dataEdit)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data semester telah diperbarui',
+            position: 'bottom-center',
+          })
+          refetch()
+          closeModal()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
   }
 
   return (
@@ -59,109 +89,105 @@ const EditSemesterModal = ({ isOpen, closeModal, semesterData }) => {
             <h4 className="modal-title">Edit</h4>
           </div>
           <div className="modal-body ">
-            <form role="form" onSubmit={handleSubmit}>
-              <div className="box-body ">
-                <div className="form-group">
-                  <label>Tahun Ajaran Awal</label>
-                  <input
-                    type="number"
-                    required
-                    name="tahunAjaranAwal"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={dataEdit.tahunAjaranAwal || ''}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Tahun Ajaran Akhir</label>
-                  <input
-                    type="number"
-                    required
-                    name="tahunAjaranAkhir"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={dataEdit.tahunAjaranAkhir || ''}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Semester</label>
-                  <select
-                    required
-                    name="jenisSemester"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={dataEdit.jenisSemester || ''}
-                  >
-                    <option value="">--- Pilih Semester ---</option>
-                    <option value="GANJIL">Ganjil</option>
-                    <option value="GENAP">Genap</option>
-                    {/* Add other options */}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="namaKepsek">Kepala Sekolah</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="namaKepsek"
-                    name="namaKepsek"
-                    placeholder="Masukkan Nama Kepala Sekolah"
-                    required
-                    onChange={handleChange}
-                    value={dataEdit.namaKepsek || ''}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="nipKepsek">NIP</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="nipKepsek"
-                    name="nipKepsek"
-                    placeholder="Masukkan NIP"
-                    required
-                    onChange={handleChange}
-                    value={dataEdit.nipKepsek || ''}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="inputDatepickerTglLahir">
-                    Tanggal Raport
-                  </label>
-                  <div className="input-group date">
-                    <div className="input-group-addon">
-                      <i className="fa fa-calendar"></i>
-                    </div>
-                    <input
-                      type="date"
-                      required
-                      name="tglBagiRapor"
-                      className="form-control pull-right"
-                      id="tglBagiRapor"
-                      onChange={handleChange}
-                      value={dataEdit.tglBagiRapor || ''}
-                    />
+            <div className="box-body ">
+              <div className="form-group">
+                <label>Tahun Ajaran Awal</label>
+                <input
+                  type="number"
+                  required
+                  name="tahunAjaranAwal"
+                  className="form-control"
+                  onChange={handleChange}
+                  value={dataEdit.tahunAjaranAwal || ''}
+                />
+              </div>
+              <div className="form-group">
+                <label>Tahun Ajaran Akhir</label>
+                <input
+                  type="number"
+                  required
+                  name="tahunAjaranAkhir"
+                  className="form-control"
+                  onChange={handleChange}
+                  value={dataEdit.tahunAjaranAkhir || ''}
+                />
+              </div>
+              <div className="form-group">
+                <label>Semester</label>
+                <select
+                  required
+                  name="jenisSemester"
+                  className="form-control"
+                  onChange={handleChange}
+                  value={dataEdit.jenisSemester || ''}
+                >
+                  <option value="">--- Pilih Semester ---</option>
+                  <option value="GANJIL">Ganjil</option>
+                  <option value="GENAP">Genap</option>
+                  {/* Add other options */}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="namaKepsek">Kepala Sekolah</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="namaKepsek"
+                  name="namaKepsek"
+                  placeholder="Masukkan Nama Kepala Sekolah"
+                  required
+                  onChange={handleChange}
+                  value={dataEdit.namaKepsek || ''}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="nipKepsek">NIP</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nipKepsek"
+                  name="nipKepsek"
+                  placeholder="Masukkan NIP"
+                  required
+                  onChange={handleChange}
+                  value={dataEdit.nipKepsek || ''}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputDatepickerTglLahir">Tanggal Raport</label>
+                <div className="input-group date">
+                  <div className="input-group-addon">
+                    <i className="fa fa-calendar"></i>
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>Status Aktif</label>
-                  <br />
-                  <div onClick={handleToggle} className="switch">
-                    <input
-                      type="checkbox"
-                      name="isAktif"
-                      checked={dataEdit.isAktif}
-                    />
-                    <span className="slider round"></span>
-                  </div>
+                  <input
+                    type="date"
+                    required
+                    name="tglBagiRapor"
+                    className="form-control pull-right"
+                    id="tglBagiRapor"
+                    onChange={handleChange}
+                    value={dataEdit.tglBagiRapor || ''}
+                  />
                 </div>
               </div>
-              <div className="box-footer">
-                <button type="submit" className="btn btn-primary">
-                  Simpan
-                </button>
+              <div className="form-group">
+                <label>Status Aktif</label>
+                <br />
+                <div onClick={handleToggle} className="switch">
+                  <input
+                    type="checkbox"
+                    name="isAktif"
+                    checked={dataEdit.isAktif}
+                  />
+                  <span className="slider round"></span>
+                </div>
               </div>
-            </form>
+            </div>
+            <div className="box-footer">
+              <button onClick={handleSubmit} className="btn btn-primary">
+                Simpan
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ import useAuth from '@/hooks/useAuth'
 import { useGetAllSemesterData } from '@/services/semesterService/useSemester'
 import Loading from '@/components/shared/Loading'
 import { formatDate } from '@/lib/helperDate'
+import semesterService from '@/services/semesterService/semester.service'
+import Swal from 'sweetalert2'
 
 const SemesterView = () => {
   const { token } = useAuth()
@@ -38,7 +40,29 @@ const SemesterView = () => {
     setIsOpenEditModal(false)
   }
 
-  const deleteData = (id) => {}
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus semester!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await semesterService.delete(token, id)
+        refetchSemester()
+        Swal.fire('Data Dihapus!', 'Semester telah dihapus.', 'success')
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Dibatalkan',
+          'Tidak ada perubahan pada data semester.',
+          'error'
+        )
+      }
+    })
+  }
 
   return (
     <>
@@ -103,11 +127,14 @@ const SemesterView = () => {
                             <td>
                               <button
                                 className="btn btn-primary btn-sm"
-                                onClick={() => openModalEdit(item)}
+                                onClick={openModalEdit.bind(this, item)}
                               >
                                 <i className="icon fa fa-edit"></i>
                               </button>
-                              <button className="btn btn-danger btn-sm">
+                              <button
+                                className="btn btn-danger btn-sm"
+                                onClick={handleDelete.bind(this, item.id)}
+                              >
                                 <i className="icon fa fa-trash"></i>
                               </button>
                             </td>
@@ -121,11 +148,18 @@ const SemesterView = () => {
           </div>
         </section>
       </div>
-      <AddSemesterModal isOpen={isOpenAddModal} closeModal={closeModalAdd} />
+      <AddSemesterModal
+        token={token}
+        isOpen={isOpenAddModal}
+        closeModal={closeModalAdd}
+        refetch={refetchSemester}
+      />
       <EditSemesterModal
         isOpen={isOpenEditModal}
         closeModal={closeModalEdit}
         semesterData={selectedSemester}
+        refetch={refetchSemester}
+        token={token}
       />
     </>
   )
