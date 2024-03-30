@@ -29,6 +29,14 @@ export class RombelService {
         return await this.rombelRepository.deleteRombelById(id)
     }
 
+    async findAllWithGuru() {
+        return await this.rombelRepository.findAllWithGuru()
+    }
+
+    async findAllRombelGuruNoRelation() {
+        return await this.rombelRepository.findAllRombelGuruNoRelation()
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel Service

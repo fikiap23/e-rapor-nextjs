@@ -77,6 +77,51 @@ export class RombelQuery extends DbService {
         return await this.prisma.rombel.delete({ where: { id } })
     }
 
+    async findAllWithGuru() {
+        const rombels = await this.prisma.rombel.findMany({
+            where: {
+                idGuru: {
+                    not: null
+                }
+            },
+            include: {
+                guru: true
+            }
+        })
+
+        return rombels.map(rombel => {
+            return {
+                id: rombel.id,
+                name: rombel.name,
+                idGuru: rombel.idGuru,
+                guru: rombel.guru
+            }
+        })
+    }
+    async findAllRombelGuruNoRelation() {
+        const rombels = await this.prisma.rombel.findMany({
+            where: {
+                idGuru: null
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        })
+
+        const gurus = await this.prisma.guru.findMany({
+            where: {
+                rombel: {
+                    none: {}
+                }
+            }
+        })
+
+        return {
+            rombels,
+            gurus
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel Query

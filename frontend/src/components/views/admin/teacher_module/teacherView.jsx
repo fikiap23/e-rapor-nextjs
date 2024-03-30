@@ -6,6 +6,7 @@ import ManageTeacher from './manageTeacher'
 import TeacherTable from './teacherTable'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllTeacherData } from '@/services/teacherService/useTeacher'
+import Loading from '@/components/shared/Loading'
 
 const TeacherView = () => {
   const [activeTab, setActiveTab] = useState('view')
@@ -64,6 +65,7 @@ const TeacherView = () => {
                     </Link>
                   </li>
                 </ul>
+                {isFetchingTeacher && activeTab === 'view' && <Loading />}
                 {activeTab === 'view' && !isFetchingTeacher && (
                   <ManageTeacher listTeacher={listTeacher} />
                 )}

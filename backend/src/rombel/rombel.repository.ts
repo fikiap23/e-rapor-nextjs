@@ -57,6 +57,14 @@ export class RombelRepository {
         }
     }
 
+    async findAllWithGuru() {
+        return await this.rombelQuery.findAllWithGuru()
+    }
+
+    async findAllRombelGuruNoRelation() {
+        return await this.rombelQuery.findAllRombelGuruNoRelation()
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel FUNCTIONS

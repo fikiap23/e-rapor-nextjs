@@ -55,6 +55,22 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('guru')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async findAllWithGuru(@Res() res) {
+        const result = await this.rombelService.findAllWithGuru();
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get('guru/not-join')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async findAllRombelGuruNoRelation(@Res() res) {
+        const result = await this.rombelService.findAllRombelGuruNoRelation();
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
 
     /*
     |--------------------------------------------------------------------------

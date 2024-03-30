@@ -2,14 +2,17 @@
 import { useState } from 'react'
 import React from 'react'
 import AddGuruToRombelModal from './addGuruToRombelModal'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllRombelWithGuru } from '@/services/rombelService/useRombelGuru'
+import Loading from '@/components/shared/Loading'
 const TeacherTable = () => {
-  // Data dummy untuk digunakan dalam tabel
-  const wali_kelas = [
-    { id: 1, kelas: 'Rombel A', guru: 'Guru A' },
-    { id: 2, kelas: 'Rombel B', guru: 'Guru B' },
-    { id: 3, kelas: 'Rombel C', guru: 'Guru C' },
-  ]
-
+  const { token } = useAuth()
+  const {
+    data: listRombel,
+    error: errorRombel,
+    isFetching: isFetchingRombel,
+    refetch: refetchRombel,
+  } = useGetAllRombelWithGuru(token)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openModal = () => {
@@ -28,28 +31,32 @@ const TeacherTable = () => {
             <i className="icon fa fa-plus"></i> Tambah
           </button>
         </div>
+        {isFetchingRombel && <Loading />}
         <table id="ekstra" className="table table-bordered table-striped">
           <thead>
             <tr>
               <th>No</th>
-              <th>Nama Rombel</th>
+              <th>Rombel</th>
+              <th>NIP Guru</th>
               <th>Nama Guru</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {wali_kelas.map((item, index) => (
-              <tr key={item.id}>
-                <td>{index + 1}</td>
-                <td>{item.kelas}</td>
-                <td>{item.guru}</td>
-                <td>
-                  <button className="btn btn-danger btn-sm">
-                    <i className="icon fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {!isFetchingRombel &&
+              listRombel.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.name}</td>
+                  <td>{item.guru?.nip || 'N/A'}</td>
+                  <td>{item.guru?.nama || 'N/A'}</td>
+                  <td>
+                    <button className="btn btn-danger btn-sm">
+                      <i className="icon fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -57,6 +64,7 @@ const TeacherTable = () => {
       <AddGuruToRombelModal
         isOpen={isModalOpen}
         closeModal={closeModal}
+        refetch={refetchRombel}
       ></AddGuruToRombelModal>
     </>
   )
