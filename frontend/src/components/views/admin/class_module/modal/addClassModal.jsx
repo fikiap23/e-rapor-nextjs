@@ -3,8 +3,7 @@ import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombelService/rombel.service'
 import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRombel'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import Swal from 'sweetalert2'
 const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
   const [kelompokUsia, setKelompokUsia] = useState('')
   const [kuota, setKuota] = useState('')
@@ -20,11 +19,14 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
       kuota: kuota,
       name: noRombel,
     }
+
     try {
       rombelService
         .createRombel(token, payload)
         .then((result) => {
-          toast.success('Data rombel telah ditambahkan', {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data rombel telah ditambahkan',
             position: 'bottom-center',
           })
           setRombels((prevRombels) => [...prevRombels, result.data])
@@ -36,12 +38,18 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
           closeModal()
         })
         .catch((error) => {
-          toast.error(error, {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
             position: 'bottom-center',
           })
         })
     } catch (error) {
-      toast.error(error, {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
         position: 'top-right',
       })
     }
