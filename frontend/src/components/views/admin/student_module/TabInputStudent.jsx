@@ -1,30 +1,28 @@
+import useAuth from "@/hooks/useAuth";
+import siswaService from "@/services/studentService/student.service";
 import React, { useState } from "react";
+import Swal from 'sweetalert2';
 
 function TabInputSiswa() {
+    const { token } = useAuth();
     const [formData, setFormData] = useState({
-        nis: '',
         nisn: '',
+        nis: '',
         nama: '',
-        jk: '',
-        tmptLahir: '',
-        tglLahir: '',
-        agama: '',
+        jenisKelamin: '',
+        tempatLahir: '',
+        tanggalLahir: '',
         alamat: '',
-        noTelp: '',
-        asalSekolah: '',
-        alamatAsalSekolah: '',
-        diterimaKelas: '',
-        tglDiterima: '',
-        ortuAyah: '',
-        ortuIbu: '',
-        alamatOrtu: '',
-        noOrtu: '',
-        pkjOrtuAyah: '',
-        pkjOrtuIbu: '',
-        wali: '',
-        alamatWali: '',
-        noWali: '',
-        pkjWali: ''
+        tanggalMasuk: '',
+        tinggiBadan: '',
+        beratBadan: '',
+        foto: '',
+        namaAyah: '',
+        namaIbu: '',
+        pekerjaanAyah: '',
+        pekerjaanIbu: '',
+        agama: 'ISLAM',
+        status: 'AKTIF'
     });
 
     const handleChange = (e) => {
@@ -32,58 +30,134 @@ function TabInputSiswa() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted with data:", formData);
+        try {
+            const result = await Swal.fire({
+                title: 'Apakah Data Sudah Benar?',
+                text: 'Anda akan menambah siswa!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, tambah!',
+                cancelButtonText: 'Tidak, cek lagi',
+                reverseButtons: true,
+            });
+
+            if (result.isConfirmed) {
+                await siswaService.create(formData, token);
+                setFormData({
+                    ...formData,
+                    nisn: '',
+                    nis: '',
+                    nama: '',
+                    jenisKelamin: '',
+                    tempatLahir: '',
+                    tanggalLahir: '',
+                    alamat: '',
+                    tanggalMasuk: '',
+                    tinggiBadan: '',
+                    beratBadan: '',
+                    foto: '',
+                    namaAyah: '',
+                    namaIbu: '',
+                    pekerjaanAyah: '',
+                    pekerjaanIbu: '',
+                });
+                Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            Swal.fire('Error', 'NIS/NISN Sudah Terdaftar', 'error');
+        }
     };
 
-    // Label untuk setiap input
+    // NAMA LABEL
     const labels = {
         nis: 'NIS',
         nisn: 'NISN',
         nama: 'Nama',
-        jk: 'Jenis Kelamin',
-        tmptLahir: 'Tempat Lahir',
-        tglLahir: 'Tanggal Lahir',
-        agama: 'Agama',
+        jenisKelamin: 'Jenis Kelamin',
+        tempatLahir: 'Tempat Lahir',
+        tanggalLahir: 'Tanggal Lahir',
         alamat: 'Alamat',
-        noTelp: 'Nomor Telepon',
-        asalSekolah: 'Sekolah Asal',
-        alamatAsalSekolah: 'Alamat Sekolah Asal',
-        diterimaKelas: 'Diterima di Kelas',
-        tglDiterima: 'Tanggal Diterima',
-        ortuAyah: 'Nama Ayah',
-        ortuIbu: 'Nama Ibu',
-        alamatOrtu: 'Alamat Orang Tua',
-        noOrtu: 'Nomor Telepon Orang Tua',
-        pkjOrtuAyah: 'Pekerjaan Ayah',
-        pkjOrtuIbu: 'Pekerjaan Ibu',
-        wali: 'Nama Wali',
-        alamatWali: 'Alamat Wali',
-        noWali: 'Nomor Telepon Wali',
-        pkjWali: 'Pekerjaan Wali'
+        tanggalMasuk: 'Tanggal Masuk',
+        tinggiBadan: 'Tinggi Badan',
+        beratBadan: 'Berat Badan',
+        foto: 'Foto',
+        namaAyah: 'Nama Ayah',
+        namaIbu: 'Nama Ibu',
+        pekerjaanAyah: 'Pekerjaan Ayah',
+        pekerjaanIbu: 'Pekerjaan Ibu',
+        agama: 'Agama',
+        status: 'Status'
     };
 
+    const jenisKelaminOptions = ["LAKI-LAKI", "PEREMPUAN"];
+
     return (
-        <div className="active tab-pane" id="input-siswa">
+        <div className="active tab-pane p-px" style={{ padding: '10px' }} id="input-siswa">
             <div className="box-body">
                 <form onSubmit={handleSubmit}>
-                    {Object.keys(formData).map((key, index) => (
-                        <div className="row" key={index}>
-                            <div className="form-group">
-                                <label htmlFor={key} className="control-label">{labels[key]}</label>
-                                <input
-                                    type={key.includes("tgl") ? "date" : key.includes("nis") ? "number" : "text"}
-                                    name={key}
-                                    className="form-control"
-                                    id={key}
-                                    onChange={handleChange}
-                                    value={formData[key]}
-                                    required
-                                />
+                    <div className="row">
+                        {Object.keys(formData).map((key, index) => (
+                            <div className="col-md-6" key={index}>
+                                <div className="form-group">
+                                    <label
+                                        htmlFor={key}
+                                        className={`control-label
+                                  ${labels[key].toLowerCase() === 'status' ? 'hide' : labels[key].toLowerCase() === 'agama' ? 'hide' : ''}`}>{labels[key]}</label>
+                                    {key === 'jenisKelamin' ? (
+                                        <select
+                                            name={key}
+                                            className="form-control"
+                                            id={key}
+                                            onChange={handleChange}
+                                            value={formData[key]}
+                                            required
+                                        >
+                                            <option value="">Pilih Jenis Kelamin</option>
+                                            {jenisKelaminOptions.map((option, index) => (
+                                                <option key={index} value={option.replace('-', '_')}>{option}</option>
+                                            ))}
+                                        </select>
+                                    ) : key === 'alamat' ? (
+                                        <textarea
+                                            type={
+                                                key.includes("tanggal") ? "date" :
+                                                    key.includes("nis") ? "number" :
+                                                        key === "jenisKelamin" ? "text" :
+                                                            key === "foto" ? "file" :
+                                                                "text"
+                                            }
+                                            name={key}
+                                            className={`form-control ${key === 'status' ? "hide" : key === 'agama' ? "hide" : ""}`}
+                                            id={key}
+                                            onChange={handleChange}
+                                            value={formData[key]}
+                                            required
+                                        ></textarea>
+                                    ) : (
+                                        <input
+                                            type={
+                                                key.includes("tanggal") ? "date" :
+                                                    key.includes("nis") ? "number" :
+                                                        key.includes("Badan") ? "number" :
+                                                            key === "jenisKelamin" ? "text" :
+                                                                key === "foto" ? "file" :
+                                                                    "text"
+                                            }
+                                            name={key}
+                                            className={`form-control ${key === 'status' ? "hide" : key === 'agama' ? "hide" : ""}`}
+                                            id={key}
+                                            onChange={handleChange}
+                                            value={formData[key]}
+                                            required
+                                        />
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                     <div className="box-footer">
                         <button type="submit" className="btn btn-primary pull-left">
                             Simpan
