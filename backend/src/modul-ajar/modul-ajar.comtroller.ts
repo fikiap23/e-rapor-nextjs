@@ -51,8 +51,8 @@ export class ModulAjarController {
     @Get()
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN, Role.GURU)
-    async findAll(@Res() res) {
-        const result = await this.modulAjarService.findAllModulAjar();
+    async findAll(@Res() res, @Request() req,) {
+        const result = await this.modulAjarService.findAllModulAjar(req.headers.authorization);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 

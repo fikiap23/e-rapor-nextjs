@@ -50,7 +50,7 @@ export class MapelController {
 
     @Get()
     @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.GURU)
     async findAll(@Res() res) {
         const result = await this.mapelService.findAll();
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
@@ -58,7 +58,7 @@ export class MapelController {
 
     @Get(':id')
     @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.GURU)
     async findOne(@Res() res, @Param('id') id) {
         const result = await this.mapelService.findOne(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);

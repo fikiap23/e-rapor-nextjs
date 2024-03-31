@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import CreateModulAjarDto from '../../../modul-ajar/dto/create-modul-ajar.dto';
 import { UpdateModulAjarDto } from '../../../modul-ajar/dto/update-modul-ajar.dto';
@@ -15,6 +15,11 @@ export class ModulAjarQuery extends DbService {
 
     async findByIdAndRombel(id: string, idRombel: string) {
         return await this.prisma.modulAjar.findUnique({ where: { id, idRombel } })
+    }
+
+    async findByIdRombel(idRombel: string) {
+        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombel }, include: { mapel: true }, orderBy: { minggu: 'asc' } })
+        return modulAjar
     }
 
     async checkIsMingguHasUsed(minggu: number, idMapel: string, idRombel: string): Promise<boolean> {

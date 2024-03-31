@@ -14,8 +14,10 @@ export class ModulAjarRepository {
         private readonly mapelRepository: MapelRepository
     ) { }
 
-    async findAllModulAjar() {
-        return await this.modulAjarQuery.findAll();
+    async findAllModulAjar(token: string) {
+        // get decode payload jwt token
+        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        return await this.modulAjarQuery.findByIdRombel(idsRombel[0]);
     }
 
     async findByIdOrThrow(id: string) {
