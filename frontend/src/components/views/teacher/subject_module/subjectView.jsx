@@ -7,6 +7,8 @@ import useAuth from '@/hooks/useAuth'
 import InputModulAjar from './component/inputModulAjar'
 import ActivitiesView from './component/activitiesView'
 import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
+import Loading from '@/components/shared/Loading'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 
 const SubjectView = () => {
   const [activeTab, setActiveTab] = useState('moduleTab')
@@ -58,18 +60,6 @@ const SubjectView = () => {
                     Modul Ajar
                   </Link>
                 </li>
-                <li
-                  className={
-                    activeTab === 'learningOutcomesTab' ? 'active' : ''
-                  }
-                >
-                  <Link
-                    href=""
-                    onClick={() => handleTabChange('learningOutcomesTab')}
-                  >
-                    Input Modul Ajar
-                  </Link>
-                </li>
                 <li className={activeTab === 'activitiesTab' ? 'active' : ''}>
                   <Link
                     href=""
@@ -83,57 +73,72 @@ const SubjectView = () => {
                 {activeTab === 'moduleTab' && (
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
-                      <table id="siswa" className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Minggu</th>
-                            <th>Mata Pelajaran</th>
-                            <th>Topik</th>
-                            <th>Sub Topik</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {modulAjars?.map((modulAjar) => (
-                            <tr key={modulAjar.id}>
-                              <td>{modulAjar.minggu}</td>
-                              <td>{modulAjar.mapel.name}</td>
-                              <td>{modulAjar.topik}</td>
-                              <td>{modulAjar.subtopik}</td>
-                              <td>
-                                <button
-                                  style={{
-                                    marginRight: '2px',
-                                    marginLeft: '2px',
-                                  }}
-                                  type="button"
-                                  className="btn btn-primary"
-                                  // onClick={handleDelete}
-                                >
-                                  <i className="icon fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                  onClick={() => handleDelete(modulAjar.id)}
-                                >
-                                  <i className="icon fa fa-trash"></i>
-                                </button>
-                                <button
-                                  style={{
-                                    marginRight: '2px',
-                                    marginLeft: '2px',
-                                  }}
-                                  type="button"
-                                  className="btn btn-success"
-                                >
-                                  <i className="icon fa fa-print"></i>
-                                </button>
-                              </td>
+                      <div style={{ margin: '0 20px 20px 20px' }}>
+                        <button
+                          type="button"
+                          className="btn bg-green"
+                          onClick={() => handleTabChange('learningOutcomesTab')}
+                        >
+                          <i className="icon fa fa-plus"></i> Tambah
+                        </button>
+                      </div>
+                      {isFetchingModulAjars && <Loading />}
+                      {!isFetchingModulAjars && modulAjars.length === 0 && (
+                        <EmptyDataIndicator message={'Belum Ada Modul Ajar'} />
+                      )}
+                      {!isFetchingModulAjars && modulAjars.length > 0 && (
+                        <table id="siswa" className="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Minggu</th>
+                              <th>Mata Pelajaran</th>
+                              <th>Topik</th>
+                              <th>Sub Topik</th>
+                              <th>Aksi</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {modulAjars?.map((modulAjar) => (
+                              <tr key={modulAjar.id}>
+                                <td>{modulAjar.minggu}</td>
+                                <td>{modulAjar.mapel.name}</td>
+                                <td>{modulAjar.topik}</td>
+                                <td>{modulAjar.subtopik}</td>
+                                <td>
+                                  <button
+                                    style={{
+                                      marginRight: '2px',
+                                      marginLeft: '2px',
+                                    }}
+                                    type="button"
+                                    className="btn btn-primary"
+                                    // onClick={handleDelete}
+                                  >
+                                    <i className="icon fa fa-edit"></i>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => handleDelete(modulAjar.id)}
+                                  >
+                                    <i className="icon fa fa-trash"></i>
+                                  </button>
+                                  <button
+                                    style={{
+                                      marginRight: '2px',
+                                      marginLeft: '2px',
+                                    }}
+                                    type="button"
+                                    className="btn btn-success"
+                                  >
+                                    <i className="icon fa fa-print"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
                     </div>
                   </div>
                 )}

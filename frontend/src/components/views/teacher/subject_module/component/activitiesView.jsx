@@ -7,6 +7,8 @@ import Loading from '@/components/shared/Loading'
 import { useJadwalAjars } from '@/services/jadwalAjarService/useJadwalAjar'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { formatDate } from '@/lib/helperDate'
+import jadwalAjarService from '@/services/jadwalAjarService/jadwal-ajar.service'
+import Swal from 'sweetalert2'
 
 const ActivitiesView = () => {
   const { token } = useAuth()
@@ -23,10 +25,6 @@ const ActivitiesView = () => {
     refetch: refetchJadwalAjars,
   } = useJadwalAjars(token)
 
-  console.log(jadwalAjars)
-  const activityDummy = [
-    { id: 1, week: 'Minggu 1', day: 'Senin', date: '10 Juli 2024' },
-  ]
   const [isModalOpen, setIsModalOpen] = useState(false)
   const openModal = () => {
     setIsModalOpen(true)
@@ -34,6 +32,34 @@ const ActivitiesView = () => {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus data Jadwal Ajar ini !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await jadwalAjarService.delete(token, id)
+        Swal.fire(
+          'Data Dihapus!',
+          'Data Jadwal Ajar ini telah dihapus.',
+          'success'
+        )
+        refetchJadwalAjars()
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Dibatalkan',
+          'Tidak ada perubahan pada data Jadwal Ajar ini.',
+          'error'
+        )
+      }
+    })
   }
 
   return (
@@ -70,29 +96,28 @@ const ActivitiesView = () => {
                       <td>{`Minggu ${item.modulAjar.minggu}`}</td>
                       <td>{item.hari}</td>
                       <td>{formatDate(new Date(item.tanggal))}</td>
-                      <td>{item.kegiatanInti}</td>
+                      <td style={{ whiteSpace: 'pre-line' }}>
+                        {item.kegiatanInti}
+                      </td>
+
                       <td>
                         <a
                           style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-primary btn-sm"
                         >
-                          {/* <span className="glyphicon glyphicon-edit"></span> Edit */}
                           <i className="icon fa fa-edit"></i>
                         </a>
                         <button
                           style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-info btn-sm"
-                          // onClick={() => deleteSiswa(item.id)}
                         >
-                          {/* <span className="glyphicon glyphicon-remove"></span> Delete */}
                           <i className="icon fa fa-eye"></i>
                         </button>
                         <button
                           style={{ marginRight: '2px', marginLeft: '2px' }}
                           className="btn btn-danger btn-sm"
-                          // onClick={() => deleteSiswa(item.id)}
+                          onClick={() => handleDelete(item.id)}
                         >
-                          {/* <span className="glyphicon glyphicon-remove"></span> Delete */}
                           <i className="icon fa fa-trash"></i>
                         </button>
                       </td>
