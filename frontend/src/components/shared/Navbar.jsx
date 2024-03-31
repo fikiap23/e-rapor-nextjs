@@ -18,7 +18,7 @@ export default function Navbar(props) {
             className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6"
             href="/teacher"
           >
-            Log in
+            Dashboard
           </a>
         ) : (
           <a

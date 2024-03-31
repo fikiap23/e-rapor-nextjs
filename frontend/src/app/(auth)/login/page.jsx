@@ -1,60 +1,63 @@
-'use client'
-import { useState } from 'react'
-import authService from '@/services/auth.service'
-import '../../tailwind.css'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/navigation'
-import useAuth from '@/hooks/useAuth'
-import getTokenData from '@/lib/getTokenData'
+"use client";
+import { useState } from "react";
+import authService from "@/services/auth.service";
+import "../../tailwind.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
+import getTokenData from "@/lib/getTokenData";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const { push } = useRouter()
-  const { token, setToken } = useAuth()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { push } = useRouter();
+  const { token, setToken } = useAuth();
   const handleSubmit = async () => {
     try {
-      setIsLoading(true)
-      const payload = { username, password }
-      const result = await authService.login(payload)
-      const accessToken = result.access_token
-      const jwtPayload = getTokenData(accessToken)
+      setIsLoading(true);
+      const payload = { username, password };
+      const result = await authService.login(payload);
+      const accessToken = result.access_token;
+      const jwtPayload = getTokenData(accessToken);
 
-      setToken(accessToken)
+      setToken(accessToken);
       // simpan  ke cookie
-      const now = Math.floor(Date.now() / 1000)
-      const expireInSeconds = jwtPayload.exp - now
-      document.cookie = `token=${accessToken};path=/;max-age=${expireInSeconds}`
-      toast.success('Login success', {
-        position: 'top-right',
-      })
+      const now = Math.floor(Date.now() / 1000);
+      const expireInSeconds = jwtPayload.exp - now;
+      document.cookie = `token=${accessToken};path=/;max-age=${expireInSeconds}`;
+      toast.success("Login success", {
+        position: "top-right",
+      });
       // Redirect to home
-      push('/')
-      setIsLoading(false)
+      push("/");
+      setIsLoading(false);
     } catch (error) {
       toast.error(error, {
-        position: 'top-right',
-      })
-      console.log(`Login error: ${error}`)
-      setIsLoading(false)
+        position: "top-right",
+      });
+      console.log(`Login error: ${error}`);
+      setIsLoading(false);
     }
-  }
+  };
   return (
     <>
       <div className="h-screen md:flex">
         <div className="relative overflow-hidden md:flex w-1/2 bg-[url('https://ensys.bekasikota.go.id/uploads/galeri/69915167/69915167-6f268633-60ed-45fc-8e23-6d9b0fa5e33e.jpeg?1639816268')] bg-no-repeat bg-cover bg-center justify-around items-center hidden">
           <div className="bg-white/30 backdrop-blur-sm p-8 rounded-xl drop-shadow-xl">
-            <h1 className="text-white font-bold text-4xl font-sans">
+            <h1 className="text-indigo-800 font-bold text-4xl font-sans">
               Taman Karya
             </h1>
-            <p className="text-white mt-1">
+            <p className="text-indigo-800 mt-4 font-medium">
               TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
             </p>
-            <button className="block w-28 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold mb-2">
+            <a
+              href="/search-raport"
+              className="block w-fit px-5 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold"
+            >
               Beranda
-            </button>
+            </a>
           </div>
           <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
           <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
@@ -117,7 +120,7 @@ export default function LoginPage() {
               onClick={handleSubmit}
               className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2"
             >
-              {isLoading ? 'Loading...' : 'Login'}
+              {isLoading ? "Loading..." : "Login"}
             </button>
             <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">
               Forgot Password ?
@@ -126,5 +129,5 @@ export default function LoginPage() {
         </div>
       </div>
     </>
-  )
+  );
 }
