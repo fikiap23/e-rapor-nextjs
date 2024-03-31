@@ -1,6 +1,18 @@
+'use client'
+import useAuth from '@/hooks/useAuth'
 import TableLecture from './tableLecture'
+import { useRombelDiampu } from '@/services/teacherService/useRombelDiampu'
+import Loading from '@/components/shared/Loading'
 
 const LectureView = () => {
+  const { token } = useAuth()
+  const {
+    data: listRombel,
+    error,
+    isFetching,
+    refetch,
+  } = useRombelDiampu(token)
+  console.log(listRombel)
   return (
     <>
       <div className="content-wrapper">
@@ -14,7 +26,10 @@ const LectureView = () => {
                   </h3>
                 </div>
                 <div className="box-body">
-                  <TableLecture />
+                  {isFetching && <Loading />}
+                  {!isFetching && listRombel && (
+                    <TableLecture rombels={listRombel} />
+                  )}
                 </div>
               </div>
             </div>
