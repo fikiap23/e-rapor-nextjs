@@ -1,38 +1,38 @@
-'use client'
-import { useState } from 'react'
-import semesterService from '@/services/semesterService/semester.service'
-import Swal from 'sweetalert2'
+"use client";
+import { useState } from "react";
+import semesterService from "@/services/semesterService/semester.service";
+import Swal from "sweetalert2";
 const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
   const [formValues, setFormValues] = useState({
-    tahunAjaranAwal: '',
-    tahunAjaranAkhir: '',
-    jenisSemester: '',
-    namaKepsek: '',
-    nipKepsek: '',
-    tglBagiRapor: '',
+    tahunAjaranAwal: "",
+    tahunAjaranAkhir: "",
+    jenisSemester: "",
+    namaKepsek: "",
+    nipKepsek: "",
+    tglBagiRapor: "",
     isAktif: false,
-  })
+  });
 
   const handleToggle = () => {
-    setFormValues({ ...formValues, isAktif: !formValues.isAktif })
-  }
+    setFormValues({ ...formValues, isAktif: !formValues.isAktif });
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormValues({ ...formValues, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
   const clearForm = () => {
     setFormValues({
-      tahunAjaranAwal: '',
-      tahunAjaranAkhir: '',
-      jenisSemester: '',
-      namaKepsek: '',
-      nipKepsek: '',
-      tglBagiRapor: '',
+      tahunAjaranAwal: "",
+      tahunAjaranAkhir: "",
+      jenisSemester: "",
+      namaKepsek: "",
+      nipKepsek: "",
+      tglBagiRapor: "",
       isAktif: false,
-    })
-  }
+    });
+  };
 
   const handleSubmit = () => {
     try {
@@ -40,36 +40,36 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
         .create(formValues, token)
         .then((result) => {
           Swal.fire({
-            icon: 'success',
-            title: 'Data semester telah ditambahkan',
-            position: 'bottom-center',
-          })
-          clearForm()
-          refetch()
-          closeModal()
+            icon: "success",
+            title: "Data semester telah ditambahkan",
+            position: "bottom-center",
+          });
+          clearForm();
+          refetch();
+          closeModal();
         })
         .catch((error) => {
           Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
+            icon: "error",
+            title: "Oops...",
             text: error,
-            position: 'bottom-center',
-          })
-        })
+            position: "bottom-center",
+          });
+        });
     } catch (error) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
+        icon: "error",
+        title: "Oops...",
         text: error,
-        position: 'top-right',
-      })
+        position: "top-right",
+      });
     }
-  }
+  };
 
   return (
     <div
       className={`modal fade overscroll-auto scroll-auto  ${
-        isOpen ? 'in show-modal' : ''
+        isOpen ? "in show-modal" : ""
       }`}
       id="add-modal"
     >
@@ -177,7 +177,7 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
                     type="checkbox"
                     name="isAktif"
                     value={formValues.isAktif}
-                    checked={formValues.isAktif}
+                    onChange={handleChange}
                   />
                   <span className="slider round"></span>
                 </div>
@@ -196,7 +196,7 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddSemesterModal
+export default AddSemesterModal;
