@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import { DynamicInput, useInputs } from './input/DynamicInput'
-import useAuth from '@/hooks/useAuth'
-import { useMapels } from '@/services/mapelService/useMapel'
 import Swal from 'sweetalert2'
 import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 
-const InputModulAjar = ({ refetch }) => {
-  const { token } = useAuth()
-  const { data: mapels, isFetching: isFetchingMapels } = useMapels(token)
+const InputModulAjar = ({ refetch, mapels }) => {
   const [formData, setFormData] = useState({
     minggu: '',
     topik: '',
@@ -137,26 +133,24 @@ const InputModulAjar = ({ refetch }) => {
             </select>
           </div>
 
-          {!isFetchingMapels && (
-            <div className="form-group">
-              <label htmlFor="idMapel">Mata Pelajaran</label>
-              <select
-                className="form-control"
-                id="idMapel"
-                name="idMapel"
-                value={formData.idMapel}
-                onChange={(e) => handleFormChange('idMapel', e.target.value)}
-                required
-              >
-                <option value="">Pilih Mata Pelajaran</option>
-                {mapels.map((mapel, index) => (
-                  <option key={mapel.id} value={mapel.id}>
-                    {mapel.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          <div className="form-group">
+            <label htmlFor="idMapel">Mata Pelajaran</label>
+            <select
+              className="form-control"
+              id="idMapel"
+              name="idMapel"
+              value={formData.idMapel}
+              onChange={(e) => handleFormChange('idMapel', e.target.value)}
+              required
+            >
+              <option value="">Pilih Mata Pelajaran</option>
+              {mapels.map((mapel, index) => (
+                <option key={mapel.id} value={mapel.id}>
+                  {mapel.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div style={{ display: 'flex', gap: '20px' }}>
             <div className="form-group" style={{ width: '30%' }}>

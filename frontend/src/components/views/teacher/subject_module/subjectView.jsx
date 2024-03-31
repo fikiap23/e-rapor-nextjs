@@ -9,6 +9,7 @@ import ActivitiesView from './component/activitiesView'
 import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 import Loading from '@/components/shared/Loading'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
+import { useMapels } from '@/services/mapelService/useMapel'
 
 const SubjectView = () => {
   const [activeTab, setActiveTab] = useState('moduleTab')
@@ -19,6 +20,8 @@ const SubjectView = () => {
     isFetching: isFetchingModulAjars,
     refetch: refetchModulAjars,
   } = useModulAjars(token)
+
+  const { data: mapels, isFetching: isFetchingMapels } = useMapels(token)
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -142,8 +145,8 @@ const SubjectView = () => {
                     </div>
                   </div>
                 )}
-                {activeTab === 'learningOutcomesTab' && (
-                  <InputModulAjar refetch={refetchModulAjars} />
+                {activeTab === 'learningOutcomesTab' && !isFetchingMapels && (
+                  <InputModulAjar refetch={refetchModulAjars} mapels={mapels} />
                 )}
                 {activeTab === 'activitiesTab' && <ActivitiesView />}
               </div>
