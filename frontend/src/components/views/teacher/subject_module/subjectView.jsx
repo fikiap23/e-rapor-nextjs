@@ -1,28 +1,16 @@
 'use client'
 import Swal from 'sweetalert2'
 import { useState } from 'react'
-import AddSubjectModal from './component/addSubjectModal'
 import Link from 'next/link'
-import InputSubject from './component/InputSubject'
 import ActivitiesView from './component/activitiesView'
 import InputModulAjar from './component/inputModulAjar'
 
 const SubjectView = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [showInput, setShowInput] = useState(false)
   const [activeTab, setActiveTab] = useState('moduleTab')
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
     // console.log(tab);
-  }
-
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
   }
 
   const handleDelete = () => {
@@ -41,11 +29,6 @@ const SubjectView = () => {
         Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
       }
     })
-  }
-
-  const handleShowInput = () => {
-    setShowInput(!showInput)
-    console.log(showInput)
   }
 
   const dataDummy = [
@@ -159,21 +142,6 @@ const SubjectView = () => {
     },
   ]
 
-  function potongString(str) {
-    if (str.length > 20) {
-      return str.substring(0, 20) + '...'
-    } else {
-      return str
-    }
-  }
-
-  const dataDummyTerpotong = dataDummy.map((item) => ({
-    minggu: item.minggu,
-    tujuan_pembelajaran: item.tujuan_pembelajaran.map(potongString),
-    capaian_pembelajaran: item.capaian_pembelajaran.map(potongString),
-    tujuan_kegiatan: potongString(item.tujuan_kegiatan),
-  }))
-
   return (
     <div className="content-wrapper" id="guru">
       <section className="content">
@@ -196,7 +164,7 @@ const SubjectView = () => {
                     href=""
                     onClick={() => handleTabChange('learningOutcomesTab')}
                   >
-                    Pembelajaran
+                    Input Modul Ajar
                   </Link>
                 </li>
                 <li className={activeTab === 'activitiesTab' ? 'active' : ''}>
@@ -204,7 +172,7 @@ const SubjectView = () => {
                     href=""
                     onClick={() => handleTabChange('activitiesTab')}
                   >
-                    Kegiatan Inti
+                    Jadwal Ajar
                   </Link>
                 </li>
               </ul>
@@ -212,16 +180,6 @@ const SubjectView = () => {
                 {activeTab === 'moduleTab' && (
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
-                      <div style={{ margin: '0 20px 20px 20px' }}>
-                        <button
-                          type="button"
-                          className="btn bg-green"
-                          onClick={openModal}
-                        >
-                          <i className="icon fa fa-plus"></i> Tambah
-                        </button>
-                        {/* <span style={{color: 'red', fontStyle: 'italic', marginLeft: '10px'}}>*modul ajar belum lengkap sampai 14 minggu</span> */}
-                      </div>
                       <table id="siswa" className="table table-hover">
                         <thead>
                           <tr>
@@ -322,11 +280,6 @@ const SubjectView = () => {
           </div>
         </div>
       </section>
-      {/* ADD MODUL AJAR */}
-      <AddSubjectModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-      ></AddSubjectModal>
     </div>
   )
 }
