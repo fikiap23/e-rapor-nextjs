@@ -5,6 +5,7 @@ import AddSubjectModal from './component/addSubjectModal'
 import Link from 'next/link'
 import InputSubject from './component/InputSubject'
 import ActivitiesView from './component/activitiesView'
+import InputModulAjar from './component/inputModulAjar'
 
 const SubjectView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -314,121 +315,7 @@ const SubjectView = () => {
                     </div>
                   </div>
                 )}
-                {activeTab === 'learningOutcomesTab' && (
-                  <div className="active tab-pane" id="activity">
-                    <div className="box-body table-responsive no-padding">
-                      {showInput ? (
-                        <>
-                          <div style={{ margin: '0 20px 20px 20px' }}>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleShowInput}
-                            >
-                              <i className="icon fa fa-close"></i> Batal
-                            </button>
-                          </div>
-                          <InputSubject />
-                        </>
-                      ) : (
-                        <>
-                          <div style={{ margin: '0 20px 20px 20px' }}>
-                            <button
-                              type="button"
-                              className="btn btn-success"
-                              onClick={handleShowInput}
-                            >
-                              <i className="icon fa fa-plus"></i> Tambah
-                            </button>
-                            <span
-                              style={{
-                                color: 'red',
-                                fontStyle: 'italic',
-                                marginLeft: '10px',
-                              }}
-                            >
-                              *modul ajar belum lengkap
-                            </span>
-                          </div>
-                          <table
-                            id="siswa"
-                            className="table table-bordered table-striped"
-                          >
-                            <thead>
-                              <tr>
-                                <th className="text-center">Minggu</th>
-                                <th>Tujuan Pembelajaran</th>
-                                <th>Capaian Pembelajaran</th>
-                                <th>Tujuan Kegiatan</th>
-                                <th>Aksi</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {dataDummyTerpotong.map((item, index) => (
-                                <tr key={index}>
-                                  <td className="text-center">{item.minggu}</td>
-                                  <td>
-                                    <ol>
-                                      {item.tujuan_pembelajaran.map(
-                                        (tujuan, idx) => (
-                                          <li key={idx}>{tujuan}</li>
-                                        )
-                                      )}
-                                    </ol>
-                                  </td>
-                                  <td>
-                                    <ol>
-                                      {item.capaian_pembelajaran.map(
-                                        (capaian, idx) => (
-                                          <li key={idx}>{capaian}</li>
-                                        )
-                                      )}
-                                    </ol>
-                                  </td>
-                                  <td>{item.tujuan_kegiatan}</td>
-                                  <td>
-                                    <button
-                                      style={{
-                                        marginRight: '2px',
-                                        marginLeft: '2px',
-                                      }}
-                                      type="button"
-                                      className="btn btn-info"
-                                    >
-                                      <i className="icon fa fa-eye"></i>
-                                    </button>
-
-                                    <button
-                                      style={{
-                                        marginRight: '2px',
-                                        marginLeft: '2px',
-                                      }}
-                                      type="button"
-                                      className="btn btn-danger"
-                                    >
-                                      <i className="icon fa fa-trash"></i>
-                                    </button>
-
-                                    <button
-                                      style={{
-                                        marginRight: '2px',
-                                        marginLeft: '2px',
-                                      }}
-                                      type="button"
-                                      className="btn btn-primary"
-                                    >
-                                      <i className="icon fa fa-edit"></i>
-                                    </button>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
+                {activeTab === 'learningOutcomesTab' && <InputModulAjar />}
                 {activeTab === 'activitiesTab' && <ActivitiesView />}
               </div>
             </div>
