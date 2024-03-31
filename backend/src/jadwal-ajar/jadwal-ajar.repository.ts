@@ -15,8 +15,10 @@ export class JadwalAjarRepository {
         private readonly authRepository: AuthRepository,
     ) { }
 
-    async findAll() {
-        return await this.jadwalAjarQuery.findAll();
+    async findAll(token: string) {
+        // get decode payload jwt token
+        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken
+        return await this.jadwalAjarQuery.findAll(idsRombel[0]);
     }
 
     async findByIdOrThrow(id: string) {

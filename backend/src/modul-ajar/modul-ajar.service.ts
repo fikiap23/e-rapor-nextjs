@@ -19,8 +19,8 @@ export class ModulAjarService {
         return await this.modulAjarRepository.delete(token, id)
     }
 
-    async findAllModulAjar() {
-        return await this.modulAjarRepository.findAllModulAjar()
+    async findAllModulAjar(token: string) {
+        return await this.modulAjarRepository.findAllModulAjar(token)
     }
 
     async findByIdOrThrow(id: string) {

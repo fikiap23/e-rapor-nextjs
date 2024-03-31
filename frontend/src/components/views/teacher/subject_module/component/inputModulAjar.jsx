@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { DynamicInput, useInputs } from './input/DynamicInput'
+import Swal from 'sweetalert2'
+import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 
-const InputModulAjar = () => {
+const InputModulAjar = ({ refetch, mapels }) => {
   const [formData, setFormData] = useState({
     minggu: '',
-    topic: '',
+    topik: '',
     subtopik: '',
     startDate: '',
     endDate: '',
@@ -25,7 +27,7 @@ const InputModulAjar = () => {
     handleRemoveInput: handleRemoveTujuanKegiatan,
   } = useInputs({ label: 'Tujuan Kegiatan' })
 
-  const [kataKunci, setKataKunci] = useState('')
+  const [katakunci, setKataKunci] = useState('')
   const [alatBahan, setAlatBahan] = useState('')
   const [petaKonsep, setPetaKonsep] = useState('')
 
@@ -36,16 +38,76 @@ const InputModulAjar = () => {
     })
   }
 
+  const clearForm = () => {
+    setFormData({
+      minggu: '',
+      topik: '',
+      subtopik: '',
+      startDate: '',
+      endDate: '',
+      capaianPembelajaran: '',
+      idMapel: '',
+    })
+
+    setKataKunci('')
+    setAlatBahan('')
+    setPetaKonsep('')
+  }
+
   const handleSubmit = (event) => {
     const payload = {
       ...formData,
-      kataKunci: kataKunci.split(',').map((kata) => kata.trim()),
+      katakunci: katakunci.split(',').map((kata) => kata.trim()),
       alatBahan: alatBahan.split(',').map((alat) => alat.trim()),
       petaKonsep: petaKonsep.split(',').map((peta) => peta.trim()),
       tujuanPembelajaran: tujuanPembelajaran.map((tujuan) => tujuan.value),
       tujuanKegiatan: tujuanKegiatan.map((tujuan) => tujuan.value),
     }
-    console.log(payload)
+
+    if (
+      payload.minggu === '' ||
+      payload.topik === '' ||
+      payload.startDate === '' ||
+      payload.endDate === '' ||
+      payload.capaianPembelajaran === '' ||
+      payload.idMapel === ''
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Data tidak boleh ada yang kosong',
+        position: 'bottom-center',
+      })
+      return
+    }
+    try {
+      modulAjarService
+        .create(payload, token)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data modul telah ditambahkan',
+            position: 'bottom-center',
+          })
+          refetch()
+          clearForm()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
   }
 
   return (
@@ -63,7 +125,7 @@ const InputModulAjar = () => {
               required
             >
               <option value="">Pilih Minggu</option>
-              {[...Array(14)].map((_, index) => (
+              {[...Array(20)].map((_, index) => (
                 <option key={index + 1} value={index + 1}>
                   {index + 1}
                 </option>
@@ -82,9 +144,9 @@ const InputModulAjar = () => {
               required
             >
               <option value="">Pilih Mata Pelajaran</option>
-              {[...Array(14)].map((_, index) => (
-                <option key={index + 1} value={index + 1}>
-                  {index + 1}
+              {mapels.map((mapel, index) => (
+                <option key={mapel.id} value={mapel.id}>
+                  {mapel.name}
                 </option>
               ))}
             </select>
@@ -118,15 +180,15 @@ const InputModulAjar = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="topic">Topik</label>
+            <label htmlFor="topik">Topik</label>
             <input
               type="text"
               className="form-control"
-              id="topic"
-              name="topic"
+              id="topik"
+              name="topik"
               placeholder="Masukan Topik"
-              value={formData.topic}
-              onChange={(e) => handleFormChange('topic', e.target.value)}
+              value={formData.topik}
+              onChange={(e) => handleFormChange('topik', e.target.value)}
               required
             />
           </div>
@@ -153,7 +215,7 @@ const InputModulAjar = () => {
               id="katakunci"
               name="katakunci"
               placeholder="Masukan Kata Kunci"
-              value={kataKunci}
+              value={katakunci}
               onChange={(e) => setKataKunci(e.target.value)}
               required
             />
