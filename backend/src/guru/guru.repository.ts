@@ -79,6 +79,12 @@ export class GuruRepository {
         return await this.userQuery.delete(guru.idUser)
     }
 
+    async findAllRombelDiampu(token) {
+        // decaode
+        const { idGuru } = await this.authRepository.decodeJwtToken(token);
+        return await this.guruQuery.findAllRombelDiampu(idGuru)
+    }
+
     /*
       |--------------------------------------------------------------------------
       | Helper guru function

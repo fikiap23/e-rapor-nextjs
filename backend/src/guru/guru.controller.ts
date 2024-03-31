@@ -11,6 +11,7 @@ import {
     Query,
     UseGuards,
     Req,
+    Headers,
 } from '@nestjs/common';
 import { JwtGuard, RoleGuard } from '../auth/guard';
 import { Role } from '@prisma/client';
@@ -77,6 +78,14 @@ export class GuruController {
     @Roles(Role.ADMIN, Role.GURU)
     async findAll(@Res() res, @Query() dto: GuruQueryDto) {
         const result = await this.guruService.findAll(dto);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get('rombel-semester-guru')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.GURU)
+    async findAllRombel(@Res() res, @Headers('authorization') authorization: string,) {
+        const result = await this.guruService.findAllRombelDiampu(authorization);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 

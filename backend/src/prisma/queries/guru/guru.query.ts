@@ -155,4 +155,34 @@ export class GuruQuery extends DbService {
         }
     }
 
+    async findAllRombelDiampu(id: string) {
+        const data = await this.prisma.rombelSemesterGuru.findMany({
+            where: { idGuru: id },
+            select: {
+                id: true,
+
+                rombel: {
+                    select: {
+                        id: true,
+                        name: true,
+                        kategoriRombel: true
+                    }
+                },
+                semester: true
+            }
+        })
+
+        return data.map(d => {
+            return {
+                id: d.id,
+                idRombel: d.rombel.id,
+                idSemester: d.semester.id,
+                name: d.rombel.name,
+                semester: `${d.semester.tahunAjaranAwal}-${d.semester.tahunAjaranAkhir} (${d.semester.jenisSemester})`,
+                statusSemester: d.semester.isAktif,
+                kelompokUsia: d.rombel.kategoriRombel.kelompokUsia
+            }
+
+        })
+    }
 }
