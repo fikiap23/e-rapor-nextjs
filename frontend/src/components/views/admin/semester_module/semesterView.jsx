@@ -8,6 +8,7 @@ import Loading from '@/components/shared/Loading'
 import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semesterService/semester.service'
 import Swal from 'sweetalert2'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 
 const SemesterView = () => {
   const { token } = useAuth()
@@ -88,60 +89,69 @@ const SemesterView = () => {
                     </button>
                   </div>
                   {isFetchingSemester && <Loading />}
-                  <table
-                    className="table table-bordered table-striped"
-                    id="tahun"
-                  >
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Tahun</th>
-                        <th>Kepala Sekolah</th>
-                        <th>NIP</th>
-                        <th>Tgl Raport</th>
-                        <th>Semester</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!isFetchingSemester &&
-                        listSemester &&
-                        listSemester.map((item, index) => (
-                          <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{`${item.tahunAjaranAwal}-${item.tahunAjaranAkhir}`}</td>
-                            <td>{item.namaKepsek}</td>
-                            <td>{item.nipKepsek}</td>
-                            <td>{formatDate(new Date(item.tglBagiRapor))}</td>
-                            <td>{item.jenisSemester}</td>
-                            <td>
-                              <span
-                                className={`label bg-${
-                                  item.isAktif ? 'green' : 'red'
-                                }`}
-                              >
-                                {item.isAktif ? 'Aktif' : 'Nonaktif'}
-                              </span>
-                            </td>
-                            <td>
-                              <button
-                                className="btn btn-primary btn-sm"
-                                onClick={openModalEdit.bind(this, item)}
-                              >
-                                <i className="icon fa fa-edit"></i>
-                              </button>
-                              <button
-                                className="btn btn-danger btn-sm"
-                                onClick={handleDelete.bind(this, item.id)}
-                              >
-                                <i className="icon fa fa-trash"></i>
-                              </button>
-                            </td>
+                  {!isFetchingSemester && (
+                    <EmptyDataIndicator message={'Belum ada data'} />
+                  )}
+                  {!isFetchingSemester &&
+                    listSemester &&
+                    listSemester.length > 0 && (
+                      <table
+                        className="table table-bordered table-striped"
+                        id="tahun"
+                      >
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Tahun</th>
+                            <th>Kepala Sekolah</th>
+                            <th>NIP</th>
+                            <th>Tgl Raport</th>
+                            <th>Semester</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
                           </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                        </thead>
+                        <tbody>
+                          {!isFetchingSemester &&
+                            listSemester &&
+                            listSemester.map((item, index) => (
+                              <tr key={item.id}>
+                                <td>{index + 1}</td>
+                                <td>{`${item.tahunAjaranAwal}-${item.tahunAjaranAkhir}`}</td>
+                                <td>{item.namaKepsek}</td>
+                                <td>{item.nipKepsek}</td>
+                                <td>
+                                  {formatDate(new Date(item.tglBagiRapor))}
+                                </td>
+                                <td>{item.jenisSemester}</td>
+                                <td>
+                                  <span
+                                    className={`label bg-${
+                                      item.isAktif ? 'green' : 'red'
+                                    }`}
+                                  >
+                                    {item.isAktif ? 'Aktif' : 'Nonaktif'}
+                                  </span>
+                                </td>
+                                <td>
+                                  <button
+                                    className="btn btn-primary btn-sm"
+                                    onClick={openModalEdit.bind(this, item)}
+                                  >
+                                    <i className="icon fa fa-edit"></i>
+                                  </button>
+                                  <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={handleDelete.bind(this, item.id)}
+                                  >
+                                    <i className="icon fa fa-trash"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    )}
                 </div>
               </div>
             </div>

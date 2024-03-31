@@ -6,6 +6,7 @@ import teacherService from '@/services/teacherService/teacher.service'
 import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
 import { useGetAllTeacherData } from '@/services/teacherService/useTeacher'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 
 const ManageTeacher = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
@@ -96,7 +97,10 @@ const ManageTeacher = () => {
         </div>
 
         {isFetchingTeacher && <Loading />}
-        {!isFetchingTeacher && (
+        {!isFetchingTeacher && listTeacher.length === 0 && (
+          <EmptyDataIndicator message="Tidak ada data guru" />
+        )}
+        {!isFetchingTeacher && listTeacher && listTeacher.length > 0 && (
           <table id="guru" className="table table-bordered table-striped">
             <thead>
               <tr>

@@ -8,6 +8,7 @@ import Loading from '@/components/shared/Loading'
 import Swal from 'sweetalert2'
 import rombelService from '@/services/rombelService/rombel.service'
 import { useRombelsNotRelationWithGuru } from '@/services/rombelService/useRombelGuruNotRelation'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 const TeacherTable = () => {
   const { token } = useAuth()
   const {
@@ -65,19 +66,22 @@ const TeacherTable = () => {
           </button>
         </div>
         {isFetchingRombel && <Loading />}
-        <table id="ekstra" className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Rombel</th>
-              <th>NIP Guru</th>
-              <th>Nama Guru</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!isFetchingRombel &&
-              listRombel.map((item, index) => (
+        {!isFetchingRombel && listRombel && listRombel.length === 0 && (
+          <EmptyDataIndicator message={'Belum ada data rombel'} />
+        )}
+        {!isFetchingGuruRombel && listRombel && listRombel.length > 0 && (
+          <table id="ekstra" className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Rombel</th>
+                <th>NIP Guru</th>
+                <th>Nama Guru</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listRombel.map((item, index) => (
                 <tr key={item.id}>
                   <td>{index + 1}</td>
                   <td>{item.name}</td>
@@ -93,8 +97,9 @@ const TeacherTable = () => {
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        )}
       </div>
       {/* add guru */}
       <AddGuruToRombelModal
