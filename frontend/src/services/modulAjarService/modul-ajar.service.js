@@ -15,6 +15,19 @@ const modulAjarService = {
       throw error.response?.data?.message || 'Modul Ajar Gagal Ditambahkan'
     }
   },
+
+  delete: async (token, id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Modul Ajar Gagal Dihapus'
+    }
+  },
 }
 
 export default modulAjarService

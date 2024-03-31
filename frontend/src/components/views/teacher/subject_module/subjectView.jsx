@@ -6,6 +6,7 @@ import { useModulAjars } from '@/services/modulAjarService/useModulAjar'
 import useAuth from '@/hooks/useAuth'
 import InputModulAjar from './component/inputModulAjar'
 import ActivitiesView from './component/activitiesView'
+import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 
 const SubjectView = () => {
   const [activeTab, setActiveTab] = useState('moduleTab')
@@ -21,20 +22,22 @@ const SubjectView = () => {
     setActiveTab(tab)
   }
 
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus siswa!',
+      text: 'Anda akan menghapus data modul !',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Ya, hapus!',
       cancelButtonText: 'Tidak, batalkan!',
       reverseButtons: true,
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
+        await modulAjarService.delete(token, id)
+        Swal.fire('Data Dihapus!', 'Data modul telah dihapus.', 'success')
+        refetchModulAjars()
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
+        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data modul.', 'error')
       }
     })
   }
@@ -112,7 +115,7 @@ const SubjectView = () => {
                                 <button
                                   type="button"
                                   className="btn btn-danger"
-                                  onClick={handleDelete}
+                                  onClick={() => handleDelete(modulAjar.id)}
                                 >
                                   <i className="icon fa fa-trash"></i>
                                 </button>
