@@ -3,17 +3,12 @@ import Loading from '@/components/shared/Loading'
 import useAuth from '@/hooks/useAuth'
 import { useOneRombel } from '@/services/rombelService/useOneRombel'
 import siswaService from '@/services/studentService/student.service'
-import { useStudentsNullRombel } from '@/services/studentService/useStudenNullROmbel'
+import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
-export default function AddStudentToClassView({ id }) {
+export default function SeeStudentView({ id }) {
   const { token } = useAuth()
-  const {
-    data: allSiswa,
-    isFetching: isFetchingSiswa,
-    error: errorSiswa,
-    refetch: refetchSiswa,
-  } = useStudentsNullRombel(token)
+  const [siswas, setSiswas] = useState([])
 
   const {
     data: rombelData,
@@ -22,31 +17,37 @@ export default function AddStudentToClassView({ id }) {
     refetch: refetchRombel,
   } = useOneRombel(token, id)
 
+  useEffect(() => {
+    if (rombelData) {
+      setSiswas(rombelData?.murid)
+    }
+  }, [rombelData])
+
   const handleAdd = (idSiswa) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: 'Data siswa akan ditambahkan ke rombel ini.',
+      text: 'Data siswa akan dikeluarkan dari rombel ini.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, tambahkan!',
+      confirmButtonText: 'Ya, keluarkan!',
       cancelButtonText: 'Batal',
     }).then((result) => {
       if (result.isConfirmed) {
         try {
           const payload = {
-            idRombel: id,
+            idRombel: null,
           }
           siswaService
             .update(token, idSiswa, payload)
             .then((result) => {
               Swal.fire({
                 icon: 'success',
-                title: 'Data siswa telah ditambahkan',
+                title: 'Siswa telah dikeluarkan',
                 position: 'bottom-center',
               })
-              refetchSiswa()
+              refetchRombel()
             })
             .catch((error) => {
               Swal.fire({
@@ -93,17 +94,17 @@ export default function AddStudentToClassView({ id }) {
                       <i className="icon fa fa-info-circle"></i>{' '}
                       {`Rombel ${rombelData.name}`}
                     </h4>
-                    <p> {`Daftarkan Siswa di Rombel ${rombelData.name}`}</p>
+                    <p> {`Daftar Siswa di Rombel ${rombelData.name}`}</p>
                   </div>
                 )}
 
                 <div className="tab-pane " id="input-siswa">
                   <div className="box-body table-responsive no-padding">
-                    {isFetchingSiswa && <Loading />}
-                    {!isFetchingRombel && allSiswa && allSiswa.length === 0 && (
-                      <EmptyDataIndicator message="Semua siswa sudah terdaftar di rombel" />
+                    {isFetchingRombel && <Loading />}
+                    {!isFetchingRombel && siswas && siswas.length === 0 && (
+                      <EmptyDataIndicator message="Belum ada siswa di rombel ini" />
                     )}
-                    {!isFetchingSiswa && allSiswa && allSiswa.length > 0 && (
+                    {!isFetchingRombel && siswas && siswas.length > 0 && (
                       <table id="all_siswa" className="table table-hover">
                         <thead>
                           <tr>
@@ -115,7 +116,7 @@ export default function AddStudentToClassView({ id }) {
                           </tr>
                         </thead>
                         <tbody>
-                          {allSiswa.map((siswa, index) => (
+                          {siswas.map((siswa, index) => (
                             <tr key={siswa.id}>
                               <td>{index + 1}</td>
                               <td>{siswa.nis}</td>
@@ -123,11 +124,11 @@ export default function AddStudentToClassView({ id }) {
                               <td>{siswa.nama}</td>
                               <td>
                                 <button
-                                  className="btn btn-success btn-sm"
+                                  className="btn btn-danger btn-sm"
                                   onClick={() => handleAdd(siswa.id)}
                                 >
-                                  <span className="glyphicon glyphicon-plus"></span>
-                                  Add Siswa
+                                  <span className="glyphicon glyphicon-trash "></span>
+                                  {' Keluarkan Siswa'}
                                 </button>
                               </td>
                             </tr>

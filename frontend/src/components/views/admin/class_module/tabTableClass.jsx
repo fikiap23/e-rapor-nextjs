@@ -77,9 +77,19 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
                 <td>{item.name}</td>
                 <td>{`${item.coutMurid}/${item.kuota}`}</td>
                 <td style={{ display: 'flex', gap: '5px' }}>
+                  <Link
+                    className="btn btn-success btn-sm"
+                    href={`/admin/class/read_student/${item.id}`}
+                    title="Lihat"
+                    data-toggle="tooltip"
+                  >
+                    <i className="icon fa fa-eye"></i>
+                  </Link>
                   <button
                     style={{ marginRight: '2px', marginLeft: '2px' }}
                     className="btn btn-primary btn-sm edit"
+                    title="Edit"
+                    data-toggle="tooltip"
                     onClick={() => {
                       setSelectedRombel(item)
                       setIsModalOpen(true)
@@ -87,14 +97,19 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
                   >
                     <i className="icon fa fa-edit"></i>
                   </button>
+
                   <Link
                     className="btn btn-success btn-sm"
                     href={`/admin/class/add_student/${item.id}`}
+                    title="Tambah Siswa"
+                    data-toggle="tooltip"
                   >
-                    {item.isFull ? 'Lihat Siswa' : 'Tambah Siswa'}
+                    <i className="icon fa fa-plus"></i>
                   </Link>
                   <button
                     className="btn btn-danger btn-sm"
+                    title="Hapus"
+                    data-toggle="tooltip"
                     onClick={() => handleDelete(item.id)}
                   >
                     <i className="icon fa fa-trash"></i>
