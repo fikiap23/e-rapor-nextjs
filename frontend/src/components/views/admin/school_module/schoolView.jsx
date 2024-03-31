@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import SchoolForm from './component/schoolForm'
 import useAuth from '@/hooks/useAuth'
 import { useSekolah } from '@/services/sekolahService/useSekolah'
+import Loading from '@/components/shared/Loading'
 
 function SchoolView() {
   const { token } = useAuth()
@@ -31,6 +32,7 @@ function SchoolView() {
                   </strong>
                 </div>
               )}
+              {isFetching && <Loading />}
               {!isFetching && !error && sekolahData && (
                 <SchoolForm sekolahData={sekolahData} token={token} />
               )}

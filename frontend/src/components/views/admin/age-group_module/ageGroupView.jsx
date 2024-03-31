@@ -15,6 +15,7 @@ const AgeGroupView = () => {
     data: listKategoriRombel,
     error: errorKategoriRombel,
     isFetching: isFetchingKategoriRombel,
+    refetch: refetchKategoriRombel,
   } = useGetAllKategoriRombel(token)
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
@@ -56,9 +57,7 @@ const AgeGroupView = () => {
         try {
           const deleteResult = await rombelService.deleteKategori(token, id)
           if (deleteResult.message === 'OK') {
-            setKategories((prevKategories) =>
-              prevKategories.filter((k) => k.id !== id)
-            )
+            refetchKategoriRombel()
             Swal.fire(
               'Terhapus!',
               'Data kelompok telah berhasil dihapus.',
@@ -98,11 +97,12 @@ const AgeGroupView = () => {
                     </button>
                   </div>
                   {isFetchingKategoriRombel && <Loading />}
-                  {!isFetchingKategoriRombel && (
-                    <EmptyDataIndicator
-                      message={'Belum ada data kelompok usia'}
-                    />
-                  )}
+                  {!isFetchingKategoriRombel &&
+                    listKategoriRombel.length === 0 && (
+                      <EmptyDataIndicator
+                        message={'Belum ada data kelompok usia'}
+                      />
+                    )}
                   {!isFetchingKategoriRombel &&
                     listKategoriRombel &&
                     listKategoriRombel.length > 0 && (
@@ -157,12 +157,12 @@ const AgeGroupView = () => {
       <AddGroupModal
         isOpen={isOpenAddModal}
         closeModal={closeModal}
-        setKategories={setKategories}
+        refetch={refetchKategoriRombel}
       ></AddGroupModal>
       <UpdateGroupModal
         isOpen={isOpenUpdateModal}
         closeModal={closeModalUpdate}
-        setKategories={setKategories}
+        refetch={refetchKategoriRombel}
         selectedKategori={selectedKategori}
         token={token}
       ></UpdateGroupModal>

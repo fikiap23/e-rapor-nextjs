@@ -89,7 +89,7 @@ const SemesterView = () => {
                     </button>
                   </div>
                   {isFetchingSemester && <Loading />}
-                  {!isFetchingSemester && (
+                  {!isFetchingSemester && listSemester.length === 0 && (
                     <EmptyDataIndicator message={'Belum ada data'} />
                   )}
                   {!isFetchingSemester &&
