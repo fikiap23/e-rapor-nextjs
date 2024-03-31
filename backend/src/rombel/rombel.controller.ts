@@ -20,6 +20,7 @@ import { HttpHelper } from '../helpers/http-helper';
 import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
+import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
 
 
 @Controller('rombel')
@@ -36,6 +37,14 @@ export class RombelController {
     @Roles(Role.ADMIN)
     async create(@Body() dto: CreateRombelDto, @Res() res) {
         const result = await this.rombelService.createRombel(dto);
+        return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
+    }
+
+    @Post('rombel-semester-guru')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async createRombelSemesterGuru(@Body() dto: UpdateRombelSemesterGuruDto, @Res() res) {
+        const result = await this.rombelService.createRombelSemesterGuru(dto);
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }
 
@@ -126,6 +135,13 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }
 
+    @Delete('rombel-semester-guru/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async deleteRombelSemesterGuru(@Res() res, @Param('id') id) {
+        await this.rombelService.deleteRombelSemesterGuruById(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
+    }
     @Delete(':id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)

@@ -99,10 +99,11 @@ model Guru {
   jenisKelamin JenisKelamin
 
   // Relation
-  idUser String   @unique
-  user   User     @relation(fields: [idUser], references: [id], onDelete: Cascade)
-  rombel Rombel[]
-  rapor  Rapor[]
+  idUser             String               @unique
+  user               User                 @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  rombel             Rombel[]
+  rapor              Rapor[]
+  rombelSemesterGuru RombelSemesterGuru[]
 
   // index
   @@index([id, nip, idUser])
@@ -147,14 +148,15 @@ model Rombel {
   isFull Boolean @default(false)
 
   // Relation
-  idGuru           String?
-  guru             Guru?          @relation(fields: [idGuru], references: [id])
-  idKategoriRombel String
-  kategoriRombel   KategoriRombel @relation(fields: [idKategoriRombel], references: [id])
-  rapor            Rapor[]
-  murid            Murid[]
-  modulAjar        ModulAjar[]
-  jadwalAjar       JadwalAjar[]
+  idGuru             String?
+  guru               Guru?                @relation(fields: [idGuru], references: [id])
+  idKategoriRombel   String
+  kategoriRombel     KategoriRombel       @relation(fields: [idKategoriRombel], references: [id])
+  rapor              Rapor[]
+  murid              Murid[]
+  modulAjar          ModulAjar[]
+  jadwalAjar         JadwalAjar[]
+  rombelSemesterGuru RombelSemesterGuru[]
 
   // index
   @@index([id, idGuru, idKategoriRombel, name])
@@ -254,15 +256,16 @@ model PenilaianMingguan {
 }
 
 model Semester {
-  id               String       @id @default(uuid())
-  jenisSemester    SemesterType
-  tahunAjaranAwal  Int
-  tahunAjaranAkhir Int
-  isAktif          Boolean      @default(false)
-  tglBagiRapor     DateTime
-  nipKepsek        String
-  namaKepsek       String
-  rapor            Rapor[]
+  id                 String               @id @default(uuid())
+  jenisSemester      SemesterType
+  tahunAjaranAwal    Int
+  tahunAjaranAkhir   Int
+  isAktif            Boolean              @default(false)
+  tglBagiRapor       DateTime
+  nipKepsek          String
+  namaKepsek         String
+  rapor              Rapor[]
+  rombelSemesterGuru RombelSemesterGuru[]
 
   // index
   @@index([id])
@@ -292,6 +295,10 @@ model Rapor {
   idRombel   String
   rombel     Rombel   @relation(fields: [idRombel], references: [id])
 
+  rombelSemesterId     String?
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [rombelSemesterGuruId], references: [id])
+  rombelSemesterGuruId String?
+
   // index
   @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])
 }
@@ -314,4 +321,17 @@ model Sekolah {
 
   // index
   @@index([id, npsn])
+}
+
+model RombelSemesterGuru {
+  id         String   @id @default(uuid())
+  idRombel   String
+  idSemester String
+  idGuru     String
+  guru       Guru     @relation(fields: [idGuru], references: [id], onDelete: Cascade)
+  rombel     Rombel   @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
+  rapor      Rapor[]
+
+  @@index([id, idRombel, idSemester, idGuru])
 }

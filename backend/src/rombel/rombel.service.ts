@@ -4,6 +4,7 @@ import { CreateRombelDto } from './dto/create-rombel.dto';
 import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
+import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
 
 @Injectable()
 export class RombelService {
@@ -35,6 +36,14 @@ export class RombelService {
 
     async findAllRombelGuruNoRelation() {
         return await this.rombelRepository.findAllRombelGuruNoRelation()
+    }
+
+    async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
+        return await this.rombelRepository.createRombelSemesterGuru(payload)
+    }
+
+    async deleteRombelSemesterGuruById(id: string) {
+        return await this.rombelRepository.deleteRombelSemesterGuruById(id)
     }
 
     /*

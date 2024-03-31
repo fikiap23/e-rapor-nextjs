@@ -1,4 +1,5 @@
 import rombelService from '@/services/rombelService/rombel.service'
+import { useGetAllSemesterData } from '@/services/semesterService/useSemester'
 import React, { useEffect } from 'react'
 import Swal from 'sweetalert2'
 const AddGuruToRombelModal = ({
@@ -12,21 +13,30 @@ const AddGuruToRombelModal = ({
   const [formData, setFormData] = React.useState({
     idRombel: '',
     idGuru: '',
+    idSemester: '',
   })
   const [gurus, setGurus] = React.useState([])
   const [rombels, setRombels] = React.useState([])
+  const [semesters, setSemesters] = React.useState([])
+  const {
+    data: listSemester,
+    error: errorSemester,
+    isFetching: isFetchingSemester,
+  } = useGetAllSemesterData(token)
 
   useEffect(() => {
-    if (listGuruRombel) {
+    if (listGuruRombel && listSemester) {
       setGurus(listGuruRombel.gurus || [])
       setRombels(listGuruRombel.rombels || [])
+      setSemesters(listSemester || [])
     }
-  }, [listGuruRombel])
+  }, [listGuruRombel, listSemester])
 
   const clearForm = () => {
     setFormData({
       idRombel: '',
       idGuru: '',
+      idSemester: '',
     })
   }
 
@@ -35,10 +45,22 @@ const AddGuruToRombelModal = ({
     try {
       const payload = {
         idGuru: formData.idGuru,
+        idSemester: formData.idSemester,
+        idRombel: formData.idRombel,
+      }
+      // check payload not null
+      if (!payload.idGuru || !payload.idSemester || !payload.idRombel) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Semua field harus diisi',
+          position: 'bottom-center',
+        })
+        return
       }
       try {
         rombelService
-          .updateRombel(token, formData.idRombel, payload)
+          .createRombelSemesterGuru(token, payload)
           .then(() => {
             Swal.fire({
               icon: 'success',
@@ -138,6 +160,33 @@ const AddGuruToRombelModal = ({
                     {gurus.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.nama}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Pilih Semester</label>
+              <select
+                required
+                name="idSemester"
+                className="form-control"
+                value={formData.idSemester}
+                onChange={(e) =>
+                  setFormData({ ...formData, idSemester: e.target.value })
+                }
+              >
+                {semesters.length === 0 ? (
+                  <option value="" disabled>
+                    Tidak data semester
+                  </option>
+                ) : (
+                  <>
+                    <option value="" className="bg-blue"></option>
+                    {semesters.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {`${item.tahunAjaranAwal} - ${item.tahunAjaranAkhir} (${item.jenisSemester})`}
                       </option>
                     ))}
                   </>

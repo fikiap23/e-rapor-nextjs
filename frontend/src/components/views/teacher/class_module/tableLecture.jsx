@@ -1,31 +1,4 @@
-const TableLecture = () => {
-  const dummyDiampuh = [
-    {
-      KelUsia: '2-3 Tahun',
-      Rombel: 'A',
-      KelasId: 1,
-      MatpelId: 1,
-      TahunAjaran: '2022-2023 Ganjil',
-      Status: 'Aktif',
-    },
-    {
-      KelUsia: '3-4 Tahun',
-      Rombel: 'B',
-      KelasId: 1,
-      MatpelId: 2,
-      TahunAjaran: '2022-2023 Genap',
-      Status: 'Aktif',
-    },
-    {
-      KelUsia: '4-5 Tahun',
-      Rombel: 'B',
-      KelasId: 1,
-      MatpelId: 3,
-      TahunAjaran: '2022-2023 Genap',
-      Status: 'Tidak Aktif',
-    },
-  ]
-
+const TableLecture = ({ rombels }) => {
   return (
     <table id="diampuh" className="table table-bordered table-striped">
       <thead>
@@ -39,16 +12,22 @@ const TableLecture = () => {
         </tr>
       </thead>
       <tbody>
-        {dummyDiampuh.map((item, index) => (
+        {rombels.map((item, index) => (
           <tr key={index} className="text-center">
             <td>{index + 1}</td>
-            <td>{item.KelUsia}</td>
-            <td>{item.Rombel}</td>
-            <td>{item.TahunAjaran}</td>
-            <td>{item.Status}</td>
+            <td>{item.kelompokUsia}</td>
+            <td>{item.name}</td>
+            <td>{item.semester}</td>
+            <td>
+              <span
+                className={`label bg-${item.statusSemester ? 'green' : 'red'}`}
+              >
+                {item.statusSemester ? 'Aktif' : 'Tidak Aktif'}
+              </span>
+            </td>
             <td>
               <a
-                href={`/teacher/lecture/${item.KelasId}`}
+                href={`/teacher/lecture/${item.idRombel}`}
                 className="btn btn-primary btn-sm"
               >
                 <span className="fa fa-edit"></span> Input Nilai

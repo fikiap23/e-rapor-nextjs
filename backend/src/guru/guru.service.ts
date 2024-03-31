@@ -27,4 +27,8 @@ export class GuruService {
     async deleteByAdmin(id: string) {
         return await this.guruRepository.deleteByAdmin(id)
     }
+
+    async findAllRombelDiampu(token: string) {
+        return await this.guruRepository.findAllRombelDiampu(token)
+    }
 }

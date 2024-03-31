@@ -4,6 +4,7 @@ import { CreateRombelDto } from '../../../rombel/dto/create-rombel.dto';
 import { CreateKategoriRombelDto } from '../../../rombel/dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from '../../../rombel/dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from '../../../rombel/dto/update-rombel.dto';
+import { UpdateRombelSemesterGuruDto } from '../../../rombel/dto/update-rombel-semester-guru.dto';
 
 
 
@@ -78,48 +79,73 @@ export class RombelQuery extends DbService {
     }
 
     async findAllWithGuru() {
-        const rombels = await this.prisma.rombel.findMany({
-            where: {
-                idGuru: {
-                    not: null
-                }
-            },
+        const data = await this.prisma.rombelSemesterGuru.findMany({
             include: {
-                guru: true
+                rombel: true,
+                guru: true,
+                semester: true
             }
         })
 
-        return rombels.map(rombel => {
+        return data.map(data => {
             return {
-                id: rombel.id,
-                name: rombel.name,
-                idGuru: rombel.idGuru,
-                guru: rombel.guru
+                id: data.id,
+                idRombel: data.idRombel,
+                idGuru: data.idGuru,
+                idSemester: data.idSemester,
+                name: data.rombel.name,
+                semester: `${data.semester.tahunAjaranAwal}-${data.semester.tahunAjaranAkhir} (${data.semester.jenisSemester})`,
+                guru: data.guru
             }
         })
     }
     async findAllRombelGuruNoRelation() {
         const rombels = await this.prisma.rombel.findMany({
-            where: {
-                idGuru: null
-            },
+            // where: {
+            //     idGuru: null
+            // },
             orderBy: {
                 name: 'asc'
             }
         })
 
         const gurus = await this.prisma.guru.findMany({
-            where: {
-                rombel: {
-                    none: {}
-                }
-            }
+            // where: {
+            //     rombel: {
+            //         none: {}
+            //     }
+            // }
         })
 
         return {
             rombels,
             gurus
         }
+    }
+
+    async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
+        return await this.prisma.rombelSemesterGuru.create({ data: payload })
+    }
+
+    async deleteRombelSemesterGuruById(id: string) {
+        await this.prisma.rombelSemesterGuru.update({
+            where: { id }, data: {
+                rombel: {
+                    update: {
+                        idGuru: null
+                    }
+                }
+            }
+        })
+        return await this.prisma.rombelSemesterGuru.delete({ where: { id } })
+    }
+
+    async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
+        return await this.prisma.rombelSemesterGuru.update({ where: { id }, data: payload })
+    }
+
+    async checkIsRombelSemesterGuruExist(idRombel: string, idSemester: string, idGuru: string) {
+        return await this.prisma.rombelSemesterGuru.findFirst({ where: { idRombel, idSemester, idGuru } })
     }
 
     /*
