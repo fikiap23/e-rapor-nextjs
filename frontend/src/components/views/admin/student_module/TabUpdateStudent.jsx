@@ -1,10 +1,26 @@
-'use client'
 import useAuth from "@/hooks/useAuth";
 import siswaService from "@/services/studentService/student.service";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-function TabUpdateSiswa() {
+function formatDate(dateString) {
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    const date = new Date(dateString);
+    const day = days[date.getUTCDay()];
+    const dateOfMonth = date.getUTCDate();
+    const month = months[date.getUTCMonth()];
+    const year = date.getUTCFullYear();
+
+    return `${day}, ${dateOfMonth} ${month} ${year}`;
+}
+
+function TabInputSiswa() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const idStudent = searchParams.get('id');
     const { token } = useAuth();
     const [formData, setFormData] = useState({
         nisn: '',
@@ -27,23 +43,30 @@ function TabUpdateSiswa() {
     });
 
     useEffect(() => {
-        // Ambil data siswa yang akan diedit dan isi ke dalam form
-        const fetchData = async () => {
-            try {
-                const response = await siswaService.getById(id, token); // Ganti 'id' dengan id siswa yang ingin diedit
-                const siswaData = response.data;
-                setFormData(siswaData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+        if (idStudent) {
+            fetchStudentData(idStudent);
+        }
+    }, [idStudent]);
 
-        fetchData();
-    }, []); // Pastikan untuk mengganti dependensi useEffect sesuai kebutuhan, misalnya jika id siswa berubah
+    const fetchStudentData = async (id) => {
+        try {
+            const response = await siswaService.getById(id, token);
+            if (response.data) {
+                setFormData(response.data);
+            } else {
+                console.log('Data tidak ditemukan');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -51,25 +74,27 @@ function TabUpdateSiswa() {
         try {
             const result = await Swal.fire({
                 title: 'Apakah Data Sudah Benar?',
-                text: 'Anda akan mengedit siswa!',
+                text: 'Anda akan mengubah data siswa!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, edit!',
+                confirmButtonText: 'Ya, ubah!',
                 cancelButtonText: 'Tidak, cek lagi',
                 reverseButtons: true,
             });
 
             if (result.isConfirmed) {
-                await siswaService.update(id, formData, token); // Ganti 'id' dengan id siswa yang ingin diedit
-                Swal.fire('Data Diedit!', 'Siswa telah diedit.', 'success');
+                await siswaService.update(token, idStudent ,formData);
+                // window.history.back();
+                console.log(formData);
+                // router.push('/admin');
+                Swal.fire('Data Diubah!', 'Data siswa telah diubah.', 'success');
             }
         } catch (error) {
             console.error('Error:', error.message);
-            Swal.fire('Error', 'Gagal mengedit siswa', 'error');
+            Swal.fire('Error', 'NIS/NISN Sudah Terdaftar', 'error');
         }
     };
 
-    // NAMA LABEL
     const labels = {
         nis: 'NIS',
         nisn: 'NISN',
@@ -91,6 +116,7 @@ function TabUpdateSiswa() {
     };
 
     const jenisKelaminOptions = ["LAKI-LAKI", "PEREMPUAN"];
+    const statusOptions = ["AKTIF", "TIDAK-AKTIF"];
 
     return (
         <div className="active tab-pane p-px" style={{ padding: '10px' }} id="input-siswa">
@@ -100,10 +126,14 @@ function TabUpdateSiswa() {
                         {Object.keys(formData).map((key, index) => (
                             <div className="col-md-6" key={index}>
                                 <div className="form-group">
-                                    <label
-                                        htmlFor={key}
-                                        className={`control-label
-                                  ${labels[key].toLowerCase() === 'status' ? 'hide' : labels[key].toLowerCase() === 'agama' ? 'hide' : ''}`}>{labels[key]}</label>
+                                    <label htmlFor={key}>
+                                        {key.includes('tanggal') ? (
+                                            <span> {labels[key]} Sebelumnya: <b className="text-danger">{formatDate(formData[key])}</b></span>
+                                        ) : (
+                                            labels[key]
+                                        )}
+                                    </label>
+
                                     {key === 'jenisKelamin' ? (
                                         <select
                                             name={key}
@@ -113,43 +143,34 @@ function TabUpdateSiswa() {
                                             value={formData[key]}
                                             required
                                         >
-                                            <option value="">Pilih Jenis Kelamin</option>
+                                            <option value="">Pilih Status</option>
                                             {jenisKelaminOptions.map((option, index) => (
                                                 <option key={index} value={option.replace('-', '_')}>{option}</option>
                                             ))}
                                         </select>
-                                    ) : key === 'alamat' ? (
-                                        <textarea
-                                            type={
-                                                key.includes("tanggal") ? "date" :
-                                                    key.includes("nis") ? "number" :
-                                                        key === "jenisKelamin" ? "text" :
-                                                            key === "foto" ? "file" :
-                                                                "text"
-                                            }
+                                    ) : key === 'status' ? (
+                                        <select
                                             name={key}
-                                            className={`form-control ${key === 'status' ? "hide" : key === 'agama' ? "hide" : ""}`}
+                                            className="form-control"
                                             id={key}
                                             onChange={handleChange}
                                             value={formData[key]}
                                             required
-                                        ></textarea>
+                                        >
+                                            <option value="">Pilih Jenis Kelamin</option>
+                                            {statusOptions.map((option, index) => (
+                                                <option key={index} value={option.replace('-', '_')}>{option}</option>
+                                            ))}
+                                        </select>
                                     ) : (
                                         <input
-                                            type={
-                                                key.includes("tanggal") ? "date" :
-                                                    key.includes("nis") ? "number" :
-                                                        key.includes("Badan") ? "number" :
-                                                            key === "jenisKelamin" ? "text" :
-                                                                key === "foto" ? "file" :
-                                                                    "text"
-                                            }
+                                            type={key.includes("nis") ? "number" : key.includes("tanggal") ? "date" : "text"}
                                             name={key}
-                                            className={`form-control ${key === 'status' ? "hide" : key === 'agama' ? "hide" : ""}`}
-                                            id={key}
-                                            onChange={handleChange}
+                                            className={`form-control ${key === 'id' && 'hidden' || key === 'idRombel' && 'hidden'}`}
                                             value={formData[key]}
-                                            required
+                                            onChange={handleChange}
+                                            readOnly={key === 'agama'}
+                                            required={!key.includes('tanggal') && key !== 'idRombel'}
                                         />
                                     )}
                                 </div>
@@ -167,4 +188,4 @@ function TabUpdateSiswa() {
     );
 }
 
-export default TabUpdateSiswa;
+export default TabInputSiswa;

@@ -49,9 +49,8 @@ const StudentView = () => {
     )
   }
 
-  const handleTabChange = (tab, id) => {
+  const handleTabChange = (tab) => {
     setActiveTab(tab)
-    localStorage.setItem('@currentStudentId', id);
   }
 
   const handleDelete = (id) => {
@@ -174,9 +173,9 @@ const StudentView = () => {
                                     <td>{item.nisn}</td>
                                     <td>{item.nama.toUpperCase()}</td>
                                     <td>
-                                      <a className="btn btn-success btn-sm" onClick={() => handleTabChange('update', item.id)}>
+                                      <Link href={`?id=${item.id}`} className="btn btn-success btn-sm" onClick={() => handleTabChange('update')}>
                                         <i className="icon fa fa-edit"></i>
-                                      </a>
+                                      </Link>
                                       <button
                                         style={{
                                           marginRight: '2px',
@@ -213,7 +212,16 @@ const StudentView = () => {
                 {activeTab === 'input' && <TabInputSiswa />}
                 {activeTab === 'update' && (
                   <div>
-                    <button className='btn btn-danger' onClick={() => handleTabChange('view')}>Batal</button>
+                    {/* <button className='btn btn-danger' onClick={() => handleTabChange('view')}>Batal</button> */}
+                    <button
+                      className="btn btn-default"
+                      onClick={() => {
+                        window.history.back();
+                        handleTabChange('view');
+                      }}
+                    >
+                      <i className="fa fa-arrow-left"></i> Kembali
+                    </button>
                     <TabUpdateSiswa />
                   </div>
                 )}
@@ -221,8 +229,8 @@ const StudentView = () => {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   )
 }
 
