@@ -28,4 +28,8 @@ export class MuridService {
     async findOne(id: string) {
         return await this.muridRepository.findByIdOrThrow(id);
     }
+
+    async findByNullRombel() {
+        return await this.muridRepository.findByNullRombel();
+    }
 }
