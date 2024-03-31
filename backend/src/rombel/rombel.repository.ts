@@ -5,6 +5,7 @@ import { GuruRepository } from '../guru/guru.repository';
 import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
+import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
 
 @Injectable()
 export class RombelRepository {
@@ -63,6 +64,23 @@ export class RombelRepository {
 
     async findAllRombelGuruNoRelation() {
         return await this.rombelQuery.findAllRombelGuruNoRelation()
+    }
+
+    async checkRombelSemesterGuruExist(idRombel: string, idGuru: string, idSemester: string) {
+        const rombel = await this.rombelQuery.checkIsRombelSemesterGuruExist(idRombel, idSemester, idGuru)
+        if (rombel) throw new BadRequestException('Data sudah ada');
+        return
+    }
+
+    async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
+        // check rombel exist
+        await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
+        await this.updateRombelById(payload.idRombel, { idGuru: payload.idGuru })
+        return await this.rombelQuery.createRombelSemesterGuru(payload)
+    }
+
+    async deleteRombelSemesterGuruById(id: string) {
+        return await this.rombelQuery.deleteRombelSemesterGuruById(id)
     }
 
     /*

@@ -81,6 +81,39 @@ const rombelService = {
       throw error.response?.data?.message || 'Gagal Di Hapus!'
     }
   },
+
+  createRombelSemesterGuru: async (token, data) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/rombel-semester-guru`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+    }
+  },
+
+  deleteRombelSemesterGuru: async (token, id) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/rombel-semester-guru/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Di Hapus!'
+    }
+  },
 }
 
 export default rombelService

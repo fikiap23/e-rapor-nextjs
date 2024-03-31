@@ -44,10 +44,7 @@ const TeacherTable = () => {
       reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const payload = {
-          idGuru: null,
-        }
-        await rombelService.updateRombel(token, id, payload)
+        await rombelService.deleteRombelSemesterGuru(token, id)
         refetchGuruRombel()
         refetchRombel()
         Swal.fire('Data Dihapus!', 'Rombel telah dikosongkan.', 'success')
@@ -77,6 +74,7 @@ const TeacherTable = () => {
                 <th>Rombel</th>
                 <th>NIP Guru</th>
                 <th>Nama Guru</th>
+                <th>Semester</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -87,6 +85,7 @@ const TeacherTable = () => {
                   <td>{item.name}</td>
                   <td>{item.guru?.nip || 'N/A'}</td>
                   <td>{item.guru?.nama || 'N/A'}</td>
+                  <td>{item.semester || 'N/A'}</td>
                   <td>
                     <button
                       className="btn btn-danger btn-sm"
