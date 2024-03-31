@@ -72,4 +72,8 @@ export class MuridRepository {
         return await this.muridQuery.findAll()
     }
 
+    async findByNullRombel() {
+        return await this.muridQuery.findByNullIdRombel()
+    }
+
 }

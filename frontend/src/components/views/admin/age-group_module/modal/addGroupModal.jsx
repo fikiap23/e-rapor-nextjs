@@ -1,9 +1,8 @@
 import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombelService/rombel.service'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
+import Swal from 'sweetalert2'
+const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
   const [formValues, setFormValues] = useState({
     name: '',
     kelompokUsia: '',
@@ -21,25 +20,27 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
     try {
       setIsLoading(true)
       // Tambahkan logika untuk menyimpan data kelas
-      const result = await rombelService.createKategori(token, formValues)
-      if (result.message === 'CREATED') {
-        setKategories((prevGurus) => [...prevGurus, result.data])
-        toast.success('Kategori rombel telah ditambahkan', {
-          position: 'bottom-center',
-        })
-      }
+      await rombelService.createKategori(token, formValues)
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Data kelompok usia rombel telah ditambahkan',
+      })
       // Reset form setelah submit
       setFormValues({
         name: '',
         kelompokUsia: '',
         kode: '',
       })
+      refetch()
       closeModal()
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
-      toast.error(error, {
-        position: 'bottom-center',
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
       })
     }
   }
@@ -61,13 +62,13 @@ const AddGroupModal = ({ isOpen, closeModal, setKategories }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">Tambah Data Kategori Rombel</h4>
+            <h4 className="modal-title">Tambah Data Kelompok Usia Rombel</h4>
           </div>
           <div className="modal-body">
             <div>
               <div className="box-body">
                 <div className="form-group">
-                  <label>Nama Kategori Rombel</label>
+                  <label>Kelompok Usia Rombel</label>
                   <input
                     type="text"
                     className="form-control"

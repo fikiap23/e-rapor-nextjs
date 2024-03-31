@@ -6,6 +6,8 @@ import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRom
 import UpdateGroupModal from './modal/updateGroupModal'
 import Swal from 'sweetalert2'
 import rombelService from '@/services/rombelService/rombel.service'
+import Loading from '@/components/shared/Loading'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 
 const AgeGroupView = () => {
   const { token } = useAuth()
@@ -13,6 +15,7 @@ const AgeGroupView = () => {
     data: listKategoriRombel,
     error: errorKategoriRombel,
     isFetching: isFetchingKategoriRombel,
+    refetch: refetchKategoriRombel,
   } = useGetAllKategoriRombel(token)
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
@@ -54,9 +57,7 @@ const AgeGroupView = () => {
         try {
           const deleteResult = await rombelService.deleteKategori(token, id)
           if (deleteResult.message === 'OK') {
-            setKategories((prevKategories) =>
-              prevKategories.filter((k) => k.id !== id)
-            )
+            refetchKategoriRombel()
             Swal.fire(
               'Terhapus!',
               'Data kelompok telah berhasil dihapus.',
@@ -95,47 +96,58 @@ const AgeGroupView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
-                  <table
-                    className="table table-bordered table-striped"
-                    id="tahun"
-                  >
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Kelompok Usia</th>
-                        <th>Kode</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!isFetchingKategoriRombel &&
-                        Kategories &&
-                        Kategories.map((item, index) => (
-                          <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.kelompokUsia}</td>
-                            <td>{item.kode}</td>
-                            <td>
-                              <button
-                                className="btn btn-primary btn-sm"
-                                onClick={() => openUpdateModal(item)}
-                              >
-                                <i className="icon fa fa-edit"></i>
-                              </button>
-                              <button
-                                className="btn btn-danger btn-sm"
-                                style={{ marginLeft: '5px' }}
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <i className="icon fa fa-trash"></i>
-                              </button>
-                            </td>
+                  {isFetchingKategoriRombel && <Loading />}
+                  {!isFetchingKategoriRombel &&
+                    listKategoriRombel.length === 0 && (
+                      <EmptyDataIndicator
+                        message={'Belum ada data kelompok usia'}
+                      />
+                    )}
+                  {!isFetchingKategoriRombel &&
+                    listKategoriRombel &&
+                    listKategoriRombel.length > 0 && (
+                      <table
+                        className="table table-bordered table-striped"
+                        id="tahun"
+                      >
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Kelompok Usia</th>
+                            <th>Kode</th>
+                            <th>Aksi</th>
                           </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                        </thead>
+                        <tbody>
+                          {!isFetchingKategoriRombel &&
+                            Kategories &&
+                            Kategories.map((item, index) => (
+                              <tr key={item.id}>
+                                <td>{index + 1}</td>
+                                <td>{item.name}</td>
+                                <td>{item.kelompokUsia}</td>
+                                <td>{item.kode}</td>
+                                <td>
+                                  <button
+                                    className="btn btn-primary btn-sm"
+                                    onClick={() => openUpdateModal(item)}
+                                  >
+                                    <i className="icon fa fa-edit"></i>
+                                  </button>
+                                  <button
+                                    className="btn btn-danger btn-sm"
+                                    style={{ marginLeft: '5px' }}
+                                    onClick={() => handleDelete(item.id)}
+                                  >
+                                    <i className="icon fa fa-trash"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    )}
                 </div>
               </div>
             </div>
@@ -145,12 +157,12 @@ const AgeGroupView = () => {
       <AddGroupModal
         isOpen={isOpenAddModal}
         closeModal={closeModal}
-        setKategories={setKategories}
+        refetch={refetchKategoriRombel}
       ></AddGroupModal>
       <UpdateGroupModal
         isOpen={isOpenUpdateModal}
         closeModal={closeModalUpdate}
-        setKategories={setKategories}
+        refetch={refetchKategoriRombel}
         selectedKategori={selectedKategori}
         token={token}
       ></UpdateGroupModal>

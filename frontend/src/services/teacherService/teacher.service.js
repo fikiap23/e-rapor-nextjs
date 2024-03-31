@@ -10,7 +10,7 @@ const teacherService = {
           Authorization: `Bearer ${token}`,
         },
       })
-      return response.data.data
+      return response.data?.data || 'Guru Berhasil Di Ditambahkan'
     } catch (error) {
       throw error.response?.data?.message || 'Guru Gagal Ditambahkan'
     }

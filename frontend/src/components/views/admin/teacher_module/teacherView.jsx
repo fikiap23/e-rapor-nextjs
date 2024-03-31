@@ -1,21 +1,11 @@
 'use client'
-import Swal from 'sweetalert2'
 import { useState } from 'react'
 import Link from 'next/link'
 import ManageTeacher from './manageTeacher'
 import TeacherTable from './teacherTable'
-import useAuth from '@/hooks/useAuth'
-import { useGetAllTeacherData } from '@/services/teacherService/useTeacher'
-import Loading from '@/components/shared/Loading'
 
 const TeacherView = () => {
   const [activeTab, setActiveTab] = useState('view')
-  const { token } = useAuth()
-  const {
-    data: listTeacher,
-    error: errorTeacher,
-    isFetching: isFetchingTeacher,
-  } = useGetAllTeacherData(token)
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -65,10 +55,8 @@ const TeacherView = () => {
                     </Link>
                   </li>
                 </ul>
-                {isFetchingTeacher && activeTab === 'view' && <Loading />}
-                {activeTab === 'view' && !isFetchingTeacher && (
-                  <ManageTeacher listTeacher={listTeacher} />
-                )}
+
+                {activeTab === 'view' && <ManageTeacher />}
                 {activeTab === 'daftarkan_guru' && <TeacherTable />}
               </div>
             </div>

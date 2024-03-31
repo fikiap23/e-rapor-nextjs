@@ -1,15 +1,15 @@
 import rombelService from '@/services/rombelService/rombel.service'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import Swal from 'sweetalert2'
 
 const UpdateGroupModal = ({
   isOpen,
   closeModal,
-  setKategories,
+  refetch,
   selectedKategori,
   token,
 }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const [formValues, setFormValues] = useState({
     name: '',
     kelompokUsia: '',
@@ -25,8 +25,6 @@ const UpdateGroupModal = ({
     }
   }, [selectedKategori])
 
-  const [isLoading, setIsLoading] = useState(false)
-
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -41,16 +39,12 @@ const UpdateGroupModal = ({
         selectedKategori.id,
         formValues
       )
-      console.log(result)
       if (result.message == 'OK') {
-        console.log('Data kelas diperbarui')
-        setKategories((prevKategories) =>
-          prevKategories.map((k) =>
-            k.id === selectedKategori.id ? result.data : k
-          )
-        )
-        toast.success('Kategori rombel telah diperbarui', {
-          position: 'bottom-center',
+        refetch()
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Data kelompok usia rombel telah diperbarui',
         })
         closeModal()
       }
@@ -58,8 +52,10 @@ const UpdateGroupModal = ({
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
-      toast.error(error, {
-        position: 'bottom-center',
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
       })
     }
   }

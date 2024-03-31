@@ -1,14 +1,11 @@
-import useAuth from '@/hooks/useAuth'
 import teacherService from '@/services/teacherService/teacher.service'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-const AddModal = ({ isOpen, closeModal, setGurus }) => {
+import Swal from 'sweetalert2'
+const AddModal = ({ isOpen, closeModal, refetch, token }) => {
   const [nip, setNip] = useState('')
   const [nama, setNama] = useState('')
   const [jenisKelamin, setJenisKelamin] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { token } = useAuth()
 
   const handleNipChange = (event) => {
     setNip(event.target.value)
@@ -32,21 +29,18 @@ const AddModal = ({ isOpen, closeModal, setGurus }) => {
         jenisKelamin: jenisKelamin,
       }
 
-      const result = await teacherService.create(payload, token)
-      setGurus((prevGurus) => [...prevGurus, result])
-      toast.success('Guru telah ditambahkan', {
-        position: 'top-right',
-      })
+      await teacherService.create(payload, token)
+      refetch()
+      Swal.fire('Add Berhasil!', ` Data guru telah ditambahkan`, 'success')
 
       setNip('')
       setNama('')
       setJenisKelamin('')
       closeModal()
-      isLoading(false)
+      setIsLoading(false)
     } catch (error) {
-      toast.error(error, {
-        position: 'top-right',
-      })
+      console.log(error)
+      Swal.fire('Oops...', error, 'error')
       setIsLoading(false)
     }
   }

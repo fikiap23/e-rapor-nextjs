@@ -6,6 +6,7 @@ import TabTableClass from './tabTableClass'
 import SetClass from './setClass'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllRombel } from '@/services/rombelService/useRombel'
+import Loading from '@/components/shared/Loading'
 
 export default function ClassView() {
   const [rombels, setRombels] = useState([])
@@ -71,7 +72,7 @@ export default function ClassView() {
                   </ul>
                   {activeTab === 'view' &&
                     (isFetchingSRombel ? (
-                      <div>Loading...</div>
+                      <Loading></Loading>
                     ) : (
                       <TabTableClass
                         rombels={rombels}
@@ -81,7 +82,7 @@ export default function ClassView() {
                     ))}
                   {activeTab === 'view_rombel' &&
                     (isFetchingSRombel ? (
-                      <div>Loading...</div>
+                      <Loading></Loading>
                     ) : (
                       <SetClass rombels={rombels} />
                     ))}

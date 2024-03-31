@@ -36,6 +36,14 @@ export class MuridQuery extends DbService {
         })
     }
 
+    async findByNullIdRombel() {
+        return await this.prisma.murid.findMany({
+            where: {
+                idRombel: null
+            }
+        })
+    }
+
     async checkIsNisOrNisnHasUsed(nis: string, nisn: string): Promise<boolean> {
         const isNisOrNisnHasUsed = await this.prisma.murid.findFirst({ where: { OR: [{ nis }, { nisn }] } })
         return isNisOrNisnHasUsed ? true : false

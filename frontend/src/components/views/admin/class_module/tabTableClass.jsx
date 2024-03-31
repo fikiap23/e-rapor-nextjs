@@ -5,6 +5,7 @@ import { useState } from 'react'
 import rombelService from '@/services/rombelService/rombel.service'
 import useAuth from '@/hooks/useAuth'
 import Swal from 'sweetalert2'
+import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 export default function TabTableClass({ rombels, openModal, setRombels }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRombel, setSelectedRombel] = useState(null)
@@ -54,51 +55,71 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
           Tambah
         </button>
       </div>
-      <table id="Rombel" className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Kelompok Usia</th>
-            <th>Rombel</th>
-            <th>Kuota</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rombels.map((item, index) => (
-            <tr key={item.id}>
-              <td>{index + 1}</td>
-              <td>{item.kelompokUsia}</td>
-              <td>{item.name}</td>
-              <td>{`${item.coutMurid}/${item.kuota}`}</td>
-              <td style={{ display: 'flex', gap: '5px' }}>
-                <button
-                  style={{ marginRight: '2px', marginLeft: '2px' }}
-                  className="btn btn-primary btn-sm edit"
-                  onClick={() => {
-                    setSelectedRombel(item)
-                    setIsModalOpen(true)
-                  }}
-                >
-                  <i className="icon fa fa-edit"></i>
-                </button>
-                <Link
-                  className="btn btn-success btn-sm"
-                  href={`/admin/class/add_student/${item.id}`}
-                >
-                  {item.isFull ? 'Lihat Siswa' : 'Tambah Siswa'}
-                </Link>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  <i className="icon fa fa-trash"></i>
-                </button>
-              </td>
+      {rombels.length === 0 && (
+        <EmptyDataIndicator message={'Data Rombel Kosong'} />
+      )}
+      {rombels.length > 0 && (
+        <table id="Rombel" className="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Kelompok Usia</th>
+              <th>Rombel</th>
+              <th>Kuota</th>
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rombels.map((item, index) => (
+              <tr key={item.id}>
+                <td>{index + 1}</td>
+                <td>{item.kelompokUsia}</td>
+                <td>{item.name}</td>
+                <td>{`${item.coutMurid}/${item.kuota}`}</td>
+                <td style={{ display: 'flex', gap: '5px' }}>
+                  <Link
+                    className="btn btn-success btn-sm"
+                    href={`/admin/class/read_student/${item.id}`}
+                    title="Lihat"
+                    data-toggle="tooltip"
+                  >
+                    <i className="icon fa fa-eye"></i>
+                  </Link>
+                  <button
+                    style={{ marginRight: '2px', marginLeft: '2px' }}
+                    className="btn btn-primary btn-sm edit"
+                    title="Edit"
+                    data-toggle="tooltip"
+                    onClick={() => {
+                      setSelectedRombel(item)
+                      setIsModalOpen(true)
+                    }}
+                  >
+                    <i className="icon fa fa-edit"></i>
+                  </button>
+
+                  <Link
+                    className="btn btn-success btn-sm"
+                    href={`/admin/class/add_student/${item.id}`}
+                    title="Tambah Siswa"
+                    data-toggle="tooltip"
+                  >
+                    <i className="icon fa fa-plus"></i>
+                  </Link>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    title="Hapus"
+                    data-toggle="tooltip"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <i className="icon fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <UpdateClassModal
         setRombels={setRombels}
         selectedRombel={selectedRombel}

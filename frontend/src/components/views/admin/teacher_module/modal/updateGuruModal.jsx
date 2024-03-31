@@ -1,9 +1,8 @@
 import useAuth from '@/hooks/useAuth'
 import teacherService from '@/services/teacherService/teacher.service'
 import React, { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-const UpdateGuruModal = ({ isOpen, closeModal, setGurus, teacherData }) => {
+import Swal from 'sweetalert2'
+const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
   const [nip, setNip] = useState('')
   const [nama, setNama] = useState('')
   const [jenisKelamin, setJenisKelamin] = useState('')
@@ -40,20 +39,14 @@ const UpdateGuruModal = ({ isOpen, closeModal, setGurus, teacherData }) => {
         jenisKelamin: jenisKelamin,
       }
 
-      const result = await teacherService.update(token, teacherData.id, payload)
-      setGurus((prevGurus) =>
-        prevGurus.map((guru) => (guru.id === result.id ? result : guru))
-      )
-      toast.success('Data guru telah diperbarui', {
-        position: 'top-right',
-      })
+      await teacherService.update(token, teacherData.id, payload)
+      refetch()
+      Swal.fire('Update Berhasil!', ` Data guru telah diperbarui`, 'success')
 
       closeModal()
       setIsLoading(false)
     } catch (error) {
-      toast.error(error, {
-        position: 'top-right',
-      })
+      Swal.fire('Oops...', error, 'error')
       setIsLoading(false)
     }
   }
