@@ -54,9 +54,9 @@ export class JadwalAjarController {
 
     @Get()
     @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN, Role.GURU)
-    async findAll(@Res() res) {
-        const result = await this.jadwalAjarService.findAll();
+    @Roles(Role.GURU)
+    async findAll(@Res() res, @Request() req) {
+        const result = await this.jadwalAjarService.findAll(req.headers.authorization);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 

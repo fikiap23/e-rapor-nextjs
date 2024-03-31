@@ -1,17 +1,70 @@
+import jadwalAjarService from '@/services/jadwalAjarService/jadwal-ajar.service'
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 
-const AddModal = ({ isOpen, closeModal }) => {
+const AddModal = ({ isOpen, closeModal, modulAjar, token, refetch }) => {
   const [formData, setFormData] = useState({
-    minggu: '',
     tanggal: '',
     hari: '',
     kegiatanInti: '',
     idModulAjar: '',
   })
-  const handleSubmit = (event) => {
-    console.log(formData)
 
-    // closeModal()
+  const clearForm = () => {
+    setFormData({
+      tanggal: '',
+      hari: '',
+      kegiatanInti: '',
+      idModulAjar: '',
+    })
+  }
+  const handleSubmit = (event) => {
+    // check form
+    if (
+      !formData.tanggal ||
+      !formData.hari ||
+      !formData.kegiatanInti ||
+      !formData.idModulAjar
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Data tidak boleh ada yang kosong',
+        position: 'bottom-center',
+      })
+      return
+    }
+
+    try {
+      jadwalAjarService
+        .create(formData, token)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data jadwal ajar telah ditambahkan',
+            position: 'bottom-center',
+          })
+          refetch()
+          clearForm()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
+
+    closeModal()
   }
 
   const handleFormChange = (field, value) => {
@@ -37,24 +90,25 @@ const AddModal = ({ isOpen, closeModal }) => {
           <div className="modal-body">
             <div className="box-body">
               <div className="form-group">
-                <label htmlFor="minggu">Minggu</label>
+                <label htmlFor="idModulAjar">Modul Ajar</label>
                 <select
                   className="form-control"
-                  id="minggu"
-                  name="minggu"
-                  value={formData.minggu}
-                  onChange={(e) => handleFormChange('minggu', e.target.value)}
+                  id="idModulAjar"
+                  name="idModulAjar"
+                  value={formData.idModulAjar}
+                  onChange={(e) =>
+                    handleFormChange('idModulAjar', e.target.value)
+                  }
                   required
                 >
-                  <option value="">Pilih Minggu</option>
-                  {[...Array(14)].map((_, index) => (
-                    <option key={index + 1} value={index + 1}>
-                      {index + 1}
+                  <option value="">Pilih Modul Ajar</option>
+                  {modulAjar.map((item, index) => (
+                    <option key={item.id} value={item.id}>
+                      {`Minggu ${item.minggu} - ${item.topik}`}
                     </option>
                   ))}
                 </select>
               </div>
-
               <div className="form-group">
                 <label htmlFor="hari">Hari</label>
                 <select
@@ -73,27 +127,6 @@ const AddModal = ({ isOpen, closeModal }) => {
                       </option>
                     )
                   )}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="idModulAjar">Modul Ajar</label>
-                <select
-                  className="form-control"
-                  id="idModulAjar"
-                  name="idModulAjar"
-                  value={formData.idModulAjar}
-                  onChange={(e) =>
-                    handleFormChange('idModulAjar', e.target.value)
-                  }
-                  required
-                >
-                  <option value="">Pilih Modul Ajar</option>
-                  {[...Array(14)].map((_, index) => (
-                    <option key={index + 1} value={index + 1}>
-                      {index + 1}
-                    </option>
-                  ))}
                 </select>
               </div>
 

@@ -7,8 +7,8 @@ import { UpdateJadwalAjarDto } from './dto/update-jadwal-ajar.dto';
 export class JadwalAjarService {
     constructor(private readonly jadwalAjarRepository: JadwalAjarRepository) { }
 
-    async findAll() {
-        return await this.jadwalAjarRepository.findAll();
+    async findAll(token: string) {
+        return await this.jadwalAjarRepository.findAll(token);
     }
 
     async findByIdOrThrow(id: string) {

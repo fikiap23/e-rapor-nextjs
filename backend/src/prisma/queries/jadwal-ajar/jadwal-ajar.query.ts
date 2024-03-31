@@ -7,8 +7,19 @@ import { UpdateJadwalAjarDto } from '../../../jadwal-ajar/dto/update-jadwal-ajar
 @Injectable()
 export class JadwalAjarQuery extends DbService {
 
-    async findAll() {
-        return await this.prisma.jadwalAjar.findMany()
+    async findAll(idRombel: string) {
+        return await this.prisma.jadwalAjar.findMany({
+            where: { idRombel }, include: {
+                modulAjar: {
+                    select: {
+                        minggu: true
+                    }
+                }
+            },
+            orderBy: {
+                tanggal: 'asc'
+            }
+        })
     }
 
     async findById(id: string) {
