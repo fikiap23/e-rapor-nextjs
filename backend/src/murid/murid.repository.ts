@@ -53,7 +53,9 @@ export class MuridRepository {
         const murid = await this.findByIdOrThrow(id);
         if (dto.idRombel && dto.idRombel !== murid.idRombel) {
             // check rombel exist
-            await this.rombelRepository.findRombelByIdOrThrow(dto.idRombel);
+            const rombel = await this.rombelRepository.findRombelByIdOrThrow(dto.idRombel);
+            // check kuota rombel sudah penuh
+            if (rombel.kuota - rombel.coutMurid <= 0) throw new BadRequestException('Kuota rombel sudah penuh');
         }
         if (murid.nis !== dto.nis || murid.nisn !== dto.nisn) {
             await this.isNisOrNisnHasUsed(dto.nis, dto.nisn);
