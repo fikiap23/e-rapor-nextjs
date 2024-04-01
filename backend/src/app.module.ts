@@ -13,6 +13,7 @@ import { SemesterModule } from './semester/semester.module';
 import { SekolahModule } from './sekolah/sekolah.module';
 import { AbsensiModule } from './absensi/absensi.module';
 import { RaporModule } from './rapor/rapor.module';
+import { CpTpModule } from './cp-tp/cp-tp.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { RaporModule } from './rapor/rapor.module';
     SemesterModule,
     SekolahModule,
     AbsensiModule,
-    RaporModule
+    RaporModule,
+    CpTpModule
   ],
   controllers: [],
   providers: [],
