@@ -18,12 +18,12 @@ export class ModulAjarQuery extends DbService {
     }
 
     async findByIdRombel(idRombel: string) {
-        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombel }, include: { mapel: true }, orderBy: { minggu: 'asc' } })
+        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombel }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
         return modulAjar
     }
 
-    async checkIsMingguHasUsed(minggu: number, idMapel: string, idRombel: string): Promise<boolean> {
-        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idMapel, idRombel } })
+    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombel: string): Promise<boolean> {
+        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombel } })
         return isMingguHasUsed ? true : false
     }
 

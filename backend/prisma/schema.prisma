@@ -174,40 +174,55 @@ model KategoriRombel {
 }
 
 model ModulAjar {
-  id                  String              @id @default(uuid())
-  minggu              Int
-  topik               String
-  subtopik            String
-  capaianPembelajaran String
-  startDate           DateTime
-  endDate             DateTime
-  katakunci           String[]
-  tujuanPembelajaran  String[]
-  tujuanKegiatan      String[]
-  alatBahan           String[]
-  petaKonsep          String[]
-  jadwalAjar          JadwalAjar[]
-  penilaianMingguan   PenilaianMingguan[]
+  id                String              @id @default(uuid())
+  minggu            Int
+  topik             String
+  subtopik          String
+  startDate         DateTime
+  endDate           DateTime
+  katakunci         String[]
+  tujuanKegiatan    String[]
+  alatBahan         String[]
+  petaKonsep        String[]
+  jadwalAjar        JadwalAjar[]
+  penilaianMingguan PenilaianMingguan[]
 
   // Relation
-  idMapel  String
-  mapel    Mapel  @relation(fields: [idMapel], references: [id])
-  idRombel String
-  rombel   Rombel @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  idTujuanPembelajaran String
+  tujuanPembelajaran   TujuanPembelajaran @relation(fields: [idTujuanPembelajaran], references: [id])
+  idRombel             String
+  rombel               Rombel             @relation(fields: [idRombel], references: [id], onDelete: Cascade)
 
   // index
   @@index([id, minggu])
 }
 
-model Mapel {
-  id        String      @id @default(uuid())
-  name      String
-  deskripsi String
-  isAktif   Boolean     @default(true)
-  modulAjar ModulAjar[]
+model CapaianPembelajarn {
+  id String @id @default(uuid())
+
+  capaianPembelajaranAgama         String
+  capaianPembelajaranJatiDiri      String
+  capaianPembelajaranLiterasiSains String
+  tujuanPembelajaran               TujuanPembelajaran[]
 
   // index
-  @@index([id, name])
+  @@index([id])
+}
+
+model TujuanPembelajaran {
+  id                                 String @id @default(uuid())
+  minggu                             Int    @unique
+  tujuanPembelajaranAgamaBudipekerti String
+  tujuanPembelajaranJatiDiri         String
+  tujuanPembelajaranLiterasiSains    String
+
+  // relation
+  idCapaianPembelajaran String
+  capaianPembelajaran   CapaianPembelajarn @relation(fields: [idCapaianPembelajaran], references: [id], onDelete: Cascade)
+  modulAjar             ModulAjar[]
+
+  // index
+  @@index([id, minggu])
 }
 
 model JadwalAjar {
