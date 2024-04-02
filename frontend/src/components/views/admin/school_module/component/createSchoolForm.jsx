@@ -1,29 +1,36 @@
 'use client'
 import sekolahService from '@/services/sekolahService/sekolah.service'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 
-function SchoolForm({ sekolahData, token }) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [formData, setFormData] = useState(sekolahData)
-  useEffect(() => {
-    setFormData(sekolahData)
-  }, [sekolahData])
-
-  const handleEditClick = () => {
-    setIsEditing(true)
-  }
+function CreateSchoolForm({ token }) {
+  const [formData, setFormData] = useState({
+    nama: '',
+    alamat: '',
+    noTelepon: '',
+    npsn: '',
+    kelurahan: '',
+    nipKepsek: '',
+    kecamatan: '',
+    kodePos: '',
+    kota: '',
+    provinsi: '',
+    namaDisdik: '',
+    namaKapsek: '',
+  })
 
   const handleSubmit = (event) => {
     try {
       sekolahService
-        .update(token, formData)
+        .create(token, formData)
         .then((result) => {
           Swal.fire({
             icon: 'success',
             title: 'Data sekolah telah diperbarui',
             position: 'bottom-center',
           })
+
+          window.location.reload()
         })
         .catch((error) => {
           Swal.fire({
@@ -41,7 +48,6 @@ function SchoolForm({ sekolahData, token }) {
         position: 'top-right',
       })
     }
-    setIsEditing(false)
   }
 
   const handleInputChange = (event) => {
@@ -54,6 +60,15 @@ function SchoolForm({ sekolahData, token }) {
 
   return (
     <div className="box-body">
+      <h3>TAMBAH DATA SEKOLAH</h3>
+      <div
+        style={{
+          height: '1px',
+          width: '100%',
+          backgroundColor: 'black',
+          margin: '10px 0',
+        }}
+      ></div>
       <div>
         <div className="row">
           <div className="col-md-6">
@@ -67,7 +82,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="nama"
                 value={formData.nama}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -80,7 +94,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="alamat"
                 value={formData.alamat}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               ></textarea>
             </div>
@@ -94,7 +107,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="noTelepon"
                 value={formData.noTelepon}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -108,7 +120,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="npsn"
                 value={formData.npsn}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -122,7 +133,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="kelurahan"
                 value={formData.kelurahan}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -136,7 +146,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="nipKepsek"
                 value={formData.nipKepsek}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -153,7 +162,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="kecamatan"
                 value={formData.kecamatan}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -168,7 +176,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="kodePos"
                 value={formData.kodePos}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -182,7 +189,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="kota"
                 value={formData.kota}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -196,7 +202,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="provinsi"
                 value={formData.provinsi}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -210,7 +215,6 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="namaDisdik"
                 value={formData.namaDisdik}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
@@ -224,34 +228,20 @@ function SchoolForm({ sekolahData, token }) {
                 className="form-control"
                 id="namaKapsek"
                 value={formData.namaKapsek}
-                readOnly={!isEditing}
                 onChange={handleInputChange}
               />
             </div>
           </div>
         </div>
-        {/* Tombol Edit/Simpan */}
+
         <div className="box-footer">
-          {isEditing ? (
-            <button
-              onClick={handleSubmit}
-              className="btn btn-primary pull-left"
-            >
-              Simpan
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-primary pull-left"
-              onClick={handleEditClick}
-            >
-              Edit
-            </button>
-          )}
+          <button onClick={handleSubmit} className="btn btn-primary pull-left">
+            Simpan
+          </button>
         </div>
       </div>
     </div>
   )
 }
 
-export default SchoolForm
+export default CreateSchoolForm

@@ -14,7 +14,7 @@ export class SekolahRepository {
 
     async findSekolah() {
         const sekolah = await this.sekolahQuery.findAll()
-        if (!sekolah || sekolah.length == 0) throw new NotFoundException('Sekolah belum ada');
+        if (!sekolah || sekolah.length == 0) return null
         return sekolah[0]
     }
 
