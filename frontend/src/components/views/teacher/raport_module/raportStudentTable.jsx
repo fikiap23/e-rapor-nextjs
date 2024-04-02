@@ -1,166 +1,230 @@
 'use client'
+import { useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import useAuth from '@/hooks/useAuth'
+import { useGetAllStudentData } from '@/services/studentService/useStudent'
+import Loading from '@/components/shared/Loading'
+import siswaService from '@/services/studentService/student.service'
+import TabInputSiswa from '../../admin/student_module/TabInputStudent'
+import TabUpdateSiswa from '../../admin/student_module/TabUpdateStudent'
+
 
 const RaportStudentTable = () => {
-  const [selectedTahun, setSelectedTahun] = useState(2022)
-  const [selectedRombel, setSelectedRombel] = useState('')
-  const [searchTerm, setSearchTerm] = useState('')
+  const { token } = useAuth();
+  const [activeTab, setActiveTab] = useState('view');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [filteredDataStudent, setFilteredDataStudent] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [refreshTable, setRefreshTable] = useState(false);
 
-  const kelompok_siswa = [
-    {
-      SiswaId: 1,
-      TahunId: 2022,
-      Siswa: {
-        nis: '123',
-        nama: 'John Doe',
-      },
-      rombel: 'XII A',
-    },
-    {
-      SiswaId: 2,
-      TahunId: 2022,
-      Siswa: {
-        nis: '456',
-        nama: 'Jane Doe',
-      },
-      rombel: 'XII B',
-    },
-    {
-      SiswaId: 3,
-      TahunId: 2022,
-      Siswa: {
-        nis: '789',
-        nama: 'Alice Smith',
-      },
-      rombel: 'XII C',
-    },
-  ]
-
-  const filteredSiswa = kelompok_siswa.filter(
-    (item) =>
-      item.TahunId === selectedTahun &&
-      (selectedRombel === '' || item.rombel === selectedRombel) &&
-      (searchTerm === '' ||
-        item.Siswa.nama.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
-
-  const [riwayat, setRiwayat] = useState(kelompok_siswa)
-  const [sortAscending, setSortAscending] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [filter, setFilter] = useState('')
-  const [indexOfFirstItem, setIndexOfFirstItem] = useState(0)
+  const {
+    data: listStudent,
+    error: errorStudent,
+    isFetching: isFetchingStudent,
+    refetch: refetchStudents,
+  } = useGetAllStudentData(token)
 
   useEffect(() => {
-    setIndexOfFirstItem((currentPage - 1) * itemsPerPage)
-  }, [currentPage])
+    if (listStudent) {
+      const sortedStudents = [...listStudent].sort((a, b) => {
+        if (a[sortBy] < b[sortBy]) {
+          return sortOrder === 'asc' ? -1 : 1
+        }
+        if (a[sortBy] > b[sortBy]) {
+          return sortOrder === 'asc' ? 1 : -1
+        }
+        return 0
+      })
+      setFilteredDataStudent(sortedStudents.filter(filterStudent))
+    }
+  }, [listStudent, searchKeyword, sortBy, sortOrder, refreshTable])
 
-  const handleSort = (key) => {
-    const sortedRiwayat = [...riwayat].sort((a, b) => {
-      const valueA = a[key].nama.toUpperCase()
-      const valueB = b[key].nama.toUpperCase()
-      return sortAscending
-        ? valueA.localeCompare(valueB)
-        : valueB.localeCompare(valueA)
-    })
-    setRiwayat(sortedRiwayat)
-    setSortAscending(!sortAscending)
+  const filterStudent = (student) => {
+    return (
+      student.nis.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      student.nisn.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      student.nama.toLowerCase().includes(searchKeyword.toLowerCase())
+    )
   }
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
+  const handleTabChange = (tab) => {
+    setActiveTab(tab)
+  }
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus siswa!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await siswaService.delete(token, id);
+        refetchStudents();
+        Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
+      }
+    })
+  }
+
+  const handleFilterChange = (e) => {
+    setSearchKeyword(e.target.value)
     setCurrentPage(1)
   }
 
-  const itemsPerPage = 10
-  const filteredRiwayat = riwayat.filter(
-    (data) =>
-      data.Siswa.nama.toLowerCase().includes(filter.toLowerCase()) ||
-      data.Siswa.nis.toLowerCase().includes(filter.toLowerCase()) ||
-      data.rombel.toLowerCase().includes(filter.toLowerCase())
-    // data.MataPelajaran.nama.toLowerCase().includes(filter.toLowerCase()) ||
-    // data.Kelas.nama.toLowerCase().includes(filter.toLowerCase())
-  )
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('asc')
+    }
+  }
 
-  const currentRiwayat = filteredRiwayat.slice(
-    indexOfFirstItem,
-    indexOfFirstItem + itemsPerPage
-  )
+  const maxPaginationData = 10;
+  const indexOfLastStudent = currentPage * maxPaginationData
+  const indexOfFirstStudent = indexOfLastStudent - maxPaginationData
+  const currentStudents = filteredDataStudent.slice(indexOfFirstStudent, indexOfLastStudent)
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
-    <div>
-      <div>
-        <div className="form-group" style={{ width: '30%' }}>
-          <select
-            value={selectedTahun}
-            onChange={(e) => setSelectedTahun(e.target.value)}
-          >
-            <option value={2022}>2022</option>
-            <option value={2023}>2023</option>
-            <option value={2024}>2024</option>
-          </select>
-          <select
-            value={selectedRombel}
-            onChange={(e) => setSelectedRombel(e.target.value)}
-          >
-            <option value="">Pilih Rombel</option>
-            <option value="XII A">XII A</option>
-            <option value="XII B">XII B</option>
-            <option value="XII C">XII C</option>
-          </select>
-        </div>
-        <div className="form-group" style={{ width: '30%' }}>
-          {/* <label htmlFor="filter">Cari:</label> */}
-          <input
-            type="text"
-            id="filter"
-            className="form-control"
-            value={filter}
-            placeholder="Masukan pencarian"
-            onChange={handleFilterChange}
-          />
+    <section className="content">
+      <div className="row">
+        <div className="col-md-12">
+          <div className="nav-tabs-custom">
+            <div className="form-group" style={{ width: '30%', display: 'flex' }}>
+              <select
+                // value={selectedTahun}
+                // onChange={(e) => setSelectedTahun(e.target.value)}
+                className='form-control'
+              >
+                <option value={2022}>2022</option>
+                <option value={2023}>2023</option>
+                <option value={2024}>2024</option>
+              </select>
+              <select
+                // value={selectedRombel}
+                // onChange={(e) => setSelectedRombel(e.target.value)}
+                className='form-control'
+              >
+                <option value="">Pilih Rombel</option>
+                <option value="XII A">XII A</option>
+                <option value="XII B">XII B</option>
+                <option value="XII C">XII C</option>
+              </select>
+            </div>
+            <div className="tab-content">
+              {activeTab === 'view' && (
+                <div className="active tab-pane" id="activity">
+                  <div className="box-body table-responsive no-padding">
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      {!isFetchingStudent && currentStudents.length === 0 ? (null) : (
+                        <div className="form-group" style={{ width: '30%' }}>
+                          <input
+                            type="text"
+                            id="filter"
+                            className="form-control"
+                            value={searchKeyword}
+                            placeholder="Masukan pencarian"
+                            onChange={handleFilterChange}
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <button className="btn btn-primary" onClick={refetchStudents}><i className="fa fa-refresh"></i></button>
+                      </div>
+                    </div>
+                    {isFetchingStudent ? (
+                      <Loading></Loading>
+                    ) : (!isFetchingStudent && currentStudents.length === 0 ? (
+                      <div className='text-center' style={{ opacity: '0.6' }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24"><path fill="#47a6ff" fill-opacity="0" d="M5 3H12.5V8.5H19V21H5V3Z"><animate fill="freeze" attributeName="fill-opacity" begin="2.38s" dur="0.255s" values="0;0.3" /></path><g fill="none" stroke="#47a6ff" stroke-linecap="round" stroke-linejoin="round"><g stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M13 3L19 9V21H5V3H13"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.02s" values="64;0" /></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M9 13H13"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.7s" dur="0.34s" values="6;0" /></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M9 16H15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="2.04s" dur="0.34s" values="8;0" /></path></g><path stroke-dasharray="14" stroke-dashoffset="14" d="M12.5 3V8.5H19"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.19s" dur="0.34s" values="14;0" /></path></g></svg>
+                        <div style={{ color: 'gray' }}>
+                          <p><b>Data masih kosong</b></p>
+                          <small><b>Silahkan input siswa terlebih dahulu</b></small>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <table id="siswa" className="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>No.</th>
+                              <th onClick={() => handleSort('nis')}>Nis <i className="fa fa-sort"></i></th>
+                              {/* <th onClick={() => handleSort('nisn')}>Nisn <i className="fa fa-sort"></i></th> */}
+                              <th onClick={() => handleSort('nama')}>Nama <i className="fa fa-sort"></i></th>
+                              <th>Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {!isFetchingStudent &&
+                              currentStudents &&
+                              currentStudents.map((item, index) => (
+                                <tr key={item.id}>
+                                  <td>{indexOfFirstStudent + index + 1}</td>
+                                  <td>{item.nis}</td>
+                                  {/* <td>{item.nisn}</td> */}
+                                  <td>{item.nama.toUpperCase()}</td>
+                                  <td>
+                                    <Link
+                                      href={`/teacher/raport/${item.id}`}
+                                      className="btn btn-primary btn-sm"
+                                    // target="_blank"
+                                    >
+                                      <i className="fa fa-edit"></i> Input Catatan
+                                    </Link>
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                        {/* Pagination */}
+                        <nav aria-label="Page navigation example">
+                          <ul className="pagination">
+                            {[...Array(Math.ceil(filteredDataStudent.length / maxPaginationData))].map((_, index) => (
+                              <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                <Link href="" className="page-link" onClick={() => paginate(index + 1)}>
+                                  {index + 1}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </nav>
+                      </>
+                    )
+                    )}
+                  </div>
+                </div>
+              )}
+              {activeTab === 'input' && <TabInputSiswa />}
+              {activeTab === 'update' && (
+                <div>
+                  {/* <button className='btn btn-danger' onClick={() => handleTabChange('view')}>Batal</button> */}
+                  <button
+                    className="btn btn-default"
+                    onClick={() => {
+                      window.history.back();
+                      handleTabChange('view');
+                    }}
+                  >
+                    <i className="fa fa-arrow-left"></i> Kembali
+                  </button>
+                  <TabUpdateSiswa />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-      <table className="table table-bordered table-striped" id="raport">
-        <thead>
-          <tr>
-            <th>No</th>
-            {/* <th onClick={() => handleSort('SiswaId')}>No <i className="fa fa-sort"></i></th> */}
-            <th onClick={() => handleSort('Siswa')}>
-              Nis <i className="fa fa-sort"></i>
-            </th>
-            <th onClick={() => handleSort('Siswa')}>
-              Nama <i className="fa fa-sort"></i>
-            </th>
-            {/* <th onClick={() => handleSort('rombel')}>Rombel <i className="fa fa-sort"></i></th> */}
-            <th>Rombel</th>
-            <th>Cetak</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentRiwayat.map((item, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{item.Siswa.nis}</td>
-              <td>{item.Siswa.nama}</td>
-
-              <td>{item.rombel}</td>
-              <td>
-                <Link
-                  href={'/raport_print'}
-                  className="btn btn-success btn-sm"
-                  target="_blank"
-                >
-                  <i className="fa fa-print"></i> Cetak Rapor
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </section >
   )
 }
 

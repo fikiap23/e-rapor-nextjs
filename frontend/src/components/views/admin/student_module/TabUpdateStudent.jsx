@@ -17,7 +17,7 @@ function formatDate(dateString) {
     return `${day}, ${dateOfMonth} ${month} ${year}`;
 }
 
-function TabInputSiswa() {
+function TabUpdateSiswa() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const idStudent = searchParams.get('id');
@@ -188,4 +188,4 @@ function TabInputSiswa() {
     );
 }
 
-export default TabInputSiswa;
+export default TabUpdateSiswa;

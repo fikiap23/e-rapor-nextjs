@@ -22,7 +22,7 @@ const LectureView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-book"></i> Rombel Diampuh
+                    <i className="fa fa-book"></i> Rombel Diampu
                   </h3>
                 </div>
                 <div className="box-body">
