@@ -79,6 +79,7 @@ const AddTujuanModal = ({ isOpen, closeModal }) => {
                     name="tujuanPembelajaranAgamaBudipekerti"
                     value={formData.tujuanPembelajaranAgamaBudipekerti}
                     onChange={handleChange}
+                    placeholder="Tuliskan Tujuan Pembelajaran..."
                     required
                   />
                 </div>
@@ -92,6 +93,7 @@ const AddTujuanModal = ({ isOpen, closeModal }) => {
                     name="tujuanPembelajaranJatiDiri"
                     value={formData.tujuanPembelajaranJatiDiri}
                     onChange={handleChange}
+                    placeholder="Tuliskan Tujuan Pembelajaran..."
                     required
                   />
                 </div>
@@ -108,6 +110,7 @@ const AddTujuanModal = ({ isOpen, closeModal }) => {
                     name="tujuanPembelajaranLiterasiSains"
                     value={formData.tujuanPembelajaranLiterasiSains}
                     onChange={handleChange}
+                    placeholder="Tuliskan Tujuan Pembelajaran..."
                     required
                   />
                 </div>
