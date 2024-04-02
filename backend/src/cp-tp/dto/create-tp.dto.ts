@@ -1,7 +1,6 @@
 import { IsString, IsNotEmpty, IsInt } from 'class-validator';
 
 export class CreateTPDto {
-
     @IsInt()
     @IsNotEmpty()
     minggu: number;
@@ -10,7 +9,6 @@ export class CreateTPDto {
     @IsNotEmpty()
     tujuanPembelajaranJatiDiri: string;
 
-
     @IsString()
     @IsNotEmpty()
     tujuanPembelajaranLiterasiSains: string;
@@ -18,6 +16,4 @@ export class CreateTPDto {
     @IsString()
     @IsNotEmpty()
     tujuanPembelajaranAgamaBudipekerti: string;
-
-
 }

@@ -29,6 +29,10 @@ export class CpTpRepository {
         return await this.prisma.capaianPembelajarn.update({ where: { id: cp.id }, data })
     }
 
+    async findCpWithTp() {
+        return await this.prisma.capaianPembelajarn.findFirst({ include: { tujuanPembelajaran: true } })
+    }
+
     /*
     |--------------------------------------------------------------------------
     | CRUD Tujuan Pembelajaran(TP), TP Boleh lebih dari 1
@@ -60,7 +64,7 @@ export class CpTpRepository {
     }
 
     async deleteTpById(id: string) {
-        const tp = await this.findTpByIdOrThrow(id)
+        await this.findTpByIdOrThrow(id)
         return await this.prisma.tujuanPembelajaran.delete({ where: { id } })
     }
 

@@ -8,8 +8,6 @@ import { CpTpRepository } from './cp-tp.repository';
 import { CpTpService } from './cp-tp.service';
 import { CpTpController } from './cp-tp.controller';
 
-
-
 @Module({
     imports: [
         PrismaModule,
