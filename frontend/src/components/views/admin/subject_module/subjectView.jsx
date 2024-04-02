@@ -4,21 +4,25 @@ import Swal from 'sweetalert2'
 import Link from 'next/link'
 import CapaianPage from './component/capaianPage'
 import TujuanPage from './component/tujuanPage'
+import useAuth from '@/hooks/useAuth'
+import { useCp } from '@/services/cp-tpService/useCp'
+import Loading from '@/components/shared/Loading'
 
 const SubjecetView = () => {
   const [activeTab, setActiveTab] = useState('view')
+  const { token } = useAuth()
+  const {
+    data: listCp,
+    error: errorCp,
+    isFetching: isFetchingCp,
+    refetch: refetchCp,
+  } = useCp(token)
+
+  console.log(listCp)
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
-    // console.log(tab);
   }
-
-  const siswa = [
-    { id: 1, nis: '123', nisn: '456', nama: 'John Doe' },
-    { id: 2, nis: '789', nisn: '012', nama: 'Jane Doe' },
-    { id: 3, nis: '345', nisn: '678', nama: 'Alice Smith' },
-  ]
-
   const handleDelete = () => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
@@ -58,8 +62,11 @@ const SubjecetView = () => {
                 </li>
               </ul>
               <div className="tab-content">
+                {isFetchingCp && <Loading />}
                 {activeTab === 'view' && <TujuanPage tujuanData={[]} />}
-                {activeTab === 'input' && <CapaianPage />}
+                {activeTab === 'input' && !isFetchingCp && (
+                  <CapaianPage cp={listCp} refetch={refetchCp} token={token} />
+                )}
               </div>
             </div>
           </div>

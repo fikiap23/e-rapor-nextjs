@@ -18,12 +18,12 @@ export class CpTpService {
         return await this.cpTpRepository.createCP(dto);
     }
 
-    async updateCp(dto: Partial<CreateCPDto>) {
+    async updateCp(dto: CreateCPDto) {
         return await this.cpTpRepository.updateCp(dto);
     }
 
     async findCp() {
-        return await this.cpTpRepository.findOneCpOrThrow();
+        return await this.cpTpRepository.findCp();
     }
 
     async findCpWithTp() {

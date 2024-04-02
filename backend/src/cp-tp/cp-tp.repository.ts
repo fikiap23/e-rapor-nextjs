@@ -24,8 +24,13 @@ export class CpTpRepository {
         return cp
     }
 
-    async updateCp(data: Partial<CreateCPDto>) {
-        const cp = await this.findOneCpOrThrow()
+    async findCp() {
+        return await this.prisma.capaianPembelajarn.findFirst()
+    }
+
+    async updateCp(data: CreateCPDto) {
+        const cp = await this.findCp()
+        if (!cp) return await this.prisma.capaianPembelajarn.create({ data })
         return await this.prisma.capaianPembelajarn.update({ where: { id: cp.id }, data })
     }
 

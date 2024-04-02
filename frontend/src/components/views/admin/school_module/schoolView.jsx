@@ -9,7 +9,6 @@ import CreateSchoolForm from './component/createSchoolForm'
 function SchoolView() {
   const { token } = useAuth()
   const { data: sekolahData, error, isFetching } = useSekolah(token)
-  console.log(error)
   return (
     <div className="content-wrapper">
       <section className="content">

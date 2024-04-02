@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiClient } from '../apiUrls'
 
-export function useMapels(token) {
+export function useCp(token) {
   return useQuery({
-    queryKey: ['get-all-mapel'],
+    queryKey: ['get-all-cp'],
     initialData: [],
     queryFn: async () => {
-      const res = await ApiClient.get('/mapel', {
+      const res = await ApiClient.get('/silabus/cp', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

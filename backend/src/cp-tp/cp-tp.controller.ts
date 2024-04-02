@@ -44,7 +44,7 @@ export class CpTpController {
     @Put("cp")
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
-    async updateCp(@Body() dto: Partial<CreateCPDto>, @Res() res) {
+    async updateCp(@Body() dto: CreateCPDto, @Res() res) {
         await this.cpTpService.updateCp(dto);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }

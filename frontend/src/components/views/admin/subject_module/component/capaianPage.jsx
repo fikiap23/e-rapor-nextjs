@@ -1,11 +1,14 @@
+import cpTpService from '@/services/cp-tpService/cp-tp.service'
 import { useState } from 'react'
+import Swal from 'sweetalert2'
 
-function CapaianPage() {
+function CapaianPage({ cp, refetch, token }) {
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
-    capaianPembelajaranAgama: '',
-    capaianPembelajaranJatiDiri: '',
-    capaianPembelajaranLiterasiSains: '',
+    capaianPembelajaranAgama: cp?.capaianPembelajaranAgama || '',
+    capaianPembelajaranJatiDiri: cp?.capaianPembelajaranJatiDiri || '',
+    capaianPembelajaranLiterasiSains:
+      cp?.capaianPembelajaranLiterasiSains || '',
   })
 
   const handleInputChange = (event) => {
@@ -21,6 +24,46 @@ function CapaianPage() {
   }
 
   const handleSubmit = () => {
+    if (
+      !formData.capaianPembelajaranAgama ||
+      !formData.capaianPembelajaranJatiDiri ||
+      !formData.capaianPembelajaranLiterasiSains
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Semua kolom harus diisi',
+        position: 'bottom-center',
+      })
+      return
+    }
+    try {
+      cpTpService
+        .updateCp(token, formData)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data Capaian Pembelajaran telah diperbarui',
+            position: 'bottom-center',
+          })
+          refetch()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
     setIsEditing(false)
   }
   return (
