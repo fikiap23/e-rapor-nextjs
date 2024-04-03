@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
-import { DynamicInput, useInputs } from './input/DynamicInput'
-import Swal from 'sweetalert2'
-import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
+import { DynamicInput, useInputs } from './DynamicInput'
 
-const InputModulAjar = ({ refetch, mapels }) => {
+const InputModulAjar = () => {
   const [formData, setFormData] = useState({
     minggu: '',
-    topik: '',
+    topic: '',
     subtopik: '',
     startDate: '',
     endDate: '',
     capaianPembelajaran: '',
-    idMapel: '',
+    idTujuanPembelajaran: '',
   })
   const {
     inputs: tujuanPembelajaran,
@@ -27,7 +25,7 @@ const InputModulAjar = ({ refetch, mapels }) => {
     handleRemoveInput: handleRemoveTujuanKegiatan,
   } = useInputs({ label: 'Tujuan Kegiatan' })
 
-  const [katakunci, setKataKunci] = useState('')
+  const [kataKunci, setKataKunci] = useState('')
   const [alatBahan, setAlatBahan] = useState('')
   const [petaKonsep, setPetaKonsep] = useState('')
 
@@ -38,76 +36,16 @@ const InputModulAjar = ({ refetch, mapels }) => {
     })
   }
 
-  const clearForm = () => {
-    setFormData({
-      minggu: '',
-      topik: '',
-      subtopik: '',
-      startDate: '',
-      endDate: '',
-      capaianPembelajaran: '',
-      idMapel: '',
-    })
-
-    setKataKunci('')
-    setAlatBahan('')
-    setPetaKonsep('')
-  }
-
   const handleSubmit = (event) => {
     const payload = {
       ...formData,
-      katakunci: katakunci.split(',').map((kata) => kata.trim()),
+      kataKunci: kataKunci.split(',').map((kata) => kata.trim()),
       alatBahan: alatBahan.split(',').map((alat) => alat.trim()),
       petaKonsep: petaKonsep.split(',').map((peta) => peta.trim()),
       tujuanPembelajaran: tujuanPembelajaran.map((tujuan) => tujuan.value),
       tujuanKegiatan: tujuanKegiatan.map((tujuan) => tujuan.value),
     }
-
-    if (
-      payload.minggu === '' ||
-      payload.topik === '' ||
-      payload.startDate === '' ||
-      payload.endDate === '' ||
-      payload.capaianPembelajaran === '' ||
-      payload.idMapel === ''
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Data tidak boleh ada yang kosong',
-        position: 'bottom-center',
-      })
-      return
-    }
-    try {
-      modulAjarService
-        .create(payload, token)
-        .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data modul telah ditambahkan',
-            position: 'bottom-center',
-          })
-          refetch()
-          clearForm()
-        })
-        .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: error,
-            position: 'bottom-center',
-          })
-        })
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error,
-        position: 'top-right',
-      })
-    }
+    console.log(payload)
   }
 
   return (
@@ -125,28 +63,9 @@ const InputModulAjar = ({ refetch, mapels }) => {
               required
             >
               <option value="">Pilih Minggu</option>
-              {[...Array(20)].map((_, index) => (
+              {[...Array(14)].map((_, index) => (
                 <option key={index + 1} value={index + 1}>
                   {index + 1}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="idMapel">Mata Pelajaran</label>
-            <select
-              className="form-control"
-              id="idMapel"
-              name="idMapel"
-              value={formData.idMapel}
-              onChange={(e) => handleFormChange('idMapel', e.target.value)}
-              required
-            >
-              <option value="">Pilih Mata Pelajaran</option>
-              {mapels.map((mapel, index) => (
-                <option key={mapel.id} value={mapel.id}>
-                  {mapel.name}
                 </option>
               ))}
             </select>
@@ -180,15 +99,15 @@ const InputModulAjar = ({ refetch, mapels }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="topik">Topik</label>
+            <label htmlFor="topic">Topik</label>
             <input
               type="text"
               className="form-control"
-              id="topik"
-              name="topik"
+              id="topic"
+              name="topic"
               placeholder="Masukan Topik"
-              value={formData.topik}
-              onChange={(e) => handleFormChange('topik', e.target.value)}
+              value={formData.topic}
+              onChange={(e) => handleFormChange('topic', e.target.value)}
               required
             />
           </div>
@@ -215,7 +134,7 @@ const InputModulAjar = ({ refetch, mapels }) => {
               id="katakunci"
               name="katakunci"
               placeholder="Masukan Kata Kunci"
-              value={katakunci}
+              value={kataKunci}
               onChange={(e) => setKataKunci(e.target.value)}
               required
             />
@@ -252,44 +171,6 @@ const InputModulAjar = ({ refetch, mapels }) => {
             <small>Gunakan koma untuk memisahkan kata</small>
           </div>
 
-          <div className="form-group">
-            <label>Capaian Pembelajaran</label>
-            <textarea
-              className="form-control"
-              rows="5"
-              name="capaianPembelajaran"
-              placeholder="Masukkan Capaian"
-              required
-              value={formData.capaianPembelajaran}
-              onChange={(e) =>
-                handleFormChange('capaianPembelajaran', e.target.value)
-              }
-            />
-          </div>
-
-          {/* Form input TujuanPembelajaran */}
-          {tujuanPembelajaran.map((input, index) => (
-            <DynamicInput
-              key={input.id}
-              label={input.label}
-              id={input.id}
-              value={input.value}
-              onChange={(e) =>
-                handleChangeTujuanPembelajaran(index, e.target.value)
-              }
-              onAdd={() => handleAddTujuanPembelajaran(index)}
-              onRemove={() => handleRemoveTujuanPembelajaran(index)}
-              showRemoveButton={index > 0}
-            />
-          ))}
-          <div
-            style={{
-              height: '1px',
-              width: '100%',
-              backgroundColor: 'black',
-              margin: '20px 0',
-            }}
-          ></div>
           {/* Form inputTujuanKegiatan */}
           {tujuanKegiatan.map((input, index) => (
             <DynamicInput

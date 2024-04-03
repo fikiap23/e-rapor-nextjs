@@ -1,70 +1,17 @@
-import jadwalAjarService from '@/services/jadwalAjarService/jadwal-ajar.service'
 import React, { useState } from 'react'
-import Swal from 'sweetalert2'
 
-const AddModal = ({ isOpen, closeModal, modulAjar, token, refetch }) => {
+const AddModal = ({ isOpen, closeModal }) => {
   const [formData, setFormData] = useState({
+    minggu: '',
     tanggal: '',
     hari: '',
     kegiatanInti: '',
     idModulAjar: '',
   })
-
-  const clearForm = () => {
-    setFormData({
-      tanggal: '',
-      hari: '',
-      kegiatanInti: '',
-      idModulAjar: '',
-    })
-  }
   const handleSubmit = (event) => {
-    // check form
-    if (
-      !formData.tanggal ||
-      !formData.hari ||
-      !formData.kegiatanInti ||
-      !formData.idModulAjar
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Data tidak boleh ada yang kosong',
-        position: 'bottom-center',
-      })
-      return
-    }
+    console.log(formData)
 
-    try {
-      jadwalAjarService
-        .create(formData, token)
-        .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data jadwal ajar telah ditambahkan',
-            position: 'bottom-center',
-          })
-          refetch()
-          clearForm()
-        })
-        .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: error,
-            position: 'bottom-center',
-          })
-        })
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error,
-        position: 'top-right',
-      })
-    }
-
-    closeModal()
+    // closeModal()
   }
 
   const handleFormChange = (field, value) => {
@@ -102,9 +49,9 @@ const AddModal = ({ isOpen, closeModal, modulAjar, token, refetch }) => {
                   required
                 >
                   <option value="">Pilih Modul Ajar</option>
-                  {modulAjar.map((item, index) => (
-                    <option key={item.id} value={item.id}>
-                      {`Minggu ${item.minggu} - ${item.topik}`}
+                  {[...Array(14)].map((_, index) => (
+                    <option key={index + 1} value={index + 1}>
+                      {index + 1}
                     </option>
                   ))}
                 </select>
@@ -129,7 +76,6 @@ const AddModal = ({ isOpen, closeModal, modulAjar, token, refetch }) => {
                   )}
                 </select>
               </div>
-
               <div className="form-group" style={{ width: '30%' }}>
                 <label htmlFor="tanggal">Tanggal</label>
                 <input
