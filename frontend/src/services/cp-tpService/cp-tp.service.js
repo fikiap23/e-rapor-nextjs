@@ -42,6 +42,19 @@ const cpTpService = {
       throw error.response?.data?.message || 'Gagal Dihapus!'
     }
   },
+
+  updateTp: async (token, id, data) => {
+    try {
+      const response = await axios.put(`${BASE_URL_TP}/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Diupdate!'
+    }
+  },
 }
 
 export default cpTpService

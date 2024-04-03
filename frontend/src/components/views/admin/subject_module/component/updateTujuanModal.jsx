@@ -1,14 +1,25 @@
 import cpTpService from '@/services/cp-tpService/cp-tp.service'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 
-const AddTujuanModal = ({ isOpen, closeModal, token, refetch }) => {
+const UpdateTujuanModal = ({ isOpen, closeModal, token, refetch, tujuan }) => {
   const [formData, setFormData] = useState({
     minggu: '',
     tujuanPembelajaranJatiDiri: '',
     tujuanPembelajaranLiterasiSains: '',
     tujuanPembelajaranAgamaBudipekerti: '',
   })
+
+  useEffect(() => {
+    setFormData({
+      minggu: tujuan.minggu || '',
+      tujuanPembelajaranJatiDiri: tujuan.tujuanPembelajaranJatiDiri || '',
+      tujuanPembelajaranLiterasiSains:
+        tujuan.tujuanPembelajaranLiterasiSains || '',
+      tujuanPembelajaranAgamaBudipekerti:
+        tujuan.tujuanPembelajaranAgamaBudipekerti || '',
+    })
+  }, [tujuan])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -31,7 +42,7 @@ const AddTujuanModal = ({ isOpen, closeModal, token, refetch }) => {
     event.preventDefault()
     try {
       cpTpService
-        .createTp(token, formData)
+        .updateTp(token, tujuan.id, formData)
         .then((result) => {
           Swal.fire({
             icon: 'success',
@@ -74,7 +85,7 @@ const AddTujuanModal = ({ isOpen, closeModal, token, refetch }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 className="modal-title">Tambah Tujuan Pembelajaran</h4>
+            <h4 className="modal-title">Update Tujuan Pembelajaran</h4>
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
@@ -158,4 +169,4 @@ const AddTujuanModal = ({ isOpen, closeModal, token, refetch }) => {
   )
 }
 
-export default AddTujuanModal
+export default UpdateTujuanModal

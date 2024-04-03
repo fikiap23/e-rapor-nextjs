@@ -3,9 +3,21 @@ import AddTujuanModal from './addTujuanModal'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import Swal from 'sweetalert2'
 import cpTpService from '@/services/cp-tpService/cp-tp.service'
+import UpdateTujuanModal from './updateTujuanModal'
 
 const TujuanPage = ({ cp, token, refetch }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const [selectedTp, setSelectedTp] = useState(null)
+
+  const openUpdateModal = (tp) => {
+    setSelectedTp(tp)
+    setIsUpdateModalOpen(true)
+  }
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false)
+  }
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -81,9 +93,12 @@ const TujuanPage = ({ cp, token, refetch }) => {
                   <td>{item.tujuanPembelajaranJatiDiri}</td>
                   <td>{item.tujuanPembelajaranLiterasiSains}</td>
                   <td>
-                    <a className="btn btn-success btn-sm">
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() => openUpdateModal(item)}
+                    >
                       <i className="icon fa fa-edit"></i>
-                    </a>
+                    </button>
                     <button
                       style={{
                         marginRight: '2px',
@@ -107,6 +122,16 @@ const TujuanPage = ({ cp, token, refetch }) => {
         token={token}
         refetch={refetch}
       />
+
+      {isUpdateModalOpen && selectedTp && (
+        <UpdateTujuanModal
+          token={token}
+          refetch={refetch}
+          isOpen={isUpdateModalOpen}
+          closeModal={closeUpdateModal}
+          tujuan={selectedTp}
+        />
+      )}
     </div>
   )
 }
