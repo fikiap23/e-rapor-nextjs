@@ -1,6 +1,8 @@
+import cpTpService from '@/services/cp-tpService/cp-tp.service'
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 
-const AddTujuanModal = ({ isOpen, closeModal }) => {
+const AddTujuanModal = ({ isOpen, closeModal, token, refetch }) => {
   const [formData, setFormData] = useState({
     minggu: '',
     tujuanPembelajaranJatiDiri: '',
@@ -16,18 +18,61 @@ const AddTujuanModal = ({ isOpen, closeModal }) => {
     })
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    // Tambahkan logika untuk menyimpan data tujuan pembelajaran
-    console.log(formData)
-    // Reset form setelah submit
+  const clearForm = () => {
     setFormData({
       minggu: '',
       tujuanPembelajaranJatiDiri: '',
       tujuanPembelajaranLiterasiSains: '',
       tujuanPembelajaranAgamaBudipekerti: '',
     })
-    closeModal()
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (
+      !formData.minggu ||
+      !formData.tujuanPembelajaranJatiDiri ||
+      !formData.tujuanPembelajaranLiterasiSains ||
+      !formData.tujuanPembelajaranAgamaBudipekerti
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Semua kolom harus diisi',
+        position: 'bottom-center',
+      })
+
+      return
+    }
+    try {
+      cpTpService
+        .createTp(token, formData)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data tujuan pembelajaran telah diperbarui',
+            position: 'bottom-center',
+          })
+          clearForm()
+          refetch()
+          closeModal()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+    }
   }
 
   return (

@@ -1,24 +1,23 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import Link from 'next/link'
 import CapaianPage from './component/capaianPage'
 import TujuanPage from './component/tujuanPage'
 import useAuth from '@/hooks/useAuth'
-import { useCp } from '@/services/cp-tpService/useCp'
+import { useCpTp } from '@/services/cp-tpService/useCpTp'
 import Loading from '@/components/shared/Loading'
 
 const SubjecetView = () => {
   const [activeTab, setActiveTab] = useState('view')
+
   const { token } = useAuth()
   const {
     data: listCp,
     error: errorCp,
     isFetching: isFetchingCp,
     refetch: refetchCp,
-  } = useCp(token)
-
-  console.log(listCp)
+  } = useCpTp(token)
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -63,7 +62,9 @@ const SubjecetView = () => {
               </ul>
               <div className="tab-content">
                 {isFetchingCp && <Loading />}
-                {activeTab === 'view' && <TujuanPage tujuanData={[]} />}
+                {activeTab === 'view' && !isFetchingCp && (
+                  <TujuanPage cp={listCp} refetch={refetchCp} token={token} />
+                )}
                 {activeTab === 'input' && !isFetchingCp && (
                   <CapaianPage cp={listCp} refetch={refetchCp} token={token} />
                 )}

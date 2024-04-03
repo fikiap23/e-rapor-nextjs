@@ -16,6 +16,32 @@ const cpTpService = {
       throw error.response?.data?.message || 'Gagal Ditambahkan!'
     }
   },
+
+  createTp: async (token, data) => {
+    try {
+      const response = await axios.post(`${BASE_URL_TP}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+    }
+  },
+
+  deleteTp: async (token, id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL_TP}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Dihapus!'
+    }
+  },
 }
 
 export default cpTpService
