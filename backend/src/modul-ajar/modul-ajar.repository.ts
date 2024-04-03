@@ -3,7 +3,6 @@ import { ModulAjarQuery } from '../prisma/queries/modul-ajar/modul-ajar.query';
 import { AuthRepository } from '../auth/auth.repository';
 import { PayloadToken } from '../auth/type';
 import CreateModulAjarDto from './dto/create-modul-ajar.dto';
-import { MapelRepository } from '../mapel/mapel.repository';
 import { UpdateModulAjarDto } from './dto/update-modul-ajar.dto';
 
 @Injectable()
@@ -11,7 +10,6 @@ export class ModulAjarRepository {
     constructor(
         private readonly modulAjarQuery: ModulAjarQuery,
         private readonly authRepository: AuthRepository,
-        private readonly mapelRepository: MapelRepository
     ) { }
 
     async findAllModulAjar(token: string) {
@@ -32,19 +30,19 @@ export class ModulAjarRepository {
         return modulAjar
     }
 
-    async checkIsMingguHasUsed(minggu: number, idMapel: string, idRombel: string) {
+    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombel: string) {
         ;
-        const modulAjar = await this.modulAjarQuery.checkIsMingguHasUsed(minggu, idMapel, idRombel);
+        const modulAjar = await this.modulAjarQuery.checkIsMingguHasUsed(minggu, idTujuanPembelajaran, idRombel);
         if (modulAjar) throw new BadRequestException('Minggu ini sudah ada modul ajar');
         return
     }
 
     async createModulAjar(token: string, dto: CreateModulAjarDto) {
         // check mapel is exist
-        await this.mapelRepository.findByIdOrThrow(dto.idMapel);
+        // await this.mapelRepository.findByIdOrThrow(dto.idTujuanPembelajaran);
         // get decode payload jwt token
         const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        await this.checkIsMingguHasUsed(dto.minggu, dto.idMapel, idsRombel[0]);
+        await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombel[0]);
         const modulAjar = await this.modulAjarQuery.create(idsRombel[0], dto);
         if (!modulAjar) throw new BadRequestException('Modul Ajar gagal ditambahkan');
         return modulAjar
@@ -55,11 +53,11 @@ export class ModulAjarRepository {
         const currModulAjar = await this.findByIdOrThrow(id);
 
         // check mapel is exist
-        if (dto.idMapel && dto.idMapel !== currModulAjar.idMapel) await this.mapelRepository.findByIdOrThrow(dto.idMapel);
+        // if (dto.idTujuanPembelajaran && dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.mapelRepository.findByIdOrThrow(dto.idTujuanPembelajaran);
 
         // get decode payload jwt token
         const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        if (dto.minggu && dto.minggu !== currModulAjar.minggu || dto.idMapel !== currModulAjar.idMapel) await this.checkIsMingguHasUsed(dto.minggu, dto.idMapel, idsRombel[0]);
+        if (dto.minggu && dto.minggu !== currModulAjar.minggu || dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombel[0]);
 
         // update modul ajar
         const modulAjar = await this.modulAjarQuery.updateById(id, dto);

@@ -4,11 +4,9 @@ import { MomentModule } from '@ccmos/nestjs-moment';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HelperModule } from '../helpers/helper.module';
-import { MapelService } from './mapel.service';
-import { MapelRepository } from './mapel.repository';
-import { MapelQuery } from '../prisma/queries/mapel/mapel.query';
-import { MapelController } from './mapel.controller';
-
+import { CpTpRepository } from './cp-tp.repository';
+import { CpTpService } from './cp-tp.service';
+import { CpTpController } from './cp-tp.controller';
 
 @Module({
     imports: [
@@ -18,8 +16,8 @@ import { MapelController } from './mapel.controller';
         ConfigModule,
         HelperModule,
     ],
-    providers: [MapelService, MapelRepository, MapelQuery],
-    controllers: [MapelController],
-    exports: [MapelService, MapelRepository],
+    providers: [CpTpService, CpTpRepository],
+    controllers: [CpTpController],
+    exports: [CpTpService, CpTpRepository],
 })
-export class MapelModule { }
+export class CpTpModule { }

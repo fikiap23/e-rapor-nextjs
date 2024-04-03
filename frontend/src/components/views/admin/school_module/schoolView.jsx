@@ -4,11 +4,11 @@ import SchoolForm from './component/schoolForm'
 import useAuth from '@/hooks/useAuth'
 import { useSekolah } from '@/services/sekolahService/useSekolah'
 import Loading from '@/components/shared/Loading'
+import CreateSchoolForm from './component/createSchoolForm'
 
 function SchoolView() {
   const { token } = useAuth()
   const { data: sekolahData, error, isFetching } = useSekolah(token)
-
   return (
     <div className="content-wrapper">
       <section className="content">
@@ -24,13 +24,8 @@ function SchoolView() {
         <div className="row">
           <div className="col-md-12">
             <div className="box box-solid box-primary">
-              {error && (
-                <div className="alert alert-danger">
-                  {'Data sekolah tidak ditemukan.'}{' '}
-                  <strong className="ml-2 text-white ">
-                    {'Hubungi Teknisi'}
-                  </strong>
-                </div>
+              {!isFetching && !sekolahData && (
+                <CreateSchoolForm token={token} />
               )}
               {isFetching && <Loading />}
               {!isFetching && !error && sekolahData && (

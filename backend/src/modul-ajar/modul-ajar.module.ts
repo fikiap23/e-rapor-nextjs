@@ -9,7 +9,6 @@ import { ModulAjarRepository } from './modul-ajar.repository';
 import { ModulAjarQuery } from '../prisma/queries/modul-ajar/modul-ajar.query';
 import { AuthModule } from '../auth/auth.module';
 import { ModulAjarController } from './modul-ajar.comtroller';
-import { MapelModule } from '../mapel/mapel.module';
 
 
 @Module({
@@ -20,7 +19,6 @@ import { MapelModule } from '../mapel/mapel.module';
         ConfigModule,
         HelperModule,
         AuthModule,
-        MapelModule
     ],
     providers: [ModulAjarService, ModulAjarRepository, ModulAjarQuery],
     controllers: [ModulAjarController],

@@ -14,10 +14,6 @@ class CreateModulAjarDto {
     subtopik: string;
 
     @IsNotEmpty()
-    @IsString()
-    capaianPembelajaran: string;
-
-    @IsNotEmpty()
     @IsDate()
     startDate: Date;
 
@@ -28,10 +24,6 @@ class CreateModulAjarDto {
     @IsNotEmpty()
     @IsArray()
     katakunci: string[];
-
-    @IsNotEmpty()
-    @IsArray()
-    tujuanPembelajaran: string[];
 
     @IsNotEmpty()
     @IsArray()
@@ -47,7 +39,7 @@ class CreateModulAjarDto {
 
     @IsNotEmpty()
     @IsString()
-    idMapel: string;
+    idTujuanPembelajaran: string;
 }
 
 export default CreateModulAjarDto;
