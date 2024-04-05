@@ -1,22 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DynamicInput, useInputs } from './DynamicInput'
 
-const InputModulAjar = () => {
+const InputModulAjar = ({ tujuanPembelajarans }) => {
   const [formData, setFormData] = useState({
     minggu: '',
     topic: '',
     subtopik: '',
     startDate: '',
     endDate: '',
-    capaianPembelajaran: '',
     idTujuanPembelajaran: '',
   })
-  const {
-    inputs: tujuanPembelajaran,
-    handleAddInput: handleAddTujuanPembelajaran,
-    handleInputChange: handleChangeTujuanPembelajaran,
-    handleRemoveInput: handleRemoveTujuanPembelajaran,
-  } = useInputs({ label: 'Tujuan Pembelajaran' })
 
   const {
     inputs: tujuanKegiatan,
@@ -28,12 +21,31 @@ const InputModulAjar = () => {
   const [kataKunci, setKataKunci] = useState('')
   const [alatBahan, setAlatBahan] = useState('')
   const [petaKonsep, setPetaKonsep] = useState('')
+  const [selectedTp, setSelectedTp] = useState(null)
+  console.log(selectedTp)
 
   const handleFormChange = (field, value) => {
     setFormData({
       ...formData,
       [field]: value,
     })
+    console.log(tujuanPembelajarans)
+    if (field === 'minggu') {
+      tujuanPembelajarans.forEach((tp) => {
+        if (tp.minggu.toString() === value) {
+          setSelectedTp(tp)
+          setFormData({
+            ...formData,
+            [field]: tp.minggu,
+          })
+        }
+      })
+    } else {
+      setFormData({
+        ...formData,
+        [field]: value,
+      })
+    }
   }
 
   const handleSubmit = (event) => {
@@ -42,9 +54,9 @@ const InputModulAjar = () => {
       kataKunci: kataKunci.split(',').map((kata) => kata.trim()),
       alatBahan: alatBahan.split(',').map((alat) => alat.trim()),
       petaKonsep: petaKonsep.split(',').map((peta) => peta.trim()),
-      tujuanPembelajaran: tujuanPembelajaran.map((tujuan) => tujuan.value),
       tujuanKegiatan: tujuanKegiatan.map((tujuan) => tujuan.value),
     }
+
     console.log(payload)
   }
 
@@ -62,14 +74,76 @@ const InputModulAjar = () => {
               onChange={(e) => handleFormChange('minggu', e.target.value)}
               required
             >
-              <option value="">Pilih Minggu</option>
-              {[...Array(14)].map((_, index) => (
-                <option key={index + 1} value={index + 1}>
-                  {index + 1}
+              <option value="" disabled>
+                Pilih Minggu
+              </option>
+              {tujuanPembelajarans.map((tp) => (
+                <option key={tp.id} value={tp.minggu}>
+                  {tp.minggu}
                 </option>
               ))}
             </select>
           </div>
+
+          {selectedTp && (
+            <div className="form-group">
+              <label
+                htmlFor="tujuanPembelajaranAgamaBudipekerti"
+                className="control-label"
+              >
+                Tujuan Pembelajaran Nilai Agama dan Budi Pekerti
+              </label>
+              <textarea
+                type="text"
+                name="tujuanPembelajaranAgamaBudipekerti"
+                rows="5"
+                className="form-control"
+                id="tujuanPembelajaranAgamaBudipekerti"
+                value={selectedTp.tujuanPembelajaranAgamaBudipekerti}
+                readOnly={true}
+              />
+            </div>
+          )}
+
+          {selectedTp && (
+            <div className="form-group">
+              <label
+                htmlFor="tujuanPembelajaranJatiDiri"
+                className="control-label"
+              >
+                Tujuan Pembelajaran Jati Diri
+              </label>
+              <textarea
+                type="text"
+                name="tujuanPembelajaranJatiDiri"
+                rows="5"
+                className="form-control"
+                id="tujuanPembelajaranJatiDiri"
+                value={selectedTp.tujuanPembelajaranJatiDiri}
+                readOnly={true}
+              />
+            </div>
+          )}
+
+          {selectedTp && (
+            <div className="form-group">
+              <label
+                htmlFor="tujuanPembelajaranLiterasiSains"
+                className="control-label"
+              >
+                Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni
+              </label>
+              <textarea
+                type="text"
+                name="tujuanPembelajaranLiterasiSains"
+                rows="5"
+                className="form-control"
+                id="tujuanPembelajaranLiterasiSains"
+                value={selectedTp.tujuanPembelajaranLiterasiSains}
+                readOnly={true}
+              />
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '20px' }}>
             <div className="form-group" style={{ width: '30%' }}>
