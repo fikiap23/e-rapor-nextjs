@@ -1,4 +1,4 @@
-import PrintModule from '@/components/views/admin/subject_module/component/print/printModule'
+import PrintModule from '@/components/views/print/modul_ajar/printModule'
 import React from 'react'
 
 const RaportPage = () => {

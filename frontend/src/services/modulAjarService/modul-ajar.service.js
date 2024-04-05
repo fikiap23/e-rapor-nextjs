@@ -16,6 +16,19 @@ const modulAjarService = {
     }
   },
 
+  update: async (id, data, token) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Modul Ajar Gagal Diupdate'
+    }
+  },
+
   delete: async (token, id) => {
     try {
       const response = await axios.delete(`${BASE_URL}/${id}`, {

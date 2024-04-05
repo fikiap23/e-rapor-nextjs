@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DynamicInput, useInputs } from './DynamicInput'
 import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 import Swal from 'sweetalert2'
+import { formatDate } from '@/lib/helperDate'
 
-const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
+const EditModulAjar = ({
+  modulAjarData,
+  tujuanPembelajarans,
+  refetch,
+  token,
+}) => {
   const [formData, setFormData] = useState({
-    minggu: '',
-    topik: '',
-    subtopik: '',
-    startDate: '',
-    endDate: '',
-    idTujuanPembelajaran: '',
+    minggu: modulAjarData.minggu,
+    topik: modulAjarData.topik,
+    subtopik: modulAjarData.subtopik,
+    startDate: formatDate(new Date(modulAjarData.startDate)),
+    endDate: formatDate(new Date(modulAjarData.endDate)),
+    idTujuanPembelajaran: modulAjarData.idTujuanPembelajaran,
   })
 
   const {
@@ -18,12 +24,24 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
     handleAddInput: handleAddTujuanKegiatan,
     handleInputChange: handleChangeTujuanKegiatan,
     handleRemoveInput: handleRemoveTujuanKegiatan,
-  } = useInputs({ label: 'Tujuan Kegiatan' })
+  } = useInputs({
+    label: 'Tujuan Kegiatan',
+  })
 
-  const [kataKunci, setKataKunci] = useState('')
-  const [alatBahan, setAlatBahan] = useState('')
-  const [petaKonsep, setPetaKonsep] = useState('')
+  const [kataKunci, setKataKunci] = useState(modulAjarData.katakunci.join(', '))
+  const [alatBahan, setAlatBahan] = useState(modulAjarData.alatBahan.join(', '))
+  const [petaKonsep, setPetaKonsep] = useState(
+    modulAjarData.petaKonsep.join(', ')
+  )
   const [selectedTp, setSelectedTp] = useState(null)
+
+  useEffect(() => {
+    tujuanPembelajarans.forEach((tp) => {
+      if (tp.minggu.toString() === modulAjarData.minggu.toString()) {
+        setSelectedTp(tp)
+      }
+    })
+  }, [tujuanPembelajarans, modulAjarData.minggu])
 
   const handleFormChange = (field, value) => {
     setFormData({
@@ -41,11 +59,6 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
             ['idTujuanPembelajaran']: tp.id,
           })
         }
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [field]: value,
       })
     }
   }
@@ -77,11 +90,11 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
 
     try {
       modulAjarService
-        .create(payload, token)
+        .update(modulAjarData.id, payload, token)
         .then((result) => {
           Swal.fire({
             icon: 'success',
-            title: 'Data modul ajar telah ditambahkan',
+            title: 'Data modul ajar telah diperbarui',
             position: 'bottom-center',
           })
           clearForm()
@@ -151,76 +164,7 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
               </div>
             )}
 
-            {selectedTp && (
-              <div className="form-group">
-                <label
-                  htmlFor="tujuanPembelajaranJatiDiri"
-                  className="control-label"
-                >
-                  Tujuan Pembelajaran Jati Diri
-                </label>
-                <textarea
-                  type="text"
-                  name="tujuanPembelajaranJatiDiri"
-                  rows="5"
-                  className="form-control"
-                  id="tujuanPembelajaranJatiDiri"
-                  value={selectedTp.tujuanPembelajaranJatiDiri}
-                  readOnly={true}
-                />
-              </div>
-            )}
-
-            {selectedTp && (
-              <div className="form-group">
-                <label
-                  htmlFor="tujuanPembelajaranLiterasiSains"
-                  className="control-label"
-                >
-                  Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan
-                  Seni
-                </label>
-                <textarea
-                  type="text"
-                  name="tujuanPembelajaranLiterasiSains"
-                  rows="5"
-                  className="form-control"
-                  id="tujuanPembelajaranLiterasiSains"
-                  value={selectedTp.tujuanPembelajaranLiterasiSains}
-                  readOnly={true}
-                />
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div className="form-group" style={{ width: '30%' }}>
-                <label htmlFor="startDate">Tanggal Mulai</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="startDate"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={(e) =>
-                    handleFormChange('startDate', e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group" style={{ width: '30%' }}>
-                <label htmlFor="endDate">Tanggal Akhir</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="endDate"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={(e) => handleFormChange('endDate', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
+            {/* Other form elements */}
             <div className="form-group">
               <label htmlFor="topik">Topik</label>
               <input
@@ -245,6 +189,32 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
                 placeholder="Masukan Sub Topik"
                 value={formData.subtopik}
                 onChange={(e) => handleFormChange('subtopik', e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="startDate">Tanggal Mulai</label>
+              <input
+                type="date"
+                className="form-control"
+                id="startDate"
+                name="startDate"
+                value={formData.startDate}
+                onChange={(e) => handleFormChange('startDate', e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="endDate">Tanggal Akhir</label>
+              <input
+                type="date"
+                className="form-control"
+                id="endDate"
+                name="endDate"
+                value={formData.endDate}
+                onChange={(e) => handleFormChange('endDate', e.target.value)}
                 required
               />
             </div>
@@ -321,4 +291,4 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
   )
 }
 
-export default InputModulAjar
+export default EditModulAjar

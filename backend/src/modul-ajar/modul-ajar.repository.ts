@@ -4,12 +4,14 @@ import { AuthRepository } from '../auth/auth.repository';
 import { PayloadToken } from '../auth/type';
 import CreateModulAjarDto from './dto/create-modul-ajar.dto';
 import { UpdateModulAjarDto } from './dto/update-modul-ajar.dto';
+import { CpTpRepository } from '../cp-tp/cp-tp.repository';
 
 @Injectable()
 export class ModulAjarRepository {
     constructor(
         private readonly modulAjarQuery: ModulAjarQuery,
         private readonly authRepository: AuthRepository,
+        private readonly cpTpRepository: CpTpRepository
     ) { }
 
     async findAllModulAjar(token: string) {
@@ -39,7 +41,7 @@ export class ModulAjarRepository {
 
     async createModulAjar(token: string, dto: CreateModulAjarDto) {
         // check mapel is exist
-        // await this.mapelRepository.findByIdOrThrow(dto.idTujuanPembelajaran);
+        await this.cpTpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
         // get decode payload jwt token
         const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombel[0]);
@@ -53,7 +55,7 @@ export class ModulAjarRepository {
         const currModulAjar = await this.findByIdOrThrow(id);
 
         // check mapel is exist
-        // if (dto.idTujuanPembelajaran && dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.mapelRepository.findByIdOrThrow(dto.idTujuanPembelajaran);
+        if (dto.idTujuanPembelajaran && dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.cpTpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
 
         // get decode payload jwt token
         const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
