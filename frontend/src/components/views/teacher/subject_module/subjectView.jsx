@@ -10,10 +10,12 @@ import modulAjarService from '@/services/modulAjarService/modul-ajar.service'
 import Loading from '@/components/shared/Loading'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { useCpTp } from '@/services/cp-tpService/useCpTp'
+import EditModulAjar from './component/editModulAjar'
 
 const SubjectView = () => {
   const [activeTab, setActiveTab] = useState('moduleTab')
   const [mingguTpUnCreated, setMingguTpUncreated] = useState([])
+  const [selectedModulAjar, setSelectedModulAjar] = useState(null)
   const { token } = useAuth()
   const {
     data: modulAjars,
@@ -44,6 +46,11 @@ const SubjectView = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
+  }
+
+  const handleEdit = (data) => {
+    setActiveTab('moduleEditTab')
+    setSelectedModulAjar(data)
   }
 
   const handleDelete = (id) => {
@@ -138,7 +145,7 @@ const SubjectView = () => {
                                     }}
                                     type="button"
                                     className="btn btn-primary"
-                                    // onClick={handleDelete}
+                                    onClick={() => handleEdit(modulAjar)}
                                   >
                                     <i className="icon fa fa-edit"></i>
                                   </button>
@@ -178,6 +185,14 @@ const SubjectView = () => {
                     />
                   )}
                 {activeTab === 'activitiesTab' && <ActivitiesView />}
+                {activeTab === 'moduleEditTab' && selectedModulAjar && (
+                  <EditModulAjar
+                    modulAjarData={selectedModulAjar}
+                    refetch={refetchModulAjars}
+                    token={token}
+                    tujuanPembelajarans={mingguTpUnCreated}
+                  />
+                )}
               </div>
             </div>
           </div>
