@@ -174,6 +174,7 @@ const SubjectView = () => {
                     <InputModulAjar
                       refetch={refetchModulAjars}
                       tujuanPembelajarans={mingguTpUnCreated}
+                      token={token}
                     />
                   )}
                 {activeTab === 'activitiesTab' && <ActivitiesView />}
