@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
 import Swal from 'sweetalert2'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
-
+import { Table, Button, Tag, Space } from 'antd'
 const SemesterView = () => {
   const { token } = useAuth()
   const [selectedSemester, setSelectedSemester] = useState({})
@@ -64,6 +64,75 @@ const SemesterView = () => {
     })
   }
 
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: 'Tahun',
+      dataIndex: ['tahunAjaranAwal', 'tahunAjaranAkhir'],
+      key: 'tahun',
+      render: (text, record) =>
+        `${record.tahunAjaranAwal}-${record.tahunAjaranAkhir}`,
+      sorter: (a, b) => a.tahunAjaranAwal - b.tahunAjaranAwal,
+    },
+    {
+      title: 'Kepala Sekolah',
+      dataIndex: 'namaKepsek',
+      key: 'namaKepsek',
+      sorter: (a, b) => a.namaKepsek.localeCompare(b.namaKepsek),
+    },
+    {
+      title: 'NIP',
+      dataIndex: 'nipKepsek',
+      key: 'nipKepsek',
+      sorter: (a, b) => a.nipKepsek.localeCompare(b.nipKepsek),
+    },
+    {
+      title: 'Tgl Raport',
+      dataIndex: 'tglBagiRapor',
+      key: 'tglBagiRapor',
+      render: (text, record) => formatDate(new Date(record.tglBagiRapor)),
+      sorter: (a, b) => new Date(a.tglBagiRapor) - new Date(b.tglBagiRapor),
+    },
+    {
+      title: 'Semester',
+      dataIndex: 'jenisSemester',
+      key: 'jenisSemester',
+      sorter: (a, b) => a.jenisSemester.localeCompare(b.jenisSemester),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'isAktif',
+      key: 'status',
+      filters: [
+        { text: 'Aktif', value: true },
+        { text: 'Nonaktif', value: false },
+      ],
+      onFilter: (value, record) => record.isAktif === value,
+      render: (text, record) => (
+        <Tag color={record.isAktif ? 'green' : 'red'}>
+          {record.isAktif ? 'Aktif' : 'Nonaktif'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <Button onClick={() => openModalEdit(record)}>Edit</Button>
+          <Button onClick={() => handleDelete(record.id)} danger>
+            Hapus
+          </Button>
+        </Space>
+      ),
+    },
+  ]
+
   return (
     <>
       <div className="content-wrapper">
@@ -73,7 +142,7 @@ const SemesterView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-calendar"></i> Data Tahun
+                    <i className="fa fa-calendar"></i> Data Semester
                   </h3>
                 </div>
 
@@ -87,61 +156,15 @@ const SemesterView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
-                  {isFetchingSemester && <Loading />}
-                  <table
-                    className="table table-bordered table-striped"
-                    id="tahun"
-                  >
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Tahun</th>
-                        <th>Kepala Sekolah</th>
-                        <th>NIP</th>
-                        <th>Tgl Raport</th>
-                        <th>Semester</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!isFetchingSemester &&
-                        listSemester &&
-                        listSemester.map((item, index) => (
-                          <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{`${item.tahunAjaranAwal}-${item.tahunAjaranAkhir}`}</td>
-                            <td>{item.namaKepsek}</td>
-                            <td>{item.nipKepsek}</td>
-                            <td>{formatDate(new Date(item.tglBagiRapor))}</td>
-                            <td>{item.jenisSemester}</td>
-                            <td>
-                              <span
-                                className={`label bg-${
-                                  item.isAktif ? 'green' : 'red'
-                                }`}
-                              >
-                                {item.isAktif ? 'Aktif' : 'Nonaktif'}
-                              </span>
-                            </td>
-                            <td>
-                              <button
-                                className="btn btn-primary btn-sm"
-                                onClick={openModalEdit.bind(this, item)}
-                              >
-                                <i className="icon fa fa-edit"></i>
-                              </button>
-                              <button
-                                className="btn btn-danger btn-sm"
-                                onClick={handleDelete.bind(this, item.id)}
-                              >
-                                <i className="icon fa fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                  <Table
+                    bordered
+                    scroll={{ x: 1000 }}
+                    columns={columns}
+                    dataSource={listSemester}
+                    loading={isFetchingSemester}
+                    pagination={{ pageSize: 10 }}
+                    rowKey="id"
+                  />
                 </div>
               </div>
             </div>

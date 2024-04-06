@@ -1,8 +1,11 @@
-'use client'
+import { Modal, Form, Input, Select, Switch, DatePicker, Button } from 'antd'
 import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
+import moment from 'moment'
+const { Option } = Select
+
 const EditSemesterModal = ({
   isOpen,
   closeModal,
@@ -10,188 +13,109 @@ const EditSemesterModal = ({
   token,
   refetch,
 }) => {
-  const [dataEdit, setDataEdit] = useState({})
+  const [form] = Form.useForm()
 
   useEffect(() => {
     if (isOpen) {
-      setDataEdit({
+      form.setFieldsValue({
         id: semesterData.id,
         isAktif: semesterData.isAktif,
         jenisSemester: semesterData.jenisSemester,
-        tglBagiRapor: formatDate(new Date(semesterData.tglBagiRapor)),
+        tglBagiRapor: moment(semesterData.tglBagiRapor),
         namaKepsek: semesterData.namaKepsek,
         nipKepsek: semesterData.nipKepsek,
         tahunAjaranAwal: semesterData.tahunAjaranAwal,
         tahunAjaranAkhir: semesterData.tahunAjaranAkhir,
       })
     }
-  }, [semesterData])
+  }, [isOpen, semesterData, form])
 
-  const handleToggle = () => {
-    setDataEdit({ ...dataEdit, isAktif: !dataEdit.isAktif })
+  const handleToggle = (checked) => {
+    form.setFieldsValue({ isAktif: checked })
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setDataEdit({ ...dataEdit, [name]: value })
-  }
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      semesterService
-        .update(token, dataEdit.id, dataEdit)
-        .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data semester telah diperbarui',
-            position: 'bottom-center',
-          })
-          refetch()
-          closeModal()
-        })
-        .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: error,
-            position: 'bottom-center',
-          })
-        })
+      const values = await form.validateFields()
+      await semesterService.update(token, semesterData.id, values)
+      Swal.fire({
+        icon: 'success',
+        title: 'Data semester telah diperbarui',
+        position: 'bottom-center',
+      })
+      refetch()
+      closeModal()
     } catch (error) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: error,
-        position: 'top-right',
+        position: 'bottom-center',
       })
     }
   }
 
   return (
-    <div
-      className={`modal fade overscroll-auto scroll-auto  ${
-        isOpen ? 'in show-modal' : ''
-      }`}
-      id="add-modal"
+    <Modal
+      title="Edit"
+      visible={isOpen}
+      onCancel={closeModal}
+      footer={[
+        <Button key="back" onClick={closeModal}>
+          Batal
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleSubmit}>
+          Simpan
+        </Button>,
+      ]}
     >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              onClick={closeModal}
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 className="modal-title">Edit</h4>
-          </div>
-          <div className="modal-body ">
-            <div className="box-body ">
-              <div className="form-group">
-                <label>Tahun Ajaran Awal</label>
-                <input
-                  type="number"
-                  required
-                  name="tahunAjaranAwal"
-                  className="form-control"
-                  onChange={handleChange}
-                  value={dataEdit.tahunAjaranAwal || ''}
-                />
-              </div>
-              <div className="form-group">
-                <label>Tahun Ajaran Akhir</label>
-                <input
-                  type="number"
-                  required
-                  name="tahunAjaranAkhir"
-                  className="form-control"
-                  onChange={handleChange}
-                  value={dataEdit.tahunAjaranAkhir || ''}
-                />
-              </div>
-              <div className="form-group">
-                <label>Semester</label>
-                <select
-                  required
-                  name="jenisSemester"
-                  className="form-control"
-                  onChange={handleChange}
-                  value={dataEdit.jenisSemester || ''}
-                >
-                  <option value="">--- Pilih Semester ---</option>
-                  <option value="GANJIL">Ganjil</option>
-                  <option value="GENAP">Genap</option>
-                  {/* Add other options */}
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="namaKepsek">Kepala Sekolah</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="namaKepsek"
-                  name="namaKepsek"
-                  placeholder="Masukkan Nama Kepala Sekolah"
-                  required
-                  onChange={handleChange}
-                  value={dataEdit.namaKepsek || ''}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="nipKepsek">NIP</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="nipKepsek"
-                  name="nipKepsek"
-                  placeholder="Masukkan NIP"
-                  required
-                  onChange={handleChange}
-                  value={dataEdit.nipKepsek || ''}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="inputDatepickerTglLahir">Tanggal Raport</label>
-                <div className="input-group date">
-                  <div className="input-group-addon">
-                    <i className="fa fa-calendar"></i>
-                  </div>
-                  <input
-                    type="date"
-                    required
-                    name="tglBagiRapor"
-                    className="form-control pull-right"
-                    id="tglBagiRapor"
-                    onChange={handleChange}
-                    value={dataEdit.tglBagiRapor || ''}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Status Aktif</label>
-                <br />
-                <div onClick={handleToggle} className="switch">
-                  <input
-                    type="checkbox"
-                    name="isAktif"
-                    checked={dataEdit.isAktif}
-                  />
-                  <span className="slider round"></span>
-                </div>
-              </div>
-            </div>
-            <div className="box-footer">
-              <button onClick={handleSubmit} className="btn btn-primary">
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label="Tahun Ajaran Awal"
+          name="tahunAjaranAwal"
+          rules={[{ required: true }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
+          label="Tahun Ajaran Akhir"
+          name="tahunAjaranAkhir"
+          rules={[{ required: true }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
+          label="Semester"
+          name="jenisSemester"
+          rules={[{ required: true }]}
+        >
+          <Select>
+            <Option value="GANJIL">Ganjil</Option>
+            <Option value="GENAP">Genap</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Kepala Sekolah"
+          name="namaKepsek"
+          rules={[{ required: true }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label="NIP" name="nipKepsek" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Tanggal Raport"
+          name="tglBagiRapor"
+          rules={[{ required: true }]}
+        >
+          <DatePicker style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item label="Status Aktif" name="isAktif" valuePropName="checked">
+          <Switch onChange={handleToggle} />
+        </Form.Item>
+      </Form>
+    </Modal>
   )
 }
 
