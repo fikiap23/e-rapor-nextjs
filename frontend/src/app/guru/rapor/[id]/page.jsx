@@ -1,4 +1,4 @@
-import RaportInput from '@/components/views/teacher/raport_module/raportInput'
+import RaportInput from '@/components/views/rapor/raportInput'
 import React from 'react'
 
 const RaportPage = () => {

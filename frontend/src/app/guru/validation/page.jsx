@@ -1,4 +1,4 @@
-import ValidationView from '@/components/views/teacher/validation_module/validationViews'
+import ValidationView from '@/components/views/validation/validationViews'
 import React from 'react'
 
 const ValidationPage = () => {

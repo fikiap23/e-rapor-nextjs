@@ -1,12 +1,12 @@
-import SubjectView from '@/components/views/teacher/subject_module/subjectView'
+import ModulAjarView from '@/components/views/modul-ajar/modulAjarView'
 import React from 'react'
 
-const AbsencePage = () => {
+const ModulAjarage = () => {
   return (
     <>
-      <SubjectView></SubjectView>
+      <ModulAjarView />
     </>
   )
 }
 
-export default AbsencePage
+export default ModulAjarage

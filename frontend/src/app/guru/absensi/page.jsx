@@ -1,6 +1,5 @@
-import AbsenceView from '@/components/views/teacher/absence_module/absenceView'
+import AbsenceView from '@/components/views/absensi/absenceView'
 import React from 'react'
-
 const AbsencePage = () => {
   return (
     <>

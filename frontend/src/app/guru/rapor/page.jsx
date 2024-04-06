@@ -1,6 +1,5 @@
-import RaportView from '@/components/views/teacher/raport_module/raportView'
+import RaportView from '@/components/views/rapor/raportView'
 import React from 'react'
-
 const RaportPage = () => {
   return (
     <>

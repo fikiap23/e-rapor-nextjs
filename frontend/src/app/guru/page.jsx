@@ -1,4 +1,4 @@
-import DashboardView from '@/components/views/teacher/dashboard/DashboadView'
+import DashboardView from '@/components/views/dashboard/dashboardView'
 import React from 'react'
 
 const DashboardPage = () => {

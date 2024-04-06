@@ -1,4 +1,4 @@
-import LectureView from '@/components/views/teacher/class_module/lectureView'
+import LectureView from '@/components/views/rombel-diampu/lectureView'
 import React from 'react'
 
 const LecturePage = () => {
