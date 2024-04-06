@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { apiUrl } from '../apiUrls'
 
-const BASE_URL = `${apiUrl}/raport`
+const BASE_URL = `${apiUrl}/rapor`
 const raportService = {
   create: async (data, token) => {
     try {
@@ -10,9 +10,9 @@ const raportService = {
           Authorization: `Bearer ${token}`,
         },
       })
-      return response.data?.data || 'Guru Berhasil Di Ditambahkan'
+      return response.data?.data || 'Catatan Berhasil Di Ditambahkan'
     } catch (error) {
-      throw error.response?.data?.message || 'Guru Gagal Ditambahkan'
+      throw error.response?.data?.message || 'Catatan Gagal Ditambahkan'
     }
   },
 

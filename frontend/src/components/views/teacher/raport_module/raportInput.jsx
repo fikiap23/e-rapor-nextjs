@@ -1,6 +1,6 @@
 'use client'
 import useAuth from "@/hooks/useAuth";
-import siswaService from "@/services/studentService/student.service";
+import raportService from "@/services/raportService/raport.service";
 import { useOneStudent } from "@/services/studentService/useOneStudent";
 import { useGetAllStudentData } from "@/services/studentService/useStudent";
 import { useParams } from "next/navigation";
@@ -27,8 +27,9 @@ function RaportInput() {
         catatanPertumbuhan: '',
         catatanPancasila: '',
         catatanGuru: '',
-        idSemester: '',
-        idMurid: ''
+        // isPrint: 'YES',
+        idSemester: 'dc117068-59c3-46e8-a551-e177fdb23414', //masih dummy
+        idMurid: idStudent.id
     });
 
     const handleChange = (e) => {
@@ -50,22 +51,24 @@ function RaportInput() {
             });
 
             if (result.isConfirmed) {
-                // await siswaService.create(formData, token);
-                setFormData({
-                    ...formData,
-                    totalSakit: 0,
-                    totalIzin: 0,
-                    totalAlpa: 0,
-                    catatanAgamaBudipekerti: '',
-                    catatanJatiDiri: '',
-                    catatanLiterasiSains: '',
-                    catatanPertumbuhan: '',
-                    catatanPancasila: '',
-                    catatanGuru: '',
-                    idSemester: '',
-                    idMurid: ''
-                });
-                Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success');
+                await raportService.create(formData, token);
+                // setFormData({
+                //     ...formData,
+                //     totalSakit: 0,
+                //     totalIzin: 0,
+                //     totalAlpa: 0,
+                //     catatanAgamaBudipekerti: '',
+                //     catatanJatiDiri: '',
+                //     catatanLiterasiSains: '',
+                //     catatanPertumbuhan: '',
+                //     catatanPancasila: '',
+                //     catatanGuru: '',
+                //     idSemester: '',
+                //     idMurid: ''
+                // });
+                console.log(formData);
+                window.history.back();
+                Swal.fire('Catatan Ditambahkan!', 'Siswa sudah mendapat catatan silahkan di cetak raportnya.', 'success');
             }
         } catch (error) {
             console.error('Error:', error.message);
@@ -99,7 +102,7 @@ function RaportInput() {
                     onClick={() => {
                         window.history.back();
                     }}
-                    style={{marginBottom: '2%', marginTop: '-2%'}}
+                    style={{ marginBottom: '2%', marginTop: '-2%' }}
                 >
                     <i className="fa fa-arrow-left"></i> Kembali
                 </button>
@@ -114,8 +117,7 @@ function RaportInput() {
                                 <div className="form-group">
                                     <label
                                         htmlFor={key}
-                                        className={`control-label
-                                        ${key === 'idSemester' ? "hide" : key === 'idMurid' ? "hide" : ""}`}>
+                                        className={`control-label ${key === 'idSemester' || key === 'idMurid' || key === 'isPrint' ? 'hide' : ''}`}>
                                         {labels[key]}
                                     </label>
                                     {key.includes('catatan') ? (
@@ -132,7 +134,7 @@ function RaportInput() {
                                             type={key.includes("total") ? "number" : "text"}
                                             min={key.includes('total') ? 0 : ''}
                                             name={key}
-                                            className={`form-control ${key === 'idSemester' ? "hide" : key === 'idMurid' ? "hide" : ""}`}
+                                            className={`form-control ${key === 'idSemester' || key === 'idMurid' || key === 'isPrint' ? 'hide' : ''}`}
                                             id={key}
                                             onChange={handleChange}
                                             value={formData[key]}
