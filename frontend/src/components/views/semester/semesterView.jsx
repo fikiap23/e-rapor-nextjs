@@ -1,68 +1,68 @@
-"use client";
-import { useState } from "react";
-import AddSemesterModal from "./addSemesterModal";
-import EditSemesterModal from "./editSemesterModal";
-import useAuth from "@/hooks/useAuth";
-import { useGetAllSemesterData } from "@/services/semesterService/useSemester";
-import Loading from "@/components/shared/Loading";
-import { formatDate } from "@/lib/helperDate";
-import semesterService from "@/services/semesterService/semester.service";
-import Swal from "sweetalert2";
+'use client'
+import { useState } from 'react'
+import AddSemesterModal from './addSemesterModal'
+import EditSemesterModal from './editSemesterModal'
+import useAuth from '@/hooks/useAuth'
+import Loading from '@/components/shared/Loading'
+import { formatDate } from '@/lib/helperDate'
+import semesterService from '@/services/semester.service'
+import Swal from 'sweetalert2'
+import { useGetAllSemesterData } from '@/hooks/useSemester'
 
 const SemesterView = () => {
-  const { token } = useAuth();
-  const [selectedSemester, setSelectedSemester] = useState({});
+  const { token } = useAuth()
+  const [selectedSemester, setSelectedSemester] = useState({})
   const {
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
     refetch: refetchSemester,
-  } = useGetAllSemesterData(token);
+  } = useGetAllSemesterData(token)
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
 
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
 
   const openModalAdd = () => {
-    setIsOpenAddModal(true);
-  };
+    setIsOpenAddModal(true)
+  }
 
   const openModalEdit = (semester) => {
-    setSelectedSemester(semester);
-    setIsOpenEditModal(true);
-  };
+    setSelectedSemester(semester)
+    setIsOpenEditModal(true)
+  }
 
   const closeModalAdd = () => {
-    setIsOpenAddModal(false);
-  };
+    setIsOpenAddModal(false)
+  }
 
   const closeModalEdit = () => {
-    setIsOpenEditModal(false);
-  };
+    setIsOpenEditModal(false)
+  }
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Apakah Anda yakin?",
-      text: "Anda akan menghapus semester!",
-      icon: "warning",
+      title: 'Apakah Anda yakin?',
+      text: 'Anda akan menghapus semester!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Ya, hapus!",
-      cancelButtonText: "Tidak, batalkan!",
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batalkan!',
       reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await semesterService.delete(token, id);
-        refetchSemester();
-        Swal.fire("Data Dihapus!", "Semester telah dihapus.", "success");
+        await semesterService.delete(token, id)
+        refetchSemester()
+        Swal.fire('Data Dihapus!', 'Semester telah dihapus.', 'success')
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire(
-          "Dibatalkan",
-          "Tidak ada perubahan pada data semester.",
-          "error"
-        );
+          'Dibatalkan',
+          'Tidak ada perubahan pada data semester.',
+          'error'
+        )
       }
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -78,7 +78,7 @@ const SemesterView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: "0 20px 20px 20px" }}>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
                     <button
                       type="button"
                       className="btn btn-success"
@@ -118,10 +118,10 @@ const SemesterView = () => {
                             <td>
                               <span
                                 className={`label bg-${
-                                  item.isAktif ? "green" : "red"
+                                  item.isAktif ? 'green' : 'red'
                                 }`}
                               >
-                                {item.isAktif ? "Aktif" : "Nonaktif"}
+                                {item.isAktif ? 'Aktif' : 'Nonaktif'}
                               </span>
                             </td>
                             <td>
@@ -162,6 +162,6 @@ const SemesterView = () => {
         token={token}
       />
     </>
-  );
-};
-export default SemesterView;
+  )
+}
+export default SemesterView

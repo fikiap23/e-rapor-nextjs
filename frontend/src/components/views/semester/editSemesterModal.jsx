@@ -1,8 +1,8 @@
-"use client";
-import { formatDate } from "@/lib/helperDate";
-import semesterService from "@/services/semesterService/semester.service";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+'use client'
+import { formatDate } from '@/lib/helperDate'
+import semesterService from '@/services/semester.service'
+import { useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
 const EditSemesterModal = ({
   isOpen,
   closeModal,
@@ -10,7 +10,7 @@ const EditSemesterModal = ({
   token,
   refetch,
 }) => {
-  const [dataEdit, setDataEdit] = useState({});
+  const [dataEdit, setDataEdit] = useState({})
 
   useEffect(() => {
     if (isOpen) {
@@ -23,18 +23,18 @@ const EditSemesterModal = ({
         nipKepsek: semesterData.nipKepsek,
         tahunAjaranAwal: semesterData.tahunAjaranAwal,
         tahunAjaranAkhir: semesterData.tahunAjaranAkhir,
-      });
+      })
     }
-  }, [semesterData]);
+  }, [semesterData])
 
   const handleToggle = () => {
-    setDataEdit({ ...dataEdit, isAktif: !dataEdit.isAktif });
-  };
+    setDataEdit({ ...dataEdit, isAktif: !dataEdit.isAktif })
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDataEdit({ ...dataEdit, [name]: value });
-  };
+    const { name, value } = e.target
+    setDataEdit({ ...dataEdit, [name]: value })
+  }
 
   const handleSubmit = () => {
     try {
@@ -42,35 +42,35 @@ const EditSemesterModal = ({
         .update(token, dataEdit.id, dataEdit)
         .then((result) => {
           Swal.fire({
-            icon: "success",
-            title: "Data semester telah diperbarui",
-            position: "bottom-center",
-          });
-          refetch();
-          closeModal();
+            icon: 'success',
+            title: 'Data semester telah diperbarui',
+            position: 'bottom-center',
+          })
+          refetch()
+          closeModal()
         })
         .catch((error) => {
           Swal.fire({
-            icon: "error",
-            title: "Oops...",
+            icon: 'error',
+            title: 'Oops...',
             text: error,
-            position: "bottom-center",
-          });
-        });
+            position: 'bottom-center',
+          })
+        })
     } catch (error) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
+        icon: 'error',
+        title: 'Oops...',
         text: error,
-        position: "top-right",
-      });
+        position: 'top-right',
+      })
     }
-  };
+  }
 
   return (
     <div
       className={`modal fade overscroll-auto scroll-auto  ${
-        isOpen ? "in show-modal" : ""
+        isOpen ? 'in show-modal' : ''
       }`}
       id="add-modal"
     >
@@ -98,7 +98,7 @@ const EditSemesterModal = ({
                   name="tahunAjaranAwal"
                   className="form-control"
                   onChange={handleChange}
-                  value={dataEdit.tahunAjaranAwal || ""}
+                  value={dataEdit.tahunAjaranAwal || ''}
                 />
               </div>
               <div className="form-group">
@@ -109,7 +109,7 @@ const EditSemesterModal = ({
                   name="tahunAjaranAkhir"
                   className="form-control"
                   onChange={handleChange}
-                  value={dataEdit.tahunAjaranAkhir || ""}
+                  value={dataEdit.tahunAjaranAkhir || ''}
                 />
               </div>
               <div className="form-group">
@@ -119,7 +119,7 @@ const EditSemesterModal = ({
                   name="jenisSemester"
                   className="form-control"
                   onChange={handleChange}
-                  value={dataEdit.jenisSemester || ""}
+                  value={dataEdit.jenisSemester || ''}
                 >
                   <option value="">--- Pilih Semester ---</option>
                   <option value="GANJIL">Ganjil</option>
@@ -137,7 +137,7 @@ const EditSemesterModal = ({
                   placeholder="Masukkan Nama Kepala Sekolah"
                   required
                   onChange={handleChange}
-                  value={dataEdit.namaKepsek || ""}
+                  value={dataEdit.namaKepsek || ''}
                 />
               </div>
               <div className="form-group">
@@ -150,7 +150,7 @@ const EditSemesterModal = ({
                   placeholder="Masukkan NIP"
                   required
                   onChange={handleChange}
-                  value={dataEdit.nipKepsek || ""}
+                  value={dataEdit.nipKepsek || ''}
                 />
               </div>
               <div className="form-group">
@@ -166,7 +166,7 @@ const EditSemesterModal = ({
                     className="form-control pull-right"
                     id="tglBagiRapor"
                     onChange={handleChange}
-                    value={dataEdit.tglBagiRapor || ""}
+                    value={dataEdit.tglBagiRapor || ''}
                   />
                 </div>
               </div>
@@ -192,7 +192,7 @@ const EditSemesterModal = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditSemesterModal;
+export default EditSemesterModal
