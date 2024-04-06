@@ -28,6 +28,15 @@ const sekolahService = {
       throw error.response?.data?.message || 'Sekolah Gagal Ditambahkan'
     }
   },
+
+  getSekolah: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}`)
+      return response.data.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Sekolah Gagal Ditampilkan'
+    }
+  },
 }
 
 export default sekolahService

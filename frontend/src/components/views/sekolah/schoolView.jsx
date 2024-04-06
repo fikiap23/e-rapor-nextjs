@@ -3,11 +3,34 @@ import SchoolForm from './component/schoolForm'
 import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
 import CreateSchoolForm from './component/createSchoolForm'
-import { useSekolah } from '@/hooks/useSekolah'
+import { useEffect, useState } from 'react'
+import sekolahService from '@/services/sekolah.service'
 
 function SchoolView() {
   const { token } = useAuth()
-  const { data: sekolahData, error, isFetching } = useSekolah(token)
+
+  const [sekolahData, setSekolahData] = useState(null)
+  const [isFetching, setIsFetching] = useState(true)
+
+  useEffect(() => {
+    const fetchSekolahData = async () => {
+      try {
+        setIsFetching(true)
+        const response = await sekolahService.getSekolah()
+        if (response) {
+          setSekolahData(response)
+        } else {
+          console.log('Data tidak ditemukan')
+        }
+        setIsFetching(false)
+      } catch (error) {
+        setIsFetching(false)
+        console.error('Error:', error.message)
+      }
+    }
+    fetchSekolahData()
+  }, [])
+
   return (
     <div className="content-wrapper">
       <section className="content">
@@ -27,7 +50,7 @@ function SchoolView() {
                 <CreateSchoolForm token={token} />
               )}
               {isFetching && <Loading />}
-              {!isFetching && !error && sekolahData && (
+              {!isFetching && sekolahData && (
                 <SchoolForm sekolahData={sekolahData} token={token} />
               )}
             </div>
