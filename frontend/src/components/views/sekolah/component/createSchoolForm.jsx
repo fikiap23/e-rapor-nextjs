@@ -1,5 +1,5 @@
 'use client'
-import sekolahService from '@/services/sekolahService/sekolah.service'
+import sekolahService from '@/services/sekolah.service'
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 

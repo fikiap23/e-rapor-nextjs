@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
 import SchoolForm from './component/schoolForm'
 import useAuth from '@/hooks/useAuth'
-import { useSekolah } from '@/services/sekolahService/useSekolah'
 import Loading from '@/components/shared/Loading'
 import CreateSchoolForm from './component/createSchoolForm'
+import { useSekolah } from '@/hooks/useSekolah'
 
 function SchoolView() {
   const { token } = useAuth()

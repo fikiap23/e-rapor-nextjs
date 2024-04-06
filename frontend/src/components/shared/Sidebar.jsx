@@ -261,17 +261,17 @@ const Sidebar = () => {
           </li>
           <li
             className={
-              expandedMenus.includes('school')
+              expandedMenus.includes('sekolah')
                 ? 'treeview menu-open'
                 : 'treeview'
             }
           >
-            <a href="#" onClick={() => toggleMenu('school')}>
+            <a href="#" onClick={() => toggleMenu('sekolah')}>
               <i className="fa fa-building"></i> <span>Sekolah</span>
               <span className="pull-right-container">
                 <i
                   className={
-                    expandedMenus.includes('school')
+                    expandedMenus.includes('sekolah')
                       ? 'fa fa-angle-down pull-right'
                       : 'fa fa-angle-left pull-right'
                   }
@@ -281,16 +281,16 @@ const Sidebar = () => {
             <ul
               className="treeview-menu"
               style={{
-                display: expandedMenus.includes('school') ? 'block' : 'none',
+                display: expandedMenus.includes('sekolah') ? 'block' : 'none',
               }}
             >
               <li>
-                <Link href="/admin/school">
+                <Link href="/admin/sekolah">
                   <span>Daftar Sekolah</span>
                 </Link>
               </li>
               <li>
-                <Link href="/admin/school/add">
+                <Link href="/admin/sekolah/add">
                   <span>Tambah Sekolah</span>
                 </Link>
               </li>

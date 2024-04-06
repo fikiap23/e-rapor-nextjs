@@ -1,4 +1,4 @@
-import SchoolView from '@/components/views/admin/school_module/schoolView'
+import SchoolView from '@/components/views/sekolah/schoolView'
 import React from 'react'
 
 const SchoolPage = () => {
