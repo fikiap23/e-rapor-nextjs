@@ -5,8 +5,8 @@ import Link from 'next/link'
 import TabTableClass from './tabTableClass'
 import SetClass from './setClass'
 import useAuth from '@/hooks/useAuth'
-import { useGetAllRombel } from '@/services/rombelService/useRombel'
 import Loading from '@/components/shared/Loading'
+import { useGetAllRombel } from '@/hooks/useRombel'
 
 export default function ClassView() {
   const [rombels, setRombels] = useState([])

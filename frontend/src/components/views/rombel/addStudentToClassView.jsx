@@ -1,9 +1,9 @@
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import Loading from '@/components/shared/Loading'
 import useAuth from '@/hooks/useAuth'
-import { useOneRombel } from '@/services/rombelService/useOneRombel'
+import { useOneRombel } from '@/hooks/useOneRombel'
+import { useStudentsNullRombel } from '@/hooks/useStudenNullRombel'
 import siswaService from '@/services/siswa.service'
-import { useStudentsNullRombel } from '@/services/studentService/useStudenNullROmbel'
 import Swal from 'sweetalert2'
 
 export default function AddStudentToClassView({ id }) {

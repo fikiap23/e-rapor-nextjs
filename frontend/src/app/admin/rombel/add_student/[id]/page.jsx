@@ -1,5 +1,5 @@
 'use client'
-import AddStudentToClassView from '@/components/views/admin/class_module/addStudentToClassView'
+import AddStudentToClassView from '@/components/views/rombel/addStudentToClassView'
 import { useParams } from 'next/navigation'
 import React from 'react'
 

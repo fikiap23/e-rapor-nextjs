@@ -1,5 +1,5 @@
 'use client'
-import SeeStudentView from '@/components/views/admin/class_module/seeStudentView'
+import SeeStudentView from '@/components/views/rombel/seeStudentView'
 import { useParams } from 'next/navigation'
 import React from 'react'
 

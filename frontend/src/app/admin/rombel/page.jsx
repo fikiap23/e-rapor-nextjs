@@ -1,4 +1,4 @@
-import ClassView from '@/components/views/admin/class_module/classView'
+import ClassView from '@/components/views/rombel/classView'
 import React from 'react'
 
 const ClassPage = () => {

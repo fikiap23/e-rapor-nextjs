@@ -1,7 +1,7 @@
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import Loading from '@/components/shared/Loading'
 import useAuth from '@/hooks/useAuth'
-import { useOneRombel } from '@/services/rombelService/useOneRombel'
+import { useOneRombel } from '@/hooks/useOneRombel'
 import siswaService from '@/services/siswa.service'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'

@@ -79,7 +79,7 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
                 <td style={{ display: 'flex', gap: '5px' }}>
                   <Link
                     className="btn btn-success btn-sm"
-                    href={`/admin/class/read_student/${item.id}`}
+                    href={`/admin/rombel/read_student/${item.id}`}
                     title="Lihat"
                     data-toggle="tooltip"
                   >
@@ -100,7 +100,7 @@ export default function TabTableClass({ rombels, openModal, setRombels }) {
 
                   <Link
                     className="btn btn-success btn-sm"
-                    href={`/admin/class/add_student/${item.id}`}
+                    href={`/admin/rombel/add_student/${item.id}`}
                     title="Tambah Siswa"
                     data-toggle="tooltip"
                   >

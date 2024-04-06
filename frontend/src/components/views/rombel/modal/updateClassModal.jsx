@@ -1,6 +1,6 @@
 import useAuth from '@/hooks/useAuth'
+import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 import rombelService from '@/services/rombel.service'
-import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRombel'
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 
