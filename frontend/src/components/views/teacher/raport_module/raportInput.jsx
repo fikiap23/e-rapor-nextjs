@@ -1,11 +1,22 @@
 'use client'
 import useAuth from "@/hooks/useAuth";
 import siswaService from "@/services/studentService/student.service";
+import { useOneStudent } from "@/services/studentService/useOneStudent";
+import { useGetAllStudentData } from "@/services/studentService/useStudent";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import Swal from 'sweetalert2';
 
 function RaportInput() {
     const { token } = useAuth();
+    const idStudent = useParams();
+    const {
+        data: listStudent,
+        error,
+        isFetching,
+        refetch,
+    } = useOneStudent(token, idStudent.id)
+    // console.log(listStudent);
     const [formData, setFormData] = useState({
         totalSakit: 0,
         totalIzin: 0,
@@ -83,6 +94,19 @@ function RaportInput() {
 
         <div className="active tab-pane p-px" style={{ padding: '10px' }} id="input-siswa">
             <div className="box-body">
+                <button
+                    className="btn btn-default"
+                    onClick={() => {
+                        window.history.back();
+                    }}
+                    style={{marginBottom: '2%', marginTop: '-2%'}}
+                >
+                    <i className="fa fa-arrow-left"></i> Kembali
+                </button>
+                <div className="box-body bg-danger">
+                    <p><b>Nama Siswa: {listStudent.nama}</b></p>
+                    <p><b>Nis: {listStudent.nis}</b></p>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="row">
                         {Object.keys(formData).map((key, index) => (
@@ -101,7 +125,7 @@ function RaportInput() {
                                             id={key}
                                             onChange={handleChange}
                                             value={formData[key]}
-                                            // required
+                                        // required
                                         ></textarea>
                                     ) : (
                                         <input
@@ -112,7 +136,7 @@ function RaportInput() {
                                             id={key}
                                             onChange={handleChange}
                                             value={formData[key]}
-                                            // required
+                                        // required
                                         />
                                     )}
                                 </div>

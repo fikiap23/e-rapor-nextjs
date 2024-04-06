@@ -125,7 +125,18 @@ const StudentView = () => {
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        {!isFetchingStudent && currentStudents.length === 0 ? (null) : (
+                        {!isFetchingStudent && currentStudents.length === 0 ? (
+                          <div className="form-group" style={{ width: '30%' }}>
+                            <input
+                              type="text"
+                              id="filter"
+                              className="form-control"
+                              value={searchKeyword}
+                              placeholder="Masukan pencarian"
+                              onChange={handleFilterChange}
+                            />
+                          </div>
+                        ) : (
                           <div className="form-group" style={{ width: '30%' }}>
                             <input
                               type="text"
@@ -147,8 +158,8 @@ const StudentView = () => {
                         <div className='text-center' style={{ opacity: '0.6' }}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24"><path fill="#47a6ff" fill-opacity="0" d="M5 3H12.5V8.5H19V21H5V3Z"><animate fill="freeze" attributeName="fill-opacity" begin="2.38s" dur="0.255s" values="0;0.3" /></path><g fill="none" stroke="#47a6ff" stroke-linecap="round" stroke-linejoin="round"><g stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M13 3L19 9V21H5V3H13"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.02s" values="64;0" /></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M9 13H13"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.7s" dur="0.34s" values="6;0" /></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M9 16H15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="2.04s" dur="0.34s" values="8;0" /></path></g><path stroke-dasharray="14" stroke-dashoffset="14" d="M12.5 3V8.5H19"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.19s" dur="0.34s" values="14;0" /></path></g></svg>
                           <div style={{ color: 'gray' }}>
-                            <p><b>Data masih kosong</b></p>
-                            <small><b>Silahkan input siswa terlebih dahulu</b></small>
+                            <p><b>Data tidak ada</b></p>
+                            <small><b>Silahkan input siswa terlebih dahulu/cari kata kunci lain</b></small>
                           </div>
                         </div>
                       ) : (
