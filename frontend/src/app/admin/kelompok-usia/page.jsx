@@ -1,4 +1,4 @@
-import AgeGroupView from '@/components/views/admin/age-group_module/ageGroupView'
+import AgeGroupView from '@/components/views/kelompok-usia/ageGroupView'
 import React from 'react'
 
 const AgeGroupPage = () => {

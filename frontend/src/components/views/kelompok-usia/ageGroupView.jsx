@@ -2,12 +2,12 @@
 import { useEffect, useState } from 'react'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
-import { useGetAllKategoriRombel } from '@/services/rombelService/useKategoriRombel'
 import UpdateGroupModal from './modal/updateGroupModal'
 import Swal from 'sweetalert2'
 import rombelService from '@/services/rombel.service'
 import Loading from '@/components/shared/Loading'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
+import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 
 const AgeGroupView = () => {
   const { token } = useAuth()
