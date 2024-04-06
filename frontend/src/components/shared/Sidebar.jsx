@@ -57,7 +57,7 @@ const Sidebar = () => {
             <ul
               className="treeview-menu"
               style={{
-                display: expandedMenus.includes('guru') ? 'block' : 'none',
+                display: expandedMenus.includes('guru') ? 'block ' : 'none',
               }}
             >
               <li>

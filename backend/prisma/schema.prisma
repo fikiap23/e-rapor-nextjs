@@ -316,9 +316,8 @@ model Rapor {
   idRombel   String
   rombel     Rombel   @relation(fields: [idRombel], references: [id])
 
-  rombelSemesterId     String?
-  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [rombelSemesterGuruId], references: [id])
-  rombelSemesterGuruId String?
+  idRombelSemesterGuru String?
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id])
 
   // index
   @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])

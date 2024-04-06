@@ -20,6 +20,7 @@ import { Role } from '@prisma/client';
 import { CreateRaporDto } from './dto/create-rapor.dto';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
 import { GetRaporDto } from './dto/get-rapor.dto';
+import { GetRaporByIdRombelSemesterDto } from './dto/get-rapor-by-idRombel-semester.dto';
 
 
 @Controller('rapor')
@@ -48,6 +49,13 @@ export class RaporController {
         const result = await this.raporService.findByIdMurid(idMurid)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
+
+    @Post('read/rombel-semester')
+    async findByRombel(@Body() dto: GetRaporByIdRombelSemesterDto, @Res() res, @Request() req) {
+        const result = await this.raporService.findByIdRombelAndSemester(dto)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
+
 
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.GURU)
