@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import AddTujuanModal from './addTujuanModal'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import Swal from 'sweetalert2'
-import cpTpService from '@/services/cp-tpService/cp-tp.service'
+import cpTpService from '@/services/cp-tp.service'
 import UpdateTujuanModal from './updateTujuanModal'
 
 const TujuanPage = ({ cp, token, refetch }) => {

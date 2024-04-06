@@ -1,4 +1,4 @@
-import cpTpService from '@/services/cp-tpService/cp-tp.service'
+import cpTpService from '@/services/cp-tp.service'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 

@@ -5,8 +5,8 @@ import Link from 'next/link'
 import CapaianPage from './component/capaianPage'
 import TujuanPage from './component/tujuanPage'
 import useAuth from '@/hooks/useAuth'
-import { useCpTp } from '@/services/cp-tpService/useCpTp'
 import Loading from '@/components/shared/Loading'
+import { useCpTp } from '@/hooks/useCpTp'
 
 const SubjecetView = () => {
   const [activeTab, setActiveTab] = useState('view')
