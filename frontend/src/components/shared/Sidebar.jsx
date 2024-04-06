@@ -148,45 +148,6 @@ const Sidebar = () => {
           </li>
           <li
             className={
-              expandedMenus.includes('kelompok-usia')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('kelompok-usia')}>
-              <i className="fa fa-group"></i> <span>Kelompok Usia</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('kelompok-usia')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('kelompok-usia')
-                  ? 'block'
-                  : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/kelompok-usia">
-                  <span>Daftar Kelompok Usia</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/kelompok-usia/add">
-                  <span>Tambah Kelompok Usia</span>
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li
-            className={
               expandedMenus.includes('rombel')
                 ? 'treeview menu-open'
                 : 'treeview'
@@ -222,79 +183,20 @@ const Sidebar = () => {
               </li>
             </ul>
           </li>
-          <li
-            className={
-              expandedMenus.includes('semester')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('semester')}>
-              <i className="fa fa-calendar"></i> <span>Semester</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('semester')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('semester') ? 'block' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/semester">
-                  <span>Daftar Semester</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/semester/add">
-                  <span>Tambah Semester</span>
-                </Link>
-              </li>
-            </ul>
+          <li>
+            <Link href="/admin/kelompok-usia">
+              <i className="fa fa-group"></i> <span>Kelompok Usia</span>
+            </Link>
           </li>
-          <li
-            className={
-              expandedMenus.includes('sekolah')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('sekolah')}>
+          <li>
+            <Link href="/admin/semester">
+              <i className="fa fa-calendar"></i> <span>Semester</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin/sekolah">
               <i className="fa fa-building"></i> <span>Sekolah</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('sekolah')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('sekolah') ? 'block' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/sekolah">
-                  <span>Daftar Sekolah</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/sekolah/add">
-                  <span>Tambah Sekolah</span>
-                </Link>
-              </li>
-            </ul>
+            </Link>
           </li>
         </ul>
       </section>
