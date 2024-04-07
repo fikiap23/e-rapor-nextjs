@@ -22,20 +22,31 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
     try {
       const values = await form.validateFields()
       const data = { ...values, isAktif }
-      await semesterService.create(data, token)
-      Swal.fire({
-        icon: 'success',
-        title: 'Data semester telah ditambahkan',
-        position: 'bottom-center',
-      })
-      clearForm()
-      refetch()
-      closeModal()
+      await semesterService
+        .create(data, token)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Data semester telah ditambahkan',
+            position: 'bottom-center',
+          })
+          clearForm()
+          refetch()
+          closeModal()
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+            position: 'bottom-center',
+          })
+        })
     } catch (error) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: error,
+        text: 'Terdapat kesalahan saat menambahkan data semester',
         position: 'bottom-center',
       })
     }

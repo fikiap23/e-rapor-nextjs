@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { Table, Button } from 'antd'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import UpdateGroupModal from './modal/updateGroupModal'
@@ -73,6 +74,52 @@ const AgeGroupView = () => {
     })
   }
 
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: 'Nama',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      title: 'Kelompok Usia',
+      dataIndex: 'kelompokUsia',
+      key: 'kelompokUsia',
+      sorter: (a, b) => a.kelompokUsia.localeCompare(b.kelompokUsia),
+    },
+    {
+      title: 'Kode',
+      dataIndex: 'kode',
+      key: 'kode',
+      sorter: (a, b) => a.kode.localeCompare(b.kode),
+    },
+    {
+      title: 'Aksi',
+
+      key: 'action',
+      render: (text, record) => (
+        <>
+          <Button
+            type="primary"
+            onClick={() => openUpdateModal(record)}
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </Button>
+          <Button type="danger" onClick={() => handleDelete(record.id)}>
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ]
+
   return (
     <>
       <div className="content-wrapper">
@@ -96,58 +143,14 @@ const AgeGroupView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
-                  {isFetchingKategoriRombel && <Loading />}
-                  {!isFetchingKategoriRombel &&
-                    listKategoriRombel.length === 0 && (
-                      <EmptyDataIndicator
-                        message={'Belum ada data kelompok usia'}
-                      />
-                    )}
-                  {!isFetchingKategoriRombel &&
-                    listKategoriRombel &&
-                    listKategoriRombel.length > 0 && (
-                      <table
-                        className="table table-bordered table-striped"
-                        id="tahun"
-                      >
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Kelompok Usia</th>
-                            <th>Kode</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {!isFetchingKategoriRombel &&
-                            Kategories &&
-                            Kategories.map((item, index) => (
-                              <tr key={item.id}>
-                                <td>{index + 1}</td>
-                                <td>{item.name}</td>
-                                <td>{item.kelompokUsia}</td>
-                                <td>{item.kode}</td>
-                                <td>
-                                  <button
-                                    className="btn btn-primary btn-sm"
-                                    onClick={() => openUpdateModal(item)}
-                                  >
-                                    <i className="icon fa fa-edit"></i>
-                                  </button>
-                                  <button
-                                    className="btn btn-danger btn-sm"
-                                    style={{ marginLeft: '5px' }}
-                                    onClick={() => handleDelete(item.id)}
-                                  >
-                                    <i className="icon fa fa-trash"></i>
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
-                    )}
+                  <Table
+                    columns={columns}
+                    dataSource={Kategories}
+                    rowKey="id"
+                    loading={isFetchingKategoriRombel}
+                    scroll={{ x: 800 }}
+                    pagination={{ pageSize: 10 }}
+                  />
                 </div>
               </div>
             </div>
