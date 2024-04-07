@@ -1,13 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Table, Button } from 'antd'
+import { Table, Button, Input } from 'antd'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import UpdateGroupModal from './modal/updateGroupModal'
 import Swal from 'sweetalert2'
 import rombelService from '@/services/rombel.service'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 
 const AgeGroupView = () => {
@@ -21,11 +19,15 @@ const AgeGroupView = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
   const [selectedKategori, setSelectedKategori] = useState(null)
-  const [Kategories, setKategories] = useState([])
+  const [searchText, setSearchText] = useState('')
 
-  useEffect(() => {
-    setKategories(listKategoriRombel)
-  }, [listKategoriRombel])
+  const filteredKategories = listKategoriRombel.filter((semester) =>
+    Object.values(semester).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openModal = () => {
     setIsOpenAddModal(true)
@@ -106,13 +108,12 @@ const AgeGroupView = () => {
       render: (text, record) => (
         <>
           <Button
-            type="primary"
             onClick={() => openUpdateModal(record)}
             style={{ marginRight: 8 }}
           >
             Edit
           </Button>
-          <Button type="primary" danger onClick={() => handleDelete(record.id)}>
+          <Button danger onClick={() => handleDelete(record.id)}>
             Delete
           </Button>
         </>
@@ -143,9 +144,17 @@ const AgeGroupView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
+                    <Input
+                      placeholder="Cari kelompok usia..."
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      style={{ width: 200, marginRight: 10 }}
+                    />
+                  </div>
                   <Table
                     columns={columns}
-                    dataSource={Kategories}
+                    dataSource={filteredKategories}
                     rowKey="id"
                     loading={isFetchingKategoriRombel}
                     scroll={{ x: 800 }}

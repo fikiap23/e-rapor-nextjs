@@ -1,5 +1,5 @@
 'use client'
-import { Button, Table, Tooltip } from 'antd'
+import { Button, Input, Table, Tooltip } from 'antd'
 import {
   EyeOutlined,
   EditOutlined,
@@ -10,7 +10,6 @@ import { useState } from 'react'
 import rombelService from '@/services/rombel.service'
 import useAuth from '@/hooks/useAuth'
 import Swal from 'sweetalert2'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import UpdateClassModal from './modal/updateClassModal'
 import Link from 'next/link'
 
@@ -23,6 +22,15 @@ export default function TabTableClass({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRombel, setSelectedRombel] = useState(null)
   const { token } = useAuth()
+  const [searchText, setSearchText] = useState('')
+
+  const filteredRombels = rombels.filter((rombel) =>
+    Object.values(rombel).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const handleDelete = (idRombel) => {
     Swal.fire({
@@ -126,13 +134,20 @@ export default function TabTableClass({
   return (
     <div className="box-body">
       <div style={{ margin: '0 20px 20px 20px' }}>
-        <Button type="primary" onClick={openModal} icon={<PlusOutlined />}>
-          Tambah
-        </Button>
+        <button type="button" className="btn btn-success" onClick={openModal}>
+          <i className="icon fa fa-plus"></i> Tambah
+        </button>
       </div>
-
+      <div style={{ margin: '0 20px 20px 20px' }}>
+        <Input
+          placeholder="Cari rombel..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{ width: 200, marginRight: 10 }}
+        />
+      </div>
       <Table
-        dataSource={rombels}
+        dataSource={filteredRombels}
         columns={columns}
         rowKey="id"
         bordered
