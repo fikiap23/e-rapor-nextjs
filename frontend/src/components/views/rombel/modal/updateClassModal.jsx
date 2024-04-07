@@ -1,8 +1,11 @@
+import { Modal, Form, Input, Select, Button } from 'antd'
+import { useState, useEffect } from 'react'
+import Swal from 'sweetalert2'
+import rombelService from '@/services/rombel.service'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
-import rombelService from '@/services/rombel.service'
-import React, { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
+
+const { Option } = Select
 
 const UpdateClassModal = ({
   isOpen,
@@ -10,58 +13,69 @@ const UpdateClassModal = ({
   setRombels,
   selectedRombel,
 }) => {
-  const [kelompokUsia, setKelompokUsia] = useState('')
-  const [kuota, setKuota] = useState('')
+  const [form] = Form.useForm()
   const [kodeKelompokUsia, setKodeKelompokUsia] = useState('')
-  const [selectedKelompokUsia, setSelectedKelompokUsia] = useState('')
-  const [noRombel, setNoRombel] = useState('')
   const { token } = useAuth()
   const { data: listKategoriRombel } = useGetAllKategoriRombel(token)
 
   useEffect(() => {
     if (selectedRombel) {
-      setKelompokUsia(selectedRombel.idKategoriRombel)
-      setKuota(selectedRombel.kuota)
-      setNoRombel(selectedRombel.name)
+      form.setFieldsValue({
+        kelompokUsia: selectedRombel.idKategoriRombel,
+        noRombel: selectedRombel.name,
+        kuota: selectedRombel.kuota,
+      })
+
       const selectedKelompokUsia = listKategoriRombel.find(
         (item) => item.id === selectedRombel.idKategoriRombel
       )
       if (selectedKelompokUsia) {
-        setSelectedKelompokUsia(selectedKelompokUsia)
         setKodeKelompokUsia(selectedKelompokUsia.kode)
       }
     }
-  }, [isOpen, selectedRombel, listKategoriRombel])
+  }, [selectedRombel, listKategoriRombel, form])
 
-  const handleSubmit = () => {
-    const payload = {
-      idKategoriRombel: selectedKelompokUsia.id,
-      kuota: kuota,
-      name: noRombel,
+  const handleKelompokUsiaChange = (value) => {
+    const selectedKelompokUsia = listKategoriRombel.find(
+      (item) => item.id === value
+    )
+    if (selectedKelompokUsia) {
+      setKodeKelompokUsia(selectedKelompokUsia.kode)
+      form.setFieldsValue({ noRombel: selectedKelompokUsia.kode })
     }
+  }
 
+  const handleSubmit = async () => {
     try {
-      rombelService
+      const values = await form.validateFields()
+      const payload = {
+        idKategoriRombel: values.kelompokUsia,
+        kuota: values.kuota,
+        name: values.noRombel,
+      }
+
+      await rombelService
         .updateRombel(token, selectedRombel.id, payload)
-        .then(() => {
+        .then((result) => {
           Swal.fire({
             icon: 'success',
             title: 'Data rombel telah diperbarui',
             position: 'bottom-center',
           })
+
           const updatedRombel = {
-            id: selectedRombel.id,
-            idKategoriRombel: selectedKelompokUsia.id,
-            kelompokUsia: selectedKelompokUsia.kelompokUsia,
-            name: noRombel,
-            kuota: kuota,
+            ...selectedRombel,
+            idKategoriRombel: values.kelompokUsia,
+            name: values.noRombel,
+            kuota: values.kuota,
             kode: kodeKelompokUsia,
-            coutMurid: selectedRombel.coutMurid,
           }
-          setRombels((prevRombels) => [
-            ...prevRombels.filter((item) => item.id !== selectedRombel.id),
-            updatedRombel,
-          ])
+
+          setRombels((prevRombels) =>
+            prevRombels.map((item) =>
+              item.id === selectedRombel.id ? updatedRombel : item
+            )
+          )
           closeModal()
         })
         .catch((error) => {
@@ -76,110 +90,67 @@ const UpdateClassModal = ({
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: error,
-        position: 'top-right',
+        text: error.message,
+        position: 'bottom-center',
       })
     }
   }
 
-  const handleKelompokUsiaChange = (e) => {
-    setNoRombel('')
-    setKodeKelompokUsia('')
-    const selectedKelompokUsia = listKategoriRombel.find(
-      (item) => item.id === e.target.value
-    )
-    if (!selectedKelompokUsia) return
-    setSelectedKelompokUsia(selectedKelompokUsia)
-    setKelompokUsia(e.target.value)
-    setKodeKelompokUsia(selectedKelompokUsia.kode)
-    setNoRombel(selectedKelompokUsia.kode)
-  }
-
   return (
-    <div className={`modal fade ${isOpen ? 'in show-modal' : ''}`}>
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              onClick={closeModal}
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 className="modal-title">Update Rombel</h4>
-          </div>
-          <div className="modal-body">
-            <div className="box-body">
-              <div className="form-group">
-                <label htmlFor="kelompokUsia">Kelompok Usia</label>
-                <select
-                  className="form-control"
-                  id="kelompokUsia"
-                  name="kelompokUsia"
-                  value={kelompokUsia}
-                  onChange={handleKelompokUsiaChange}
-                  required
-                >
-                  <option value="">Pilih Kelompok Usia</option>
-                  {listKategoriRombel.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.kelompokUsia}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="kodeKelompokUsia">Kode Kelompok Usia</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="kodeKelompokUsia"
-                  name="kodeKelompokUsia"
-                  value={kodeKelompokUsia}
-                  readOnly
-                  disabled
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="noRombel">No Rombel</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="noRombel"
-                  name="noRombel"
-                  value={noRombel}
-                  onChange={(e) => setNoRombel(e.target.value)}
-                />
-                <small className="form-text text-muted">
-                  Contoh: A1, A2, B2
-                </small>
-              </div>
+    <Modal
+      visible={isOpen}
+      title="Update Rombel"
+      onCancel={closeModal}
+      footer={[
+        <Button key="cancel" onClick={closeModal}>
+          Batal
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleSubmit}>
+          Simpan
+        </Button>,
+      ]}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label="Kelompok Usia"
+          name="kelompokUsia"
+          rules={[{ required: true, message: 'Pilih Kelompok Usia' }]}
+        >
+          <Select
+            onChange={handleKelompokUsiaChange}
+            placeholder="Pilih Kelompok Usia"
+          >
+            {listKategoriRombel.map((item) => (
+              <Option key={item.id} value={item.id}>
+                {item.kelompokUsia}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Kode Kelompok Usia" name="kodeKelompokUsia">
+          <Input
+            readOnly
+            disabled
+            style={{ background: '#f0f0f0', color: '#666' }}
+          />
+        </Form.Item>
 
-              <div className="form-group">
-                <label htmlFor="kuota">Kuota</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="kuota"
-                  name="kuota"
-                  value={kuota}
-                  onChange={(e) => setKuota(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button onClick={handleSubmit} className="btn btn-primary">
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <Form.Item
+          label="No Rombel"
+          name="noRombel"
+          rules={[{ required: true, message: 'Masukkan No Rombel' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Kuota"
+          name="kuota"
+          rules={[{ required: true, message: 'Masukkan Kuota' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Form>
+    </Modal>
   )
 }
 

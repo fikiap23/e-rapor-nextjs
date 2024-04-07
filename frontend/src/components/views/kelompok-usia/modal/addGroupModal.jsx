@@ -47,7 +47,7 @@ const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
   return (
     <Modal
       visible={isOpen}
-      title="Tambah Data Kelompok Usia Rombel"
+      title="Tambah Data Kelompok Usia"
       onCancel={closeModal}
       footer={[
         <Button key="back" onClick={closeModal}>
@@ -65,25 +65,27 @@ const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="Kelompok Usia Rombel"
+          label="Inisial Kelompok Usia"
           name="name"
-          rules={[{ required: true, message: 'Masukkan Nama' }]}
+          rules={[{ required: true, message: 'Masukkan Inisial' }]}
         >
-          <Input placeholder="Masukkan Nama" />
+          <Input placeholder="Masukkan Inisital kelompok usia" />
         </Form.Item>
         <Form.Item
           label="Kelompok Usia"
           name="kelompokUsia"
-          rules={[{ required: true, message: 'Masukkan Kelompok Usia' }]}
+          rules={[
+            { required: true, message: 'Masukkan Rentang Kelompok Usia' },
+          ]}
         >
-          <Input placeholder="Masukkan Kelompok Usia" />
+          <Input placeholder="Masukkan Kelompok Usia, contoh: 2-3 Tahun" />
         </Form.Item>
         <Form.Item
           label="Kode"
           name="kode"
           rules={[{ required: true, message: 'Masukkan Kode' }]}
         >
-          <Input placeholder="Masukkan Kode" />
+          <Input placeholder="Masukkan Kode, contoh: A" />
         </Form.Item>
       </Form>
     </Modal>

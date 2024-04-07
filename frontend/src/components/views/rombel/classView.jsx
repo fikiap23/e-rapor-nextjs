@@ -70,16 +70,14 @@ export default function ClassView() {
                       </Link>
                     </li>
                   </ul>
-                  {activeTab === 'view' &&
-                    (isFetchingSRombel ? (
-                      <Loading></Loading>
-                    ) : (
-                      <TabTableClass
-                        rombels={rombels}
-                        openModal={openModal}
-                        setRombels={setRombels}
-                      />
-                    ))}
+                  {activeTab === 'view' && (
+                    <TabTableClass
+                      rombels={rombels}
+                      openModal={openModal}
+                      setRombels={setRombels}
+                      isLoading={isFetchingSRombel}
+                    />
+                  )}
                   {activeTab === 'view_rombel' &&
                     (isFetchingSRombel ? (
                       <Loading></Loading>
