@@ -35,7 +35,7 @@ function TabInputSiswa() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
-      setIsLoading(true)
+      console.log(values)
       const result = await Swal.fire({
         title: 'Apakah Data Sudah Benar?',
         text: 'Anda akan menambah siswa!',
@@ -47,18 +47,28 @@ function TabInputSiswa() {
       })
 
       if (result.isConfirmed) {
-        await siswaService.create(values, token)
-        form.resetFields()
-        setIsLoading(false)
-        Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success')
+        setIsLoading(true)
+        await siswaService
+          .create(values, token)
+          .then((res) => {
+            form.resetFields()
+            setIsLoading(false)
+            Swal.fire(
+              'Data Ditambahkan!',
+              'Siswa telah ditambahkan.',
+              'success'
+            )
+          })
+          .catch((err) => Swal.fire('Error', err, 'error'))
       }
+      setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
-      Swal.fire('Error', 'NIS/NISN Sudah Terdaftar', 'error')
+      Swal.fire('Error', 'Terjadi kesalahan', 'error')
     }
   }
 
-  const jenisKelaminOptions = ['LAKI-LAKI', 'PEREMPUAN']
+  const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
   const agamaOptions = [
     'ISLAM',
     'KRISTEN',
@@ -237,7 +247,9 @@ function TabInputSiswa() {
             <Form.Item
               label="Foto"
               name="foto"
-              rules={[{ required: true, message: 'Upload Foto' }]}
+              rules={[{ message: 'Upload Foto' }]}
+              valuePropName="fileList" // Menyimpan fileList ke dalam form field "foto"
+              getValueFromEvent={(e) => e.fileList}
             >
               <>
                 <Upload
