@@ -1,6 +1,6 @@
 import { Button, Table } from 'antd'
-import { EyeOutlined } from '@ant-design/icons'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
+import Link from 'next/link'
 
 export default function SetClass({ rombels }) {
   return (
@@ -23,9 +23,11 @@ export default function SetClass({ rombels }) {
                   >
                     {rombel.name}
                   </h3>
-                  <Button type="default" style={{ float: 'right' }}>
-                    Lihat Siswa
-                  </Button>
+                  <Link href={`/admin/rombel/read_student/${rombel.id}`}>
+                    <Button type="default" style={{ float: 'right' }}>
+                      Lihat Siswa
+                    </Button>
+                  </Link>
                 </div>
 
                 <div className="box-body">

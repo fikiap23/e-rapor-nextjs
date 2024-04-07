@@ -71,16 +71,19 @@ export default function TabTableClass({
       title: 'Kelompok Usia',
       dataIndex: 'kelompokUsia',
       key: 'kelompokUsia',
+      sorter: (a, b) => a.kelompokUsia.localeCompare(b.kelompokUsia),
     },
     {
       title: 'Rombel',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: 'Kuota',
       dataIndex: 'kuota',
       key: 'kuota',
+      sorter: (a, b) => a.kuota - b.kuota,
       render: (text, record) => `${record.coutMurid}/${record.kuota}`,
     },
     {
@@ -104,7 +107,9 @@ export default function TabTableClass({
             />
           </Tooltip>
           <Tooltip title="Tambah Siswa">
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => {}} />
+            <Link href={`/admin/rombel/add_student/${record.id}`}>
+              <Button type="primary" icon={<PlusOutlined />} />
+            </Link>
           </Tooltip>
           <Tooltip title="Hapus">
             <Button

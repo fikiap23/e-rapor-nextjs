@@ -1,5 +1,4 @@
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
-import Loading from '@/components/shared/Loading'
+import { Button, Modal, Table } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import { useOneRombel } from '@/hooks/useOneRombel'
 import siswaService from '@/services/siswa.service'
@@ -9,6 +8,9 @@ import Swal from 'sweetalert2'
 export default function SeeStudentView({ id }) {
   const { token } = useAuth()
   const [siswas, setSiswas] = useState([])
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedSiswaId, setSelectedSiswaId] = useState(null)
 
   const {
     data: rombelData,
@@ -23,51 +25,89 @@ export default function SeeStudentView({ id }) {
     }
   }, [rombelData])
 
-  const handleAdd = (idSiswa) => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Data siswa akan dikeluarkan dari rombel ini.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, keluarkan!',
-      cancelButtonText: 'Batal',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          const payload = {
-            idRombel: null,
-          }
-          siswaService
-            .update(token, idSiswa, payload)
-            .then((result) => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Siswa telah dikeluarkan',
-                position: 'bottom-center',
-              })
-              refetchRombel()
-            })
-            .catch((error) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error,
-                position: 'bottom-center',
-              })
-            })
-        } catch (error) {
+  const handleKeluarkanSiswa = (idSiswa) => {
+    setModalVisible(true)
+    setSelectedSiswaId(idSiswa)
+  }
+
+  const handleOk = () => {
+    setConfirmLoading(true)
+    try {
+      const payload = {
+        idRombel: null,
+      }
+      siswaService
+        .update(token, selectedSiswaId, payload)
+        .then((result) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Siswa telah dikeluarkan',
+            position: 'bottom-center',
+          })
+          setModalVisible(false)
+          setConfirmLoading(false)
+          refetchRombel()
+        })
+        .catch((error) => {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: error,
-            position: 'top-right',
+            position: 'bottom-center',
           })
-        }
-      }
-    })
+          setConfirmLoading(false)
+        })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        position: 'top-right',
+      })
+      setConfirmLoading(false)
+    }
   }
+
+  const handleCancel = () => {
+    setModalVisible(false)
+  }
+
+  const columns = [
+    {
+      title: 'No.',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: 'NIS',
+      dataIndex: 'nis',
+      key: 'nis',
+    },
+    {
+      title: 'NiSN',
+      dataIndex: 'nisn',
+      key: 'nisn',
+    },
+    {
+      title: 'Nama',
+      dataIndex: 'nama',
+      key: 'nama',
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <Button
+          type="primary"
+          danger
+          onClick={() => handleKeluarkanSiswa(record.id)}
+        >
+          Keluarkan Siswa
+        </Button>
+      ),
+    },
+  ]
 
   return (
     <div className="content-wrapper">
@@ -81,61 +121,29 @@ export default function SeeStudentView({ id }) {
                 </h3>
               </div>
               <div className="box-body">
-                <button
-                  className="btn btn-default"
-                  onClick={() => window.history.back()}
-                >
+                <Button onClick={() => window.history.back()}>
                   <i className="fa fa-arrow-left"></i> Back
-                </button>
+                </Button>
+                <br />
+                <br />
                 {!isFetchingRombel && rombelData && (
                   <div className="callout callout-primary">
                     <h4>
-                      {' '}
-                      <i className="icon fa fa-info-circle"></i>{' '}
+                      <i className="icon fa fa-info-circle"></i>
                       {`Rombel ${rombelData.name}`}
                     </h4>
-                    <p> {`Daftar Siswa di Rombel ${rombelData.name}`}</p>
+                    <p>{`Daftar Siswa di Rombel ${rombelData.name}`}</p>
                   </div>
                 )}
 
                 <div className="tab-pane " id="input-siswa">
                   <div className="box-body table-responsive no-padding">
-                    {isFetchingRombel && <Loading />}
-                    {!isFetchingRombel && siswas && siswas.length === 0 && (
-                      <EmptyDataIndicator message="Belum ada siswa di rombel ini" />
-                    )}
-                    {!isFetchingRombel && siswas && siswas.length > 0 && (
-                      <table id="all_siswa" className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>No.</th>
-                            <th>NIS</th>
-                            <th>NiSN</th>
-                            <th>Nama</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {siswas.map((siswa, index) => (
-                            <tr key={siswa.id}>
-                              <td>{index + 1}</td>
-                              <td>{siswa.nis}</td>
-                              <td>{siswa.nisn}</td>
-                              <td>{siswa.nama}</td>
-                              <td>
-                                <button
-                                  className="btn btn-danger btn-sm"
-                                  onClick={() => handleAdd(siswa.id)}
-                                >
-                                  <span className="glyphicon glyphicon-trash "></span>
-                                  {' Keluarkan Siswa'}
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    )}
+                    <Table
+                      columns={columns}
+                      dataSource={siswas}
+                      pagination={{ pageSize: 10 }}
+                      loading={isFetchingRombel}
+                    />
                   </div>
                 </div>
               </div>
@@ -143,6 +151,16 @@ export default function SeeStudentView({ id }) {
           </div>
         </div>
       </section>
+
+      <Modal
+        title="Konfirmasi Keluarkan Siswa"
+        visible={modalVisible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <p>Anda yakin ingin mengeluarkan siswa dari rombel ini?</p>
+      </Modal>
     </div>
   )
 }

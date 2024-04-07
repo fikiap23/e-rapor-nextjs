@@ -112,7 +112,7 @@ const AgeGroupView = () => {
           >
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDelete(record.id)}>
+          <Button type="primary" danger onClick={() => handleDelete(record.id)}>
             Delete
           </Button>
         </>
