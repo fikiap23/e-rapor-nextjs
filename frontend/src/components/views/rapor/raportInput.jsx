@@ -1,6 +1,8 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
 import { useOneStudent } from '@/hooks/useOneStudent'
+import raportService from '@/services/rapor.service'
+import siswaService from '@/services/siswa.service'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
@@ -25,8 +27,8 @@ function RaportInput() {
     catatanPertumbuhan: '',
     catatanPancasila: '',
     catatanGuru: '',
-    idSemester: '',
-    idMurid: '',
+    idSemester: 'dc117068-59c3-46e8-a551-e177fdb23414', //dummy
+    idMurid: idStudent.id,
   })
 
   const handleChange = (e) => {
@@ -48,21 +50,22 @@ function RaportInput() {
       })
 
       if (result.isConfirmed) {
-        // await siswaService.create(formData, token);
-        setFormData({
-          ...formData,
-          totalSakit: 0,
-          totalIzin: 0,
-          totalAlpa: 0,
-          catatanAgamaBudipekerti: '',
-          catatanJatiDiri: '',
-          catatanLiterasiSains: '',
-          catatanPertumbuhan: '',
-          catatanPancasila: '',
-          catatanGuru: '',
-          idSemester: '',
-          idMurid: '',
-        })
+        await raportService.create(formData, token);
+        // await siswaService.update(token, listStudent.id, { isPrint: "YES" });
+        // setFormData({
+        //   ...formData,
+        //   totalSakit: 0,
+        //   totalIzin: 0,
+        //   totalAlpa: 0,
+        //   catatanAgamaBudipekerti: '',
+        //   catatanJatiDiri: '',
+        //   catatanLiterasiSains: '',
+        //   catatanPertumbuhan: '',
+        //   catatanPancasila: '',
+        //   catatanGuru: '',
+        //   idSemester: '',
+        //   idMurid: '',
+        // })
         Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success')
       }
     } catch (error) {
@@ -104,13 +107,19 @@ function RaportInput() {
         >
           <i className="fa fa-arrow-left"></i> Kembali
         </button>
-        <div className="box-body bg-danger">
-          <p>
-            <b>Nama Siswa: {listStudent.nama}</b>
-          </p>
-          <p>
-            <b>Nis: {listStudent.nis}</b>
-          </p>
+        <div className="box-body bg-danger" style={{ marginBottom: '20px' }}>
+          <table>
+            <tr>
+              <td width={50}>Nama</td>
+              <td width={20}>:</td>
+              <td>{listStudent.nama}</td>
+            </tr>
+            <tr>
+              <td>NIS</td>
+              <td>:</td>
+              <td>{listStudent.nis}</td>
+            </tr>
+          </table>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="row">
@@ -123,13 +132,12 @@ function RaportInput() {
                   <label
                     htmlFor={key}
                     className={`control-label
-                                        ${
-                                          key === 'idSemester'
-                                            ? 'hide'
-                                            : key === 'idMurid'
-                                            ? 'hide'
-                                            : ''
-                                        }`}
+                                        ${key === 'idSemester'
+                        ? 'hide'
+                        : key === 'idMurid'
+                          ? 'hide'
+                          : ''
+                      }`}
                   >
                     {labels[key]}
                   </label>
@@ -140,24 +148,23 @@ function RaportInput() {
                       id={key}
                       onChange={handleChange}
                       value={formData[key]}
-                      // required
+                    // required
                     ></textarea>
                   ) : (
                     <input
                       type={key.includes('total') ? 'number' : 'text'}
                       min={key.includes('total') ? 0 : ''}
                       name={key}
-                      className={`form-control ${
-                        key === 'idSemester'
-                          ? 'hide'
-                          : key === 'idMurid'
+                      className={`form-control ${key === 'idSemester'
+                        ? 'hide'
+                        : key === 'idMurid'
                           ? 'hide'
                           : ''
-                      }`}
+                        }`}
                       id={key}
                       onChange={handleChange}
                       value={formData[key]}
-                      // required
+                    // required
                     />
                   )}
                 </div>
