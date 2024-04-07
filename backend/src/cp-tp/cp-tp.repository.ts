@@ -35,7 +35,13 @@ export class CpTpRepository {
     }
 
     async findCpWithTp() {
-        return await this.prisma.capaianPembelajarn.findFirst({ include: { tujuanPembelajaran: true } })
+        return await this.prisma.capaianPembelajarn.findFirst({
+            include: {
+                tujuanPembelajaran: {
+                    orderBy: { minggu: 'asc' }
+                }
+            }
+        })
     }
 
     /*

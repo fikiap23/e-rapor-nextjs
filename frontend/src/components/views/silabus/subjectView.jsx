@@ -6,18 +6,37 @@ import CapaianPage from './component/capaianPage'
 import TujuanPage from './component/tujuanPage'
 import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
-import { useCpTp } from '@/hooks/useCpTp'
+import cpTpService from '@/services/cp-tp.service'
 
 const SubjecetView = () => {
   const [activeTab, setActiveTab] = useState('view')
-
   const { token } = useAuth()
-  const {
-    data: listCp,
-    error: errorCp,
-    isFetching: isFetchingCp,
-    refetch: refetchCp,
-  } = useCpTp(token)
+  const [cpData, setCpData] = useState(null)
+  const [isFetching, setIsFetching] = useState(true)
+
+  const fetchCpData = async () => {
+    try {
+      setIsFetching(true)
+      const response = await cpTpService.getCpTp()
+      console.log(response)
+      if (response) {
+        setCpData(response?.data)
+      }
+      setIsFetching(false)
+    } catch (error) {
+      setIsFetching(false)
+      console.error('Error:', error.message)
+    }
+  }
+  useEffect(() => {
+    if (isFetching) {
+      fetchCpData()
+    }
+  }, [isFetching])
+
+  const handleRefetch = () => {
+    fetchCpData()
+  }
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -61,12 +80,25 @@ const SubjecetView = () => {
                 </li>
               </ul>
               <div className="tab-content">
-                {isFetchingCp && <Loading />}
-                {activeTab === 'view' && !isFetchingCp && (
-                  <TujuanPage cp={listCp} refetch={refetchCp} token={token} />
-                )}
-                {activeTab === 'input' && !isFetchingCp && (
-                  <CapaianPage cp={listCp} refetch={refetchCp} token={token} />
+                {isFetching && <Loading />}
+                {!isFetching && (
+                  <div className="tab-content">
+                    {activeTab === 'view' && (
+                      <TujuanPage
+                        cp={cpData}
+                        token={token}
+                        isLoading={isFetching}
+                        refetch={handleRefetch}
+                      />
+                    )}
+                    {activeTab === 'input' && (
+                      <CapaianPage
+                        cp={cpData}
+                        token={token}
+                        refetch={handleRefetch}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
