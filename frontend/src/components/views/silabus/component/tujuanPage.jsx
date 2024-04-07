@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Table, Modal, message, Space } from 'antd'
+import { Button, Table, Modal, message, Space, Input } from 'antd'
 import AddTujuanModal from './addTujuanModal'
 import cpTpService from '@/services/cp-tp.service'
 import UpdateTujuanModal from './updateTujuanModal'
@@ -8,6 +8,14 @@ const TujuanPage = ({ cp, token, isLoading, refetch }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [selectedTp, setSelectedTp] = useState(null)
+  const [searchText, setSearchText] = useState('')
+  const filteredTp = cp?.tujuanPembelajaran.filter((tp) =>
+    Object.values(tp).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openUpdateModal = (tp) => {
     setSelectedTp(tp)
@@ -89,8 +97,16 @@ const TujuanPage = ({ cp, token, isLoading, refetch }) => {
             Tambah
           </Button>
         </div>
+        <div style={{ margin: '0 20px 20px 20px' }}>
+          <Input
+            placeholder="Cari tujuan pembelajaran..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 200, marginRight: 10 }}
+          />
+        </div>
         <Table
-          dataSource={cp?.tujuanPembelajaran}
+          dataSource={filteredTp}
           columns={columns}
           pagination={false}
           rowKey="id"
