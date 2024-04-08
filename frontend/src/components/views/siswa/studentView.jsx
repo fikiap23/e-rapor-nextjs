@@ -13,6 +13,7 @@ const StudentView = () => {
   const { token } = useAuth()
   const [activeTab, setActiveTab] = useState('view')
   const [searchText, setSearchText] = useState('')
+  const [selectedSiswa, setSelectedSiswa] = useState(null)
   const {
     data: listStudent,
     error: errorStudent,
@@ -29,6 +30,11 @@ const StudentView = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
+  }
+
+  const handleUpdateSiswa = (siswa) => {
+    setSelectedSiswa(siswa)
+    setActiveTab('update')
   }
 
   const handleDelete = (id) => {
@@ -82,13 +88,12 @@ const StudentView = () => {
       key: 'action',
       render: (text, record) => (
         <span>
-          <Link
-            href={`?id=${record.id}`}
+          <Button
             className="btn btn-success btn-sm"
-            onClick={() => handleTabChange('update')}
+            onClick={() => handleUpdateSiswa(record)}
           >
             <i className="icon fa fa-edit"></i>
-          </Link>
+          </Button>
           <Button
             style={{
               marginRight: '2px',
@@ -151,7 +156,7 @@ const StudentView = () => {
                   </div>
                 )}
                 {activeTab === 'input' && <TabInputSiswa />}
-                {activeTab === 'update' && (
+                {activeTab === 'update' && selectedSiswa && (
                   <div>
                     <button
                       className="btn btn-default"
@@ -162,7 +167,7 @@ const StudentView = () => {
                     >
                       <i className="fa fa-arrow-left"></i> Kembali
                     </button>
-                    <TabUpdateSiswa />
+                    <TabUpdateSiswa dataSiswa={selectedSiswa} />
                   </div>
                 )}
               </div>
