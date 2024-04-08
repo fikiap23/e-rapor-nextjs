@@ -1,53 +1,31 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Swal from 'sweetalert2'
-import TabInputSiswa from './TabInputStudent'
+import { Table, Button, Input } from 'antd'
 import Link from 'next/link'
 import useAuth from '@/hooks/useAuth'
-import Loading from '@/components/shared/Loading'
 import siswaService from '@/services/siswa.service'
+import TabInputSiswa from './TabInputStudent'
 import TabUpdateSiswa from './TabUpdateStudent'
 import { useGetAllStudentData } from '@/hooks/useStudent'
 
 const StudentView = () => {
   const { token } = useAuth()
   const [activeTab, setActiveTab] = useState('view')
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [filteredDataStudent, setFilteredDataStudent] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [sortBy, setSortBy] = useState('')
-  const [sortOrder, setSortOrder] = useState('asc')
-  const [refreshTable, setRefreshTable] = useState(false)
-
+  const [searchText, setSearchText] = useState('')
   const {
     data: listStudent,
     error: errorStudent,
     isFetching: isFetchingStudent,
     refetch: refetchStudents,
   } = useGetAllStudentData(token)
-
-  useEffect(() => {
-    if (listStudent) {
-      const sortedStudents = [...listStudent].sort((a, b) => {
-        if (a[sortBy] < b[sortBy]) {
-          return sortOrder === 'asc' ? -1 : 1
-        }
-        if (a[sortBy] > b[sortBy]) {
-          return sortOrder === 'asc' ? 1 : -1
-        }
-        return 0
-      })
-      setFilteredDataStudent(sortedStudents.filter(filterStudent))
-    }
-  }, [listStudent, searchKeyword, sortBy, sortOrder, refreshTable])
-
-  const filterStudent = (student) => {
-    return (
-      student.nis.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      student.nisn.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      student.nama.toLowerCase().includes(searchKeyword.toLowerCase())
+  const filteredSiswa = listStudent.filter((siswa) =>
+    Object.values(siswa).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
     )
-  }
+  )
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -73,29 +51,58 @@ const StudentView = () => {
     })
   }
 
-  const handleFilterChange = (e) => {
-    setSearchKeyword(e.target.value)
-    setCurrentPage(1)
-  }
-
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortBy(field)
-      setSortOrder('asc')
-    }
-  }
-
-  const maxPaginationData = 10
-  const indexOfLastStudent = currentPage * maxPaginationData
-  const indexOfFirstStudent = indexOfLastStudent - maxPaginationData
-  const currentStudents = filteredDataStudent.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  )
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const columns = [
+    {
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{index + 1}</span>,
+    },
+    {
+      title: 'NIS',
+      dataIndex: 'nis',
+      key: 'nis',
+      sorter: (a, b) => a.nis.localeCompare(b.nis),
+    },
+    {
+      title: 'NISN',
+      dataIndex: 'nisn',
+      key: 'nisn',
+      sorter: (a, b) => a.nisn.localeCompare(b.nisn),
+    },
+    {
+      title: 'Nama',
+      dataIndex: 'nama',
+      key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
+      render: (text) => <span>{text.toUpperCase()}</span>,
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <Link
+            href={`?id=${record.id}`}
+            className="btn btn-success btn-sm"
+            onClick={() => handleTabChange('update')}
+          >
+            <i className="icon fa fa-edit"></i>
+          </Link>
+          <Button
+            style={{
+              marginRight: '2px',
+              marginLeft: '2px',
+            }}
+            className="btn btn-danger btn-sm"
+            onClick={() => handleDelete(record.id)}
+          >
+            <i className="icon fa fa-trash"></i>
+          </Button>
+        </span>
+      ),
+    },
+  ]
 
   return (
     <div className="content-wrapper">
@@ -127,229 +134,25 @@ const StudentView = () => {
                 {activeTab === 'view' && (
                   <div className="active tab-pane" id="activity">
                     <div className="box-body table-responsive no-padding">
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        {!isFetchingStudent && currentStudents.length === 0 ? (
-                          <div className="form-group" style={{ width: '30%' }}>
-                            <input
-                              type="text"
-                              id="filter"
-                              className="form-control"
-                              value={searchKeyword}
-                              placeholder="Masukan pencarian"
-                              onChange={handleFilterChange}
-                            />
-                          </div>
-                        ) : (
-                          <div className="form-group" style={{ width: '30%' }}>
-                            <input
-                              type="text"
-                              id="filter"
-                              className="form-control"
-                              value={searchKeyword}
-                              placeholder="Masukan pencarian"
-                              onChange={handleFilterChange}
-                            />
-                          </div>
-                        )}
-                        <div>
-                          <button
-                            className="btn btn-primary"
-                            onClick={refetchStudents}
-                          >
-                            <i className="fa fa-refresh"></i>
-                          </button>
-                        </div>
+                      <div style={{ margin: '0 20px 20px 20px' }}>
+                        <Input
+                          placeholder="Cari siswa..."
+                          value={searchText}
+                          onChange={(e) => setSearchText(e.target.value)}
+                          style={{ width: 200, marginRight: 10 }}
+                        />
                       </div>
-                      {isFetchingStudent ? (
-                        <Loading></Loading>
-                      ) : !isFetchingStudent && currentStudents.length === 0 ? (
-                        <div className="text-center" style={{ opacity: '0.6' }}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="3em"
-                            height="3em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="#47a6ff"
-                              fill-opacity="0"
-                              d="M5 3H12.5V8.5H19V21H5V3Z"
-                            >
-                              <animate
-                                fill="freeze"
-                                attributeName="fill-opacity"
-                                begin="2.38s"
-                                dur="0.255s"
-                                values="0;0.3"
-                              />
-                            </path>
-                            <g
-                              fill="none"
-                              stroke="#47a6ff"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <g stroke-width="2">
-                                <path
-                                  stroke-dasharray="64"
-                                  stroke-dashoffset="64"
-                                  d="M13 3L19 9V21H5V3H13"
-                                >
-                                  <animate
-                                    fill="freeze"
-                                    attributeName="stroke-dashoffset"
-                                    dur="1.02s"
-                                    values="64;0"
-                                  />
-                                </path>
-                                <path
-                                  stroke-dasharray="6"
-                                  stroke-dashoffset="6"
-                                  d="M9 13H13"
-                                >
-                                  <animate
-                                    fill="freeze"
-                                    attributeName="stroke-dashoffset"
-                                    begin="1.7s"
-                                    dur="0.34s"
-                                    values="6;0"
-                                  />
-                                </path>
-                                <path
-                                  stroke-dasharray="8"
-                                  stroke-dashoffset="8"
-                                  d="M9 16H15"
-                                >
-                                  <animate
-                                    fill="freeze"
-                                    attributeName="stroke-dashoffset"
-                                    begin="2.04s"
-                                    dur="0.34s"
-                                    values="8;0"
-                                  />
-                                </path>
-                              </g>
-                              <path
-                                stroke-dasharray="14"
-                                stroke-dashoffset="14"
-                                d="M12.5 3V8.5H19"
-                              >
-                                <animate
-                                  fill="freeze"
-                                  attributeName="stroke-dashoffset"
-                                  begin="1.19s"
-                                  dur="0.34s"
-                                  values="14;0"
-                                />
-                              </path>
-                            </g>
-                          </svg>
-                          <div style={{ color: 'gray' }}>
-                            <p>
-                              <b>Data tidak ada</b>
-                            </p>
-                            <small>
-                              <b>
-                                Silahkan input siswa terlebih dahulu/cari kata
-                                kunci lain
-                              </b>
-                            </small>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <table id="siswa" className="table table-hover">
-                            <thead>
-                              <tr>
-                                <th>No.</th>
-                                <th onClick={() => handleSort('nis')}>
-                                  Nis <i className="fa fa-sort"></i>
-                                </th>
-                                <th onClick={() => handleSort('nisn')}>
-                                  Nisn <i className="fa fa-sort"></i>
-                                </th>
-                                <th onClick={() => handleSort('nama')}>
-                                  Nama <i className="fa fa-sort"></i>
-                                </th>
-                                <th>Aksi</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {!isFetchingStudent &&
-                                currentStudents &&
-                                currentStudents.map((item, index) => (
-                                  <tr key={item.id}>
-                                    <td>{indexOfFirstStudent + index + 1}</td>
-                                    <td>{item.nis}</td>
-                                    <td>{item.nisn}</td>
-                                    <td>{item.nama.toUpperCase()}</td>
-                                    <td>
-                                      <Link
-                                        href={`?id=${item.id}`}
-                                        className="btn btn-success btn-sm"
-                                        onClick={() =>
-                                          handleTabChange('update')
-                                        }
-                                      >
-                                        <i className="icon fa fa-edit"></i>
-                                      </Link>
-                                      <button
-                                        style={{
-                                          marginRight: '2px',
-                                          marginLeft: '2px',
-                                        }}
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => handleDelete(item.id)}
-                                      >
-                                        <i className="icon fa fa-trash"></i>
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-                          {/* Pagination */}
-                          <nav aria-label="Page navigation example">
-                            <ul className="pagination">
-                              {[
-                                ...Array(
-                                  Math.ceil(
-                                    filteredDataStudent.length /
-                                      maxPaginationData
-                                  )
-                                ),
-                              ].map((_, index) => (
-                                <li
-                                  key={index}
-                                  className={`page-item ${
-                                    currentPage === index + 1 ? 'active' : ''
-                                  }`}
-                                >
-                                  <Link
-                                    href=""
-                                    className="page-link"
-                                    onClick={() => paginate(index + 1)}
-                                  >
-                                    {index + 1}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </nav>
-                        </>
-                      )}
+                      <Table
+                        columns={columns}
+                        dataSource={filteredSiswa}
+                        loading={isFetchingStudent}
+                      />
                     </div>
                   </div>
                 )}
                 {activeTab === 'input' && <TabInputSiswa />}
                 {activeTab === 'update' && (
                   <div>
-                    {/* <button className='btn btn-danger' onClick={() => handleTabChange('view')}>Batal</button> */}
                     <button
                       className="btn btn-default"
                       onClick={() => {
