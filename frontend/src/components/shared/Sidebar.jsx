@@ -1,17 +1,7 @@
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React from 'react'
 
 const Sidebar = () => {
-  const [expandedMenus, setExpandedMenus] = useState([])
-
-  const toggleMenu = (menuName) => {
-    if (expandedMenus.includes(menuName)) {
-      setExpandedMenus(expandedMenus.filter((item) => item !== menuName))
-    } else {
-      setExpandedMenus([...expandedMenus, menuName])
-    }
-  }
-
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
@@ -37,155 +27,29 @@ const Sidebar = () => {
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </Link>
           </li>
-          <li
-            className={
-              expandedMenus.includes('guru') ? 'treeview menu-open' : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('guru')}>
+          <li>
+            <Link href="/admin/guru">
               <i className="fa fa-user"></i> <span>Guru</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('guru')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('guru') ? 'block ' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/guru">
-                  <span>Daftar Guru</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/guru/add">
-                  <span>Tambah Guru</span>
-                </Link>
-              </li>
-            </ul>
+            </Link>
           </li>
-          <li
-            className={
-              expandedMenus.includes('siswa')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('siswa')}>
+          <li>
+            <Link href="/admin/siswa">
               <i className="fa fa-users"></i> <span>Siswa</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('siswa')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('siswa') ? 'block' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/siswa">
-                  <span>Daftar Siswa</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/siswa/add">
-                  <span>Tambah Siswa</span>
-                </Link>
-              </li>
-            </ul>
+            </Link>
           </li>
-          <li
-            className={
-              expandedMenus.includes('silabus')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('silabus')}>
+          <li>
+            <Link href="/admin/silabus">
               <i className="fa fa-pencil"></i> <span>Isian CP/TP</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('silabus')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('silabus') ? 'block' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/silabus">
-                  <span>Daftar Isian CP/TP</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/silabus/add">
-                  <span>Tambah Isian CP/TP</span>
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li
-            className={
-              expandedMenus.includes('rombel')
-                ? 'treeview menu-open'
-                : 'treeview'
-            }
-          >
-            <a href="#" onClick={() => toggleMenu('rombel')}>
-              <i className="fa fa-home"></i> <span>Rombel</span>
-              <span className="pull-right-container">
-                <i
-                  className={
-                    expandedMenus.includes('rombel')
-                      ? 'fa fa-angle-down pull-right'
-                      : 'fa fa-angle-left pull-right'
-                  }
-                ></i>
-              </span>
-            </a>
-            <ul
-              className="treeview-menu"
-              style={{
-                display: expandedMenus.includes('rombel') ? 'block' : 'none',
-              }}
-            >
-              <li>
-                <Link href="/admin/rombel">
-                  <span>Daftar Rombel</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/rombel/add">
-                  <span>Tambah Rombel</span>
-                </Link>
-              </li>
-            </ul>
+            </Link>
           </li>
           <li>
             <Link href="/admin/kelompok-usia">
               <i className="fa fa-group"></i> <span>Kelompok Usia</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin/rombel">
+              <i className="fa fa-home"></i> <span>Rombel</span>
             </Link>
           </li>
           <li>
