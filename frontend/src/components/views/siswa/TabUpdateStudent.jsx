@@ -56,7 +56,14 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
-      console.log(values)
+      // Mengambil binary data foto dari getBase64
+      const fotoBinary = fileList[0].originFileObj
+
+      const payload = {
+        ...values,
+        foto: fotoBinary, // Menggunakan binary data foto
+      }
+      console.log(payload)
       const result = await Swal.fire({
         title: 'Apakah Data Sudah Benar?',
         text: 'Anda akan mengubah siswa!',
@@ -70,12 +77,17 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
       if (result.isConfirmed) {
         setIsLoading(true)
         await siswaService
-          .update(dataSiswa.id, values, token) // Memperbarui dataSiswa dengan ID tertentu
+          .update(token, dataSiswa.id, payload)
           .then((res) => {
             setIsLoading(false)
             Swal.fire('Data Diubah!', 'Siswa telah diubah.', 'success')
           })
-          .catch((err) => Swal.fire('Error', err, 'error'))
+          .catch((err) => {
+            setIsLoading(false)
+            Swal.fire('Error', err, 'error')
+          })
+      } else {
+        setIsLoading(false)
       }
     } catch (error) {
       setIsLoading(false)
@@ -271,6 +283,7 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
                   listType="picture-card"
                   fileList={fileList}
                   accept="image/*"
+                  multiple={true}
                   onPreview={handlePreview}
                   onChange={handleChange}
                 >

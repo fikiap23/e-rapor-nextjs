@@ -39,8 +39,9 @@ export class MuridController {
     @Put(':id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
-    async update(@Body() dto: UpdateMuridDto, @Res() res, @Param('id') id) {
-        await this.muridService.updateById(id, dto);
+    @UseInterceptors(FileInterceptor('foto'))
+    async update(@Body() dto: UpdateMuridDto, @Res() res, @Param('id') id, @UploadedFile() file: Express.Multer.File) {
+        await this.muridService.updateById(id, dto, file);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }
 

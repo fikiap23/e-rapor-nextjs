@@ -72,7 +72,7 @@ export class MuridRepository {
     }
 
 
-    async updateById(id: string, dto: UpdateMuridDto) {
+    async updateById(id: string, dto: UpdateMuridDto, file: Express.Multer.File) {
         const murid = await this.findByIdOrThrow(id);
         if (dto.idRombel && dto.idRombel !== murid.idRombel) {
             // check rombel exist
@@ -83,6 +83,33 @@ export class MuridRepository {
         if (murid.nis !== dto.nis || murid.nisn !== dto.nisn) {
             await this.isNisOrNisnHasUsed(dto.nis, dto.nisn);
         }
+
+        let urlFileFoto: string;
+        // check if new file exists
+        if (file) {
+            _validateFile(
+                `Foto Murid`,
+                file,
+                ['.jpeg', '.jpg', '.png'],
+                1,
+            );
+
+            urlFileFoto = getCustomFilename(murid.nis, file);
+            if (murid.foto) {
+                await deleteFileImageHelper(
+                    `./public`,
+                    murid.foto,
+                );
+            }
+            // store file
+            await createFileImageHelper(
+                file,
+                `./public/foto/murid`,
+                urlFileFoto,
+            );
+            dto.foto = `foto/murid/${urlFileFoto}`;
+        }
+
         return await this.muridQuery.updateById(id, dto)
     }
 

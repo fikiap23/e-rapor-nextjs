@@ -11,8 +11,8 @@ export class MuridService {
         return await this.muridRepository.create(dto, file);
     }
 
-    async updateById(id: string, dto: UpdateMuridDto) {
-        return await this.muridRepository.updateById(id, dto);
+    async updateById(id: string, dto: UpdateMuridDto, file: Express.Multer.File) {
+        return await this.muridRepository.updateById(id, dto, file);
     }
 
     async deleteById(id: string) {

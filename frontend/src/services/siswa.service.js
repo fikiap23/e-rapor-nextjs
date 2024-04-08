@@ -22,6 +22,7 @@ const siswaService = {
       const response = await axios.put(`${BASE_URL}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       })
       return response.data.data

@@ -96,6 +96,6 @@ export const deleteFileImageHelper = async (deletePath, fileName) => {
     });
     return 'success';
   } catch (error) {
-    throw new Error(error);
+    return
   }
 };
