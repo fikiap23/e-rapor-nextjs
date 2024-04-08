@@ -84,6 +84,19 @@ const StudentView = () => {
       render: (text) => <span>{text.toUpperCase()}</span>,
     },
     {
+      title: 'Foto',
+      dataIndex: 'foto',
+      key: 'foto',
+      render: (text) => (
+        <img
+          src={text ? text : '/images/students.png'}
+          alt={text}
+          width={50}
+          height={50}
+        />
+      ),
+    },
+    {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
