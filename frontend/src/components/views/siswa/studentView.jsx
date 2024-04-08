@@ -1,14 +1,14 @@
 'use client'
 import { useState } from 'react'
-import Swal from 'sweetalert2'
-import { Table, Button, Input } from 'antd'
-import Link from 'next/link'
+import { Table, Button, Input, Tabs, Modal } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import TabInputSiswa from './TabInputStudent'
 import TabUpdateSiswa from './TabUpdateStudent'
 import { useGetAllStudentData } from '@/hooks/useStudent'
 import { apiUrl } from '@/services/apiUrls'
+
+const { TabPane } = Tabs
 
 const StudentView = () => {
   const { token } = useAuth()
@@ -39,22 +39,31 @@ const StudentView = () => {
   }
 
   const handleDelete = (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus siswa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await siswaService.delete(token, id)
-        refetchStudents()
-        Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
-      }
+      content: 'Anda akan menghapus siswa!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await siswaService
+          .delete(token, id)
+          .then(() => {
+            refetchStudents()
+            Modal.success({
+              title: 'Success',
+              content: 'Data siswa telah dihapus.',
+            })
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
+      },
+      onCancel: () => {
+        console.log('Cancel')
+      },
     })
   }
 
@@ -102,21 +111,15 @@ const StudentView = () => {
       key: 'action',
       render: (text, record) => (
         <span>
-          <Button
-            className="btn btn-success btn-sm"
-            onClick={() => handleUpdateSiswa(record)}
-          >
-            <i className="icon fa fa-edit"></i>
+          <Button type="primary" onClick={() => handleUpdateSiswa(record)}>
+            Edit
           </Button>
           <Button
-            style={{
-              marginRight: '2px',
-              marginLeft: '2px',
-            }}
-            className="btn btn-danger btn-sm"
+            danger
+            style={{ marginLeft: 8 }}
             onClick={() => handleDelete(record.id)}
           >
-            <i className="icon fa fa-trash"></i>
+            Hapus
           </Button>
         </span>
       ),
@@ -136,62 +139,46 @@ const StudentView = () => {
                   <span style={{ marginLeft: '10px' }}> Data Siswa </span>
                 </h3>
               </div>
-              <div className="nav-tabs-pills">
-                <ul className="nav nav-tabs">
-                  <li className={activeTab === 'view' ? 'active' : ''}>
-                    <Link href="" onClick={() => handleTabChange('view')}>
-                      Lihat Siswa
-                    </Link>
-                  </li>
-                  <li className={activeTab === 'input' ? 'active' : ''}>
-                    <Link href="" onClick={() => handleTabChange('input')}>
-                      Input Siswa
-                    </Link>
-                  </li>
-                  {activeTab === 'update' && (
-                    <li className={activeTab === 'update' ? 'active' : ''}>
-                      <Link href="" onClick={() => handleTabChange('update')}>
-                        Edit Siswa
-                      </Link>
-                    </li>
-                  )}
-                </ul>
-                <div className="tab-content">
-                  {activeTab === 'view' && (
-                    <div className="active tab-pane" id="activity">
-                      <div className="box-body table-responsive no-padding">
-                        <div style={{ margin: '0 20px 20px 20px' }}>
-                          <Input
-                            placeholder="Cari siswa..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            style={{ width: 200, marginRight: 10 }}
-                          />
-                        </div>
-                        <Table
-                          columns={columns}
-                          dataSource={filteredSiswa}
-                          loading={isFetchingStudent}
+              <div className="box-body">
+                <Tabs activeKey={activeTab} onChange={handleTabChange}>
+                  <TabPane tab="Lihat Siswa" key="view">
+                    <div className="box-body table-responsive no-padding">
+                      <div style={{ margin: '0 20px 20px 20px' }}>
+                        <Input
+                          placeholder="Cari siswa..."
+                          value={searchText}
+                          onChange={(e) => setSearchText(e.target.value)}
+                          style={{ width: 200, marginRight: 10 }}
                         />
                       </div>
+                      <Table
+                        columns={columns}
+                        dataSource={filteredSiswa}
+                        loading={isFetchingStudent}
+                      />
                     </div>
-                  )}
-                  {activeTab === 'input' && <TabInputSiswa />}
-                  {activeTab === 'update' && selectedSiswa && (
-                    <div>
-                      <button
-                        className="btn btn-default"
-                        onClick={() => {
-                          window.history.back()
-                          handleTabChange('view')
-                        }}
-                      >
-                        <i className="fa fa-arrow-left"></i> Kembali
-                      </button>
-                      <TabUpdateSiswa dataSiswa={selectedSiswa} />
-                    </div>
-                  )}
-                </div>
+                  </TabPane>
+                  <TabPane tab="Input Siswa" key="input">
+                    <TabInputSiswa />
+                  </TabPane>
+                  <TabPane tab="" key="update">
+                    {selectedSiswa && (
+                      <div>
+                        <Button
+                          onClick={() => {
+                            setActiveTab('view')
+                          }}
+                        >
+                          <i className="fa fa-arrow-left"></i> Kembali
+                        </Button>
+                        <TabUpdateSiswa
+                          dataSiswa={selectedSiswa}
+                          refetch={refetchStudents}
+                        />
+                      </div>
+                    )}
+                  </TabPane>
+                </Tabs>
               </div>
             </div>
           </div>

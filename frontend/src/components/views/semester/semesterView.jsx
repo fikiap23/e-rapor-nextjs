@@ -7,7 +7,7 @@ import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
 import Swal from 'sweetalert2'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
-import { Table, Button, Tag, Space, Input } from 'antd'
+import { Table, Button, Tag, Space, Input, Modal } from 'antd'
 const SemesterView = () => {
   const { token } = useAuth()
   const [selectedSemester, setSelectedSemester] = useState({})
@@ -47,26 +47,28 @@ const SemesterView = () => {
   }
 
   const handleDelete = (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus semester!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await semesterService.delete(token, id)
-        refetchSemester()
-        Swal.fire('Data Dihapus!', 'Semester telah dihapus.', 'success')
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Dibatalkan',
-          'Tidak ada perubahan pada data semester.',
-          'error'
-        )
-      }
+      content: 'Anda akan menghapus semester!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await semesterService
+          .delete(token, id)
+          .then(() => {
+            Modal.success({
+              title: 'Success',
+              content: 'Data semester telah dihapus.',
+            })
+            refetchSemester()
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
+      },
     })
   }
 

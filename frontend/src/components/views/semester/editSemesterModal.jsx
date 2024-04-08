@@ -1,8 +1,6 @@
 import { Modal, Form, Input, Select, Switch, DatePicker, Button } from 'antd'
-import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
-import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
+import { useEffect } from 'react'
 import moment from 'moment'
 const { Option } = Select
 
@@ -37,19 +35,28 @@ const EditSemesterModal = ({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
-      await semesterService.update(token, semesterData.id, values)
-      Swal.fire({
-        icon: 'success',
-        title: 'Data semester telah diperbarui',
-        position: 'bottom-center',
-      })
-      refetch()
-      closeModal()
+      await semesterService
+        .update(token, semesterData.id, values)
+        .then((res) => {
+          Modal.success({
+            title: 'Success',
+            content: 'Data semester telah diperbarui',
+            position: 'bottom-center',
+          })
+          refetch()
+          closeModal()
+        })
+        .catch((error) => {
+          Modal.error({
+            title: 'Oops...',
+            content: error,
+            position: 'bottom-center',
+          })
+        })
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: error,
+        content: 'Terdapat kesalahan saat memperbarui data semester',
         position: 'bottom-center',
       })
     }

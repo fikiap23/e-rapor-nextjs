@@ -8,18 +8,18 @@ import {
   Row,
   Col,
   Image,
+  Modal,
 } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
 import { PlusOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import { apiUrl } from '@/services/apiUrls'
 import { getBase64 } from '@/lib/helper'
 const { Option } = Select
 
-const TabUpdateSiswa = ({ dataSiswa }) => {
+const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
@@ -63,37 +63,37 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
         ...values,
         foto: fotoBinary, // Menggunakan binary data foto
       }
-      const result = await Swal.fire({
-        title: 'Apakah Data Sudah Benar?',
-        text: 'Anda akan mengubah siswa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, ubah!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
-      })
 
-      if (result.isConfirmed) {
-        setIsLoading(true)
-        await siswaService
-          .update(token, dataSiswa.id, payload)
-          .then((res) => {
-            setIsLoading(false)
-            Swal.fire('Data Diubah!', 'Siswa telah diubah.', 'success')
-          })
-          .catch((err) => {
-            setIsLoading(false)
-            Swal.fire('Error', err, 'error')
-          })
-      } else {
-        setIsLoading(false)
-      }
+      Modal.confirm({
+        title: 'Apakah Data Sudah Benar?',
+        content: 'Anda akan mengubah siswa!',
+        okText: 'Ya, ubah!',
+        cancelText: 'Tidak, cek lagi',
+        onOk: async () => {
+          setIsLoading(true)
+          await siswaService
+            .update(token, dataSiswa.id, payload)
+            .then((res) => {
+              setIsLoading(false)
+              Modal.success({
+                title: 'Data Diubah!',
+                content: 'Siswa telah diubah.',
+              })
+              refetch()
+            })
+            .catch((err) => {
+              setIsLoading(false)
+              Modal.error({
+                content: err,
+                title: 'Oops...',
+              })
+            })
+        },
+      })
     } catch (error) {
-      setIsLoading(false)
-      Swal.fire('Error', 'Terjadi kesalahan', 'error')
+      message.error('Error! Terjadi kesalahan')
     }
   }
-
   const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
   const agamaOptions = [
     'ISLAM',
