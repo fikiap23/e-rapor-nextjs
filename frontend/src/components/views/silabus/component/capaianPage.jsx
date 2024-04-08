@@ -31,7 +31,7 @@ function CapaianPage({ cp, token, refetch }) {
   }
 
   return (
-    <Form form={form} layout="vertical">
+    <Form form={form} layout="vertical" style={{ marginTop: 10 }}>
       <Row gutter={[16, 16]}>
         <Col span={24}>
           <Form.Item

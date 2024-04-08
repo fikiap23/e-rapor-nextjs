@@ -5,13 +5,14 @@ import rombelService from '@/services/rombel.service'
 
 const { Option } = Select
 
-const AddGuruToRombelModal = ({
+const UpdateGuruToRombelModal = ({
   isOpen,
   closeModal,
   refetch,
   refetchGuruRombel,
   token,
   listGuruRombel,
+  selectedData, // data guru-rombel yang akan diupdate
 }) => {
   const [form] = Form.useForm()
 
@@ -22,22 +23,22 @@ const AddGuruToRombelModal = ({
   } = useGetAllSemesterData(token)
 
   useEffect(() => {
-    if (listGuruRombel && listSemester) {
+    if (selectedData && listGuruRombel && listSemester) {
       form.setFieldsValue({
-        idRombel: '',
-        idGuru: '',
-        idSemester: '',
+        idRombel: selectedData.idRombel,
+        idGuru: selectedData.idGuru,
+        idSemester: selectedData.idSemester,
       })
     }
-  }, [listGuruRombel, listSemester])
+  }, [selectedData, listGuruRombel, listSemester])
 
   const handleSubmit = async () => {
     const values = await form.validateFields()
     await rombelService
-      .createRombelSemesterGuru(token, values)
+      .updateRombelSemesterGuru(token, selectedData.id, values)
       .then((result) => {
         Modal.success({
-          title: 'Add Berhasil!',
+          title: 'Update Berhasil!',
           content: 'Data rombel telah diperbarui',
           position: 'top-right',
         })
@@ -57,7 +58,7 @@ const AddGuruToRombelModal = ({
 
   return (
     <Modal
-      title="Pilih Guru dan Rombel"
+      title="Update Guru dan Rombel"
       visible={isOpen}
       onCancel={closeModal}
       footer={[
@@ -114,4 +115,4 @@ const AddGuruToRombelModal = ({
   )
 }
 
-export default AddGuruToRombelModal
+export default UpdateGuruToRombelModal

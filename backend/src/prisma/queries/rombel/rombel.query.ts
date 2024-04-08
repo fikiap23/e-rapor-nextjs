@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateRombelDto } from '../../../rombel/dto/create-rombel.dto';
 import { CreateKategoriRombelDto } from '../../../rombel/dto/create-kategori-rombel.dto';
@@ -143,6 +143,12 @@ export class RombelQuery extends DbService {
 
     async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
         return await this.prisma.rombelSemesterGuru.update({ where: { id }, data: payload })
+    }
+
+    async findRombelSemesterGuruByIdOrThrow(id: string) {
+        const rombel = await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
+        if (!rombel) throw new BadRequestException('Rombel tidak ditemukan')
+        return await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
     }
 
     async checkIsRombelSemesterGuruExist(idRombel: string, idSemester: string, idGuru: string) {

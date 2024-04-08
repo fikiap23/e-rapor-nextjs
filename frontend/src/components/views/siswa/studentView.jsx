@@ -129,61 +129,69 @@ const StudentView = () => {
       <section className="content">
         <div className="row">
           <div className="col-md-12">
-            <div className="nav-tabs-custom">
-              <ul className="nav nav-tabs">
-                <li className={activeTab === 'view' ? 'active' : ''}>
-                  <Link href="" onClick={() => handleTabChange('view')}>
-                    Lihat Siswa
-                  </Link>
-                </li>
-                <li className={activeTab === 'input' ? 'active' : ''}>
-                  <Link href="" onClick={() => handleTabChange('input')}>
-                    Input Siswa
-                  </Link>
-                </li>
-                {activeTab === 'update' && (
-                  <li className={activeTab === 'update' ? 'active' : ''}>
-                    <Link href="" onClick={() => handleTabChange('update')}>
-                      Edit Siswa
+            <div className="box box-solid box-primary">
+              <div className="box-header">
+                <h3 className="box-title">
+                  <i className="fa fa-user"></i>{' '}
+                  <span style={{ marginLeft: '10px' }}> Data Siswa </span>
+                </h3>
+              </div>
+              <div className="nav-tabs-pills">
+                <ul className="nav nav-tabs">
+                  <li className={activeTab === 'view' ? 'active' : ''}>
+                    <Link href="" onClick={() => handleTabChange('view')}>
+                      Lihat Siswa
                     </Link>
                   </li>
-                )}
-              </ul>
-              <div className="tab-content">
-                {activeTab === 'view' && (
-                  <div className="active tab-pane" id="activity">
-                    <div className="box-body table-responsive no-padding">
-                      <div style={{ margin: '0 20px 20px 20px' }}>
-                        <Input
-                          placeholder="Cari siswa..."
-                          value={searchText}
-                          onChange={(e) => setSearchText(e.target.value)}
-                          style={{ width: 200, marginRight: 10 }}
+                  <li className={activeTab === 'input' ? 'active' : ''}>
+                    <Link href="" onClick={() => handleTabChange('input')}>
+                      Input Siswa
+                    </Link>
+                  </li>
+                  {activeTab === 'update' && (
+                    <li className={activeTab === 'update' ? 'active' : ''}>
+                      <Link href="" onClick={() => handleTabChange('update')}>
+                        Edit Siswa
+                      </Link>
+                    </li>
+                  )}
+                </ul>
+                <div className="tab-content">
+                  {activeTab === 'view' && (
+                    <div className="active tab-pane" id="activity">
+                      <div className="box-body table-responsive no-padding">
+                        <div style={{ margin: '0 20px 20px 20px' }}>
+                          <Input
+                            placeholder="Cari siswa..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            style={{ width: 200, marginRight: 10 }}
+                          />
+                        </div>
+                        <Table
+                          columns={columns}
+                          dataSource={filteredSiswa}
+                          loading={isFetchingStudent}
                         />
                       </div>
-                      <Table
-                        columns={columns}
-                        dataSource={filteredSiswa}
-                        loading={isFetchingStudent}
-                      />
                     </div>
-                  </div>
-                )}
-                {activeTab === 'input' && <TabInputSiswa />}
-                {activeTab === 'update' && selectedSiswa && (
-                  <div>
-                    <button
-                      className="btn btn-default"
-                      onClick={() => {
-                        window.history.back()
-                        handleTabChange('view')
-                      }}
-                    >
-                      <i className="fa fa-arrow-left"></i> Kembali
-                    </button>
-                    <TabUpdateSiswa dataSiswa={selectedSiswa} />
-                  </div>
-                )}
+                  )}
+                  {activeTab === 'input' && <TabInputSiswa />}
+                  {activeTab === 'update' && selectedSiswa && (
+                    <div>
+                      <button
+                        className="btn btn-default"
+                        onClick={() => {
+                          window.history.back()
+                          handleTabChange('view')
+                        }}
+                      >
+                        <i className="fa fa-arrow-left"></i> Kembali
+                      </button>
+                      <TabUpdateSiswa dataSiswa={selectedSiswa} />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

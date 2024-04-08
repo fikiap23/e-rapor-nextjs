@@ -6,6 +6,7 @@ import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
 import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
+import { dot } from 'node:test/reporters';
 
 @Injectable()
 export class RombelRepository {
@@ -77,6 +78,15 @@ export class RombelRepository {
         await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
         await this.updateRombelById(payload.idRombel, { idGuru: payload.idGuru })
         return await this.rombelQuery.createRombelSemesterGuru(payload)
+    }
+
+    async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
+        // find rombelSemesterGuru
+        const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(id)
+        if (payload.idGuru !== rombelSemesterGuru.idGuru || payload.idSemester !== rombelSemesterGuru.idSemester || payload.idRombel !== rombelSemesterGuru.idRombel) {
+            await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
+        }
+        return await this.rombelQuery.updateRombelSemesterGuruById(id, payload)
     }
 
     async deleteRombelSemesterGuruById(id: string) {

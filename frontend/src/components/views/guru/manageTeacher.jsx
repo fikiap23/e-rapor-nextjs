@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import { Button, Table, Tag, Modal } from 'antd'
+import { Button, Table, Tag, Modal, Input } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import AddGuruModal from './modal/addGuruModal'
 import UpdateGuruModal from './modal/updateGuruModal'
 import useAuth from '@/hooks/useAuth'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { useGetAllTeacherData } from '@/hooks/useTeacher'
 import teacherService from '@/services/guru.service'
 
@@ -22,6 +20,15 @@ const ManageTeacher = () => {
     isFetching: isFetchingTeacher,
     refetch: refetchTeacher,
   } = useGetAllTeacherData(token)
+
+  const [searchText, setSearchText] = useState('')
+  const filteredTeachers = listTeacher.filter((teacher) =>
+    Object.values(teacher).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openModal = () => {
     setIsAddModalOpen(true)
@@ -72,12 +79,21 @@ const ManageTeacher = () => {
       'Apakah Anda yakin?',
       'Anda akan menghapus data guru ini!',
       async () => {
-        const deleteResult = await teacherService.delete(token, id)
-        console.log(deleteResult)
-        if (deleteResult.message === 'OK') {
-          refetchTeacher()
-          Modal.success({ content: 'Data guru telah berhasil dihapus.' })
-        }
+        await teacherService
+          .delete(token, id)
+          .then((res) => {
+            refetchTeacher()
+            Modal.success({
+              title: 'Success',
+              content: 'Data guru telah berhasil dihapus.',
+            })
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
       }
     )
   }
@@ -93,16 +109,29 @@ const ManageTeacher = () => {
       title: 'NIP',
       dataIndex: 'nip',
       key: 'nip',
+      sorter: (a, b) => a.nip.localeCompare(b.nip),
     },
     {
       title: 'Nama',
       dataIndex: 'nama',
       key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
       title: 'Status User',
       dataIndex: 'status',
       key: 'status',
+      filters: [
+        {
+          text: 'AKTIF',
+          value: 'AKTIF',
+        },
+        {
+          text: 'TIDAK AKTIF',
+          value: 'TIDAK_AKTIF',
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (text, record) => (
         <Tag color={record.status === 'AKTIF' ? 'green' : 'yellow'}>
           {record.status}
@@ -149,10 +178,19 @@ const ManageTeacher = () => {
             Tambah
           </Button>
         </div>
+        <div style={{ margin: '0 20px 20px 20px' }}>
+          <Input
+            placeholder="Cari guru..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 200, marginRight: 10 }}
+          />
+        </div>
         <Table
           columns={columns}
-          dataSource={listTeacher}
+          dataSource={filteredTeachers}
           loading={isFetchingTeacher}
+          scroll={{ x: 1000 }}
         />
       </div>
       {/* add guru */}

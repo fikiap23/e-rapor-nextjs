@@ -92,7 +92,7 @@ const TujuanPage = ({ cp, token, isLoading, refetch }) => {
   return (
     <div className="active tab-pane" id="activity">
       <div className="box-body table-responsive no-padding">
-        <div style={{ margin: '0 20px 20px 20px' }}>
+        <div style={{ margin: '10px 20px 20px 20px' }}>
           <Button type="primary" onClick={openModal}>
             Tambah
           </Button>

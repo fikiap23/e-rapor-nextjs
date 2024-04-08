@@ -65,41 +65,53 @@ const SubjecetView = () => {
       <section className="content">
         <div className="row">
           <div className="col-md-12">
-            {/* {action === "view" && ( */}
-            <div className="nav-tabs-custom">
-              <ul className="nav nav-tabs">
-                <li className={activeTab === 'view' ? 'active' : ''}>
-                  <Link href="" onClick={() => handleTabChange('view')}>
-                    Tujuan Pembelajaran
-                  </Link>
-                </li>
-                <li className={activeTab === 'input' ? 'active' : ''}>
-                  <Link href="" onClick={() => handleTabChange('input')}>
-                    Capaian Pembelajaran
-                  </Link>
-                </li>
-              </ul>
-              <div className="tab-content">
-                {isFetching && <Loading />}
-                {!isFetching && (
+            <div className="box box-solid box-primary">
+              <div className="box-header">
+                <h3 className="box-title">
+                  <i className="fa fa-book"></i>{' '}
+                  <span style={{ marginLeft: '10px' }}>
+                    {' '}
+                    Data Tujuan dan Capaian Pembelajaran
+                  </span>
+                </h3>
+              </div>
+              <div className="box-body">
+                <div className="nav-tabs-pills">
+                  <ul className="nav nav-tabs">
+                    <li className={activeTab === 'view' ? 'active' : ''}>
+                      <Link href="" onClick={() => handleTabChange('view')}>
+                        Tujuan Pembelajaran
+                      </Link>
+                    </li>
+                    <li className={activeTab === 'input' ? 'active' : ''}>
+                      <Link href="" onClick={() => handleTabChange('input')}>
+                        Capaian Pembelajaran
+                      </Link>
+                    </li>
+                  </ul>
                   <div className="tab-content">
-                    {activeTab === 'view' && (
-                      <TujuanPage
-                        cp={cpData}
-                        token={token}
-                        isLoading={isFetching}
-                        refetch={handleRefetch}
-                      />
-                    )}
-                    {activeTab === 'input' && (
-                      <CapaianPage
-                        cp={cpData}
-                        token={token}
-                        refetch={handleRefetch}
-                      />
+                    {isFetching && <Loading />}
+                    {!isFetching && (
+                      <div className="tab-content">
+                        {activeTab === 'view' && (
+                          <TujuanPage
+                            cp={cpData}
+                            token={token}
+                            isLoading={isFetching}
+                            refetch={handleRefetch}
+                          />
+                        )}
+                        {activeTab === 'input' && (
+                          <CapaianPage
+                            cp={cpData}
+                            token={token}
+                            refetch={handleRefetch}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

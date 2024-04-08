@@ -42,6 +42,10 @@ export class RombelService {
         return await this.rombelRepository.createRombelSemesterGuru(payload)
     }
 
+    async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
+        return await this.rombelRepository.updateRombelSemesterGuruById(id, payload)
+    }
+
     async deleteRombelSemesterGuruById(id: string) {
         return await this.rombelRepository.deleteRombelSemesterGuruById(id)
     }
