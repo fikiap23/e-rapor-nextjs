@@ -14,15 +14,8 @@ import siswaService from '@/services/siswa.service'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 import { PlusOutlined } from '@ant-design/icons'
+import { getBase64 } from '@/lib/helper'
 const { Option } = Select
-
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = (error) => reject(error)
-  })
 
 function TabInputSiswa() {
   const { token } = useAuth()
@@ -35,7 +28,14 @@ function TabInputSiswa() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
-      console.log(values)
+      // Mengambil binary data foto dari getBase64
+      const fotoBinary = fileList[0].originFileObj
+
+      const payload = {
+        ...values,
+        foto: fotoBinary, // Menggunakan binary data foto
+      }
+
       const result = await Swal.fire({
         title: 'Apakah Data Sudah Benar?',
         text: 'Anda akan menambah siswa!',
@@ -49,7 +49,7 @@ function TabInputSiswa() {
       if (result.isConfirmed) {
         setIsLoading(true)
         await siswaService
-          .create(values, token)
+          .create(payload, token)
           .then((res) => {
             form.resetFields()
             setIsLoading(false)
@@ -256,6 +256,7 @@ function TabInputSiswa() {
                   listType="picture-card"
                   fileList={fileList}
                   accept="image/*"
+                  multiple={true}
                   onPreview={handlePreview}
                   onChange={handleChange}
                 >

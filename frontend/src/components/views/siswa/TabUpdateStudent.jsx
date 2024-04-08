@@ -63,7 +63,6 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
         ...values,
         foto: fotoBinary, // Menggunakan binary data foto
       }
-      console.log(payload)
       const result = await Swal.fire({
         title: 'Apakah Data Sudah Benar?',
         text: 'Anda akan mengubah siswa!',
