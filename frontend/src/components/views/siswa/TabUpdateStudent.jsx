@@ -15,6 +15,8 @@ import { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { PlusOutlined } from '@ant-design/icons'
 import moment from 'moment'
+import { apiUrl } from '@/services/apiUrls'
+import { getBase64 } from '@/lib/helper'
 const { Option } = Select
 
 const TabUpdateSiswa = ({ dataSiswa }) => {
@@ -46,7 +48,9 @@ const TabUpdateSiswa = ({ dataSiswa }) => {
       beratBadan: dataSiswa.beratBadan,
       status: dataSiswa.status,
     })
-    setFileList(dataSiswa.foto ? [{ uid: '-1', url: dataSiswa.foto }] : []) // Mengatur fileList jika ada foto
+    setFileList(
+      dataSiswa.foto ? [{ uid: '-1', url: `${apiUrl}/${dataSiswa.foto}` }] : []
+    )
   }, [dataSiswa, form])
 
   const handleSubmit = async () => {

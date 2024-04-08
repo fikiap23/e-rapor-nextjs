@@ -135,10 +135,8 @@ model Murid {
   status            StatusAkun          @default(AKTIF)
   rapor             Rapor?
   penilaianMingguan PenilaianMingguan[]
-  isPrint           IsPrint             @default(NO)
 
   // Relation
-
   idRombel String?
   rombel   Rombel?   @relation(fields: [idRombel], references: [id])
   absensi  Absensi[]

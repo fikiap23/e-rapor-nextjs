@@ -8,6 +8,7 @@ import siswaService from '@/services/siswa.service'
 import TabInputSiswa from './TabInputStudent'
 import TabUpdateSiswa from './TabUpdateStudent'
 import { useGetAllStudentData } from '@/hooks/useStudent'
+import { apiUrl } from '@/services/apiUrls'
 
 const StudentView = () => {
   const { token } = useAuth()
@@ -89,7 +90,7 @@ const StudentView = () => {
       key: 'foto',
       render: (text) => (
         <img
-          src={text ? text : '/images/students.png'}
+          src={text ? `${apiUrl}/${text}` : '/images/students.png'}
           alt={text}
           width={50}
           height={50}

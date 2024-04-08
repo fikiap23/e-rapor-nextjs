@@ -3,6 +3,7 @@ import { MuridQuery } from '../prisma/queries/murid/murid.query';
 import CreateMuridDto from './dto/create-murid.dto';
 import { UpdateMuridDto } from './dto/update-murid.dto';
 import { RombelRepository } from '../rombel/rombel.repository';
+import { _validateFile, createFileImageHelper, deleteFileImageHelper, getCustomFilename } from '../helpers/helper';
 
 
 @Injectable()
@@ -39,15 +40,37 @@ export class MuridRepository {
         return
     }
 
-    async create(dto: CreateMuridDto) {
+    async create(dto: CreateMuridDto, file: Express.Multer.File) {
+        // return file
         if (dto.idRombel) {
             // check rombel exist
             await this.rombelRepository.findRombelByIdOrThrow(dto.idRombel);
         }
-        // check is nis or nisn has used
+        // check is nis or nisn has been used
         await this.isNisOrNisnHasUsed(dto.nis, dto.nisn);
+
+        let urlFileFoto: string;
+        // check if new file exists
+        if (file) {
+            _validateFile(
+                `Foto Murid`,
+                file,
+                ['.jpeg', '.jpg', '.png'],
+                1,
+            );
+
+            urlFileFoto = getCustomFilename(dto.nis, file);
+            // store file
+            await createFileImageHelper(
+                file,
+                `./public/foto/murid`,
+                urlFileFoto,
+            );
+            dto.foto = `foto/murid/${urlFileFoto}`;
+        }
         return await this.muridQuery.create(dto);
     }
+
 
     async updateById(id: string, dto: UpdateMuridDto) {
         const murid = await this.findByIdOrThrow(id);
@@ -65,6 +88,12 @@ export class MuridRepository {
 
     async deleteById(id: string) {
         const murid = await this.findByIdOrThrow(id);
+        if (murid.foto) {
+            await deleteFileImageHelper(
+                `./public`,
+                murid.foto,
+            );
+        }
         return await this.muridQuery.deleteById(murid.id)
     }
 

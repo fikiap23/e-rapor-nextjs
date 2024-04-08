@@ -56,7 +56,7 @@ export class RombelQuery extends DbService {
                 murid: true
             }
         })
-
+        if (!rombel) return null
         return {
             id: rombel.id,
             name: rombel.name,
@@ -69,6 +69,7 @@ export class RombelQuery extends DbService {
             murid: rombel.murid
         }
     }
+
 
     async updateRombelById(id: string, payload: UpdateRombelDto) {
         return await this.prisma.rombel.update({ where: { id }, data: payload })

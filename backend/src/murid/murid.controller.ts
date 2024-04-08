@@ -10,6 +10,8 @@ import {
     Delete,
     Query,
     UseGuards,
+    UseInterceptors,
+    UploadedFile,
 } from '@nestjs/common';
 import { JwtGuard, RoleGuard } from '../auth/guard';
 import { Roles } from '../auth/decorator';
@@ -18,6 +20,7 @@ import { MuridService } from './murid.service';
 import CreateMuridDto from './dto/create-murid.dto';
 import { HttpHelper } from '../helpers/http-helper';
 import { UpdateMuridDto } from './dto/update-murid.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @Controller('murid')
@@ -27,8 +30,9 @@ export class MuridController {
     @Post()
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
-    async create(@Body() dto: CreateMuridDto, @Res() res) {
-        const result = await this.muridService.create(dto);
+    @UseInterceptors(FileInterceptor('foto'))
+    async create(@Body() dto: CreateMuridDto, @Res() res, @UploadedFile() file: Express.Multer.File) {
+        const result = await this.muridService.create(dto, file);
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }
 
