@@ -1,76 +1,79 @@
 'use client'
 import { useState } from 'react'
 import AddNilaiModal from './inputNilaiModal'
-const StudentTable = () => {
-  const kelompokSiswa = [
+import { Button, Table, Tag, Modal, Input } from 'antd'
+
+const StudentTable = ({ siswa, fetching }) => {
+  console.log(siswa.map(index => index.rapor.length));
+  const columns = [
     {
-      id: 1,
-      siswa: {
-        nis: '1234567890',
-        nama: 'John Doe',
-      },
-      statusNilai: 'Belum Diinput',
+      title: 'No',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => index + 1,
     },
     {
-      id: 2,
-      siswa: {
-        nis: '0987654321',
-        nama: 'Jane Doe',
-      },
-      statusNilai: 'Sudah Diinput',
+      title: 'NIS',
+      dataIndex: 'nis',
+      key: 'nis',
+      // sorter: (a, b) => a.nip.localeCompare(b.nip),
     },
     {
-      id: 3,
-      siswa: {
-        nis: '5432167890',
-        nama: 'Alice Smith',
+      title: 'Nama Siswa',
+      dataIndex: 'nama',
+      key: 'nama',
+      // sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Status Raport',
+      dataIndex: 'statusSemester',
+      key: 'statusSemester',
+      render: (text, record) => {
+        if (record.rapor && record.rapor[0].length === 0) {
+          return (
+            <Tag color="green">
+              Aktif
+            </Tag>
+          );
+        } else {
+          return (
+            <Tag color="yellow">
+              Tidak Aktif
+            </Tag>
+          );
+        }
       },
-      statusNilai: 'Belum Diinput',
+
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => {
+              const url = `/guru/rombel/${record.id}`;
+              window.location.href = url;
+            }}
+            style={{ marginRight: 8 }}
+          >
+            <i className="fa fa-plus" style={{ marginRight: '8px' }}></i> Input Catatan Raport
+          </Button>
+        </span>
+      ),
     },
   ]
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
-
-  const openModal = () => {
-    setIsOpenAddModal(true)
-  }
-
-  const closeModal = () => {
-    setIsOpenAddModal(false)
-  }
 
   return (
     <>
-      <table className="table table-bordered table-striped" id="kelompok_siswa">
-        <thead>
-          <tr>
-            <th className="text-center">No</th>
-            <th className="text-center">NIS</th>
-            <th className="text-center">Nama Siswa</th>
-            <th className="text-center">Status Nilai</th>
-            <th className="text-center">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {kelompokSiswa.map((item, index) => (
-            <tr key={index} className="text-center">
-              <td>{index + 1}</td>
-              <td>{item.siswa.nis}</td>
-              <td>{item.siswa.nama}</td>
-              <td>{item.statusNilai}</td>
-              <td>
-                <button onClick={openModal} className="btn btn-success btn-sm">
-                  <span className="glyphicon glyphicon-plus"></span> Input Nilai
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <AddNilaiModal
-        isOpen={isOpenAddModal}
-        closeModal={closeModal}
-      ></AddNilaiModal>
+      <Table
+        columns={columns}
+        dataSource={siswa}
+        loading={fetching}
+        scroll={{ x: 1000 }}
+      />
     </>
   )
 }
