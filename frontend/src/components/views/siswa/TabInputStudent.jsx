@@ -8,23 +8,16 @@ import {
   Row,
   Col,
   Image,
+  Modal,
 } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import { useState } from 'react'
-import Swal from 'sweetalert2'
 import { PlusOutlined } from '@ant-design/icons'
+import { getBase64 } from '@/lib/helper'
 const { Option } = Select
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = (error) => reject(error)
-  })
-
-function TabInputSiswa() {
+function TabInputSiswa({ refetch }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
@@ -35,30 +28,59 @@ function TabInputSiswa() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
-      setIsLoading(true)
-      const result = await Swal.fire({
-        title: 'Apakah Data Sudah Benar?',
-        text: 'Anda akan menambah siswa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, tambah!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
-      })
-
-      if (result.isConfirmed) {
-        await siswaService.create(values, token)
-        form.resetFields()
-        setIsLoading(false)
-        Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success')
+      // Mengambil binary data foto dari getBase64
+      let payload
+      if (fileList[0]?.originFileObj) {
+        const fotoBinary = fileList[0].originFileObj
+        payload = {
+          ...values,
+          foto: fotoBinary, // Menggunakan binary data foto
+        }
+      } else {
+        payload = {
+          ...values,
+        }
       }
+
+      Modal.confirm({
+        title: 'Apakah Data Sudah Benar?',
+        content: 'Anda akan menambah siswa!',
+        okText: 'Ya, tambah!',
+        cancelText: 'Tidak, cek lagi',
+        onOk: async () => {
+          try {
+            setIsLoading(true)
+            await siswaService.create(payload, token)
+            form.resetFields()
+            setIsLoading(false)
+            refetch()
+            Modal.success({
+              title: 'Data Ditambahkan!',
+              content: 'Siswa telah ditambahkan.',
+            })
+          } catch (err) {
+            setIsLoading(false)
+            Modal.error({
+              title: 'Error',
+              content: err,
+            })
+          }
+        },
+        onCancel: () => {
+          setIsLoading(false)
+        },
+      })
     } catch (error) {
       setIsLoading(false)
-      Swal.fire('Error', 'NIS/NISN Sudah Terdaftar', 'error')
+      console.log(error)
+      Modal.error({
+        title: 'Error',
+        content: 'Terjadi kesalahan',
+      })
     }
   }
 
-  const jenisKelaminOptions = ['LAKI-LAKI', 'PEREMPUAN']
+  const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
   const agamaOptions = [
     'ISLAM',
     'KRISTEN',
@@ -67,7 +89,7 @@ function TabInputSiswa() {
     'BUDHA',
     'KONGHUCU',
   ]
-  const statusOptions = ['AKTIF', 'TIDAK AKTIF']
+  const statusOptions = ['AKTIF', 'TIDAK_AKTIF']
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -237,13 +259,16 @@ function TabInputSiswa() {
             <Form.Item
               label="Foto"
               name="foto"
-              rules={[{ required: true, message: 'Upload Foto' }]}
+              rules={[{ message: 'Upload Foto' }]}
+              valuePropName="fileList" // Menyimpan fileList ke dalam form field "foto"
+              getValueFromEvent={(e) => e.fileList}
             >
               <>
                 <Upload
                   listType="picture-card"
                   fileList={fileList}
                   accept="image/*"
+                  multiple={true}
                   onPreview={handlePreview}
                   onChange={handleChange}
                 >

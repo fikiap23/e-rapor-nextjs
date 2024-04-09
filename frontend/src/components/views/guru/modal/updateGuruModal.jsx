@@ -1,120 +1,98 @@
+import { Modal, Form, Input, Select, Button } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import teacherService from '@/services/guru.service'
-import React, { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
+import { useState, useEffect } from 'react'
+
+const { Option } = Select
+
 const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
-  const [nip, setNip] = useState('')
-  const [nama, setNama] = useState('')
-  const [jenisKelamin, setJenisKelamin] = useState('')
+  const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
   const { token } = useAuth()
 
   useEffect(() => {
     if (isOpen && teacherData) {
-      setNip(teacherData.nip)
-      setNama(teacherData.nama)
-      setJenisKelamin(teacherData.jenisKelamin)
+      form.setFieldsValue({
+        nip: teacherData.nip,
+        nama: teacherData.nama,
+        jenisKelamin: teacherData.jenisKelamin,
+      })
     }
-  }, [isOpen, teacherData])
+  }, [isOpen, teacherData, form])
 
-  const handleNipChange = (event) => {
-    setNip(event.target.value)
-  }
-
-  const handleNamaChange = (event) => {
-    setNama(event.target.value)
-  }
-
-  const handleJenisKelaminChange = (event) => {
-    setJenisKelamin(event.target.value)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    try {
-      setIsLoading(true)
-      const payload = {
-        nip: nip,
-        nama: nama,
-        jenisKelamin: jenisKelamin,
-      }
-
-      await teacherService.update(token, teacherData.id, payload)
-      refetch()
-      Swal.fire('Update Berhasil!', ` Data guru telah diperbarui`, 'success')
-
-      closeModal()
-      setIsLoading(false)
-    } catch (error) {
-      Swal.fire('Oops...', error, 'error')
-      setIsLoading(false)
-    }
+  const handleSubmit = async () => {
+    const values = await form.validateFields()
+    setIsLoading(true)
+    await teacherService
+      .update(token, teacherData.id, values)
+      .then((res) => {
+        Modal.success({
+          title: 'Update Berhasil!',
+          content: 'Data guru telah diperbarui',
+        })
+        setIsLoading(false)
+        form.resetFields()
+        closeModal()
+        refetch()
+      })
+      .catch((error) => {
+        Modal.error({
+          title: 'Oops...',
+          content: 'Terjadi kesalahan: ' + error,
+        })
+        setIsLoading(false)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
-    <div className={`modal fade  ${isOpen ? 'in show-modal' : ''}`}>
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h4 className="modal-title">Guru</h4>
-            <button className="close" onClick={closeModal}>
-              &times;
-            </button>
-          </div>
-          <div className="modal-body">
-            <div role="form">
-              <div className="box-body">
-                <div className="form-group">
-                  <label htmlFor="nip">NIP atau NIK</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="nip"
-                    name="nip"
-                    placeholder="Masukan Nip atau Nik"
-                    value={nip}
-                    onChange={handleNipChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="nama">Nama</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="nama"
-                    name="nama"
-                    placeholder="Masukan Nama"
-                    value={nama}
-                    onChange={handleNamaChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Jenis Kelamin</label>
-                  <select
-                    required
-                    name="jk"
-                    className="form-control"
-                    value={jenisKelamin}
-                    onChange={handleJenisKelaminChange}
-                  >
-                    <option value="">--- Pilih Jenis Kelamin ---</option>
-                    <option value="LAKI_LAKI">Pria</option>
-                    <option value="PEREMPUAN">Wanita</option>
-                  </select>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button onClick={handleSubmit} className="btn btn-primary">
-                  {isLoading ? 'Menyimpan...' : 'Simpan'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal
+      visible={isOpen}
+      title="Guru"
+      onCancel={closeModal}
+      footer={[
+        <Button key="cancel" onClick={closeModal}>
+          Batal
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          loading={isLoading}
+          onClick={handleSubmit}
+        >
+          Simpan
+        </Button>,
+      ]}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="nip"
+          label="NIP atau NIK"
+          rules={[{ required: true, message: 'Masukan Nip atau Nik' }]}
+        >
+          <Input type="number" placeholder="Masukan Nip atau Nik" />
+        </Form.Item>
+        <Form.Item
+          name="nama"
+          label="Nama"
+          rules={[{ required: true, message: 'Masukan Nama' }]}
+        >
+          <Input type="text" placeholder="Masukan Nama" />
+        </Form.Item>
+        <Form.Item
+          name="jenisKelamin"
+          label="Jenis Kelamin"
+          rules={[{ required: true, message: 'Pilih Jenis Kelamin' }]}
+        >
+          <Select placeholder="Pilih Jenis Kelamin">
+            <Option value="LAKI_LAKI">Pria</Option>
+            <Option value="PEREMPUAN">Wanita</Option>
+          </Select>
+        </Form.Item>
+      </Form>
+    </Modal>
   )
 }
 

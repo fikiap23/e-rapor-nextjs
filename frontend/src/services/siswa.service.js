@@ -8,6 +8,7 @@ const siswaService = {
       const response = await axios.post(`${BASE_URL}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       })
       return response.data.data
@@ -18,10 +19,10 @@ const siswaService = {
 
   update: async (token, id, data) => {
     try {
-      console.log(id)
       const response = await axios.put(`${BASE_URL}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       })
       return response.data.data
@@ -30,9 +31,24 @@ const siswaService = {
     }
   },
 
+  removeRombel: async (token, id) => {
+    try {
+      console.log(token)
+      const response = await axios.put(`${BASE_URL}/clear-rombel/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw (
+        error.response?.data?.message || 'Gagal mengeluarkan siswa dari rombel'
+      )
+    }
+  },
+
   updateStatusAkun: async (token, id, data) => {
     try {
-      console.log(id)
       const response = await axios.put(`${apiUrl}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,

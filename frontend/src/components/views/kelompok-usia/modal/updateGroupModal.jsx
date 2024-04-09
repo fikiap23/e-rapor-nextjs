@@ -1,8 +1,6 @@
 import { Modal, Form, Input, Button } from 'antd'
-import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombel.service'
 import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 
 const UpdateGroupModal = ({
   isOpen,
@@ -26,29 +24,26 @@ const UpdateGroupModal = ({
       await rombelService
         .updateKategori(token, selectedKategori.id, values)
         .then((result) => {
-          Swal.fire({
-            icon: 'success',
+          Modal.success({
             title: 'Berhasil!',
-            text: 'Data kelompok usia rombel telah diperbarui',
+            content: 'Data kelompok usia rombel telah diperbarui',
           })
           refetch()
           closeModal()
           setIsLoading(false)
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: 'Terjadi kesalahan: ' + error,
+            content: 'Terjadi kesalahan: ' + error,
           })
           setIsLoading(false)
         })
     } catch (error) {
       setIsLoading(false)
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: 'Terjadi kesalahan',
+        content: 'Terjadi kesalahan',
       })
     }
   }

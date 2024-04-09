@@ -55,6 +55,19 @@ const cpTpService = {
       throw error.response?.data?.message || 'Gagal Diupdate!'
     }
   },
+
+  getCpTp: async (token) => {
+    try {
+      const response = await axios.get(`${BASE_URL_CP}/with-tp`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Ditambahkan!'
+    }
+  },
 }
 
 export default cpTpService

@@ -1,225 +1,325 @@
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  Upload,
+  Row,
+  Col,
+  Image,
+  Modal,
+} from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
-import React, { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { PlusOutlined } from '@ant-design/icons'
+import moment from 'moment'
+import { apiUrl } from '@/services/apiUrls'
+import { getBase64 } from '@/lib/helper'
+const { Option } = Select
 
-function formatDate(dateString) {
-  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
-  const months = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember',
-  ]
-
-  const date = new Date(dateString)
-  const day = days[date.getUTCDay()]
-  const dateOfMonth = date.getUTCDate()
-  const month = months[date.getUTCMonth()]
-  const year = date.getUTCFullYear()
-
-  return `${day}, ${dateOfMonth} ${month} ${year}`
-}
-
-function TabUpdateSiswa() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const idStudent = searchParams.get('id')
+const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
   const { token } = useAuth()
-  const [formData, setFormData] = useState({
-    nisn: '',
-    nis: '',
-    nama: '',
-    jenisKelamin: '',
-    tempatLahir: '',
-    tanggalLahir: '',
-    alamat: '',
-    tanggalMasuk: '',
-    tinggiBadan: '',
-    beratBadan: '',
-    foto: '',
-    namaAyah: '',
-    namaIbu: '',
-    pekerjaanAyah: '',
-    pekerjaanIbu: '',
-    agama: 'ISLAM',
-    status: 'AKTIF',
-  })
+  const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [fileList, setFileList] = useState([])
 
   useEffect(() => {
-    if (idStudent) {
-      fetchStudentData(idStudent)
-    }
-  }, [idStudent])
+    form.setFieldsValue({
+      id: dataSiswa.id,
+      nisn: dataSiswa.nisn,
+      nis: dataSiswa.nis,
+      nama: dataSiswa.nama,
+      tempatLahir: dataSiswa.tempatLahir,
+      tanggalLahir: moment(dataSiswa.tanggalLahir),
+      alamat: dataSiswa.alamat,
+      noHp: dataSiswa.noHp,
+      agama: dataSiswa.agama,
+      jenisKelamin: dataSiswa.jenisKelamin,
+      namaAyah: dataSiswa.namaAyah,
+      namaIbu: dataSiswa.namaIbu,
+      pekerjaanAyah: dataSiswa.pekerjaanAyah,
+      pekerjaanIbu: dataSiswa.pekerjaanIbu,
+      tanggalMasuk: moment(dataSiswa.tanggalMasuk),
+      tinggiBadan: dataSiswa.tinggiBadan,
+      beratBadan: dataSiswa.beratBadan,
+      status: dataSiswa.status,
+    })
+    setFileList(
+      dataSiswa.foto ? [{ uid: '-1', url: `${apiUrl}/${dataSiswa.foto}` }] : []
+    )
+  }, [dataSiswa, form])
 
-  const fetchStudentData = async (id) => {
+  const handleSubmit = async () => {
     try {
-      const response = await siswaService.getById(id, token)
-      if (response.data) {
-        setFormData(response.data)
+      const values = await form.validateFields()
+      // Mengambil binary data foto dari getBase64
+      let payload
+      if (fileList[0]?.originFileObj) {
+        const fotoBinary = fileList[0].originFileObj
+        payload = {
+          ...values,
+          foto: fotoBinary, // Menggunakan binary data foto
+        }
       } else {
-        console.log('Data tidak ditemukan')
+        payload = {
+          ...values,
+        }
       }
-    } catch (error) {
-      console.error('Error:', error.message)
-    }
-  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const result = await Swal.fire({
+      Modal.confirm({
         title: 'Apakah Data Sudah Benar?',
-        text: 'Anda akan mengubah data siswa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, ubah!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
+        content: 'Anda akan mengubah siswa!',
+        okText: 'Ya, ubah!',
+        cancelText: 'Tidak, cek lagi',
+        onOk: async () => {
+          setIsLoading(true)
+          await siswaService
+            .update(token, dataSiswa.id, payload)
+            .then((res) => {
+              setIsLoading(false)
+              Modal.success({
+                title: 'Data Diubah!',
+                content: 'Siswa telah diubah.',
+              })
+              refetch()
+            })
+            .catch((err) => {
+              setIsLoading(false)
+              Modal.error({
+                content: err,
+                title: 'Oops...',
+              })
+            })
+        },
       })
-
-      if (result.isConfirmed) {
-        await siswaService.update(token, idStudent, formData)
-        // window.history.back();
-        console.log(formData)
-        // router.push('/admin');
-        Swal.fire('Data Diubah!', 'Data siswa telah diubah.', 'success')
-      }
     } catch (error) {
-      console.error('Error:', error.message)
-      Swal.fire('Error', 'NIS/NISN Sudah Terdaftar', 'error')
+      console.log(error)
+      Modal.error({
+        content: 'Terjadi kesalahan',
+        title: 'Oops...',
+      })
     }
   }
+  const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
+  const agamaOptions = [
+    'ISLAM',
+    'KRISTEN',
+    'KATOLIK',
+    'HINDU',
+    'BUDHA',
+    'KONGHUCU',
+  ]
+  const statusOptions = ['AKTIF', 'TIDAK AKTIF']
 
-  const labels = {
-    nis: 'NIS',
-    nisn: 'NISN',
-    nama: 'Nama',
-    jenisKelamin: 'Jenis Kelamin',
-    tempatLahir: 'Tempat Lahir',
-    tanggalLahir: 'Tanggal Lahir',
-    alamat: 'Alamat',
-    tanggalMasuk: 'Tanggal Masuk',
-    tinggiBadan: 'Tinggi Badan',
-    beratBadan: 'Berat Badan',
-    foto: 'Foto',
-    namaAyah: 'Nama Ayah',
-    namaIbu: 'Nama Ibu',
-    pekerjaanAyah: 'Pekerjaan Ayah',
-    pekerjaanIbu: 'Pekerjaan Ibu',
-    agama: 'Agama',
-    status: 'Status',
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
   }
-
-  const jenisKelaminOptions = ['LAKI-LAKI', 'PEREMPUAN']
-  const statusOptions = ['AKTIF', 'TIDAK-AKTIF']
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: 'none',
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  )
 
   return (
-    <div
-      className="active tab-pane p-px"
-      style={{ padding: '10px' }}
-      id="input-siswa"
-    >
-      <div className="box-body">
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            {Object.keys(formData).map((key, index) => (
-              <div className="col-md-6" key={index}>
-                <div className="form-group">
-                  <label htmlFor={key}>
-                    {key.includes('tanggal') ? (
-                      <span>
-                        {' '}
-                        {labels[key]} Sebelumnya:{' '}
-                        <b className="text-danger">
-                          {formatDate(formData[key])}
-                        </b>
-                      </span>
-                    ) : (
-                      labels[key]
-                    )}
-                  </label>
+    <div style={{ padding: '20px' }}>
+      <Form form={form} onFinish={handleSubmit} layout="vertical">
+        <Row gutter={16}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label="NIS"
+              name="nis"
+              rules={[{ required: true, message: 'Masukkan NIS' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item
+              label="NISN"
+              name="nisn"
+              rules={[{ required: true, message: 'Masukkan NISN' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item
+              label="Nama"
+              name="nama"
+              rules={[{ required: true, message: 'Masukkan Nama' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Jenis Kelamin"
+              name="jenisKelamin"
+              rules={[{ required: true, message: 'Pilih Jenis Kelamin' }]}
+            >
+              <Select>
+                {jenisKelaminOptions.map((option, index) => (
+                  <Option key={index} value={option}>
+                    {option}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Tempat Lahir"
+              name="tempatLahir"
+              rules={[{ required: true, message: 'Masukkan Tempat Lahir' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Tanggal Lahir"
+              name="tanggalLahir"
+              rules={[{ required: true, message: 'Pilih Tanggal Lahir' }]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item
+              label="Nama Ayah"
+              name="namaAyah"
+              rules={[{ required: true, message: 'Masukkan Nama Ayah' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Nama Ibu"
+              name="namaIbu"
+              rules={[{ required: true, message: 'Masukkan Nama Ibu' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Pekerjaan Ayah"
+              name="pekerjaanAyah"
+              rules={[{ required: true, message: 'Masukkan Pekerjaan Ayah' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label="Pekerjaan Ibu"
+              name="pekerjaanIbu"
+              rules={[{ required: true, message: 'Masukkan Pekerjaan Ibu' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Alamat"
+              name="alamat"
+              rules={[{ required: true, message: 'Masukkan Alamat' }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item
+              label="Tanggal Masuk"
+              name="tanggalMasuk"
+              rules={[{ required: true, message: 'Pilih Tanggal Masuk' }]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item
+              label="Tinggi Badan"
+              name="tinggiBadan"
+              rules={[{ required: true, message: 'Masukkan Tinggi Badan' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item
+              label="Berat Badan"
+              name="beratBadan"
+              rules={[{ required: true, message: 'Masukkan Berat Badan' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
 
-                  {key === 'jenisKelamin' ? (
-                    <select
-                      name={key}
-                      className="form-control"
-                      id={key}
-                      onChange={handleChange}
-                      value={formData[key]}
-                      required
-                    >
-                      <option value="">Pilih Status</option>
-                      {jenisKelaminOptions.map((option, index) => (
-                        <option key={index} value={option.replace('-', '_')}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : key === 'status' ? (
-                    <select
-                      name={key}
-                      className="form-control"
-                      id={key}
-                      onChange={handleChange}
-                      value={formData[key]}
-                      required
-                    >
-                      <option value="">Pilih Jenis Kelamin</option>
-                      {statusOptions.map((option, index) => (
-                        <option key={index} value={option.replace('-', '_')}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={
-                        key.includes('nis')
-                          ? 'number'
-                          : key.includes('tanggal')
-                          ? 'date'
-                          : 'text'
-                      }
-                      name={key}
-                      className={`form-control ${
-                        (key === 'id' && 'hidden') ||
-                        (key === 'idRombel' && 'hidden')
-                      }`}
-                      value={formData[key]}
-                      onChange={handleChange}
-                      readOnly={key === 'agama'}
-                      required={!key.includes('tanggal') && key !== 'idRombel'}
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="box-footer">
-            <button type="submit" className="btn btn-primary pull-left">
-              Simpan
-            </button>
-          </div>
-        </form>
-      </div>
+            <Form.Item
+              label="Agama"
+              name="agama"
+              rules={[{ required: true, message: 'Pilih Agama' }]}
+            >
+              <Select>
+                {agamaOptions.map((option, index) => (
+                  <Option key={index} value={option}>
+                    {option}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Status"
+              name="status"
+              rules={[{ required: true, message: 'Pilih Status' }]}
+            >
+              <Select>
+                {statusOptions.map((option, index) => (
+                  <Option key={index} value={option}>
+                    {option}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Foto"
+              name="foto"
+              rules={[{ message: 'Upload Foto' }]}
+              valuePropName="fileList" // Menyimpan fileList ke dalam form field "foto"
+              getValueFromEvent={(e) => e.fileList}
+            >
+              <>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  accept="image/*"
+                  multiple={true}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                >
+                  {fileList.length > 0 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{ display: 'none' }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(''),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+              </>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={isLoading}>
+            Simpan
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   )
 }

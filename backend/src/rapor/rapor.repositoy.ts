@@ -37,7 +37,7 @@ export class RaporRepository {
 
     async checkIsRaporExist(idMurid: string, idSemester: string) {
         const rapor = await this.raporQuery.findByIdMuridAndSemester(idMurid, idSemester);
-        if (rapor) throw new BadRequestException('Rapor sudah ada');
+        if (rapor && rapor.length > 0) throw new BadRequestException('Rapor sudah ada');
         return
     }
 
@@ -70,6 +70,10 @@ export class RaporRepository {
         if (rapor.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         return await this.raporQuery.updateById(id, dto);
+    }
+
+    async findByIdRombelAndSemester(idRombel: string, idSemester: string) {
+        return await this.raporQuery.findByIdRombelAndSemester(idRombel, idSemester)
     }
 
 }

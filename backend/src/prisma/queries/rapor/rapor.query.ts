@@ -55,11 +55,35 @@ export class RaporQuery extends DbService {
         })
     }
 
+    async findByIdRombelAndSemester(idRombel: string, idSemester: string) {
+        const result = await this.prisma.murid.findMany({
+            where: { idRombel }, include: {
+                rapor: {
+                    where: { idSemester },
+                    include: {
+                        guru: true,
+                        sekolah: true,
+                        semester: true,
+                        rombel: {
+                            include: {
+                                kategoriRombel: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return result
+    }
+
     async create(idSekolah: string, idRombel: string, idGuru: string, payload: CreateRaporDto) {
-        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel, idGuru } })
+        const rombelSemesterGuruId = await this.prisma.rombelSemesterGuru.findFirstOrThrow({ where: { idRombel, idGuru, idSemester: payload.idSemester } })
+        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel, idGuru, idRombelSemesterGuru: rombelSemesterGuruId.id } })
     }
 
     async updateById(id: string, payload: UpdateRaporDto) {
         return await this.prisma.rapor.update({ where: { id }, data: payload })
     }
+
 }

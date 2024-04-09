@@ -99,6 +99,23 @@ const rombelService = {
     }
   },
 
+  updateRombelSemesterGuru: async (token, id, data) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/rombel-semester-guru/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Gagal Di Update!'
+    }
+  },
+
   deleteRombelSemesterGuru: async (token, id) => {
     try {
       const response = await axios.delete(

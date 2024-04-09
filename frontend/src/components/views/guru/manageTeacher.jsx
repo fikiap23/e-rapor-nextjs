@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import Swal from 'sweetalert2'
+import { Button, Table, Tag, Modal, Input } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import AddGuruModal from './modal/addGuruModal'
 import UpdateGuruModal from './modal/updateGuruModal'
 import useAuth from '@/hooks/useAuth'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { useGetAllTeacherData } from '@/hooks/useTeacher'
 import teacherService from '@/services/guru.service'
+
+const { confirm } = Modal
 
 const ManageTeacher = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
@@ -19,6 +20,15 @@ const ManageTeacher = () => {
     isFetching: isFetchingTeacher,
     refetch: refetchTeacher,
   } = useGetAllTeacherData(token)
+
+  const [searchText, setSearchText] = useState('')
+  const filteredTeachers = listTeacher.filter((teacher) =>
+    Object.values(teacher).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openModal = () => {
     setIsAddModalOpen(true)
@@ -37,135 +47,151 @@ const ManageTeacher = () => {
     setIsUpdateModalOpen(false)
   }
 
+  const showConfirm = (title, content, onOk) => {
+    confirm({
+      title,
+      icon: <ExclamationCircleOutlined />,
+      content,
+      onOk,
+      onCancel() {},
+    })
+  }
+
   const handleNonactiveUserClick = async (idUser, status) => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: `Anda akan ${status} pengguna ini!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: `Ya, ${status}!`,
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    showConfirm(
+      'Apakah Anda yakin?',
+      `Anda akan MENG${status}kAN pengguna ini!`,
+      async () => {
         const payload = {
           status,
         }
         await teacherService.updateStatusAkun(token, idUser, payload)
         refetchTeacher()
-        Swal.fire(
-          'Update Status!',
-          ` Status pengguna telah diubah menjadi ${status}`,
-          'success'
-        )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan status pengguna.', 'error')
+        Modal.success({
+          content: `Status pengguna telah diubah menjadi ${status}`,
+        })
       }
-    })
+    )
   }
 
   const handleDelete = async (id) => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus data guru ini!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const deleteResult = await teacherService.delete(token, id)
-        console.log(deleteResult)
-        if (deleteResult.message === 'OK') {
-          refetchTeacher()
-          Swal.fire('Terhapus!', 'Data guru telah berhasil dihapus.', 'success')
-        }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Data guru tidak terhapus.', 'error')
+    showConfirm(
+      'Apakah Anda yakin?',
+      'Anda akan menghapus data guru ini!',
+      async () => {
+        await teacherService
+          .delete(token, id)
+          .then((res) => {
+            refetchTeacher()
+            Modal.success({
+              title: 'Success',
+              content: 'Data guru telah berhasil dihapus.',
+            })
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
       }
-    })
+    )
   }
+
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: 'NIP',
+      dataIndex: 'nip',
+      key: 'nip',
+      sorter: (a, b) => a.nip.localeCompare(b.nip),
+    },
+    {
+      title: 'Nama',
+      dataIndex: 'nama',
+      key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Status User',
+      dataIndex: 'status',
+      key: 'status',
+      filters: [
+        {
+          text: 'AKTIF',
+          value: 'AKTIF',
+        },
+        {
+          text: 'TIDAK AKTIF',
+          value: 'TIDAK_AKTIF',
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      render: (text, record) => (
+        <Tag color={record.status === 'AKTIF' ? 'green' : 'yellow'}>
+          {record.status}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => openUpdateModal(record)}
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </Button>
+          <Button onClick={() => handleDelete(record.id)} danger>
+            Hapus
+          </Button>
+          <Button
+            type={record.status === 'AKTIF' ? 'default' : 'primary'}
+            onClick={() =>
+              handleNonactiveUserClick(
+                record.idUser,
+                record.status === 'AKTIF' ? 'TIDAK_AKTIF' : 'AKTIF'
+              )
+            }
+            style={{ marginLeft: 8 }}
+          >
+            {record.status === 'AKTIF' ? 'Nonactive' : 'Active'} User
+          </Button>
+        </span>
+      ),
+    },
+  ]
 
   return (
     <>
       <div className="box-body">
         <div style={{ margin: '0 20px 20px 20px' }}>
-          <button type="button" className="btn btn-success" onClick={openModal}>
-            <i className="icon fa fa-plus"></i> Tambah
-          </button>
+          <Button type="primary" onClick={openModal}>
+            Tambah
+          </Button>
         </div>
-
-        {isFetchingTeacher && <Loading />}
-        {!isFetchingTeacher && listTeacher.length === 0 && (
-          <EmptyDataIndicator message="Tidak ada data guru" />
-        )}
-        {!isFetchingTeacher && listTeacher && listTeacher.length > 0 && (
-          <table id="guru" className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>NIP</th>
-                <th>Nama</th>
-                <th>Status User</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listTeacher.map((teacher, index) => (
-                <tr key={teacher.id}>
-                  <td>{index + 1}</td>
-                  <td>{teacher.nip}</td>
-                  <td>{teacher.nama}</td>
-                  <td>
-                    <small
-                      className={`label pull-center ${
-                        teacher.status === 'AKTIF' ? 'bg-green' : 'bg-yellow'
-                      }`}
-                    >
-                      {teacher.status}
-                    </small>
-                  </td>
-                  <td>
-                    <button
-                      style={{ marginRight: '2px', marginLeft: '2px' }}
-                      className="btn btn-primary btn-sm edit"
-                      onClick={() => openUpdateModal(teacher)}
-                    >
-                      <i className="icon fa fa-edit"></i>
-                    </button>
-                    <button
-                      style={{ marginRight: '2px', marginLeft: '2px' }}
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(teacher.id)}
-                    >
-                      <i className="icon fa fa-trash"></i>
-                    </button>
-                    <button
-                      style={{ marginRight: '2px', marginLeft: '2px' }}
-                      className={`btn btn-${
-                        teacher.status === 'AKTIF' ? 'warning' : 'success'
-                      } btn-sm`}
-                      onClick={
-                        teacher.status === 'AKTIF'
-                          ? () =>
-                              handleNonactiveUserClick(
-                                teacher.idUser,
-                                'TIDAK_AKTIF'
-                              )
-                          : () =>
-                              handleNonactiveUserClick(teacher.idUser, 'AKTIF')
-                      }
-                    >
-                      <span className="glyphicon glyphicon-user"></span>{' '}
-                      {teacher.status === 'AKTIF' ? 'Nonactive' : 'Active'} User
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <div style={{ margin: '0 20px 20px 20px' }}>
+          <Input
+            placeholder="Cari guru..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 200, marginRight: 10 }}
+          />
+        </div>
+        <Table
+          columns={columns}
+          dataSource={filteredTeachers}
+          loading={isFetchingTeacher}
+          scroll={{ x: 1000 }}
+        />
       </div>
       {/* add guru */}
       <AddGuruModal
