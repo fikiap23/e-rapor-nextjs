@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { Table, Button, Input } from 'antd'
+import { useState } from 'react'
+import { Table, Button, Input, Modal } from 'antd'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import UpdateGroupModal from './modal/updateGroupModal'
-import Swal from 'sweetalert2'
 import rombelService from '@/services/rombel.service'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 
@@ -47,32 +46,36 @@ const AgeGroupView = () => {
   }
 
   const handleDelete = async (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus data kelompok usia ini!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      content: 'Anda akan menghapus data kelompok usia ini!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
         try {
-          const deleteResult = await rombelService.deleteKategori(token, id)
-          if (deleteResult.message === 'OK') {
-            refetchKategoriRombel()
-            Swal.fire(
-              'Terhapus!',
-              'Data kelompok telah berhasil dihapus.',
-              'success'
-            )
-          }
+          await rombelService
+            .deleteKategori(token, id)
+            .then(() => {
+              refetchKategoriRombel()
+              Modal.success({
+                title: 'Terhapus!',
+                content: 'Data kelompok telah berhasil dihapus.',
+              })
+            })
+            .catch((error) => {
+              Modal.error({
+                title: 'Terjadi Kesalahan',
+                content: error,
+              })
+            })
         } catch (error) {
-          Swal.fire('Terjadi Kesalahan', error, 'error')
+          Modal.error({
+            title: 'Oops...',
+            content: 'Terjadi Kesalahan',
+          })
         }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Data kelompok tidak terhapus.', 'error')
-      }
+      },
+      onCancel: () => {},
     })
   }
 

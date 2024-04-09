@@ -2,7 +2,6 @@ import { Modal, Form, Input, Button } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombel.service'
 import { useState } from 'react'
-import Swal from 'sweetalert2'
 
 const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
   const [form] = Form.useForm()
@@ -16,10 +15,9 @@ const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
       await rombelService
         .createKategori(token, values)
         .then((result) => {
-          Swal.fire({
-            icon: 'success',
+          Modal.success({
             title: 'Berhasil!',
-            text: 'Data kelompok usia rombel telah ditambahkan',
+            content: 'Data kelompok usia rombel telah ditambahkan',
           })
           form.resetFields()
           refetch()
@@ -27,19 +25,17 @@ const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
           setIsLoading(false)
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: 'Terjadi kesalahan: ' + error.toString(),
+            content: 'Terjadi kesalahan: ' + error,
           })
           setIsLoading(false)
         })
     } catch (error) {
       setIsLoading(false)
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: 'Terjadi kesalahan',
+        content: 'Terjadi kesalahan',
       })
     }
   }
