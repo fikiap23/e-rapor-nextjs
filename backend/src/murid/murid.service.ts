@@ -39,7 +39,7 @@ export class MuridService {
         return await this.muridRepository.createMany(data);
     }
 
-    async findOneStudentByIdRombel(id: string) {
-        return await this.muridRepository.findOneStudentByIdRombel(id);
+    async findOneStudentByIdRombelSemesterGuru(id: string) {
+        return await this.muridRepository.findOneStudentByIdRombelSemesterGuru(id);
     }
 }

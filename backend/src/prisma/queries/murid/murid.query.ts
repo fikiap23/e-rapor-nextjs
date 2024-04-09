@@ -115,7 +115,15 @@ export class MuridQuery extends DbService {
         }
     }
 
-    async findOneStudentByIdRombel(id: string) {
+    async findOneStudentByIdRombelSemesterGuru(id: string) {
+        const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!checkRombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
         const originalData = await this.prisma.rombelSemesterGuru.findUnique({
             where: {
                 id
@@ -129,7 +137,11 @@ export class MuridQuery extends DbService {
                             select: {
                                 nama: true,
                                 nis: true,
-                                rapor: true,
+                                rapor: {
+                                    where: {
+                                        idSemester: checkRombelSemesterGuru.idSemester
+                                    }
+                                },
                             }
                         }
                     }
@@ -149,7 +161,15 @@ export class MuridQuery extends DbService {
             ...originalData,
             rombel: {
                 id: originalData.rombel.id,
-                name: originalData.rombel.name
+                name: originalData.rombel.name,
+            },
+            semester: {
+                id: originalData.semester.id,
+                tahunAjaranAwal: originalData.semester.tahunAjaranAwal,
+                tahunAjaranAkhir: originalData.semester.tahunAjaranAkhir,
+                jenisSemester: originalData.semester.jenisSemester,
+                name: `${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester})`
+
             },
             murid: originalData.rombel.murid
         };

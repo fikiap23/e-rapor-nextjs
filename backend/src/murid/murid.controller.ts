@@ -81,12 +81,12 @@ export class MuridController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
-    @Get('semester-rombel/:id')
+    @Get('rombel-semester-guru/:id')
     async findOneStudentByIdRombel(@Res() res, @Param('id') id) {
-        const result = await this.muridService.findOneStudentByIdRombel(id);
+        const result = await this.muridService.findOneStudentByIdRombelSemesterGuru(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
-    
+
     @Get(':id')
     async findOne(@Res() res, @Param('id') id) {
         const result = await this.muridService.findOne(id);

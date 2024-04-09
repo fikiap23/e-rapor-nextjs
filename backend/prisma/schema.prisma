@@ -133,7 +133,7 @@ model Murid {
   pekerjaanAyah     String?
   pekerjaanIbu      String?
   status            StatusAkun          @default(AKTIF)
-  rapor             Rapor?
+  rapor             Rapor[]
   penilaianMingguan PenilaianMingguan[]
 
   // Relation
