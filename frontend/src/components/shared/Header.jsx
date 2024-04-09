@@ -1,7 +1,6 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
 import getTokenData from '@/lib/getTokenData'
-import Image from 'next/image'
 import React, { useState } from 'react'
 
 const Header = ({ toggleSidebar }) => {
@@ -47,29 +46,25 @@ const Header = ({ toggleSidebar }) => {
               }`}
             >
               <a href="#" className="dropdown-toggle" onClick={toggleDropdown}>
-                <Image
+                <img
                   src={
                     userData?.role === 'ADMIN'
                       ? '/images/admin.png'
                       : '/images/teacher.png'
                   }
-                  width={30}
-                  height={30}
-                  className="img-circle"
+                  className="user-image"
                   alt="User Image"
                 />
                 <span className="hidden-xs">{userData?.role}</span>
               </a>
               <ul className="dropdown-menu">
                 <li className="user-header">
-                  <Image
+                  <img
                     src={
                       userData?.role === 'ADMIN'
                         ? '/images/admin.png'
                         : '/images/teacher.png'
                     }
-                    width={30}
-                    height={30}
                     className="img-circle"
                     alt="User Image"
                   />
