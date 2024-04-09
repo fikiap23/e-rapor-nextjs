@@ -136,4 +136,8 @@ export class MuridRepository {
         return await this.muridQuery.findByNullIdRombel()
     }
 
+    async createMany(data: CreateMuridDto[]) {
+        return await this.muridQuery.createMany(data)
+    }
+
 }

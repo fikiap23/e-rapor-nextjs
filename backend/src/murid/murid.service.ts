@@ -34,4 +34,8 @@ export class MuridService {
     async removeRombelById(id: string) {
         return await this.muridRepository.removeRombelById(id);
     }
+
+    async createMany(data: CreateMuridDto[]) {
+        return await this.muridRepository.createMany(data);
+    }
 }

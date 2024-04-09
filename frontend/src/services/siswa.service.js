@@ -85,6 +85,19 @@ const siswaService = {
       throw error.response?.data?.message || 'Gagal mengambil data siswa'
     }
   },
+
+  createMany: async (token, data) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/bulk`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data.data
+    } catch (error) {
+      throw error.response?.data?.message || 'Siswa Gagal Ditambahkan'
+    }
+  },
 }
 
 export default siswaService
