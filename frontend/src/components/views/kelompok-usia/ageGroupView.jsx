@@ -1,13 +1,10 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { Table, Button } from 'antd'
+import { useState } from 'react'
+import { Table, Button, Input, Modal } from 'antd'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import UpdateGroupModal from './modal/updateGroupModal'
-import Swal from 'sweetalert2'
 import rombelService from '@/services/rombel.service'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 
 const AgeGroupView = () => {
@@ -21,11 +18,15 @@ const AgeGroupView = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
   const [selectedKategori, setSelectedKategori] = useState(null)
-  const [Kategories, setKategories] = useState([])
+  const [searchText, setSearchText] = useState('')
 
-  useEffect(() => {
-    setKategories(listKategoriRombel)
-  }, [listKategoriRombel])
+  const filteredKategories = listKategoriRombel.filter((semester) =>
+    Object.values(semester).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openModal = () => {
     setIsOpenAddModal(true)
@@ -45,32 +46,36 @@ const AgeGroupView = () => {
   }
 
   const handleDelete = async (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus data kelompok usia ini!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      content: 'Anda akan menghapus data kelompok usia ini!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
         try {
-          const deleteResult = await rombelService.deleteKategori(token, id)
-          if (deleteResult.message === 'OK') {
-            refetchKategoriRombel()
-            Swal.fire(
-              'Terhapus!',
-              'Data kelompok telah berhasil dihapus.',
-              'success'
-            )
-          }
+          await rombelService
+            .deleteKategori(token, id)
+            .then(() => {
+              refetchKategoriRombel()
+              Modal.success({
+                title: 'Terhapus!',
+                content: 'Data kelompok telah berhasil dihapus.',
+              })
+            })
+            .catch((error) => {
+              Modal.error({
+                title: 'Terjadi Kesalahan',
+                content: error,
+              })
+            })
         } catch (error) {
-          Swal.fire('Terjadi Kesalahan', error, 'error')
+          Modal.error({
+            title: 'Oops...',
+            content: 'Terjadi Kesalahan',
+          })
         }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Data kelompok tidak terhapus.', 'error')
-      }
+      },
+      onCancel: () => {},
     })
   }
 
@@ -106,13 +111,12 @@ const AgeGroupView = () => {
       render: (text, record) => (
         <>
           <Button
-            type="primary"
             onClick={() => openUpdateModal(record)}
             style={{ marginRight: 8 }}
           >
             Edit
           </Button>
-          <Button type="danger" onClick={() => handleDelete(record.id)}>
+          <Button danger onClick={() => handleDelete(record.id)}>
             Delete
           </Button>
         </>
@@ -143,9 +147,17 @@ const AgeGroupView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
+                    <Input
+                      placeholder="Cari kelompok usia..."
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      style={{ width: 200, marginRight: 10 }}
+                    />
+                  </div>
                   <Table
                     columns={columns}
-                    dataSource={Kategories}
+                    dataSource={filteredKategories}
                     rowKey="id"
                     loading={isFetchingKategoriRombel}
                     scroll={{ x: 800 }}

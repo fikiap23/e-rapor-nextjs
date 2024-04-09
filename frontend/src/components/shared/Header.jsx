@@ -1,11 +1,14 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
+import getTokenData from '@/lib/getTokenData'
+import Image from 'next/image'
 import React, { useState } from 'react'
 
 const Header = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { removeToken } = useAuth()
+  const { removeToken, token } = useAuth()
 
+  const userData = getTokenData(token)
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
@@ -44,17 +47,29 @@ const Header = ({ toggleSidebar }) => {
               }`}
             >
               <a href="#" className="dropdown-toggle" onClick={toggleDropdown}>
-                <img
-                  src="https://picsum.photos/200"
-                  className="user-image"
+                <Image
+                  src={
+                    userData?.role === 'ADMIN'
+                      ? '/images/admin.png'
+                      : '/images/teacher.png'
+                  }
+                  width={30}
+                  height={30}
+                  className="img-circle"
                   alt="User Image"
                 />
-                <span className="hidden-xs">User Role</span>
+                <span className="hidden-xs">{userData?.role}</span>
               </a>
               <ul className="dropdown-menu">
                 <li className="user-header">
-                  <img
-                    src="https://picsum.photos/200/300"
+                  <Image
+                    src={
+                      userData?.role === 'ADMIN'
+                        ? '/images/admin.png'
+                        : '/images/teacher.png'
+                    }
+                    width={30}
+                    height={30}
                     className="img-circle"
                     alt="User Image"
                   />

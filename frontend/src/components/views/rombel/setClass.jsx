@@ -1,4 +1,6 @@
+import { Button, Table } from 'antd'
 import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
+import Link from 'next/link'
 
 export default function SetClass({ rombels }) {
   return (
@@ -12,11 +14,7 @@ export default function SetClass({ rombels }) {
             <div key={rombel.id} className="col-sm-4">
               <div
                 className="box box-solid box-primary"
-                style={{
-                  height: '320px',
-                  overflowY: 'scroll',
-                  overflowX: 'scroll',
-                }}
+                style={{ height: '320px', overflow: 'auto' }}
               >
                 <div className="box-header with-border">
                   <h3
@@ -25,33 +23,29 @@ export default function SetClass({ rombels }) {
                   >
                     {rombel.name}
                   </h3>
-                  <button
-                    className="btn btn-default"
-                    style={{ float: 'right' }}
-                  >
-                    Lihat Siswa
-                  </button>
+                  <Link href={`/admin/rombel/read_student/${rombel.id}`}>
+                    <Button type="default" style={{ float: 'right' }}>
+                      Lihat Siswa
+                    </Button>
+                  </Link>
                 </div>
 
                 <div className="box-body">
-                  <table className="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th className="text-center">No</th>
-                        <th className="text-center">NIS</th>
-                        <th className="text-center">Nama</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rombel.murid.map((siswa, index) => (
-                        <tr key={siswa.id} className="text-center">
-                          <td>{index + 1}</td>
-                          <td>{siswa.nis}</td>
-                          <td>{siswa.nama}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <Table
+                    dataSource={rombel.murid}
+                    rowKey="id"
+                    pagination={false}
+                    bordered
+                  >
+                    <Table.Column
+                      title="No"
+                      dataIndex="id"
+                      key="id"
+                      render={(text, record, index) => index + 1}
+                    />
+                    <Table.Column title="NIS" dataIndex="nis" key="nis" />
+                    <Table.Column title="Nama" dataIndex="nama" key="nama" />
+                  </Table>
                 </div>
               </div>
             </div>

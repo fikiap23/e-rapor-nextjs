@@ -3,12 +3,10 @@ import { useState } from 'react'
 import AddSemesterModal from './addSemesterModal'
 import EditSemesterModal from './editSemesterModal'
 import useAuth from '@/hooks/useAuth'
-import Loading from '@/components/shared/Loading'
 import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
-import Swal from 'sweetalert2'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
-import { Table, Button, Tag, Space } from 'antd'
+import { Table, Button, Tag, Space, Input, Modal } from 'antd'
 const SemesterView = () => {
   const { token } = useAuth()
   const [selectedSemester, setSelectedSemester] = useState({})
@@ -20,8 +18,15 @@ const SemesterView = () => {
   } = useGetAllSemesterData(token)
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
-
+  const [searchText, setSearchText] = useState('')
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  const filteredSemesters = listSemester.filter((semester) =>
+    Object.values(semester).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const openModalAdd = () => {
     setIsOpenAddModal(true)
@@ -41,26 +46,28 @@ const SemesterView = () => {
   }
 
   const handleDelete = (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus semester!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await semesterService.delete(token, id)
-        refetchSemester()
-        Swal.fire('Data Dihapus!', 'Semester telah dihapus.', 'success')
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Dibatalkan',
-          'Tidak ada perubahan pada data semester.',
-          'error'
-        )
-      }
+      content: 'Anda akan menghapus semester!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await semesterService
+          .delete(token, id)
+          .then(() => {
+            Modal.success({
+              title: 'Success',
+              content: 'Data semester telah dihapus.',
+            })
+            refetchSemester()
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
+      },
     })
   }
 
@@ -156,11 +163,20 @@ const SemesterView = () => {
                       <i className="icon fa fa-plus"></i> Tambah
                     </button>
                   </div>
+                  <div style={{ margin: '0 20px 20px 20px' }}>
+                    <Input
+                      placeholder="Cari semester..."
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      style={{ width: 200, marginRight: 10 }}
+                    />
+                  </div>
+
                   <Table
                     bordered
                     scroll={{ x: 1000 }}
                     columns={columns}
-                    dataSource={listSemester}
+                    dataSource={filteredSemesters}
                     loading={isFetchingSemester}
                     pagination={{ pageSize: 10 }}
                     rowKey="id"

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Modal, Form, Input, Select, DatePicker, Switch, Button } from 'antd'
-import Swal from 'sweetalert2'
 import semesterService from '@/services/semester.service'
 
 const { Option } = Select
@@ -25,9 +24,9 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
       await semesterService
         .create(data, token)
         .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data semester telah ditambahkan',
+          Modal.success({
+            title: 'Add Berhasil!',
+            content: 'Data semester telah ditambahkan',
             position: 'bottom-center',
           })
           clearForm()
@@ -35,18 +34,16 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
           closeModal()
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: error,
+            content: 'Terdapat kesalahan saat menambahkan data semester',
             position: 'bottom-center',
           })
         })
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: 'Terdapat kesalahan saat menambahkan data semester',
+        content: 'Terdapat kesalahan saat menambahkan data semester',
         position: 'bottom-center',
       })
     }

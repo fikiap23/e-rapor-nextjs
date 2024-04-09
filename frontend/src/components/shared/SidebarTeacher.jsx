@@ -37,11 +37,11 @@ const SidebarTeacher = () => {
               <i className="fa fa-edit"></i> <span>Modul Ajar</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <a href="/guru/absensi">
               <i className="fa fa-calendar"></i> <span>Input Absen</span>
             </a>
-          </li>
+          </li> */}
 
           <li>
             <Link href="/guru/validation">
