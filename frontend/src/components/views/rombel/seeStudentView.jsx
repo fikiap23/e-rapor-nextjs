@@ -15,7 +15,7 @@ export default function SeeStudentView({ id }) {
     refetch: refetchRombel,
   } = useOneRombel(token, id)
   const [searchText, setSearchText] = useState('')
-  const filteredSiswas = siswas.filter((siswa) =>
+  const filteredSiswas = siswas?.filter((siswa) =>
     Object.values(siswa).some(
       (value) =>
         typeof value === 'string' &&
