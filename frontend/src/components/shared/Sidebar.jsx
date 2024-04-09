@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -10,14 +11,16 @@ const Sidebar = () => {
       <section className="sidebar">
         <div className="user-panel">
           <div className="pull-left image">
-            <img
-              src="https://picsum.photos/200"
+            <Image
+              src="/images/admin.png"
+              width={30}
+              height={30}
               className="img-circle"
               alt="User Image"
             />
           </div>
           <div className="pull-left info">
-            <p>John Doe</p>
+            <p>Admin</p>
             <a href="#">
               <i className="fa fa-circle text-success"></i> Online
             </a>
