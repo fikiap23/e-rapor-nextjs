@@ -307,7 +307,7 @@ model Rapor {
   sekolah    Sekolah  @relation(fields: [idSekolah], references: [id], onDelete: Cascade)
   idSemester String
   semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
-  idMurid    String   @unique
+  idMurid    String   
   murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
   idGuru     String
   guru       Guru     @relation(fields: [idGuru], references: [id])
