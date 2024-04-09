@@ -36,6 +36,14 @@ export class MuridController {
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }
 
+    @Post('bulk')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async createMany(@Body() dto: CreateMuridDto[], @Res() res) {
+        const result = await this.muridService.createMany(dto);
+        return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
+    }
+
     @Put('clear-rombel/:id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)

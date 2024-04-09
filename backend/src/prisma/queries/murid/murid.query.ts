@@ -65,4 +65,8 @@ export class MuridQuery extends DbService {
     async deleteById(id: string) {
         return await this.prisma.murid.delete({ where: { id } })
     }
+
+    async createMany(data: CreateMuridDto[]) {
+        return await this.prisma.murid.createMany({ data })
+    }
 }
