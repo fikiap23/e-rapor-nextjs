@@ -8,16 +8,16 @@ import {
   Row,
   Col,
   Image,
+  Modal,
 } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import { useState } from 'react'
-import Swal from 'sweetalert2'
 import { PlusOutlined } from '@ant-design/icons'
 import { getBase64 } from '@/lib/helper'
 const { Option } = Select
 
-function TabInputSiswa() {
+function TabInputSiswa({ refetch }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
@@ -29,42 +29,54 @@ function TabInputSiswa() {
     try {
       const values = await form.validateFields()
       // Mengambil binary data foto dari getBase64
-      const fotoBinary = fileList[0].originFileObj
-
-      const payload = {
-        ...values,
-        foto: fotoBinary, // Menggunakan binary data foto
+      let payload
+      if (fileList[0]?.originFileObj) {
+        const fotoBinary = fileList[0].originFileObj
+        payload = {
+          ...values,
+          foto: fotoBinary, // Menggunakan binary data foto
+        }
+      } else {
+        payload = {
+          ...values,
+        }
       }
 
-      const result = await Swal.fire({
+      Modal.confirm({
         title: 'Apakah Data Sudah Benar?',
-        text: 'Anda akan menambah siswa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, tambah!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
-      })
-
-      if (result.isConfirmed) {
-        setIsLoading(true)
-        await siswaService
-          .create(payload, token)
-          .then((res) => {
+        content: 'Anda akan menambah siswa!',
+        okText: 'Ya, tambah!',
+        cancelText: 'Tidak, cek lagi',
+        onOk: async () => {
+          try {
+            setIsLoading(true)
+            await siswaService.create(payload, token)
             form.resetFields()
             setIsLoading(false)
-            Swal.fire(
-              'Data Ditambahkan!',
-              'Siswa telah ditambahkan.',
-              'success'
-            )
-          })
-          .catch((err) => Swal.fire('Error', err, 'error'))
-      }
-      setIsLoading(false)
+            refetch()
+            Modal.success({
+              title: 'Data Ditambahkan!',
+              content: 'Siswa telah ditambahkan.',
+            })
+          } catch (err) {
+            setIsLoading(false)
+            Modal.error({
+              title: 'Error',
+              content: err,
+            })
+          }
+        },
+        onCancel: () => {
+          setIsLoading(false)
+        },
+      })
     } catch (error) {
       setIsLoading(false)
-      Swal.fire('Error', 'Terjadi kesalahan', 'error')
+      console.log(error)
+      Modal.error({
+        title: 'Error',
+        content: 'Terjadi kesalahan',
+      })
     }
   }
 
@@ -77,7 +89,7 @@ function TabInputSiswa() {
     'BUDHA',
     'KONGHUCU',
   ]
-  const statusOptions = ['AKTIF', 'TIDAK AKTIF']
+  const statusOptions = ['AKTIF', 'TIDAK_AKTIF']
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {

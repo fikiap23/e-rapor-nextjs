@@ -159,7 +159,7 @@ const StudentView = () => {
                     </div>
                   </TabPane>
                   <TabPane tab="Input Siswa" key="input">
-                    <TabInputSiswa />
+                    <TabInputSiswa refetch={refetchStudents} />
                   </TabPane>
                   <TabPane tab="" key="update">
                     {selectedSiswa && (

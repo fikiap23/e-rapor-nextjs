@@ -57,11 +57,17 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
     try {
       const values = await form.validateFields()
       // Mengambil binary data foto dari getBase64
-      const fotoBinary = fileList[0].originFileObj
-
-      const payload = {
-        ...values,
-        foto: fotoBinary, // Menggunakan binary data foto
+      let payload
+      if (fileList[0]?.originFileObj) {
+        const fotoBinary = fileList[0].originFileObj
+        payload = {
+          ...values,
+          foto: fotoBinary, // Menggunakan binary data foto
+        }
+      } else {
+        payload = {
+          ...values,
+        }
       }
 
       Modal.confirm({
@@ -91,7 +97,11 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
         },
       })
     } catch (error) {
-      message.error('Error! Terjadi kesalahan')
+      console.log(error)
+      Modal.error({
+        content: 'Terjadi kesalahan',
+        title: 'Oops...',
+      })
     }
   }
   const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
