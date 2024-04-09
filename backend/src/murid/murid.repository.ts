@@ -137,11 +137,7 @@ export class MuridRepository {
     }
 
     async createMany(data: CreateMuridDto[]) {
-        try {
-            return await this.muridQuery.createMany(data)
-        } catch (error) {
-            throw new Error(error)
-        }
+        return await this.muridQuery.createMany(data)
     }
 
 }
