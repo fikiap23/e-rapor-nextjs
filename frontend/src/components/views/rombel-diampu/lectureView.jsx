@@ -27,7 +27,7 @@ const LectureView = () => {
                 <div className="box-body">
                   {isFetching && <Loading />}
                   {!isFetching && listRombel && (
-                    <TableLecture rombels={listRombel} />
+                    <TableLecture rombels={listRombel} fetching={isFetching} />
                   )}
                 </div>
               </div>

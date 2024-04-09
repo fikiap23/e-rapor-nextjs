@@ -10,7 +10,7 @@ const LectureStudentView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-book"></i> Rombel Diampuh
+                    <i className="fa fa-book"></i> Daftar Siswa
                   </h3>
                 </div>
 

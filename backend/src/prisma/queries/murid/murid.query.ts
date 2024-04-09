@@ -115,5 +115,47 @@ export class MuridQuery extends DbService {
         }
     }
 
+    async findOneStudentByIdRombel(id: string) {
+        const originalData = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id
+            },
+            select: {
+                rombel: {
+                    select: {
+                        id: true,
+                        name: true,
+                        murid: {
+                            select: {
+                                nama: true,
+                                nis: true,
+                                rapor: true,
+                            }
+                        }
+                    }
+                },
+                semester: {
+                    select: {
+                        id: true,
+                        tahunAjaranAwal: true,
+                        tahunAjaranAkhir: true,
+                        jenisSemester: true,
+                    }
+                },
+            }
+
+        })
+        const newData = {
+            ...originalData,
+            rombel: {
+                id: originalData.rombel.id,
+                name: originalData.rombel.name
+            },
+            murid: originalData.rombel.murid
+        };
+
+        return newData;
+    }
+
 
 }

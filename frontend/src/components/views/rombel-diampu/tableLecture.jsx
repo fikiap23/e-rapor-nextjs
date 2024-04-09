@@ -1,42 +1,68 @@
-const TableLecture = ({ rombels }) => {
+'use client'
+import { Button, Table, Tag, Modal, Input } from 'antd'
+
+const TableLecture = ({ rombels, fetching }) => {
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: 'Kelompok Usia',
+      dataIndex: 'kelompokUsia',
+      key: 'kelompokUsia',
+      // sorter: (a, b) => a.nip.localeCompare(b.nip),
+    },
+    {
+      title: 'Rombel',
+      dataIndex: 'name',
+      key: 'name',
+      // sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Tahun Ajaran',
+      dataIndex: 'semester',
+      key: 'semester',
+      // sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'statusSemester',
+      key: 'statusSemester',
+      render: (text, record) => (
+        <Tag color={record.statusSemester ? 'green' : 'yellow'}>
+          {record.statusSemester ? 'Aktif' : 'Tidak Aktif'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <Button
+            type="primary"
+            onClick={() => {
+              const url = `/guru/rombel/${record.id}`;
+              window.location.href = url;
+            }}
+            style={{ marginRight: 8 }}
+          >
+            <i className="fa fa-plus" style={{ marginRight: '8px' }}></i> Input Catatan Raport
+          </Button>
+        </span>
+      ),
+    },
+  ]
   return (
-    <table id="diampuh" className="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th className="text-center">No</th>
-          <th className="text-center">Kelompok Usia</th>
-          <th className="text-center">Rombel</th>
-          <th className="text-center">Tahun Ajaran</th>
-          <th className="text-center">Status</th>
-          <th className="text-center">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rombels.map((item, index) => (
-          <tr key={index} className="text-center">
-            <td>{index + 1}</td>
-            <td>{item.kelompokUsia}</td>
-            <td>{item.name}</td>
-            <td>{item.semester}</td>
-            <td>
-              <span
-                className={`label bg-${item.statusSemester ? 'green' : 'red'}`}
-              >
-                {item.statusSemester ? 'Aktif' : 'Tidak Aktif'}
-              </span>
-            </td>
-            <td>
-              <a
-                href={`/guru/rombel/${item.idRombel}`}
-                className="btn btn-primary btn-sm"
-              >
-                <span className="fa fa-edit"></span> Input Nilai
-              </a>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table
+      columns={columns}
+      dataSource={rombels}
+      loading={fetching}
+      scroll={{ x: 1000 }}
+    />
   )
 }
 

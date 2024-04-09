@@ -29,7 +29,7 @@ const SidebarTeacher = () => {
           </li>
           <li>
             <Link href="/guru/rombel">
-              <i className="fa fa-book"></i> <span>Rombel Diampu</span>
+              <i className="fa fa-book"></i> <span>Raport Siswa</span>
             </Link>
           </li>
           <li>

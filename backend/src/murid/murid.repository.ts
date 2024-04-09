@@ -140,4 +140,11 @@ export class MuridRepository {
         return await this.muridQuery.createMany(data)
     }
 
+    async findOneStudentByIdRombel(id: string) {
+        const murid = await this.muridQuery.findOneStudentByIdRombel(id);
+        if (!murid) {
+            throw new BadRequestException('Data gagal dimuat');
+        }
+        return murid;
+    }
 }
