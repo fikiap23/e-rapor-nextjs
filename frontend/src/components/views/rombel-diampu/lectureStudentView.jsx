@@ -1,6 +1,25 @@
+'use client'
+import { useParams } from 'next/navigation';
 import StudentTable from './tableStudent'
+import { useEffect, useState } from 'react';
+import { useOneStudentByIdSemesterGuru } from '@/hooks/useOneStudentByIdSemesterGuru';
+
 
 const LectureStudentView = () => {
+  const { id } = useParams();
+  const [rombel, setRombel] = useState('');
+  const [semester, setSemester] = useState('');
+  const {
+    data: listRombelSemesterMurid,
+    error,
+    isFetching,
+    refetch,
+  } = useOneStudentByIdSemesterGuru(id)
+
+  useEffect(() => {
+    setRombel(listRombelSemesterMurid.rombel);
+    setSemester(listRombelSemesterMurid.semester)
+  })
   return (
     <>
       <div className="content-wrapper">
@@ -17,13 +36,13 @@ const LectureStudentView = () => {
                 <div className="callout callout-primary">
                   <h4>
                     <i className="icon fa fa-info-circle"></i> Daftar Siswa di
-                    Rombel A
+                    Rombel {rombel?.name}
                   </h4>
-                  <p>Tahun Ajaran 2020-2021 Semester Ganjil</p>
+                  <p>{`Tahun Ajaran ${semester?.name}`}</p>
                 </div>
 
                 <div className="box-body">
-                  <StudentTable />
+                  <StudentTable siswa={listRombelSemesterMurid?.murid} fetching={isFetching} />
                 </div>
               </div>
             </div>
