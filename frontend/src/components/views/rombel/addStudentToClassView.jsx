@@ -1,9 +1,9 @@
-import { Button, Modal, Table } from 'antd'
+import { Button, Input, Modal, Table } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import { useOneRombel } from '@/hooks/useOneRombel'
 import { useStudentsNullRombel } from '@/hooks/useStudenNullRombel'
 import siswaService from '@/services/siswa.service'
-import Swal from 'sweetalert2'
+import { useState } from 'react'
 
 export default function AddStudentToClassView({ id }) {
   const { token } = useAuth()
@@ -21,6 +21,15 @@ export default function AddStudentToClassView({ id }) {
     refetch: refetchRombel,
   } = useOneRombel(token, id)
 
+  const [searchText, setSearchText] = useState('')
+  const filteredSiswas = allSiswa.filter((siswa) =>
+    Object.values(siswa).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
+
   const handleAdd = (idSiswa) => {
     Modal.confirm({
       title: 'Apakah Anda yakin?',
@@ -33,26 +42,24 @@ export default function AddStudentToClassView({ id }) {
           siswaService
             .update(token, idSiswa, payload)
             .then((result) => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Data siswa telah ditambahkan',
+              Modal.success({
+                title: 'Success',
+                content: 'Data siswa telah ditambahkan',
                 position: 'bottom-center',
               })
               refetchSiswa()
             })
             .catch((error) => {
-              Swal.fire({
-                icon: 'error',
+              Modal.error({
+                content: error,
                 title: 'Oops...',
-                text: error,
-                position: 'bottom-center',
+                position: 'top-right',
               })
             })
         } catch (error) {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
+            content: 'Terjadi kesalahan',
             title: 'Oops...',
-            text: error,
             position: 'top-right',
           })
         }
@@ -76,16 +83,19 @@ export default function AddStudentToClassView({ id }) {
       title: 'NIS',
       dataIndex: 'nis',
       key: 'nis',
+      sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
     {
       title: 'NiSN',
       dataIndex: 'nisn',
       key: 'nisn',
+      sorter: (a, b) => a.nisn.localeCompare(b.nisn),
     },
     {
       title: 'Nama',
       dataIndex: 'nama',
       key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
       title: 'Aksi',
@@ -127,9 +137,17 @@ export default function AddStudentToClassView({ id }) {
 
                 <div className="tab-pane " id="input-siswa">
                   <div className="box-body table-responsive no-padding">
+                    <div style={{ margin: '0 20px 20px 20px' }}>
+                      <Input
+                        placeholder="Cari siswa..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ width: 200, marginRight: 10 }}
+                      />
+                    </div>
                     <Table
                       columns={columns}
-                      dataSource={allSiswa}
+                      dataSource={filteredSiswas}
                       pagination={{ pageSize: 10 }}
                       loading={isFetchingSiswa}
                     />

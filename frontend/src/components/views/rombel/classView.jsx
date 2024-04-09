@@ -1,12 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { Tabs } from 'antd'
 import AddClassModal from './modal/addClassModal'
-import Link from 'next/link'
 import TabTableClass from './tabTableClass'
 import SetClass from './setClass'
 import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
 import { useGetAllRombel } from '@/hooks/useRombel'
+
+const { TabPane } = Tabs
 
 export default function ClassView() {
   const [rombels, setRombels] = useState([])
@@ -54,36 +56,24 @@ export default function ClassView() {
                     <i className="fa fa-home"></i> Data Rombel
                   </h3>
                 </div>
-                <div className="nav-tabs-pills">
-                  <ul className="nav nav-tabs">
-                    <li className={activeTab === 'view' ? 'active' : ''}>
-                      <Link href="" onClick={() => handleTabChange('view')}>
-                        Kelola Rombel
-                      </Link>
-                    </li>
-                    <li className={activeTab === 'view_rombel' ? 'active' : ''}>
-                      <Link
-                        href=""
-                        onClick={() => handleTabChange('view_rombel')}
-                      >
-                        Lihat Rombel
-                      </Link>
-                    </li>
-                  </ul>
-                  {activeTab === 'view' && (
-                    <TabTableClass
-                      rombels={rombels}
-                      openModal={openModal}
-                      setRombels={setRombels}
-                      isLoading={isFetchingSRombel}
-                    />
-                  )}
-                  {activeTab === 'view_rombel' &&
-                    (isFetchingSRombel ? (
-                      <Loading></Loading>
-                    ) : (
-                      <SetClass rombels={rombels} />
-                    ))}
+                <div className="box-body">
+                  <Tabs activeKey={activeTab} onChange={handleTabChange}>
+                    <TabPane tab="Kelola Rombel" key="view">
+                      <TabTableClass
+                        rombels={rombels}
+                        openModal={openModal}
+                        setRombels={setRombels}
+                        isLoading={isFetchingSRombel}
+                      />
+                    </TabPane>
+                    <TabPane tab="Lihat Rombel" key="view_rombel">
+                      {isFetchingSRombel ? (
+                        <Loading />
+                      ) : (
+                        <SetClass rombels={rombels} />
+                      )}
+                    </TabPane>
+                  </Tabs>
                 </div>
               </div>
             </div>

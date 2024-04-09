@@ -3,7 +3,6 @@ import useAuth from '@/hooks/useAuth'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
 import rombelService from '@/services/rombel.service'
 import React, { useState } from 'react'
-import Swal from 'sweetalert2'
 
 const { Option } = Select
 
@@ -25,10 +24,10 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
       await rombelService
         .createRombel(token, payload)
         .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data rombel telah ditambahkan',
+          Modal.success({
+            title: 'Berhasil',
             position: 'bottom-center',
+            content: 'Data rombel telah ditambahkan',
           })
           setRombels((prevRombels) => [...prevRombels, result.data])
           form.resetFields()
@@ -36,21 +35,14 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
           setIsLoading(false)
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: error,
-            position: 'bottom-center',
+            content: 'Terjadi kesalahan: ' + error,
           })
           setIsLoading(false)
         })
     } catch (error) {
       setIsLoading(false)
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Terjadi kesalahan',
-      })
     }
   }
 
@@ -101,7 +93,11 @@ const AddClassModal = ({ isOpen, closeModal, setRombels }) => {
         <Form.Item label="Kode Kelompok Usia" name="kodeKelompokUsia">
           <Input disabled />
         </Form.Item>
-        <Form.Item label="No Rombel" name="noRombel">
+        <Form.Item
+          label="No Rombel"
+          name="noRombel"
+          rules={[{ required: true, message: 'Masukkan no rombel!' }]}
+        >
           <Input placeholder="Contoh: A1" />
         </Form.Item>
         <Form.Item

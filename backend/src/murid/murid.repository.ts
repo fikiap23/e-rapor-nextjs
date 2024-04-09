@@ -113,6 +113,10 @@ export class MuridRepository {
         return await this.muridQuery.updateById(id, dto)
     }
 
+    async removeRombelById(id: string) {
+        return await this.muridQuery.updateById(id, { idRombel: null })
+    }
+
     async deleteById(id: string) {
         const murid = await this.findByIdOrThrow(id);
         if (murid.foto) {

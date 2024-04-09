@@ -1,16 +1,12 @@
-import { Button, Modal, Table } from 'antd'
+import { Button, Input, Modal, Table } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import { useOneRombel } from '@/hooks/useOneRombel'
 import siswaService from '@/services/siswa.service'
 import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 
 export default function SeeStudentView({ id }) {
   const { token } = useAuth()
   const [siswas, setSiswas] = useState([])
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  const [modalVisible, setModalVisible] = useState(false)
-  const [selectedSiswaId, setSelectedSiswaId] = useState(null)
 
   const {
     data: rombelData,
@@ -18,6 +14,14 @@ export default function SeeStudentView({ id }) {
     error: errorRombel,
     refetch: refetchRombel,
   } = useOneRombel(token, id)
+  const [searchText, setSearchText] = useState('')
+  const filteredSiswas = siswas.filter((siswa) =>
+    Object.values(siswa).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   useEffect(() => {
     if (rombelData) {
@@ -26,50 +30,42 @@ export default function SeeStudentView({ id }) {
   }, [rombelData])
 
   const handleKeluarkanSiswa = (idSiswa) => {
-    setModalVisible(true)
-    setSelectedSiswaId(idSiswa)
-  }
-
-  const handleOk = () => {
-    setConfirmLoading(true)
-    try {
-      const payload = {
-        idRombel: null,
-      }
-      siswaService
-        .update(token, selectedSiswaId, payload)
-        .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Siswa telah dikeluarkan',
-            position: 'bottom-center',
-          })
-          setModalVisible(false)
-          setConfirmLoading(false)
-          refetchRombel()
-        })
-        .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content: 'Siswa akan dikeluarkan ke rombel ini.',
+      onOk() {
+        try {
+          siswaService
+            .removeRombel(token, idSiswa)
+            .then((result) => {
+              Modal.success({
+                title: 'Success',
+                content: 'Siswa telah dikeluarkan',
+                position: 'bottom-center',
+              })
+              refetchRombel()
+            })
+            .catch((error) => {
+              Modal.error({
+                content: error,
+                title: 'Oops...',
+                position: 'top-right',
+              })
+            })
+        } catch (error) {
+          Modal.error({
+            content: 'Terjadi kesalahan',
             title: 'Oops...',
-            text: error,
-            position: 'bottom-center',
+            position: 'top-right',
           })
-          setConfirmLoading(false)
-        })
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error,
-        position: 'top-right',
-      })
-      setConfirmLoading(false)
-    }
-  }
-
-  const handleCancel = () => {
-    setModalVisible(false)
+        }
+      },
+      onCancel() {
+        // Do nothing
+      },
+      okText: 'Ya, keluarkan!',
+      cancelText: 'Batal',
+    })
   }
 
   const columns = [
@@ -83,16 +79,19 @@ export default function SeeStudentView({ id }) {
       title: 'NIS',
       dataIndex: 'nis',
       key: 'nis',
+      sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
     {
       title: 'NiSN',
       dataIndex: 'nisn',
       key: 'nisn',
+      sorter: (a, b) => a.nisn.localeCompare(b.nisn),
     },
     {
       title: 'Nama',
       dataIndex: 'nama',
       key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
       title: 'Aksi',
@@ -138,9 +137,17 @@ export default function SeeStudentView({ id }) {
 
                 <div className="tab-pane " id="input-siswa">
                   <div className="box-body table-responsive no-padding">
+                    <div style={{ margin: '0 20px 20px 20px' }}>
+                      <Input
+                        placeholder="Cari siswa..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ width: 200, marginRight: 10 }}
+                      />
+                    </div>
                     <Table
                       columns={columns}
-                      dataSource={siswas}
+                      dataSource={filteredSiswas}
                       pagination={{ pageSize: 10 }}
                       loading={isFetchingRombel}
                     />
@@ -151,16 +158,6 @@ export default function SeeStudentView({ id }) {
           </div>
         </div>
       </section>
-
-      <Modal
-        title="Konfirmasi Keluarkan Siswa"
-        visible={modalVisible}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <p>Anda yakin ingin mengeluarkan siswa dari rombel ini?</p>
-      </Modal>
     </div>
   )
 }

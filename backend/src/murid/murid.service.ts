@@ -30,4 +30,8 @@ export class MuridService {
     async findByNullRombel() {
         return await this.muridRepository.findByNullRombel();
     }
+
+    async removeRombelById(id: string) {
+        return await this.muridRepository.removeRombelById(id);
+    }
 }

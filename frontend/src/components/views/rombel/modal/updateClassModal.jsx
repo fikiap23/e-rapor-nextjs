@@ -1,6 +1,5 @@
 import { Modal, Form, Input, Select, Button } from 'antd'
 import { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
 import rombelService from '@/services/rombel.service'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllKategoriRombel } from '@/hooks/useKategoriRombel'
@@ -57,10 +56,10 @@ const UpdateClassModal = ({
       await rombelService
         .updateRombel(token, selectedRombel.id, payload)
         .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data rombel telah diperbarui',
+          Modal.success({
+            title: 'Berhasil',
             position: 'bottom-center',
+            content: 'Data rombel telah diperbarui',
           })
 
           const updatedRombel = {
@@ -79,18 +78,16 @@ const UpdateClassModal = ({
           closeModal()
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: error,
+            content: 'Terjadi kesalahan: ' + error,
             position: 'bottom-center',
           })
         })
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: error.message,
+        content: 'Terjadi kesalahan',
         position: 'bottom-center',
       })
     }

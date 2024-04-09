@@ -1,5 +1,5 @@
 'use client'
-import { Button, Input, Table, Tooltip } from 'antd'
+import { Button, Input, Modal, Table, Tooltip } from 'antd'
 import {
   EyeOutlined,
   EditOutlined,
@@ -9,7 +9,6 @@ import {
 import { useState } from 'react'
 import rombelService from '@/services/rombel.service'
 import useAuth from '@/hooks/useAuth'
-import Swal from 'sweetalert2'
 import UpdateClassModal from './modal/updateClassModal'
 import Link from 'next/link'
 
@@ -33,38 +32,34 @@ export default function TabTableClass({
   )
 
   const handleDelete = (idRombel) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Data rombel akan dihapus permanen.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal',
-    }).then((result) => {
-      if (result.isConfirmed) {
+      content: 'Data rombel akan dihapus permanen.',
+      okText: 'Ya, hapus!',
+      okType: 'danger',
+      cancelText: 'Batal',
+      onOk() {
         rombelService
           .deleteRombel(token, idRombel)
           .then(() => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Data rombel telah dihapus',
-              position: 'bottom-center',
+            Modal.success({
+              title: 'Data Berhasil!',
+              content: 'Data rombel telah dihapus.',
+              duration: 3,
             })
             setRombels((prevRombels) =>
               prevRombels.filter((rombel) => rombel.id !== idRombel)
             )
           })
           .catch((error) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: error,
-              position: 'bottom-center',
+            Modal.error({
+              title: 'Data Gagal!',
+              content: error,
+              duration: 3,
             })
           })
-      }
+      },
+      onCancel() {},
     })
   }
 

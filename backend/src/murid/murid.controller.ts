@@ -36,6 +36,14 @@ export class MuridController {
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }
 
+    @Put('clear-rombel/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async removeRombelById(@Res() res, @Param('id') id) {
+        await this.muridService.removeRombelById(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
+    }
+
     @Put(':id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)

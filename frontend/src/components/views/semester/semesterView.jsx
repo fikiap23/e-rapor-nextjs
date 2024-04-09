@@ -5,7 +5,6 @@ import EditSemesterModal from './editSemesterModal'
 import useAuth from '@/hooks/useAuth'
 import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
-import Swal from 'sweetalert2'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
 import { Table, Button, Tag, Space, Input, Modal } from 'antd'
 const SemesterView = () => {
