@@ -1,12 +1,17 @@
 'use client'
 import { useState } from 'react'
-import { Table, Button, Input, Tabs, Modal } from 'antd'
+import { Table, Button, Input, Tabs, Modal, Flex, Space } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import TabInputSiswa from './TabInputStudent'
 import TabUpdateSiswa from './TabUpdateStudent'
 import { useGetAllStudentData } from '@/hooks/useStudent'
 import { apiUrl } from '@/services/apiUrls'
+import * as XLSX from 'xlsx'
+import { formatDate } from '@/lib/helperDate'
+import Icon from '@ant-design/icons'
+import * as icons from '@ant-design/icons'
+import UploadSiswaExcel from './cetak/importSiswaView'
 
 const { TabPane } = Tabs
 
@@ -65,6 +70,34 @@ const StudentView = () => {
         console.log('Cancel')
       },
     })
+  }
+
+  const exportToExcel = () => {
+    const dataToExport = filteredSiswa.map((siswa) => {
+      return {
+        NIS: siswa.nis,
+        NISN: siswa.nisn,
+        Nama: siswa.nama,
+        Jenis_Kelamin: siswa.jenisKelamin,
+        Tempat_Lahir: siswa.tempatLahir,
+        Tanggal_Lahir: formatDate(new Date(siswa.tanggalLahir)),
+        Agama: siswa.agama,
+        Alamat: siswa.alamat,
+        Tinggi_Badan: siswa.tinggiBadan,
+        Berat_Badan: siswa.beratBadan,
+        Nama_Ayah: siswa.namaAyah,
+        Nama_Ibu: siswa.namaIbu,
+        Pekerjaan_Ayah: siswa.pekerjaanAyah,
+        Pekerjaan_Ibu: siswa.pekerjaanIbu,
+        Tanggal_Masuk: formatDate(new Date(siswa.tanggalMasuk)),
+        Status: siswa.status,
+      }
+    })
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Siswa')
+    XLSX.writeFile(workbook, 'data_siswa.xlsx')
   }
 
   const columns = [
@@ -143,14 +176,40 @@ const StudentView = () => {
                 <Tabs activeKey={activeTab} onChange={handleTabChange}>
                   <TabPane tab="Lihat Siswa" key="view">
                     <div className="box-body table-responsive no-padding">
-                      <div style={{ margin: '0 20px 20px 20px' }}>
+                      <Flex
+                        style={{
+                          marginBottom: 10,
+                          marginRight: 10,
+                          marginLeft: 10,
+                          justifyContent: 'space-between',
+                        }}
+                      >
                         <Input
                           placeholder="Cari siswa..."
                           value={searchText}
                           onChange={(e) => setSearchText(e.target.value)}
                           style={{ width: 200, marginRight: 10 }}
                         />
-                      </div>
+                        <Space size="middle">
+                          <Button
+                            onClick={setActiveTab.bind(this, 'import')}
+                            icon={<icons.UploadOutlined />}
+                            type="primary"
+                          >
+                            Import from Excel
+                          </Button>
+
+                          <Button
+                            onClick={exportToExcel}
+                            icon={
+                              <Icon component={icons['FileExcelOutlined']} />
+                            }
+                            style={{ backgroundColor: 'green', color: 'white' }}
+                          >
+                            Export to Excel
+                          </Button>
+                        </Space>
+                      </Flex>
                       <Table
                         columns={columns}
                         dataSource={filteredSiswa}
@@ -177,6 +236,9 @@ const StudentView = () => {
                         />
                       </div>
                     )}
+                  </TabPane>
+                  <TabPane tab="" key="import">
+                    <UploadSiswaExcel token={token} />
                   </TabPane>
                 </Tabs>
               </div>
