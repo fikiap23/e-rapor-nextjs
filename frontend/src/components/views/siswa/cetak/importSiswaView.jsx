@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
-import { Table, Button } from 'antd'
+import { Table, Button, Modal } from 'antd'
 import XLSX from 'xlsx'
 import UploadExcelComponent from '@/components/shared/UploadExcel'
+import siswaService from '@/services/siswa.service'
 
-const UploadSiswaExcel = ({ token }) => {
+const UploadSiswaExcel = ({ token, refetch }) => {
   const [state, setState] = useState({
     tableData: [],
     tableHeader: [],
+    showSaveButton: false, // Menambahkan state untuk menampilkan tombol simpan
   })
-
-  console.log(state.tableData)
 
   const handleSuccess = ({ results, header }) => {
     setState({
       ...state,
       tableData: results,
       tableHeader: header,
+      showSaveButton: true, // Menampilkan tombol simpan setelah berhasil unggah
     })
   }
 
@@ -70,6 +71,35 @@ const UploadSiswaExcel = ({ token }) => {
     XLSX.writeFile(wb, 'template_import_siswa.xlsx')
   }
 
+  const handleSaveData = () => {
+    Modal.confirm({
+      title: 'Konfirmasi Simpan Data',
+      content: 'Apakah Anda yakin ingin menyimpan data?',
+      okText: 'Ya',
+      cancelText: 'Batal',
+      onOk: async () => {
+        console.log(state.tableData)
+        await siswaService
+          .createMany(token, state.tableData)
+          .then(() => {
+            refetch()
+            setState({ ...state, showSaveButton: false, tableData: [] })
+            Modal.success({
+              title: 'Success',
+              content: 'Data telah disimpan',
+            })
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
+      },
+      onCancel() {},
+    })
+  }
+
   return (
     <div className="app-container">
       <UploadExcelComponent uploadSuccess={handleSuccess} />
@@ -79,6 +109,14 @@ const UploadSiswaExcel = ({ token }) => {
       </Button>
       <br />
       <br />
+      {state.showSaveButton && (
+        <Button
+          onClick={handleSaveData}
+          style={{ marginBottom: 16, backgroundColor: 'green', color: 'white' }}
+        >
+          Simpan Data
+        </Button>
+      )}
       <Table
         bordered
         scroll={{ x: 1500 }}

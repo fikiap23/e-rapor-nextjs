@@ -238,7 +238,7 @@ const StudentView = () => {
                     )}
                   </TabPane>
                   <TabPane tab="" key="import">
-                    <UploadSiswaExcel token={token} />
+                    <UploadSiswaExcel token={token} refetch={refetchStudents} />
                   </TabPane>
                 </Tabs>
               </div>
