@@ -33,6 +33,7 @@ const Sidebar = () => {
           <li className={router === '/admin/guru' ? 'active' : ''}>
             <Link href="/admin/guru">
               <i className="fa fa-user"></i> <span>Guru</span>
+            </Link>
           </li>
           <li className={router === '/admin/siswa' ? 'active' : ''}>
             <Link href="/admin/siswa">
