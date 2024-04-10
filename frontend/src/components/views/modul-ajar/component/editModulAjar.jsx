@@ -1,120 +1,94 @@
 import React, { useState, useEffect } from 'react'
-import { DynamicInput, useInputs } from './DynamicInput'
+import { Form, Input, Select, Button, DatePicker, message, Modal } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
-import Swal from 'sweetalert2'
-import { formatDate } from '@/lib/helperDate'
+import RichTextEditor from '@/components/shared/editor/Editor'
+import moment from 'moment'
+
+const { Option } = Select
 
 const EditModulAjar = ({
-  modulAjarData,
   tujuanPembelajarans,
   refetch,
   token,
+  modulAjarData,
 }) => {
-  const [formData, setFormData] = useState({
-    minggu: modulAjarData.minggu,
-    topik: modulAjarData.topik,
-    subtopik: modulAjarData.subtopik,
-    startDate: formatDate(new Date(modulAjarData.startDate)),
-    endDate: formatDate(new Date(modulAjarData.endDate)),
-    idTujuanPembelajaran: modulAjarData.idTujuanPembelajaran,
-  })
-  console.log(modulAjarData)
-
-  const {
-    inputs: tujuanKegiatan,
-    handleAddInput: handleAddTujuanKegiatan,
-    handleInputChange: handleChangeTujuanKegiatan,
-    handleRemoveInput: handleRemoveTujuanKegiatan,
-  } = useInputs({
-    label: 'Tujuan Kegiatan',
-  })
-
-  const [kataKunci, setKataKunci] = useState(modulAjarData.katakunci.join(', '))
-  const [alatBahan, setAlatBahan] = useState(modulAjarData.alatBahan.join(', '))
-  const [petaKonsep, setPetaKonsep] = useState(
-    modulAjarData.petaKonsep.join(', ')
-  )
+  const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
 
   useEffect(() => {
-    tujuanPembelajarans.forEach((tp) => {
-      if (tp.minggu.toString() === modulAjarData.minggu.toString()) {
-        setSelectedTp(tp)
-      }
+    form.setFieldsValue({
+      ...modulAjarData,
+      startDate: moment(modulAjarData.startDate),
+      endDate: moment(modulAjarData.endDate),
+      minggu: modulAjarData.minggu,
+      idTujuanPembelajaran: modulAjarData.idTujuanPembelajaran,
     })
-  }, [tujuanPembelajarans, modulAjarData.minggu])
+    setSelectedTp(modulAjarData.tujuanPembelajaran)
+  }, [form, modulAjarData])
 
-  const handleFormChange = (field, value) => {
-    setFormData({
-      ...formData,
-      [field]: value,
-    })
+  console.log(modulAjarData)
 
-    if (field === 'minggu') {
-      tujuanPembelajarans.forEach((tp) => {
-        if (tp.minggu.toString() === value) {
-          setSelectedTp(tp)
-          setFormData({
-            ...formData,
-            [field]: tp.minggu,
-            ['idTujuanPembelajaran']: tp.id,
-          })
-        }
-      })
+  const handleFormChange = (changedValues, allValues) => {
+    if (changedValues.minggu) {
+      const selected = tujuanPembelajarans.find(
+        (tp) => tp.minggu.toString() === changedValues.minggu.toString()
+      )
+      setSelectedTp(selected)
     }
   }
 
   const clearForm = () => {
-    setFormData({
-      minggu: '',
-      topik: '',
-      subtopik: '',
-      startDate: '',
-      endDate: '',
-      idTujuanPembelajaran: '',
-    })
-    setKataKunci('')
-    setAlatBahan('')
-    setPetaKonsep('')
+    form.resetFields()
     setSelectedTp(null)
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = async (values) => {
+    let katakunci = values.katakunci
+    if (!Array.isArray(katakunci)) {
+      katakunci = katakunci.split(',').map((kata) => kata.trim())
+    }
+
+    let alatBahan = values.alatBahan
+    if (!Array.isArray(alatBahan)) {
+      alatBahan = alatBahan.split(',').map((alat) => alat.trim())
+    }
+
+    let petaKonsep = values.petaKonsep
+    if (!Array.isArray(petaKonsep)) {
+      petaKonsep = petaKonsep.split(',').map((peta) => peta.trim())
+    }
+
     const payload = {
-      ...formData,
-      katakunci: kataKunci.split(',').map((kata) => kata.trim()),
-      alatBahan: alatBahan.split(',').map((alat) => alat.trim()),
-      petaKonsep: petaKonsep.split(',').map((peta) => peta.trim()),
-      tujuanKegiatan: tujuanKegiatan.map((tujuan) => tujuan.value),
+      ...values,
+      katakunci,
+      alatBahan,
+      petaKonsep,
+      idTujuanPembelajaran: selectedTp.id,
     }
 
     try {
-      modulAjarService
+      await modulAjarService
         .update(modulAjarData.id, payload, token)
-        .then((result) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Data modul ajar telah diperbarui',
+        .then(() => {
+          Modal.success({
+            title: 'Success',
+            content: 'Data modul ajar telah diupdate',
             position: 'bottom-center',
           })
-          clearForm()
           refetch()
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
+          Modal.error({
             title: 'Oops...',
-            text: error,
+            content: error,
             position: 'bottom-center',
           })
         })
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
+      Modal.error({
         title: 'Oops...',
-        text: error,
-        position: 'top-right',
+        content: 'Terdapat kesalahan saat memperbarui data modul ajar',
+        position: 'bottom-center',
       })
     }
   }
@@ -122,171 +96,123 @@ const EditModulAjar = ({
   return (
     <div className="active tab-pane" id="activity">
       <div className="box-body table-responsive no-padding">
-        <form onSubmit={handleSubmit}>
-          <div className="box-body">
-            <div className="form-group">
-              <label htmlFor="minggu">Minggu</label>
-              <select
-                className="form-control"
-                id="minggu"
-                name="minggu"
-                value={formData.minggu}
-                onChange={(e) => handleFormChange('minggu', e.target.value)}
-                required
-              >
-                <option value={modulAjarData.minggu}>
-                  {modulAjarData.minggu}
-                </option>
-                {tujuanPembelajarans.map((tp) => (
-                  <option key={tp.id} value={tp.minggu}>
-                    {tp.minggu}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          onValuesChange={handleFormChange}
+          layout="vertical"
+        >
+          <Form.Item
+            label="Minggu"
+            name="minggu"
+            rules={[{ required: true, message: 'Pilih Minggu' }]}
+          >
+            <Select placeholder="Pilih Minggu">
+              {tujuanPembelajarans.map((tp) => (
+                <Option key={tp.id} value={tp.minggu}>
+                  {tp.minggu}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-            {selectedTp && (
-              <div className="form-group">
-                <label
-                  htmlFor="tujuanPembelajaranAgamaBudipekerti"
-                  className="control-label"
-                >
-                  Tujuan Pembelajaran Nilai Agama dan Budi Pekerti
-                </label>
-                <textarea
-                  type="text"
-                  name="tujuanPembelajaranAgamaBudipekerti"
-                  rows="5"
-                  className="form-control"
-                  id="tujuanPembelajaranAgamaBudipekerti"
+          {selectedTp && (
+            <>
+              <Form.Item label="Tujuan Pembelajaran Nilai Agama dan Budi Pekerti">
+                <Input.TextArea
                   value={selectedTp.tujuanPembelajaranAgamaBudipekerti}
-                  readOnly={true}
+                  readOnly
+                  disabled
+                  rows={5}
                 />
-              </div>
-            )}
+              </Form.Item>
 
-            {/* Other form elements */}
-            <div className="form-group">
-              <label htmlFor="topik">Topik</label>
-              <input
-                type="text"
-                className="form-control"
-                id="topik"
-                name="topik"
-                placeholder="Masukan Topik"
-                value={formData.topik}
-                onChange={(e) => handleFormChange('topik', e.target.value)}
-                required
-              />
-            </div>
+              <Form.Item label="Tujuan Pembelajaran Jati Diri">
+                <Input.TextArea
+                  value={selectedTp.tujuanPembelajaranJatiDiri}
+                  readOnly
+                  disabled
+                  rows={5}
+                />
+              </Form.Item>
 
-            <div className="form-group">
-              <label htmlFor="subtopik">Sub Topik</label>
-              <input
-                type="text"
-                className="form-control"
-                id="subtopik"
-                name="subtopik"
-                placeholder="Masukan Sub Topik"
-                value={formData.subtopik}
-                onChange={(e) => handleFormChange('subtopik', e.target.value)}
-                required
-              />
-            </div>
+              <Form.Item label="Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni">
+                <Input.TextArea
+                  value={selectedTp.tujuanPembelajaranLiterasiSains}
+                  readOnly
+                  disabled
+                  rows={5}
+                />
+              </Form.Item>
+            </>
+          )}
 
-            <div className="form-group">
-              <label htmlFor="startDate">Tanggal Mulai</label>
-              <input
-                type="date"
-                className="form-control"
-                id="startDate"
-                name="startDate"
-                value={formData.startDate}
-                onChange={(e) => handleFormChange('startDate', e.target.value)}
-                required
-              />
-            </div>
+          <Form.Item
+            label="Tanggal Mulai"
+            name="startDate"
+            rules={[{ required: true, message: 'Tanggal Mulai harus diisi' }]}
+          >
+            <DatePicker style={{ width: '100%' }} />
+          </Form.Item>
 
-            <div className="form-group">
-              <label htmlFor="endDate">Tanggal Akhir</label>
-              <input
-                type="date"
-                className="form-control"
-                id="endDate"
-                name="endDate"
-                value={formData.endDate}
-                onChange={(e) => handleFormChange('endDate', e.target.value)}
-                required
-              />
-            </div>
+          <Form.Item
+            label="Tanggal Akhir"
+            name="endDate"
+            rules={[{ required: true, message: 'Tanggal Akhir harus diisi' }]}
+          >
+            <DatePicker style={{ width: '100%' }} />
+          </Form.Item>
 
-            <div className="form-group">
-              <label htmlFor="katakunci">Kata Kunci</label>
-              <input
-                type="text"
-                className="form-control"
-                id="katakunci"
-                name="katakunci"
-                placeholder="Masukan Kata Kunci"
-                value={kataKunci}
-                onChange={(e) => setKataKunci(e.target.value)}
-                required
-              />
-              <small>Gunakan koma untuk memisahkan kata</small>
-            </div>
+          <Form.Item
+            label="Topik"
+            name="topik"
+            rules={[{ required: true, message: 'Masukkan Topik' }]}
+          >
+            <Input />
+          </Form.Item>
 
-            <div className="form-group">
-              <label htmlFor="alatBahan">Alat dan Bahan</label>
-              <input
-                type="text"
-                className="form-control"
-                id="alatBahan"
-                name="alatBahan"
-                placeholder="Masukan Alat dan Bahan"
-                value={alatBahan}
-                onChange={(e) => setAlatBahan(e.target.value)}
-                required
-              />
-              <small>Gunakan koma untuk memisahkan kata</small>
-            </div>
+          <Form.Item
+            label="Sub Topik"
+            name="subtopik"
+            rules={[{ required: true, message: 'Masukkan Sub Topik' }]}
+          >
+            <Input />
+          </Form.Item>
 
-            <div className="form-group">
-              <label htmlFor="petaKonsep">Peta Konsep</label>
-              <input
-                type="text"
-                className="form-control"
-                id="petaKonsep"
-                name="petaKonsep"
-                placeholder="Masukan Peta Konsep"
-                value={petaKonsep}
-                onChange={(e) => setPetaKonsep(e.target.value)}
-                required
-              />
-              <small>Gunakan koma untuk memisahkan kata</small>
-            </div>
+          <Form.Item
+            label="Kata Kunci"
+            name="katakunci"
+            rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
+          >
+            <Input />
+          </Form.Item>
 
-            {/* Form inputTujuanKegiatan */}
-            {tujuanKegiatan.map((input, index) => (
-              <DynamicInput
-                key={input.id}
-                label={input.label}
-                id={input.id}
-                value={input.value}
-                onChange={(e) =>
-                  handleChangeTujuanKegiatan(index, e.target.value)
-                }
-                onAdd={() => handleAddTujuanKegiatan(index)}
-                onRemove={() => handleRemoveTujuanKegiatan(index)}
-                showRemoveButton={index > 0}
-              />
-            ))}
-          </div>
-          <div className="modal-footer">
-            <button type="submit" className="btn btn-primary">
+          <Form.Item
+            label="Alat dan Bahan"
+            name="alatBahan"
+            rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Peta Konsep"
+            name="petaKonsep"
+            rules={[{ required: true, message: 'Masukkan Peta Konsep' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="Isi Tujuan Kegiatan" name="tujuanKegiatan">
+            <RichTextEditor initialData={modulAjarData?.tujuanKegiatan} />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
               Simpan
-            </button>
-          </div>
-        </form>
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   )

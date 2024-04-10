@@ -1,4 +1,4 @@
-import PrintAssesmnet from '@/components/views/teacher/assesment/component/print/printAssesment'
+import PrintAssesmnet from '@/components/views/penilaian/component/print/printAssesment'
 import React from 'react'
 
 const DashboardPage = () => {
