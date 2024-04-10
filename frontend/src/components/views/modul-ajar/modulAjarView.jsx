@@ -175,15 +175,13 @@ const ModulAjarView = () => {
                     <ActivitiesView />
                   </TabPane>
                 </Tabs>
-                {activeTab === 'learningOutcomesTab' &&
-                  !isFetchingModulAjars &&
-                  !isFetchingCpTps && (
-                    <InputModulAjar
-                      refetch={refetchModulAjars}
-                      tujuanPembelajarans={mingguTpUncreated}
-                      token={token}
-                    />
-                  )}
+                {activeTab === 'learningOutcomesTab' && (
+                  <InputModulAjar
+                    refetch={refetchModulAjars}
+                    tujuanPembelajarans={mingguTpUncreated}
+                    token={token}
+                  />
+                )}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (
                   <EditModulAjar
                     modulAjarData={selectedModulAjar}

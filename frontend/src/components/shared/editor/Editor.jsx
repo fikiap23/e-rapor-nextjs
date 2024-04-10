@@ -6,10 +6,15 @@ import draftToHtml from 'draftjs-to-html'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import './index.css'
 
-const RichTextEditor = () => {
+const RichTextEditor = ({ onChange }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
-  const onEditorStateChange = (editorState) => setEditorState(editorState)
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState)
+    if (onChange) {
+      onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())))
+    }
+  }
 
   return (
     <div>
@@ -19,6 +24,9 @@ const RichTextEditor = () => {
         wrapperClassName="wrapper-class"
         editorClassName="editor-class"
         toolbarClassName="toolbar-class"
+        toolbar={{
+          options: ['inline', 'list', 'textAlign', 'history'],
+        }}
       />
 
       <br />

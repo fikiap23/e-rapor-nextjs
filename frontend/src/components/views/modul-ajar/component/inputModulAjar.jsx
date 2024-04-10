@@ -1,5 +1,5 @@
-import React from 'react'
-import { Form, Input, Select, DatePicker, Button, Modal } from 'antd'
+import React, { useState } from 'react'
+import { Form, Input, Select, Button, DatePicker, message } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
 import RichTextEditor from '@/components/shared/editor/Editor'
 
@@ -7,9 +7,20 @@ const { Option } = Select
 
 const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
   const [form] = Form.useForm()
+  const [selectedTp, setSelectedTp] = useState(null)
+
+  const handleFormChange = (changedValues, allValues) => {
+    if (changedValues.minggu) {
+      const selected = tujuanPembelajarans.find(
+        (tp) => tp.minggu.toString() === changedValues.minggu.toString()
+      )
+      setSelectedTp(selected)
+    }
+  }
 
   const clearForm = () => {
     form.resetFields()
+    setSelectedTp(null)
   }
 
   const handleSubmit = async (values) => {
@@ -18,40 +29,29 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
       katakunci: values.katakunci.split(',').map((kata) => kata.trim()),
       alatBahan: values.alatBahan.split(',').map((alat) => alat.trim()),
       petaKonsep: values.petaKonsep.split(',').map((peta) => peta.trim()),
+      idTujuanPembelajaran: selectedTp.id,
     }
+    console.log(payload)
 
     try {
-      await modulAjarService
-        .create(payload, token)
-        .then((result) => {
-          Modal.success({
-            title: 'Berhasil',
-            content: 'Data modul ajar telah ditambahkan',
-            position: 'bottom-center',
-          })
-          clearForm()
-          refetch()
-        })
-        .catch((error) => {
-          Modal.error({
-            title: 'Oops...',
-            content: 'Terdapat kesalahan: ' + error,
-            position: 'bottom-center',
-          })
-        })
+      await modulAjarService.create(payload, token)
+      message.success('Data modul ajar telah ditambahkan')
+      clearForm()
+      refetch()
     } catch (error) {
-      Modal.error({
-        title: 'Oops...',
-        content: 'Terdapat kesalahan saat menambahkan data modul ajar',
-        position: 'bottom-center',
-      })
+      message.error('Gagal menambahkan data modul ajar')
     }
   }
 
   return (
     <div className="active tab-pane" id="activity">
       <div className="box-body table-responsive no-padding">
-        <Form form={form} onFinish={handleSubmit} layout="vertical">
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          onValuesChange={handleFormChange}
+          layout="vertical"
+        >
           <Form.Item
             label="Minggu"
             name="minggu"
@@ -65,57 +65,95 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
               ))}
             </Select>
           </Form.Item>
+
+          {selectedTp && (
+            <>
+              <Form.Item label="Tujuan Pembelajaran Nilai Agama dan Budi Pekerti">
+                <Input.TextArea
+                  value={selectedTp.tujuanPembelajaranAgamaBudipekerti}
+                  readOnly
+                  disabled
+                  rows={5}
+                />
+              </Form.Item>
+
+              <Form.Item label="Tujuan Pembelajaran Jati Diri">
+                <Input.TextArea
+                  value={selectedTp.tujuanPembelajaranJatiDiri}
+                  readOnly
+                  disabled
+                  rows={5}
+                />
+              </Form.Item>
+
+              <Form.Item label="Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni">
+                <Input.TextArea
+                  value={selectedTp.tujuanPembelajaranLiterasiSains}
+                  readOnly
+                  disabled
+                  rows={5}
+                />
+              </Form.Item>
+            </>
+          )}
+
           <Form.Item
             label="Tanggal Mulai"
             name="startDate"
-            rules={[{ required: true, message: 'Masukkan Tanggal Mulai' }]}
+            rules={[{ required: true, message: 'Tanggal Mulai harus diisi' }]}
           >
             <DatePicker style={{ width: '100%' }} />
           </Form.Item>
+
           <Form.Item
             label="Tanggal Akhir"
             name="endDate"
-            rules={[{ required: true, message: 'Masukkan Tanggal Akhir' }]}
+            rules={[{ required: true, message: 'Tanggal Akhir harus diisi' }]}
           >
             <DatePicker style={{ width: '100%' }} />
           </Form.Item>
+
           <Form.Item
             label="Topik"
             name="topik"
             rules={[{ required: true, message: 'Masukkan Topik' }]}
           >
-            <Input placeholder="Masukkan Topik" />
+            <Input />
           </Form.Item>
+
           <Form.Item
             label="Sub Topik"
             name="subtopik"
             rules={[{ required: true, message: 'Masukkan Sub Topik' }]}
           >
-            <Input placeholder="Masukkan Sub Topik" />
+            <Input />
           </Form.Item>
+
           <Form.Item
             label="Kata Kunci"
             name="katakunci"
             rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
           >
-            <Input placeholder="Masukkan Kata Kunci" />
+            <Input />
           </Form.Item>
+
           <Form.Item
             label="Alat dan Bahan"
             name="alatBahan"
             rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
           >
-            <Input placeholder="Masukkan Alat dan Bahan" />
+            <Input />
           </Form.Item>
+
           <Form.Item
             label="Peta Konsep"
             name="petaKonsep"
             rules={[{ required: true, message: 'Masukkan Peta Konsep' }]}
           >
-            <Input placeholder="Masukkan Peta Konsep" />
+            <Input />
           </Form.Item>
 
-          <Form.Item label="Tujuan Kegiatan" name="tujuanKegiatan">
+          <Form.Item label="Isi Tujuan Kegiatan" name="tujuanKegiatan">
             <RichTextEditor />
           </Form.Item>
 
