@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Select, Button, DatePicker, message } from 'antd'
+import { Form, Input, Select, Button, DatePicker, message, Modal } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
 import RichTextEditor from '@/components/shared/editor/Editor'
 import moment from 'moment'
@@ -20,10 +20,13 @@ const EditModulAjar = ({
       ...modulAjarData,
       startDate: moment(modulAjarData.startDate),
       endDate: moment(modulAjarData.endDate),
-      minggu: modulAjarData.idTujuanPembelajaran?.minggu,
+      minggu: modulAjarData.minggu,
+      idTujuanPembelajaran: modulAjarData.idTujuanPembelajaran,
     })
-    setSelectedTp(modulAjarData.idTujuanPembelajaran)
+    setSelectedTp(modulAjarData.tujuanPembelajaran)
   }, [form, modulAjarData])
+
+  console.log(modulAjarData)
 
   const handleFormChange = (changedValues, allValues) => {
     if (changedValues.minggu) {
@@ -40,7 +43,6 @@ const EditModulAjar = ({
   }
 
   const handleSubmit = async (values) => {
-    console.log(values)
     let katakunci = values.katakunci
     if (!Array.isArray(katakunci)) {
       katakunci = katakunci.split(',').map((kata) => kata.trim())
@@ -63,16 +65,32 @@ const EditModulAjar = ({
       petaKonsep,
       idTujuanPembelajaran: selectedTp.id,
     }
-    console.log(payload)
 
-    // try {
-    //   await modulAjarService.update(modulAjarData.id, payload, token)
-    //   message.success('Data modul ajar telah diupdate')
-    //   clearForm()
-    //   refetch()
-    // } catch (error) {
-    //   message.error('Gagal mengupdate data modul ajar')
-    // }
+    try {
+      await modulAjarService
+        .update(modulAjarData.id, payload, token)
+        .then(() => {
+          Modal.success({
+            title: 'Success',
+            content: 'Data modul ajar telah diupdate',
+            position: 'bottom-center',
+          })
+          refetch()
+        })
+        .catch((error) => {
+          Modal.error({
+            title: 'Oops...',
+            content: error,
+            position: 'bottom-center',
+          })
+        })
+    } catch (error) {
+      Modal.error({
+        title: 'Oops...',
+        content: 'Terdapat kesalahan saat memperbarui data modul ajar',
+        position: 'bottom-center',
+      })
+    }
   }
 
   return (
@@ -186,7 +204,7 @@ const EditModulAjar = ({
           </Form.Item>
 
           <Form.Item label="Isi Tujuan Kegiatan" name="tujuanKegiatan">
-            <RichTextEditor />
+            <RichTextEditor initialData={modulAjarData?.tujuanKegiatan} />
           </Form.Item>
 
           <Form.Item>
