@@ -1,4 +1,4 @@
-import PrintAssesmnetInput from '@/components/views/teacher/assesment/component/print/printAssesmentInput'
+import PrintAssesmnetInput from '@/components/views/penilaian/component/print/printAssesmentInput'
 import React from 'react'
 
 const DashboardPage = () => {
