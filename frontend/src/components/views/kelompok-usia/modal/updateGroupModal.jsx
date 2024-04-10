@@ -11,10 +11,10 @@ const UpdateGroupModal = ({
 }) => {
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
-  const { name, kelompokUsia, kode } = selectedKategori || {}
+  const { kelompokUsia, kode } = selectedKategori || {}
 
   useEffect(() => {
-    form.setFieldsValue({ name, kelompokUsia, kode })
+    form.setFieldsValue({ kelompokUsia, kode })
   }, [selectedKategori])
 
   const handleSubmit = async () => {
@@ -68,13 +68,6 @@ const UpdateGroupModal = ({
       ]}
     >
       <Form form={form} layout="vertical">
-        <Form.Item
-          label="Nama Kategori Rombel"
-          name="name"
-          rules={[{ required: true, message: 'Masukkan Nama' }]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item
           label="Kelompok Usia"
           name="kelompokUsia"

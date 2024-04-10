@@ -129,15 +129,6 @@ export class RombelQuery extends DbService {
     }
 
     async deleteRombelSemesterGuruById(id: string) {
-        await this.prisma.rombelSemesterGuru.update({
-            where: { id }, data: {
-                rombel: {
-                    update: {
-                        idGuru: null
-                    }
-                }
-            }
-        })
         return await this.prisma.rombelSemesterGuru.delete({ where: { id } })
     }
 
@@ -149,6 +140,10 @@ export class RombelQuery extends DbService {
         const rombel = await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
         if (!rombel) throw new BadRequestException('Rombel tidak ditemukan')
         return await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
+    }
+
+    async findRombelSemesterGuruByIdsOrThrow(ids: string[]) {
+        return await this.prisma.rombelSemesterGuru.findMany({ where: { id: { in: ids } } })
     }
 
     async checkIsRombelSemesterGuruExist(idRombel: string, idSemester: string, idGuru: string) {

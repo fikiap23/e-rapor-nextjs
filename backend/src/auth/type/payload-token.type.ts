@@ -4,6 +4,6 @@ export type PayloadToken = {
   role: string;
   access: string;
   expire: string;
-  idsRombel: any;
+  idsRombelSemesterGuru: any;
   idGuru: string;
 };

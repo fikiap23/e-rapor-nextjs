@@ -11,6 +11,7 @@ import { NilaiMingguanQuery } from '../prisma/queries/nilai-mingguan/nilai-mingg
 import { ModulAjarModule } from '../modul-ajar/modul-ajar.module';
 import { AuthModule } from '../auth/auth.module';
 import { MuridModule } from '../murid/murid.module';
+import { RombelModule } from '../rombel/rombel.module';
 
 
 @Module({
@@ -22,7 +23,8 @@ import { MuridModule } from '../murid/murid.module';
         HelperModule,
         AuthModule,
         ModulAjarModule,
-        MuridModule
+        MuridModule,
+        RombelModule
     ],
     providers: [NilaiMingguanService, NilaiMingguanRepository, NilaiMingguanQuery],
     controllers: [NilaiMingguanController],

@@ -6,17 +6,12 @@ import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
 import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
-import { dot } from 'node:test/reporters';
 
 @Injectable()
 export class RombelRepository {
     constructor(private readonly rombelQuery: RombelQuery, private readonly guruRepository: GuruRepository) { }
 
     async createRombel(dto: CreateRombelDto) {
-        if (dto.idGuru) {
-            // check guru exist
-            await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
-        }
         // check name and name rombel exist
         const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
         if (rombel.length > 0) throw new BadRequestException('Rombel sudah ada');
@@ -37,10 +32,7 @@ export class RombelRepository {
     async updateRombelById(id: string, dto: UpdateRombelDto) {
         // check rombel exist
         const existRombel = await this.findRombelByIdOrThrow(id);
-        if (dto.idGuru) {
-            // check guru exist
-            await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
-        }
+
         // check name and name rombel exist
         if (dto.name && dto.name !== existRombel.name) {
             const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
@@ -76,7 +68,6 @@ export class RombelRepository {
     async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
         // check rombel exist
         await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
-        await this.updateRombelById(payload.idRombel, { idGuru: payload.idGuru })
         return await this.rombelQuery.createRombelSemesterGuru(payload)
     }
 

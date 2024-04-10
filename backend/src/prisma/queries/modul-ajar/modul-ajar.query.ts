@@ -13,22 +13,27 @@ export class ModulAjarQuery extends DbService {
         return await this.prisma.modulAjar.findUnique({ where: { id } })
     }
 
-    async findByIdAndRombel(id: string, idRombel: string) {
-        return await this.prisma.modulAjar.findUnique({ where: { id, idRombel } })
+    async findByIdAndRombel(id: string, idRombelSemesterGuru: string) {
+        return await this.prisma.modulAjar.findUnique({ where: { id, idRombelSemesterGuru } })
     }
 
-    async findByIdRombel(idRombel: string) {
-        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombel }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
+    async findByIdRombel(idRombelSemesterGuru: string) {
+        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombelSemesterGuru }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
         return modulAjar
     }
 
-    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombel: string): Promise<boolean> {
-        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombel } })
+    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombelSemesterGuru: string): Promise<boolean> {
+        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombelSemesterGuru } })
         return isMingguHasUsed ? true : false
     }
 
-    async create(idRombel: string, payload: CreateModulAjarDto) {
-        return await this.prisma.modulAjar.create({ data: { ...payload, idRombel } })
+    async checkIsMingguHasUsedByIdsRombelSemesterGuru(minggu: number, idTujuanPembelajaran: string, idRombelSemesterGuru: string[]): Promise<boolean> {
+        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombelSemesterGuru: { in: idRombelSemesterGuru } } })
+        return isMingguHasUsed ? true : false
+    }
+
+    async create(payload: CreateModulAjarDto) {
+        return await this.prisma.modulAjar.create({ data: payload })
     }
 
     async updateById(id: string, payload: UpdateModulAjarDto) {

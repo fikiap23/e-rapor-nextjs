@@ -16,9 +16,9 @@ export class JadwalAjarRepository {
     ) { }
 
     async findAll(token: string) {
-        // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken
-        return await this.jadwalAjarQuery.findAll(idsRombel[0]);
+        //! get decode payload jwt token
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken
+        return await this.jadwalAjarQuery.findAll(idsRombelSemesterGuru[0]);
     }
 
     async findByIdOrThrow(id: string) {
@@ -39,23 +39,23 @@ export class JadwalAjarRepository {
     }
 
     async createJadwalAjar(token: string, dto: CreateJadwalAjarDto) {
-        // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        //! get decode payload jwt token
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         // check module ajar is exist
-        await this.modulAjarRepository.findByIdAndRombelOrThrow(dto.idModulAjar, idsRombel[0]);
+        await this.modulAjarRepository.findByIdAndRombelOrThrow(dto.idModulAjar, idsRombelSemesterGuru[0]);
         // check hari exist
         await this.checkIsHariHasUsed(dto.idModulAjar, dto.hari);
-        return await this.jadwalAjarQuery.create(idsRombel[0], dto);
+        return await this.jadwalAjarQuery.create(idsRombelSemesterGuru[0], dto);
     }
 
     async updateById(token: string, id: string, dto: UpdateJadwalAjarDto) {
         const jadwalAjar = await this.findByIdOrThrow(id);
 
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
-        // check module ajar is exist
-        if (dto.idModulAjar && dto.idModulAjar !== jadwalAjar.idModulAjar) await this.modulAjarRepository.findByIdAndRombelOrThrow(dto.idModulAjar, idsRombel[0]);
+        //! check module ajar is exist
+        if (dto.idModulAjar && dto.idModulAjar !== jadwalAjar.idModulAjar) await this.modulAjarRepository.findByIdAndRombelOrThrow(dto.idModulAjar, idsRombelSemesterGuru[0]);
 
         if (dto.hari && dto.hari !== jadwalAjar.hari) await this.checkIsHariHasUsed(dto.idModulAjar, dto.hari);
         return await this.jadwalAjarQuery.updateById(id, dto);
@@ -64,8 +64,8 @@ export class JadwalAjarRepository {
     async deleteById(token: string, id: string) {
         const jadwalAjar = await this.findByIdOrThrow(id);
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        if (jadwalAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        if (!idsRombelSemesterGuru.includes(jadwalAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.jadwalAjarQuery.deleteById(id);
     }
 

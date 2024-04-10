@@ -6,6 +6,7 @@ import { AuthRepository } from '../auth/auth.repository';
 import { PayloadToken } from '../auth/type';
 import { MuridRepository } from '../murid/murid.repository';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
+import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 
 @Injectable()
 export class NilaiMingguanRepository {
@@ -13,7 +14,8 @@ export class NilaiMingguanRepository {
         private readonly nilaiMingguanQuery: NilaiMingguanQuery,
         private readonly modulAjarRepository: ModulAjarRepository,
         private readonly authRepository: AuthRepository,
-        private readonly muridRepository: MuridRepository
+        private readonly muridRepository: MuridRepository,
+        private readonly rombelQuery: RombelQuery
     ) { }
 
     async findAll() {
@@ -34,35 +36,38 @@ export class NilaiMingguanRepository {
 
     async create(token: string, dto: CreatePenilaianMingguanDto) {
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+
+        const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdsOrThrow(idsRombelSemesterGuru);
+        const idsRombel = rombelSemesterGuru.map(rombel => rombel.id);
 
         // check modul ajar exist
         const modulAjar = await this.modulAjarRepository.findByIdOrThrow(dto.idModulAjar);
 
-        if (modulAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         // check murid exist
         const murid = await this.muridRepository.findByIdOrThrow(dto.idMurid);
-        if (murid.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombel.includes(murid.idRombel)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         return await this.nilaiMingguanQuery.create(dto)
     }
 
     async updateById(token: string, id: string, dto: UpdatePenilaianMingguanDto) {
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         if (dto.idMurid && dto.idModulAjar) throw new BadRequestException('Tidak boleh memasukkan idMurid dan idModulAjar');
         const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
 
-        if (nilaiMingguan.modulAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(nilaiMingguan.modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.updateById(id, dto)
     }
 
     async deleteById(token: string, id: string) {
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
-        if (nilaiMingguan.modulAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(nilaiMingguan.modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.deleteById(id)
     }
 }

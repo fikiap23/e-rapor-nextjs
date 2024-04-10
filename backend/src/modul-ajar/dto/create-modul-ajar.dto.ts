@@ -40,6 +40,10 @@ class CreateModulAjarDto {
     @IsNotEmpty()
     @IsString()
     idTujuanPembelajaran: string;
+
+    @IsNotEmpty()
+    @IsString()
+    idRombelSemesterGuru: string;
 }
 
 export default CreateModulAjarDto;

@@ -15,9 +15,10 @@ export class ModulAjarRepository {
     ) { }
 
     async findAllModulAjar(token: string) {
+        // ! nanti dibenarkan
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        return await this.modulAjarQuery.findByIdRombel(idsRombel[0]);
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        return await this.modulAjarQuery.findByIdRombel(idsRombelSemesterGuru[0]);
     }
 
     async findByIdOrThrow(id: string) {
@@ -32,9 +33,9 @@ export class ModulAjarRepository {
         return modulAjar
     }
 
-    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombel: string) {
+    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idsRombelSemesterGuru: string[]) {
         ;
-        const modulAjar = await this.modulAjarQuery.checkIsMingguHasUsed(minggu, idTujuanPembelajaran, idRombel);
+        const modulAjar = await this.modulAjarQuery.checkIsMingguHasUsedByIdsRombelSemesterGuru(minggu, idTujuanPembelajaran, idsRombelSemesterGuru);
         if (modulAjar) throw new BadRequestException('Minggu ini sudah ada modul ajar');
         return
     }
@@ -43,9 +44,9 @@ export class ModulAjarRepository {
         // check mapel is exist
         await this.cpTpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombel[0]);
-        const modulAjar = await this.modulAjarQuery.create(idsRombel[0], dto);
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombelSemesterGuru);
+        const modulAjar = await this.modulAjarQuery.create(dto);
         if (!modulAjar) throw new BadRequestException('Modul Ajar gagal ditambahkan');
         return modulAjar
     }
@@ -58,8 +59,8 @@ export class ModulAjarRepository {
         if (dto.idTujuanPembelajaran && dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.cpTpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
 
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        if (dto.minggu && dto.minggu !== currModulAjar.minggu || dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombel[0]);
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        if (dto.minggu && dto.minggu !== currModulAjar.minggu || dto.idTujuanPembelajaran !== currModulAjar.idTujuanPembelajaran) await this.checkIsMingguHasUsed(dto.minggu, dto.idTujuanPembelajaran, idsRombelSemesterGuru);
 
         // update modul ajar
         const modulAjar = await this.modulAjarQuery.updateById(id, dto);
@@ -72,9 +73,9 @@ export class ModulAjarRepository {
         const modulAjar = await this.findByIdOrThrow(id);
 
         // get decode payload jwt token
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
-        if (modulAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         // delete modul ajar
         const isDeleted = await this.modulAjarQuery.deleteById(id);
         if (!isDeleted) throw new BadRequestException('Modul Ajar gagal dihapus');
