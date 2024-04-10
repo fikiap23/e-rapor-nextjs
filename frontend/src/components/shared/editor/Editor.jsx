@@ -17,32 +17,16 @@ const RichTextEditor = ({ onChange }) => {
   }
 
   return (
-    <div>
-      <Editor
-        editorState={editorState}
-        onEditorStateChange={onEditorStateChange}
-        wrapperClassName="wrapper-class"
-        editorClassName="editor-class"
-        toolbarClassName="toolbar-class"
-        toolbar={{
-          options: ['inline', 'list', 'textAlign', 'history'],
-        }}
-      />
-
-      <br />
-      <Row gutter={10}>
-        <Col span={12}>
-          <Card
-            title="Convert HTML synchronously"
-            bordered={false}
-            style={{ minHeight: 200 }}
-          >
-            {editorState &&
-              draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    <Editor
+      editorState={editorState}
+      onEditorStateChange={onEditorStateChange}
+      wrapperClassName="wrapper-class"
+      editorClassName="editor-class"
+      toolbarClassName="toolbar-class"
+      toolbar={{
+        options: ['inline', 'list', 'textAlign', 'history'],
+      }}
+    />
   )
 }
 

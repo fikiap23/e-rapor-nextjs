@@ -98,13 +98,7 @@ const ModulAjarView = () => {
       dataIndex: 'tujuanKegiatan',
       key: 'tujuanKegiatan',
       render: (text, record, index) => (
-        <div>
-          {text.map((tujuan, idx) => (
-            <p key={idx}>
-              {idx + 1}. {tujuan}
-            </p>
-          ))}
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: text }} />
       ),
     },
     {

@@ -26,8 +26,8 @@ class CreateModulAjarDto {
     katakunci: string[];
 
     @IsNotEmpty()
-    @IsArray()
-    tujuanKegiatan: string[];
+    @IsString()
+    tujuanKegiatan: string;
 
     @IsNotEmpty()
     @IsArray()
