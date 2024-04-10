@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Select, Button, DatePicker, message } from 'antd'
+import { Form, Input, Select, Button, DatePicker, Modal } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
 import RichTextEditor from '@/components/shared/editor/Editor'
 
@@ -34,12 +34,27 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
     console.log(payload)
 
     try {
-      await modulAjarService.create(payload, token)
-      message.success('Data modul ajar telah ditambahkan')
-      clearForm()
-      refetch()
+      await modulAjarService
+        .create(payload, token)
+        .then(() => {
+          Modal.success({
+            title: 'Success',
+            content: 'Data modul ajar telah ditambahkan',
+          })
+          clearForm()
+          refetch()
+        })
+        .catch((err) => {
+          Modal.error({
+            content: err,
+            title: 'Oops...',
+          })
+        })
     } catch (error) {
-      message.error('Gagal menambahkan data modul ajar')
+      Modal.error({
+        content: 'Terjadi kesalahan',
+        title: 'Oops...',
+      })
     }
   }
 
