@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { Tabs, Button, Table, Modal, Space } from 'antd'
 import Link from 'next/link'
-import Swal from 'sweetalert2'
 import useAuth from '@/hooks/useAuth'
 import InputModulAjar from './component/inputModulAjar'
 import ActivitiesView from './component/activitiesView'
@@ -11,10 +11,17 @@ import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import EditModulAjar from './component/editModulAjar'
 import { useModulAjars } from '@/hooks/useModulAjar'
 import { useCpTp } from '@/hooks/useCpTp'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PrinterOutlined,
+} from '@ant-design/icons'
+
+const { TabPane } = Tabs
 
 const ModulAjarView = () => {
   const [activeTab, setActiveTab] = useState('moduleTab')
-  const [mingguTpUnCreated, setMingguTpUncreated] = useState([])
+  const [mingguTpUncreated, setMingguTpUncreated] = useState([])
   const [selectedModulAjar, setSelectedModulAjar] = useState(null)
   const { token } = useAuth()
   const {
@@ -54,143 +61,135 @@ const ModulAjarView = () => {
   }
 
   const handleDelete = (id) => {
-    Swal.fire({
+    Modal.confirm({
       title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus data modul !',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      content: 'Anda akan menghapus data modul!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
         await modulAjarService.delete(token, id)
-        Swal.fire('Data Dihapus!', 'Data modul telah dihapus.', 'success')
+        Modal.success({
+          content: 'Data modul telah dihapus.',
+        })
         refetchModulAjars()
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data modul.', 'error')
-      }
+      },
+      onCancel: () => {},
     })
   }
+
+  const columns = [
+    {
+      title: 'Minggu',
+      dataIndex: 'minggu',
+      key: 'minggu',
+    },
+    {
+      title: 'Topik',
+      dataIndex: 'topik',
+      key: 'topik',
+    },
+    {
+      title: 'Sub Topik',
+      dataIndex: 'subtopik',
+      key: 'subtopik',
+    },
+    {
+      title: 'Tujuan Kegiatan',
+      dataIndex: 'tujuanKegiatan',
+      key: 'tujuanKegiatan',
+      render: (text, record, index) => (
+        <div>
+          {text.map((tujuan, idx) => (
+            <p key={idx}>
+              {idx + 1}. {tujuan}
+            </p>
+          ))}
+        </div>
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'id',
+      render: (text, record, index) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          >
+            Edit
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+          >
+            Hapus
+          </Button>
+          <Button
+            style={{ backgroundColor: 'green', color: 'white' }}
+            icon={<PrinterOutlined />}
+          >
+            Print
+          </Button>
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <div className="content-wrapper" id="guru">
       <section className="content">
         <div className="row">
           <div className="col-md-12">
-            <div className="nav-tabs-custom">
-              <ul className="nav nav-tabs">
-                <li className={activeTab === 'moduleTab' ? 'active' : ''}>
-                  <Link href="" onClick={() => handleTabChange('moduleTab')}>
-                    Modul Ajar
-                  </Link>
-                </li>
-                <li className={activeTab === 'activitiesTab' ? 'active' : ''}>
-                  <Link
-                    href=""
-                    onClick={() => handleTabChange('activitiesTab')}
-                  >
-                    Jadwal Ajar
-                  </Link>
-                </li>
-              </ul>
-              <div className="tab-content">
-                {activeTab === 'moduleTab' && (
-                  <div className="active tab-pane" id="activity">
+            <div className="box box-solid box-primary">
+              <div className="box-header">
+                <h3 className="box-title">
+                  <i className="fa fa-book"></i>{' '}
+                  <span style={{ marginLeft: '10px' }}> Data Modul Ajar </span>
+                </h3>
+              </div>
+              <div className="box-body">
+                <Tabs activeKey={activeTab} onChange={handleTabChange}>
+                  <TabPane tab="Modul Ajar" key="moduleTab">
                     <div className="box-body table-responsive no-padding">
                       <div style={{ margin: '0 20px 20px 20px' }}>
-                        <button
-                          type="button"
-                          className="btn bg-green"
+                        <Button
+                          type="primary"
                           onClick={() => handleTabChange('learningOutcomesTab')}
                         >
-                          <i className="icon fa fa-plus"></i> Tambah
-                        </button>
+                          Tambah
+                        </Button>
                       </div>
-                      {isFetchingModulAjars && <Loading />}
-                      {!isFetchingModulAjars && modulAjars.length === 0 && (
-                        <EmptyDataIndicator message={'Belum Ada Modul Ajar'} />
-                      )}
-                      {!isFetchingModulAjars && modulAjars.length > 0 && (
-                        <table id="siswa" className="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>Minggu</th>
-                              <th>Topik</th>
-                              <th>Sub Topik</th>
-                              <th>Tujuan Kegiatan</th>
-                              <th>Aksi</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {modulAjars?.map((modulAjar) => (
-                              <tr key={modulAjar.id}>
-                                <td>{modulAjar.minggu}</td>
-                                <td>{modulAjar.topik}</td>
-                                <td>{modulAjar.subtopik}</td>
-                                <td>
-                                  {modulAjar?.tujuanKegiatan?.map(
-                                    (tujuan, index) => (
-                                      <p key={tujuan}>
-                                        {index + 1}. {tujuan}
-                                      </p>
-                                    )
-                                  )}
-                                </td>
-                                <td>
-                                  <button
-                                    style={{
-                                      marginRight: '2px',
-                                      marginLeft: '2px',
-                                    }}
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={() => handleEdit(modulAjar)}
-                                  >
-                                    <i className="icon fa fa-edit"></i>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() => handleDelete(modulAjar.id)}
-                                  >
-                                    <i className="icon fa fa-trash"></i>
-                                  </button>
-                                  <button
-                                    style={{
-                                      marginRight: '2px',
-                                      marginLeft: '2px',
-                                    }}
-                                    type="button"
-                                    className="btn btn-success"
-                                  >
-                                    <i className="icon fa fa-print"></i>
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      )}
+
+                      <Table
+                        loading={isFetchingModulAjars}
+                        columns={columns}
+                        dataSource={modulAjars}
+                        rowKey="id"
+                        pagination={false}
+                      />
                     </div>
-                  </div>
-                )}
+                  </TabPane>
+                  <TabPane tab="Jadwal Ajar" key="activitiesTab">
+                    <ActivitiesView />
+                  </TabPane>
+                </Tabs>
                 {activeTab === 'learningOutcomesTab' &&
                   !isFetchingModulAjars &&
                   !isFetchingCpTps && (
                     <InputModulAjar
                       refetch={refetchModulAjars}
-                      tujuanPembelajarans={mingguTpUnCreated}
+                      tujuanPembelajarans={mingguTpUncreated}
                       token={token}
                     />
                   )}
-                {activeTab === 'activitiesTab' && <ActivitiesView />}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (
                   <EditModulAjar
                     modulAjarData={selectedModulAjar}
                     refetch={refetchModulAjars}
                     token={token}
-                    tujuanPembelajarans={mingguTpUnCreated}
+                    tujuanPembelajarans={mingguTpUncreated}
                   />
                 )}
               </div>
