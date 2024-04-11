@@ -120,7 +120,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
           >
             Hapus
           </Button>
-          <Link href={`/module_print/${record.id}`}>
+          <Link href={`/module_print/${record.id}`} target="_blank">
             <Button
               style={{ backgroundColor: 'green', color: 'white' }}
               icon={<PrinterOutlined />}

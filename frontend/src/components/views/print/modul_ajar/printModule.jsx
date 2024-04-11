@@ -9,6 +9,53 @@ function PrintModule({ data }) {
   // }, [])
 
   console.log(`Data for printing:`, data)
+  const weeklySchedule = [
+    {
+      date: 'Senin, 25 September 2023',
+      activities: [
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 1',
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 2',
+        'Bertanya jawab tentang bagian ikan 1',
+        'Membaca ensiklopedia tentang aneka ikan 1',
+      ],
+    },
+    {
+      date: 'Selasa, 26 September 2023',
+      activities: [
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 3',
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 4',
+        'Bertanya jawab tentang bagian ikan 2',
+        'Membaca ensiklopedia tentang aneka ikan 2',
+      ],
+    },
+    {
+      date: 'Rabu, 27 September 2023',
+      activities: [
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 5',
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 6',
+        'Bertanya jawab tentang bagian ikan 3',
+        'Membaca ensiklopedia tentang aneka ikan 3',
+      ],
+    },
+    {
+      date: 'Kamis, 28 September 2023',
+      activities: [
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 7',
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 8',
+        'Bertanya jawab tentang bagian ikan 4',
+        'Membaca ensiklopedia tentang aneka ikan 4',
+      ],
+    },
+    {
+      date: 'Jumat, 29 September 2023',
+      activities: [
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 9',
+        'Menyimak video tentang aneka binatang yang hidup di air dan bertanya jawab 10',
+        'Bertanya jawab tentang bagian ikan 5',
+        'Membaca ensiklopedia tentang aneka ikan 5',
+      ],
+    },
+  ]
 
   return (
     <div className="body">
@@ -184,71 +231,23 @@ function PrintModule({ data }) {
       >
         <thead>
           <tr>
-            <th>Senin, 25 September 2023</th>
-            <th>Senin, 26 September 2023</th>
-            <th>Senin, 27 September 2023</th>
-            <th>Senin, 28 September 2023</th>
-            <th>Senin, 29 September 2023</th>
-            <th>Senin, 30 September 2023</th>
+            {weeklySchedule.map((day) => (
+              <th key={day.date}>{day.date}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>Bertanya jawab tentang bagian ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-          </tr>
-          <tr>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>Bertanya jawab tentang bagian ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-          </tr>
-          <tr>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>Bertanya jawab tentang bagian ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-          </tr>
-          <tr>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>
-              Menyimak video tentang aneka binatang yang hidup di air dan
-              bertanya jawab
-            </td>
-            <td>Bertanya jawab tentang bagian ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-            <td>Membaca ensiklopedia tentang aneka ikan</td>
-          </tr>
+          {Array.from({
+            length: Math.max(
+              ...weeklySchedule.map((day) => day.activities.length)
+            ),
+          }).map((_, index) => (
+            <tr key={index}>
+              {weeklySchedule.map((day) => (
+                <td key={day.date}>{day.activities[index] || ''}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
 
