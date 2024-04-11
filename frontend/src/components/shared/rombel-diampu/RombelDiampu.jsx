@@ -1,8 +1,7 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
 import { useRombelDiampu } from '@/hooks/useRombelDiampu'
-import { Button, Table, Tag } from 'antd'
-import Link from 'next/link'
+import { Table } from 'antd'
 
 const RombelDiampuView = () => {
   const { token } = useAuth()
@@ -52,12 +51,19 @@ const RombelDiampuView = () => {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
-        <Link href={`/guru/modul-ajar/${record.id}`}>
-          <Button type="primary" style={{ marginRight: 8 }}>
+        <span>
+          <Button
+            type="primary"
+            onClick={() => {
+              const url = `/guru/rombel/${record.id}`
+              window.location.href = url
+            }}
+            style={{ marginRight: 8 }}
+          >
             <i className="fa fa-plus" style={{ marginRight: '8px' }}></i> Input
-            Modul Ajar
+            Catatan Raport
           </Button>
-        </Link>
+        </span>
       ),
     },
   ]
@@ -70,7 +76,7 @@ const RombelDiampuView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-book"></i> Input Modul Ajar
+                    <i className="fa fa-book"></i> Rombel Diampu
                   </h3>
                 </div>
                 <div className="box-body">

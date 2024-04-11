@@ -45,15 +45,15 @@ export class AbsensiRepository {
     async create(token: string, dto: CreateAbsensiDto) {
         try {
             // get decode payload jwt token
-            const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+            const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
             // check jadwal ajar exist
             const jadwalAjar = await this.jadwalAjarRepository.findByIdOrThrow(dto.idJadwalAjar);
-            if (jadwalAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+            if (!idsRombelSemesterGuru.includes(jadwalAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
             // check murid exist
             const murid = await this.muridRepository.findByIdOrThrow(dto.idMurid);
-            if (murid.idRombel !== idsRombel[0]) throw new BadRequestException('Murid tidak terdaftar di rombel ini');
+            // if (murid.idRombel !== idsRombel[0]) throw new BadRequestException('Murid tidak terdaftar di rombel ini');
 
             // check absensi exist
             await this.checkIsAbsensiExist(dto.idMurid, dto.idJadwalAjar);
@@ -71,7 +71,7 @@ export class AbsensiRepository {
     async createManyByJadwal(token: string, idJadwalAjar: string, dto: BulkAbsensiByJadwalDto[]) {
         try {
             // get decode payload jwt token
-            const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+            const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
             // check murid exist
             const murids = await this.absensiQuery.checkIsAbsensiExistByBulk(dto.map(item => item.idMurid), idJadwalAjar);
@@ -79,7 +79,7 @@ export class AbsensiRepository {
 
             // check jadwal ajar exist
             const jadwalAjar = await this.jadwalAjarRepository.findByIdOrThrow(idJadwalAjar);
-            if (jadwalAjar.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+            if (!idsRombelSemesterGuru.includes(jadwalAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
             const dataAbsensi = await this.absensiQuery.createMany(idJadwalAjar, dto);
             if (!dataAbsensi) throw new BadRequestException('Absensi gagal ditambahkan');

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, DatePicker, message, Modal } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
 import RichTextEditor from '@/components/shared/editor/Editor'
-import moment from 'moment'
 
 const { Option } = Select
 
@@ -11,6 +10,7 @@ const EditModulAjar = ({
   refetch,
   token,
   modulAjarData,
+  idRombelSemesterGuru,
 }) => {
   const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
@@ -18,15 +18,11 @@ const EditModulAjar = ({
   useEffect(() => {
     form.setFieldsValue({
       ...modulAjarData,
-      startDate: moment(modulAjarData.startDate),
-      endDate: moment(modulAjarData.endDate),
       minggu: modulAjarData.minggu,
       idTujuanPembelajaran: modulAjarData.idTujuanPembelajaran,
     })
     setSelectedTp(modulAjarData.tujuanPembelajaran)
   }, [form, modulAjarData])
-
-  console.log(modulAjarData)
 
   const handleFormChange = (changedValues, allValues) => {
     if (changedValues.minggu) {
@@ -64,6 +60,7 @@ const EditModulAjar = ({
       alatBahan,
       petaKonsep,
       idTujuanPembelajaran: selectedTp.id,
+      idRombelSemesterGuru,
     }
 
     try {
@@ -146,22 +143,6 @@ const EditModulAjar = ({
               </Form.Item>
             </>
           )}
-
-          <Form.Item
-            label="Tanggal Mulai"
-            name="startDate"
-            rules={[{ required: true, message: 'Tanggal Mulai harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item
-            label="Tanggal Akhir"
-            name="endDate"
-            rules={[{ required: true, message: 'Tanggal Akhir harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
 
           <Form.Item
             label="Topik"

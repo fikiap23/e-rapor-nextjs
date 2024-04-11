@@ -1,21 +1,23 @@
 'use client'
 import { useEffect } from 'react'
 import './style_module.css'
+import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 
-function PrintModule() {
-  useEffect(() => {
-    window.print()
-  }, [])
+function PrintModule({ data }) {
+  // useEffect(() => {
+  //   window.print()
+  // }, [])
+
+  console.log(`Data for printing:`, data)
 
   return (
     <div className="body">
       <div className="header">
         <h4 className="tbl">MODUL AJAR</h4>
         <h6 className="tbl">
-          TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL | Kelompok Usia 4-5 tahun
-          | Fase Pondasi
+          {data.sekolah} | Kelompok Usia {data.kelompokUsia} | Fase Pondasi
         </h6>
-        <h6 className="tbl">Semester 1 Tahun Pelajaran 2023/2024</h6>
+        <h6 className="tbl">{data.semester}</h6>
         <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
       </div>
 
@@ -28,7 +30,7 @@ function PrintModule() {
           <tr>
             <td className="tbl">Minggu Ke</td>
             <td className="tbl">:</td>
-            <td className="tbl">1</td>
+            <td className="tbl">{data.modulAjar.minggu}</td>
             <td
               className="tbl"
               style={{ paddingLeft: '5px', borderLeft: '2px solid black' }}
@@ -41,7 +43,7 @@ function PrintModule() {
           <tr>
             <td className="tbl">Topik</td>
             <td className="tbl">:</td>
-            <td className="tbl">Aku Hamba Allah</td>
+            <td className="tbl">{data.modulAjar.topik}</td>
             <td
               className="tbl"
               style={{ paddingLeft: '5px', borderLeft: '2px solid black' }}
@@ -54,7 +56,7 @@ function PrintModule() {
           <tr>
             <td className="tbl">Sub Topik</td>
             <td className="tbl">:</td>
-            <td className="tbl">Identitasku</td>
+            <td className="tbl">{data.modulAjar.subtopik}</td>
             <td
               className="tbl"
               style={{ paddingLeft: '5px', borderLeft: '2px solid black' }}
@@ -62,7 +64,9 @@ function PrintModule() {
               Kata Kunci
             </td>
             <td className="tbl">:</td>
-            <td className="tbl">Namaku, Ientitasku</td>
+            <td className="tbl">
+              {data.modulAjar.katakunci.map((kata) => `${kata}, `)}
+            </td>
           </tr>
         </table>
       </div>
@@ -70,28 +74,10 @@ function PrintModule() {
       <div style={{ display: 'flex', marginTop: '10px' }}>
         <p>Tujuan Kegiatan</p>
         <span style={{ textIndent: '3.2em' }}>:</span>
-        <div className="ttd" style={{ marginLeft: '20px' }}>
-          <ol className="dashed-list">
-            <li>
-              <p>
-                Bersyukur atas anugrah Allah SWT karena telah menciptakan
-                manusia yang berakal dan sempurna
-              </p>
-            </li>
-            <li>
-              <p>Mengenal identitas diri</p>
-            </li>
-            <li>
-              <p>Berkomunikasi dan menjelaskan tentang diri dan teman</p>
-            </li>
-            <li>
-              <p>Berlatih motorik dan kreativitas serta kolaborasi</p>
-            </li>
-          </ol>
-          {/* <p style={{ fontWeight: 'bold', margin: '0' }}>LILIANA ASTUTI</p>
-                    <hr style={{ borderColor: 'black', margin: '5px 0', width: '100%' }} />
-                    <p style={{ fontWeight: 'bold', margin: '0' }}>NIP. 1234567890</p> */}
-        </div>
+        <div
+          className="ttd"
+          dangerouslySetInnerHTML={{ __html: data.modulAjar.tujuanKegiatan }}
+        />
       </div>
 
       <table style={{ marginBottom: '10px' }}>
@@ -110,10 +96,7 @@ function PrintModule() {
         <tr>
           <td width={120}>Alat dan Bahan</td>
           <td width={25}>:</td>
-          <td>
-            Loose parts, plastisin, playdough, kartu gambar, kartu huruf, alat
-            mewarnai, alat melukis, lagu sesuai tema, dll
-          </td>
+          <td>{data.modulAjar.alatBahan.map((alat) => `${alat}, `)}</td>
         </tr>
       </table>
 
@@ -391,18 +374,14 @@ function PrintModule() {
         <tr>
           <td width="5%" style={{ textAlign: 'center' }}>
             Mengetahui :
-            <p style={{ marginTop: '5px' }}>
-              Kepala TK ERLANGGA CIRACAS
-              <br />
-              ASY SYAMS ISLAMIC SCHOOL
-            </p>
+            <p style={{ marginTop: '5px' }}>{`Kepala Tk ${data.sekolah}`}</p>
             <div style={{ marginTop: '20%' }}>
               <p style={{ margin: '-15px' }}>
-                <b>LILIANA ASTUTI</b>
+                <b>{data.namaKepsek}</b>
               </p>
               <hr style={{ color: 'black' }} />
               <p style={{ margin: '-15px' }}>
-                <b>NIP. 1234567890</b>
+                <b>{`NIP. ${data.nipKepsek}`}</b>
               </p>
             </div>
           </td>
@@ -410,15 +389,15 @@ function PrintModule() {
           <td width="8%"></td>
 
           <td width="5%" style={{ textAlign: 'center' }}>
-            Jakarta, 14 Februari 2024 :
+            {` Jakarta, ${formatDateWithIndonesianMonth(new Date())}`}
             <p style={{ marginTop: '5px' }}>Guru Kelompok</p>
             <div style={{ marginTop: '25%' }}>
               <p style={{ margin: '-15px' }}>
-                <b>DWI ANGGRAINI</b>
+                <b>{data.namaGuru}</b>
               </p>
               <hr style={{ color: 'black' }} />
               <p style={{ margin: '-15px' }}>
-                <b>NIP/NUPTK 987654</b>
+                <b>{`NIP/NUPTK ${data.nipGuru}`}</b>
               </p>
             </div>
           </td>

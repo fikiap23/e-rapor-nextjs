@@ -87,12 +87,6 @@ const AgeGroupView = () => {
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Nama',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
       title: 'Kelompok Usia',
       dataIndex: 'kelompokUsia',
       key: 'kelompokUsia',

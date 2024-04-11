@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import CreateModulAjarDto from '../../../modul-ajar/dto/create-modul-ajar.dto';
 import { UpdateModulAjarDto } from '../../../modul-ajar/dto/update-modul-ajar.dto';
+import { SemesterType } from '@prisma/client';
 
 @Injectable()
 export class ModulAjarQuery extends DbService {
@@ -13,22 +14,76 @@ export class ModulAjarQuery extends DbService {
         return await this.prisma.modulAjar.findUnique({ where: { id } })
     }
 
-    async findByIdAndRombel(id: string, idRombel: string) {
-        return await this.prisma.modulAjar.findUnique({ where: { id, idRombel } })
+    async printById(id: string) {
+        const modulAjar = await this.prisma.modulAjar.findUnique({ where: { id }, include: { jadwalAjar: true } })
+        if (!modulAjar) return null
+        const result = await this.prisma.modulAjar.findUnique({
+            where: { id }, include: {
+                rombelSemesterGuru: {
+                    select: {
+                        semester: true,
+                        guru: true,
+                        rombel: {
+                            select: {
+                                kategoriRombel: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const sekolah = await this.prisma.sekolah.findFirst()
+
+        const semester = result.rombelSemesterGuru.semester
+        const rombel = result.rombelSemesterGuru.rombel
+        const guru = result.rombelSemesterGuru.guru
+
+
+        return {
+            semester: `Semester ${semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${semester.tahunAjaranAwal}/${semester.tahunAjaranAkhir}`,
+            sekolah: sekolah.nama,
+            namaKepsek: semester.namaKepsek,
+            nipKepsek: semester.nipKepsek,
+            namaGuru: guru.nama,
+            nipGuru: guru.nip,
+            kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+            rombel: rombel.name,
+            modulAjar: modulAjar
+
+        }
     }
 
-    async findByIdRombel(idRombel: string) {
-        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombel }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
-        return modulAjar
+    async findByIdAndRombel(id: string, idRombelSemesterGuru: string) {
+        return await this.prisma.modulAjar.findUnique({ where: { id, idRombelSemesterGuru } })
     }
 
-    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombel: string): Promise<boolean> {
-        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombel } })
+    async findByIdRombel(idRombelSemesterGuru: string) {
+        const rombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({ where: { id: idRombelSemesterGuru }, include: { rombel: { select: { id: true, name: true, kategoriRombel: true } }, semester: true } })
+        if (!rombelSemesterGuru) throw new BadRequestException('Rombel tidak ditemukan')
+
+        const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombelSemesterGuru }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
+        return {
+            semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`,
+            kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            rombel: rombelSemesterGuru.rombel.name,
+            modulAjars: modulAjar,
+        }
+    }
+
+    async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombelSemesterGuru: string): Promise<boolean> {
+        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombelSemesterGuru } })
         return isMingguHasUsed ? true : false
     }
 
-    async create(idRombel: string, payload: CreateModulAjarDto) {
-        return await this.prisma.modulAjar.create({ data: { ...payload, idRombel } })
+    async checkIsMingguHasUsedByIdsRombelSemesterGuru(minggu: number, idTujuanPembelajaran: string, idRombelSemesterGuru: string[]): Promise<boolean> {
+        const isMingguHasUsed = await this.prisma.modulAjar.findFirst({ where: { minggu, idTujuanPembelajaran, idRombelSemesterGuru: { in: idRombelSemesterGuru } } })
+        return isMingguHasUsed ? true : false
+    }
+
+    async create(payload: CreateModulAjarDto) {
+        return await this.prisma.modulAjar.create({ data: payload })
     }
 
     async updateById(id: string, payload: UpdateModulAjarDto) {

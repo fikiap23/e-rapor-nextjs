@@ -5,7 +5,12 @@ import RichTextEditor from '@/components/shared/editor/Editor'
 
 const { Option } = Select
 
-const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
+const InputModulAjar = ({
+  tujuanPembelajarans,
+  refetch,
+  token,
+  idRombelSemesterGuru,
+}) => {
   const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
 
@@ -30,8 +35,9 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
       alatBahan: values.alatBahan.split(',').map((alat) => alat.trim()),
       petaKonsep: values.petaKonsep.split(',').map((peta) => peta.trim()),
       idTujuanPembelajaran: selectedTp.id,
+      idRombelSemesterGuru,
     }
-    console.log(payload)
+    console.log(selectedTp)
 
     try {
       await modulAjarService
@@ -111,22 +117,6 @@ const InputModulAjar = ({ tujuanPembelajarans, refetch, token }) => {
               </Form.Item>
             </>
           )}
-
-          <Form.Item
-            label="Tanggal Mulai"
-            name="startDate"
-            rules={[{ required: true, message: 'Tanggal Mulai harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item
-            label="Tanggal Akhir"
-            name="endDate"
-            rules={[{ required: true, message: 'Tanggal Akhir harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
 
           <Form.Item
             label="Topik"

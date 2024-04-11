@@ -10,6 +10,7 @@ import { ModulAjarQuery } from '../prisma/queries/modul-ajar/modul-ajar.query';
 import { AuthModule } from '../auth/auth.module';
 import { ModulAjarController } from './modul-ajar.comtroller';
 import { CpTpModule } from '../cp-tp/cp-tp.module';
+import { RombelModule } from '../rombel/rombel.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { CpTpModule } from '../cp-tp/cp-tp.module';
         ConfigModule,
         HelperModule,
         AuthModule,
-        CpTpModule
+        CpTpModule,
+        RombelModule
     ],
     providers: [ModulAjarService, ModulAjarRepository, ModulAjarQuery],
     controllers: [ModulAjarController],

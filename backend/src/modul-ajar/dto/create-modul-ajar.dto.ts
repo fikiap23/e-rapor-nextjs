@@ -14,14 +14,6 @@ class CreateModulAjarDto {
     subtopik: string;
 
     @IsNotEmpty()
-    @IsDate()
-    startDate: Date;
-
-    @IsNotEmpty()
-    @IsDate()
-    endDate: Date;
-
-    @IsNotEmpty()
     @IsArray()
     katakunci: string[];
 
@@ -40,6 +32,10 @@ class CreateModulAjarDto {
     @IsNotEmpty()
     @IsString()
     idTujuanPembelajaran: string;
+
+    @IsNotEmpty()
+    @IsString()
+    idRombelSemesterGuru: string;
 }
 
 export default CreateModulAjarDto;

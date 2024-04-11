@@ -24,6 +24,6 @@ import { GuruModule } from '../guru/guru.module';
     ],
     providers: [RombelService, RombelRepository, RombelQuery],
     controllers: [RombelController],
-    exports: [RombelService, RombelRepository],
+    exports: [RombelService, RombelRepository, RombelQuery],
 })
 export class RombelModule { }

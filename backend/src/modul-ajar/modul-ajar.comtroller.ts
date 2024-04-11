@@ -48,11 +48,19 @@ export class ModulAjarController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
     }
 
-    @Get()
+    @Get("rombel-semester-guru/:id")
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN, Role.GURU)
-    async findAll(@Res() res, @Request() req,) {
-        const result = await this.modulAjarService.findAllModulAjar(req.headers.authorization);
+    async findAll(@Res() res, @Request() req, @Param('id') id) {
+        const result = await this.modulAjarService.findAllModulAjar(req.headers.authorization, id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get('print/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async printOne(@Res() res, @Param('id') id) {
+        const result = await this.modulAjarService.printById(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 

@@ -61,13 +61,6 @@ const AddGroupModal = ({ isOpen, closeModal, refetch }) => {
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="Inisial Kelompok Usia"
-          name="name"
-          rules={[{ required: true, message: 'Masukkan Inisial' }]}
-        >
-          <Input placeholder="Masukkan Inisital kelompok usia" />
-        </Form.Item>
-        <Form.Item
           label="Kelompok Usia"
           name="kelompokUsia"
           rules={[

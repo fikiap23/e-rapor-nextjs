@@ -12,6 +12,7 @@ import { AuthModule } from '../auth/auth.module';
 import { SekolahModule } from '../sekolah/sekolah.module';
 import { MuridModule } from '../murid/murid.module';
 import { SemesterModule } from '../semester/semester.module';
+import { RombelModule } from '../rombel/rombel.module';
 
 
 @Module({
@@ -24,7 +25,8 @@ import { SemesterModule } from '../semester/semester.module';
         AuthModule,
         SekolahModule,
         MuridModule,
-        SemesterModule
+        SemesterModule,
+        RombelModule
     ],
     providers: [RaporService, RaporRepository, RaporQuery],
     controllers: [RaporController],
