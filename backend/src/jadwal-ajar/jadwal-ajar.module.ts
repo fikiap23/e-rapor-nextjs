@@ -20,7 +20,7 @@ import { AuthModule } from '../auth/auth.module';
         ConfigModule,
         HelperModule,
         AuthModule,
-        ModulAjarModule
+        ModulAjarModule,
     ],
     providers: [JadwalAjarService, JadwalAjarRepository, JadwalAjarQuery],
     controllers: [JadwalAjarController],

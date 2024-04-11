@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateJadwalAjarDto } from '../../../jadwal-ajar/dto/create-jadwal-ajar.dto';
-import { HariType } from '@prisma/client';
 import { UpdateJadwalAjarDto } from '../../../jadwal-ajar/dto/update-jadwal-ajar.dto';
 
 @Injectable()
@@ -28,11 +27,6 @@ export class JadwalAjarQuery extends DbService {
 
     async findByIdModulAjar(idModulAjar: string) {
         return await this.prisma.jadwalAjar.findMany({ where: { idModulAjar } })
-    }
-
-    async checkIsHariHasUsed(idModulAjar: string, hari: HariType): Promise<boolean> {
-        const isHariHasUsed = await this.prisma.jadwalAjar.findFirst({ where: { idModulAjar, hari } })
-        return isHariHasUsed ? true : false
     }
 
     async create(idRombelSemesterGuru: string, payload: CreateJadwalAjarDto) {
