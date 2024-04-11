@@ -1,4 +1,5 @@
-import { IsInt, IsString, IsArray, IsNotEmpty, IsDate } from 'class-validator';
+import { ModelPembelajaranType } from '@prisma/client';
+import { IsInt, IsString, IsArray, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 
 class CreateModulAjarDto {
     @IsNotEmpty()
@@ -18,8 +19,8 @@ class CreateModulAjarDto {
     katakunci: string[];
 
     @IsNotEmpty()
-    @IsString()
-    tujuanKegiatan: string;
+    @IsArray()
+    tujuanKegiatan: string[];
 
     @IsNotEmpty()
     @IsArray()
@@ -28,6 +29,38 @@ class CreateModulAjarDto {
     @IsNotEmpty()
     @IsArray()
     petaKonsep: string[];
+
+    @IsOptional()
+    @IsString()
+    alokasiWaktu?: string;
+
+    @IsOptional()
+    @IsString()
+    deskripsiUmum?: string;
+
+    @IsOptional()
+    @IsEnum(ModelPembelajaranType)
+    modelPembelajaran: ModelPembelajaranType;
+
+    @IsOptional()
+    @IsString()
+    komponenInti?: string;
+
+    @IsOptional()
+    @IsString()
+    curahIdeKegiatan?: string;
+
+    @IsOptional()
+    @IsString()
+    kegiatanPembukaan?: string;
+
+    @IsOptional()
+    @IsString()
+    istirahat?: string;
+
+    @IsOptional()
+    @IsString()
+    kegiatanPenutupan?: string;
 
     @IsNotEmpty()
     @IsString()

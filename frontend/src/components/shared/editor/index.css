@@ -1,7 +1,6 @@
 .editor-class {
-  min-height: 300px;
-  border: 1px solid #f1f1f1;
-  border-top: none;
+  min-height: 200px;
+  border: 1px solid #000000;
   margin-top: -5px;
   padding: 0 10px;
 }

@@ -70,9 +70,9 @@ enum StatusAbsensi {
   ALPA
 }
 
-enum IsPrint {
-  YES
-  NO
+enum ModelPembelajaranType {
+  TATAP_MUKA
+  DARLING
 }
 
 // /*
@@ -172,12 +172,20 @@ model KategoriRombel {
 }
 
 model ModulAjar {
-  id                String              @id @default(uuid())
+  id                String                @id @default(uuid())
   minggu            Int
   topik             String
   subtopik          String
+  alokasiWaktu      String?
+  deskripsiUmum     String?
+  modelPembelajaran ModelPembelajaranType @default(TATAP_MUKA)
+  komponenInti      String?
+  curahIdeKegiatan  String?
+  kegiatanPembukaan String?
+  istirahat         String?
+  kegiatanPenutupan String?
   katakunci         String[]
-  tujuanKegiatan    String
+  tujuanKegiatan    String[]
   alatBahan         String[]
   petaKonsep        String[]
   jadwalAjar        JadwalAjar[]
