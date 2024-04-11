@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import CreateModulAjarDto from '../../../modul-ajar/dto/create-modul-ajar.dto';
 import { UpdateModulAjarDto } from '../../../modul-ajar/dto/update-modul-ajar.dto';
+import { SemesterType } from '@prisma/client';
 
 @Injectable()
 export class ModulAjarQuery extends DbService {
@@ -11,6 +12,45 @@ export class ModulAjarQuery extends DbService {
 
     async findById(id: string) {
         return await this.prisma.modulAjar.findUnique({ where: { id } })
+    }
+
+    async printById(id: string) {
+        const result = await this.prisma.modulAjar.findUnique({
+            where: { id }, include: {
+                rombelSemesterGuru: {
+                    select: {
+                        semester: true,
+                        guru: true,
+                        rombel: {
+                            select: {
+                                kategoriRombel: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const sekolah = await this.prisma.sekolah.findFirst()
+
+        const semester = result.rombelSemesterGuru.semester
+        const rombel = result.rombelSemesterGuru.rombel
+        const guru = result.rombelSemesterGuru.guru
+        const modulAjar = await this.prisma.modulAjar.findUnique({ where: { id }, include: { jadwalAjar: true } })
+
+        return {
+            semester: `Semester ${semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${semester.tahunAjaranAwal}/${semester.tahunAjaranAkhir}`,
+            sekolah: sekolah.nama,
+            namaKepsek: semester.namaKepsek,
+            nipKepsek: semester.nipKepsek,
+            namaGuru: guru.nama,
+            nipGuru: guru.nip,
+            kelompokUsia: rombel.kategoriRombel.kelompokUsia,
+            rombel: rombel.name,
+            modulAjar: modulAjar
+
+        }
     }
 
     async findByIdAndRombel(id: string, idRombelSemesterGuru: string) {

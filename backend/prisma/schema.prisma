@@ -176,8 +176,6 @@ model ModulAjar {
   minggu            Int
   topik             String
   subtopik          String
-  startDate         DateTime
-  endDate           DateTime
   katakunci         String[]
   tujuanKegiatan    String
   alatBahan         String[]

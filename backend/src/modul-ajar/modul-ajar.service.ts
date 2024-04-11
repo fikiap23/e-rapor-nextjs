@@ -26,4 +26,8 @@ export class ModulAjarService {
     async findByIdOrThrow(id: string) {
         return await this.modulAjarRepository.findByIdOrThrow(id)
     }
+
+    async printById(id: string) {
+        return await this.modulAjarRepository.printByIdOrThrow(id)
+    }
 }

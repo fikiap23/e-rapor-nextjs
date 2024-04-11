@@ -56,6 +56,14 @@ export class ModulAjarController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('print/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    async printOne(@Res() res, @Param('id') id) {
+        const result = await this.modulAjarService.printById(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
     @Get(':id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN, Role.GURU)

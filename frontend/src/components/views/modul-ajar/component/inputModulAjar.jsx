@@ -119,22 +119,6 @@ const InputModulAjar = ({
           )}
 
           <Form.Item
-            label="Tanggal Mulai"
-            name="startDate"
-            rules={[{ required: true, message: 'Tanggal Mulai harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item
-            label="Tanggal Akhir"
-            name="endDate"
-            rules={[{ required: true, message: 'Tanggal Akhir harus diisi' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item
             label="Topik"
             name="topik"
             rules={[{ required: true, message: 'Masukkan Topik' }]}

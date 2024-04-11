@@ -29,6 +29,11 @@ export class ModulAjarRepository {
         if (!modulAjar) throw new BadRequestException('Modul Ajar tidak ditemukan');
         return modulAjar
     }
+    async printByIdOrThrow(id: string) {
+        const modulAjar = await this.modulAjarQuery.printById(id);
+        if (!modulAjar) throw new BadRequestException('Modul Ajar tidak ditemukan');
+        return modulAjar
+    }
 
     async findByIdAndRombelOrThrow(id: string, idRombel: string) {
         const modulAjar = await this.modulAjarQuery.findByIdAndRombel(id, idRombel);
