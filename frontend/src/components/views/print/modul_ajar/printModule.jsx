@@ -123,10 +123,15 @@ function PrintModule({ data }) {
       <div style={{ display: 'flex', marginTop: '10px' }}>
         <p>Tujuan Kegiatan</p>
         <span style={{ textIndent: '3.2em' }}>:</span>
-        <div
-          className="ttd"
-          dangerouslySetInnerHTML={{ __html: modulAjar.tujuanKegiatan }}
-        />
+        <div className="ttd" style={{ marginLeft: '20px' }}>
+          <ol className="dashed-list">
+            {modulAjar.tujuanKegiatan.map((tujuan) => (
+              <li key={tujuan}>
+                <p>{tujuan}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
 
       <table style={{ marginBottom: '10px' }}>
@@ -239,24 +244,13 @@ function PrintModule({ data }) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              Bersyukur atas anugrah Allah SWT karena telah menciptakan manusia
-              yang berakal dan sempurna Mengenal identitas diri
-            </td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Berkomunikasi dan menjelaskan tentang diri dan teman</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Berlatih motorik dan kreativitas serta kolaborasi</td>
-            <td></td>
-            <td></td>
-          </tr>
+          {modulAjar.tujuanKegiatan.map((tujuan) => (
+            <tr>
+              <td>{tujuan}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
