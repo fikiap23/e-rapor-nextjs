@@ -18,8 +18,16 @@ export class ModulAjarQuery extends DbService {
     }
 
     async findByIdRombel(idRombelSemesterGuru: string) {
+        const rombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({ where: { id: idRombelSemesterGuru }, include: { rombel: { select: { id: true, name: true, kategoriRombel: true } }, semester: true } })
+        if (!rombelSemesterGuru) throw new BadRequestException('Rombel tidak ditemukan')
+
         const modulAjar = await this.prisma.modulAjar.findMany({ where: { idRombelSemesterGuru }, include: { tujuanPembelajaran: true }, orderBy: { minggu: 'asc' } })
-        return modulAjar
+        return {
+            semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`,
+            kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            rombel: rombelSemesterGuru.rombel.name,
+            modulAjars: modulAjar,
+        }
     }
 
     async checkIsMingguHasUsed(minggu: number, idTujuanPembelajaran: string, idRombelSemesterGuru: string): Promise<boolean> {

@@ -19,17 +19,17 @@ import {
 
 const { TabPane } = Tabs
 
-const ModulAjarView = () => {
+const ModulAjarView = ({ idRombelSemesterGuru }) => {
   const [activeTab, setActiveTab] = useState('moduleTab')
   const [mingguTpUncreated, setMingguTpUncreated] = useState([])
   const [selectedModulAjar, setSelectedModulAjar] = useState(null)
   const { token } = useAuth()
   const {
-    data: modulAjars,
+    data,
     error: errorModulAjars,
     isFetching: isFetchingModulAjars,
     refetch: refetchModulAjars,
-  } = useModulAjars(token)
+  } = useModulAjars(token, idRombelSemesterGuru)
 
   const {
     data: cpTps,
@@ -40,7 +40,7 @@ const ModulAjarView = () => {
 
   useEffect(() => {
     if (!isFetchingCpTps && !isFetchingModulAjars) {
-      const mingguModulAjar = modulAjars?.map((modulAjar) => {
+      const mingguModulAjar = data.modulAjars?.map((modulAjar) => {
         return modulAjar?.minggu
       })
       const tp = cpTps?.tujuanPembelajaran.filter(
@@ -49,7 +49,7 @@ const ModulAjarView = () => {
       )
       setMingguTpUncreated(tp)
     }
-  }, [isFetchingCpTps, isFetchingModulAjars, cpTps, modulAjars])
+  }, [isFetchingCpTps, isFetchingModulAjars, cpTps, data.modulAjars])
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -140,7 +140,9 @@ const ModulAjarView = () => {
               <div className="box-header">
                 <h3 className="box-title">
                   <i className="fa fa-book"></i>{' '}
-                  <span style={{ marginLeft: '10px' }}> Data Modul Ajar </span>
+                  <span style={{ marginLeft: '10px' }}>
+                    {`Modul Ajar Rombel ${data.rombel} - Semester ${data.semester}`}
+                  </span>
                 </h3>
               </div>
               <div className="box-body">
@@ -159,7 +161,7 @@ const ModulAjarView = () => {
                       <Table
                         loading={isFetchingModulAjars}
                         columns={columns}
-                        dataSource={modulAjars}
+                        dataSource={data.modulAjars}
                         rowKey="id"
                         pagination={false}
                       />
@@ -174,6 +176,7 @@ const ModulAjarView = () => {
                     refetch={refetchModulAjars}
                     tujuanPembelajarans={mingguTpUncreated}
                     token={token}
+                    idRombelSemesterGuru={idRombelSemesterGuru}
                   />
                 )}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (
@@ -182,6 +185,7 @@ const ModulAjarView = () => {
                     refetch={refetchModulAjars}
                     token={token}
                     tujuanPembelajarans={mingguTpUncreated}
+                    idRombelSemesterGuru={idRombelSemesterGuru}
                   />
                 )}
               </div>

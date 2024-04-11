@@ -11,6 +11,7 @@ const EditModulAjar = ({
   refetch,
   token,
   modulAjarData,
+  idRombelSemesterGuru,
 }) => {
   const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
@@ -25,8 +26,6 @@ const EditModulAjar = ({
     })
     setSelectedTp(modulAjarData.tujuanPembelajaran)
   }, [form, modulAjarData])
-
-  console.log(modulAjarData)
 
   const handleFormChange = (changedValues, allValues) => {
     if (changedValues.minggu) {
@@ -64,6 +63,7 @@ const EditModulAjar = ({
       alatBahan,
       petaKonsep,
       idTujuanPembelajaran: selectedTp.id,
+      idRombelSemesterGuru,
     }
 
     try {
