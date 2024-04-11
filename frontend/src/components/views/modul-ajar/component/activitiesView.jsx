@@ -1,8 +1,18 @@
-'use client'
+import React, { useState } from 'react'
+import { Button, Table, Modal } from 'antd'
 import AddSubjectModal from './addSubjectModal'
-import { useState } from 'react'
 
 const ActivitiesView = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   const activityDummy = [
     {
       id: 1,
@@ -12,72 +22,67 @@ const ActivitiesView = () => {
       activity: 'Modul Ajar 1',
     },
   ]
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
 
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Minggu',
+      dataIndex: 'week',
+      key: 'week',
+    },
+    {
+      title: 'Hari',
+      dataIndex: 'day',
+      key: 'day',
+    },
+    {
+      title: 'Tanggal',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Kegiatan Inti',
+      dataIndex: 'activity',
+      key: 'activity',
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: () => (
+        <span>
+          <Button
+            type="primary"
+            icon={<i className="icon fa fa-edit"></i>}
+            style={{ marginRight: '2px', marginLeft: '2px' }}
+          />
+          <Button
+            type="info"
+            icon={<i className="icon fa fa-eye"></i>}
+            style={{ marginRight: '2px', marginLeft: '2px' }}
+          />
+          <Button
+            type="danger"
+            icon={<i className="icon fa fa-trash"></i>}
+            style={{ marginRight: '2px', marginLeft: '2px' }}
+          />
+        </span>
+      ),
+    },
+  ]
 
   return (
     <div className="active tab-pane" id="activity">
       <div className="box-body table-responsive no-padding">
         <div style={{ margin: '0 20px 20px 20px' }}>
-          <button type="button" className="btn bg-green" onClick={openModal}>
+          <Button type="primary" onClick={openModal}>
             <i className="icon fa fa-plus"></i> Tambah
-          </button>
-          {/* <span style={{color: 'red', fontStyle: 'italic', marginLeft: '10px'}}>*modul ajar belum lengkap sampai 14 minggu</span> */}
+          </Button>
         </div>
-        <table id="activity" className="table table-hover">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Minggu</th>
-              <th>Hari</th>
-              <th>Tanggal</th>
-              <th>Kegiatan Inti</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activityDummy.map((item, index) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.week}</td>
-                <td>{item.day}</td>
-                <td>{item.date}</td>
-                <td>{item.activity}</td>
-                <td>
-                  <a
-                    style={{ marginRight: '2px', marginLeft: '2px' }}
-                    className="btn btn-primary btn-sm"
-                  >
-                    {/* <span className="glyphicon glyphicon-edit"></span> Edit */}
-                    <i className="icon fa fa-edit"></i>
-                  </a>
-                  <button
-                    style={{ marginRight: '2px', marginLeft: '2px' }}
-                    className="btn btn-info btn-sm"
-                    // onClick={() => deleteSiswa(item.id)}
-                  >
-                    {/* <span className="glyphicon glyphicon-remove"></span> Delete */}
-                    <i className="icon fa fa-eye"></i>
-                  </button>
-                  <button
-                    style={{ marginRight: '2px', marginLeft: '2px' }}
-                    className="btn btn-danger btn-sm"
-                    // onClick={() => deleteSiswa(item.id)}
-                  >
-                    {/* <span className="glyphicon glyphicon-remove"></span> Delete */}
-                    <i className="icon fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table dataSource={activityDummy} columns={columns} />
       </div>
       {/* ADD MODUL AJAR */}
       <AddSubjectModal

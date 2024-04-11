@@ -1,118 +1,99 @@
 import React, { useState } from 'react'
+import { Modal, Select, Input, Button, DatePicker, Form } from 'antd'
+
+const { Option } = Select
 
 const AddModal = ({ isOpen, closeModal }) => {
-  const [formData, setFormData] = useState({
-    minggu: '',
-    tanggal: '',
-    hari: '',
-    kegiatanInti: '',
-    idModulAjar: '',
-  })
-  const handleSubmit = (event) => {
-    console.log(formData)
+  const [form] = Form.useForm()
+  const [jumlahKegiatan, setJumlahKegiatan] = useState(1) // State untuk jumlah kegiatan inti
 
-    // closeModal()
-  }
+  const handleSubmit = () => {
+    form.validateFields().then((values) => {
+      // Mendapatkan nilai dari setiap kegiatan inti dan menyimpannya dalam bentuk array
+      const kegiatanIntiValues = []
+      for (let i = 1; i <= jumlahKegiatan; i++) {
+        kegiatanIntiValues.push(values[`kegiatanInti${i}`])
+      }
+      const payload = {
+        idModulAjar: values.idModulAjar,
+        tanggal: values.tanggal,
+        kegiatanInti: kegiatanIntiValues,
+      }
 
-  const handleFormChange = (field, value) => {
-    setFormData({
-      ...formData,
-      [field]: value,
+      console.log(payload)
+
+      // closeModal();
     })
   }
 
-  return (
-    <div
-      className={`modal fade ${isOpen ? 'in show-modal' : ''}`}
-      style={{ overflowY: 'auto' }}
-    >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h4 className="modal-title">Jadwal Ajar</h4>
-            <button className="close" onClick={closeModal}>
-              &times;
-            </button>
-          </div>
-          <div className="modal-body">
-            <div className="box-body">
-              <div className="form-group">
-                <label htmlFor="idModulAjar">Modul Ajar</label>
-                <select
-                  className="form-control"
-                  id="idModulAjar"
-                  name="idModulAjar"
-                  value={formData.idModulAjar}
-                  onChange={(e) =>
-                    handleFormChange('idModulAjar', e.target.value)
-                  }
-                  required
-                >
-                  <option value="">Pilih Modul Ajar</option>
-                  {[...Array(14)].map((_, index) => (
-                    <option key={index + 1} value={index + 1}>
-                      {index + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="hari">Hari</label>
-                <select
-                  className="form-control"
-                  id="hari"
-                  name="hari"
-                  value={formData.hari}
-                  onChange={(e) => handleFormChange('hari', e.target.value)}
-                  required
-                >
-                  <option value="">Pilih Hari</option>
-                  {['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'].map(
-                    (item, index) => (
-                      <option key={index + 1} value={item}>
-                        {item}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-              <div className="form-group" style={{ width: '30%' }}>
-                <label htmlFor="tanggal">Tanggal</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="tanggal"
-                  name="tanggal"
-                  value={formData.tanggal}
-                  onChange={(e) => handleFormChange('tanggal', e.target.value)}
-                  required
-                />
-              </div>
+  const handleJumlahKegiatanChange = (value) => {
+    setJumlahKegiatan(value)
+  }
 
-              <div className="form-group">
-                <label>Kegiatan Inti</label>
-                <textarea
-                  className="form-control"
-                  rows="5"
-                  name="kegiatanInti"
-                  placeholder="Masukkan Capaian"
-                  required
-                  value={formData.kegiatanInti}
-                  onChange={(e) =>
-                    handleFormChange('kegiatanInti', e.target.value)
-                  }
-                />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button onClick={handleSubmit} className="btn btn-primary">
-                Simpan
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  return (
+    <Modal
+      visible={isOpen}
+      title="Jadwal Ajar"
+      onCancel={closeModal}
+      footer={[
+        <Button key="back" onClick={closeModal}>
+          Batal
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleSubmit}>
+          Simpan
+        </Button>,
+      ]}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label="Modul Ajar"
+          name="idModulAjar"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Pilih Modul Ajar">
+            {[...Array(14)].map((_, index) => (
+              <Option key={index + 1} value={index + 1}>
+                {index + 1}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Tanggal" name="tanggal" rules={[{ required: true }]}>
+          <DatePicker style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item
+          label="Jumlah Kegiatan Inti"
+          name="jumlahKegiatan"
+          rules={[{ required: true }]}
+        >
+          <Select
+            placeholder="Pilih Jumlah Kegiatan Inti"
+            onChange={handleJumlahKegiatanChange}
+            value={jumlahKegiatan}
+          >
+            {[1, 2, 3, 4, 5].map((item) => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        {/* Input untuk setiap kegiatan inti */}
+        {[...Array(jumlahKegiatan)].map((_, index) => (
+          <Form.Item
+            key={index}
+            label={`Kegiatan Inti ${index + 1}`}
+            name={`kegiatanInti${index + 1}`}
+            rules={[{ required: true, message: 'Kegiatan Inti harus diisi' }]}
+          >
+            <Input.TextArea
+              rows={3}
+              placeholder={`Masukkan Kegiatan Inti ${index + 1}`}
+            />
+          </Form.Item>
+        ))}
+      </Form>
+    </Modal>
   )
 }
 
