@@ -120,12 +120,14 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
           >
             Hapus
           </Button>
-          <Button
-            style={{ backgroundColor: 'green', color: 'white' }}
-            icon={<PrinterOutlined />}
-          >
-            Print
-          </Button>
+          <Link href={`/module_print/${record.id}`}>
+            <Button
+              style={{ backgroundColor: 'green', color: 'white' }}
+              icon={<PrinterOutlined />}
+            >
+              Print
+            </Button>
+          </Link>
         </Space>
       ),
     },

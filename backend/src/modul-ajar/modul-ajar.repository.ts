@@ -31,7 +31,6 @@ export class ModulAjarRepository {
     }
     async printByIdOrThrow(id: string) {
         const modulAjar = await this.modulAjarQuery.printById(id);
-        if (!modulAjar) throw new BadRequestException('Modul Ajar tidak ditemukan');
         return modulAjar
     }
 

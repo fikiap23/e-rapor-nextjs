@@ -15,6 +15,8 @@ export class ModulAjarQuery extends DbService {
     }
 
     async printById(id: string) {
+        const modulAjar = await this.prisma.modulAjar.findUnique({ where: { id }, include: { jadwalAjar: true } })
+        if (!modulAjar) return null
         const result = await this.prisma.modulAjar.findUnique({
             where: { id }, include: {
                 rombelSemesterGuru: {
@@ -37,7 +39,7 @@ export class ModulAjarQuery extends DbService {
         const semester = result.rombelSemesterGuru.semester
         const rombel = result.rombelSemesterGuru.rombel
         const guru = result.rombelSemesterGuru.guru
-        const modulAjar = await this.prisma.modulAjar.findUnique({ where: { id }, include: { jadwalAjar: true } })
+
 
         return {
             semester: `Semester ${semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${semester.tahunAjaranAwal}/${semester.tahunAjaranAkhir}`,
