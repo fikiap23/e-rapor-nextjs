@@ -4,7 +4,10 @@ import AddNilaiModal from './inputNilaiModal'
 import { Button, Table, Tag, Modal, Input } from 'antd'
 
 const StudentTable = ({ siswa, fetching }) => {
-  console.log(siswa.map(index => index.rapor.length));
+  // console.log(siswa.map(index => index.rapor.length));
+  // console.log(siswa);
+  const [searchKeyword, setSearchKeyword] = useState('');
+
   const columns = [
     {
       title: 'No',
@@ -16,34 +19,39 @@ const StudentTable = ({ siswa, fetching }) => {
       title: 'NIS',
       dataIndex: 'nis',
       key: 'nis',
-      // sorter: (a, b) => a.nip.localeCompare(b.nip),
+      filteredValue: [searchKeyword],
+      onFilter: (value, record) => {
+        return String(record.nis).toLowerCase().includes(value.toLowerCase()) || 
+        String(record.nama).toLowerCase().includes(value.toLowerCase())
+      },
+      sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
     {
       title: 'Nama Siswa',
       dataIndex: 'nama',
       key: 'nama',
-      // sorter: (a, b) => a.nama.localeCompare(b.nama),
+      render: (text) => text.toUpperCase(),
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
       title: 'Status Raport',
       dataIndex: 'statusSemester',
       key: 'statusSemester',
       render: (text, record) => {
-        if (record.rapor && record.rapor[0].length === 0) {
+        if (record.rapor && record.rapor.length === 0) {
           return (
-            <Tag color="green">
-              Aktif
+            <Tag color="yellow">
+              Belum Bisa Dicetak
             </Tag>
           );
         } else {
           return (
-            <Tag color="yellow">
-              Tidak Aktif
+            <Tag color="green">
+              Tersedia
             </Tag>
           );
         }
       },
-
     },
     {
       title: 'Aksi',
@@ -58,16 +66,55 @@ const StudentTable = ({ siswa, fetching }) => {
             }}
             style={{ marginRight: 8 }}
           >
-            <i className="fa fa-plus" style={{ marginRight: '8px' }}></i> Input Catatan Raport
+            {record.rapor && record.rapor.length === 0 ? (
+              <>
+                <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
+                Input Catatan Raport
+              </>
+            ) : (
+              <>
+                <i className="fa fa-edit" style={{ marginRight: '8px' }}></i>
+                Edit Catatan Raport
+              </>
+            )}
           </Button>
+
+          {record.rapor && record.rapor.length !== 0 && (
+            <Button
+              type="primary"
+              // onClick={() => {
+              //   const url = `/guru/rombel/${record.id}`;
+              //   window.location.href = url;
+              // }}
+              style={{ marginRight: 8 }}
+            >
+              <i className="fa fa-print" style={{ marginRight: '8px' }}></i> Cetak Raport
+            </Button>
+          )}
         </span>
       ),
     },
   ]
 
+  const handleSearch = (value) => {
+    setSearchKeyword(value);
+  };
+
+  const handleChangeSearch = (e) => {
+    setSearchKeyword(e.target.value)
+  }
+
 
   return (
     <>
+      <div style={{ width: '30%' }}>
+        <Input.Search
+          placeholder="Cari data..."
+          onSearch={handleSearch}
+          onChange={handleChangeSearch}
+          style={{ marginBottom: 16 }}
+        />
+      </div>
       <Table
         columns={columns}
         dataSource={siswa}

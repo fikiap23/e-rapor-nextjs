@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation';
 import StudentTable from './tableStudent'
 import { useEffect, useState } from 'react';
 import { useOneStudentByIdSemesterGuru } from '@/hooks/useOneStudentByIdSemesterGuru';
+import Loading from '@/components/shared/Loading';
 
 
 const LectureStudentView = () => {
@@ -33,17 +34,31 @@ const LectureStudentView = () => {
                   </h3>
                 </div>
 
-                <div className="callout callout-primary">
-                  <h4>
-                    <i className="icon fa fa-info-circle"></i> Daftar Siswa di
-                    Rombel {rombel?.name}
-                  </h4>
-                  <p>{`Tahun Ajaran ${semester?.name}`}</p>
-                </div>
+                {isFetching && <Loading />}
+                {!isFetching && listRombelSemesterMurid && (
+                  <>
+                    <div className="callout callout-primary">
+                      <button
+                        className="btn btn-default"
+                        onClick={() => {
+                          window.history.back()
+                        }}
+                        style={{ marginBottom: '2%', marginTop: '1%' }}
+                      >
+                        <i className="fa fa-arrow-left"></i> Kembali
+                      </button>
+                      <h4>
+                        <i className="icon fa fa-info-circle"></i> Daftar Siswa di
+                        Rombel {rombel?.name}
+                      </h4>
+                      <p>{`Tahun Ajaran ${semester?.name}`}</p>
+                    </div>
 
-                <div className="box-body">
-                  <StudentTable siswa={listRombelSemesterMurid?.murid} fetching={isFetching} />
-                </div>
+                    <div className="box-body">
+                      <StudentTable siswa={listRombelSemesterMurid?.murid} fetching={isFetching} />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
