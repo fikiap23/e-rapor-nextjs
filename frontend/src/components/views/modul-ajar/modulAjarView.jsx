@@ -98,7 +98,13 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
       dataIndex: 'tujuanKegiatan',
       key: 'tujuanKegiatan',
       render: (text, record, index) => (
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div>
+          {text.map((tujuan, idx) => (
+            <p key={idx}>
+              {idx + 1}. {tujuan}
+            </p>
+          ))}
+        </div>
       ),
     },
     {
@@ -183,7 +189,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                 )}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (
                   <EditModulAjar
-                    modulAjarData={selectedModulAjar}
+                    dataToUpdate={selectedModulAjar}
                     refetch={refetchModulAjars}
                     token={token}
                     tujuanPembelajarans={mingguTpUncreated}

@@ -31,7 +31,7 @@ const InputModulAjar = ({
 
   const handleSubmit = async (values) => {
     const tujuanKegiatanValues = []
-    form.validateFields().then((values) => {
+    await form.validateFields().then((values) => {
       // Mendapatkan nilai dari setiap kegiatan inti dan menyimpannya dalam bentuk array
       for (let i = 1; i <= jumlahKegiatan; i++) {
         tujuanKegiatanValues.push(values[`tujuanKegiatan${i}`])
