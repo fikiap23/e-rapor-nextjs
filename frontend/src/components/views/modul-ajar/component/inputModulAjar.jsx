@@ -99,7 +99,7 @@ const InputModulAjar = ({
               rules={[{ required: true, message: 'Pilih Minggu' }]}
             >
               <Select placeholder="Pilih Minggu">
-                {tujuanPembelajarans.map((tp) => (
+                {tujuanPembelajarans?.map((tp) => (
                   <Option key={tp.id} value={tp.minggu}>
                     {tp.minggu}
                   </Option>
