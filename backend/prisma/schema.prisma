@@ -189,7 +189,6 @@ model ModulAjar {
   alatBahan         String[]
   petaKonsep        String[]
   jadwalAjar        JadwalAjar[]
-  penilaianMingguan PenilaianMingguan[]
 
   // Relation
   idTujuanPembelajaran String
@@ -222,8 +221,9 @@ model TujuanPembelajaran {
 
   // relation
   idCapaianPembelajaran String
-  capaianPembelajaran   CapaianPembelajarn @relation(fields: [idCapaianPembelajaran], references: [id], onDelete: Cascade)
+  capaianPembelajaran   CapaianPembelajarn  @relation(fields: [idCapaianPembelajaran], references: [id], onDelete: Cascade)
   modulAjar             ModulAjar[]
+  penilaianMingguan     PenilaianMingguan[]
 
   // index
   @@index([id, minggu])
@@ -270,13 +270,15 @@ model PenilaianMingguan {
   deskripsiLiterasiSains String
 
   // Relation
-  idModulAjar String
-  modulAjar   ModulAjar @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
-  idMurid     String
-  murid       Murid     @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idTujuanPembelajaran String
+  tujuanPembelajaran   TujuanPembelajaran  @relation(fields: [idTujuanPembelajaran], references: [id])
+  idMurid              String
+  murid                Murid               @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idRombelSemesterGuru String
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id])
 
   // index
-  @@index([id, idModulAjar, idMurid])
+  @@index([id, idTujuanPembelajaran, idMurid])
 }
 
 model Semester {
@@ -347,16 +349,17 @@ model Sekolah {
 }
 
 model RombelSemesterGuru {
-  id         String       @id @default(uuid())
-  idRombel   String
-  idSemester String
-  idGuru     String
-  guru       Guru         @relation(fields: [idGuru], references: [id], onDelete: Cascade)
-  rombel     Rombel       @relation(fields: [idRombel], references: [id], onDelete: Cascade)
-  semester   Semester     @relation(fields: [idSemester], references: [id], onDelete: Cascade)
-  rapor      Rapor[]
-  modulAjar  ModulAjar[]
-  jadwalAjar JadwalAjar[]
+  id                String              @id @default(uuid())
+  idRombel          String
+  idSemester        String
+  idGuru            String
+  guru              Guru                @relation(fields: [idGuru], references: [id], onDelete: Cascade)
+  rombel            Rombel              @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  semester          Semester            @relation(fields: [idSemester], references: [id], onDelete: Cascade)
+  rapor             Rapor[]
+  modulAjar         ModulAjar[]
+  jadwalAjar        JadwalAjar[]
+  penilaianMingguan PenilaianMingguan[]
 
   @@index([id, idRombel, idSemester, idGuru])
 }

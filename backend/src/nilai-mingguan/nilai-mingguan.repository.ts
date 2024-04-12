@@ -7,12 +7,13 @@ import { PayloadToken } from '../auth/type';
 import { MuridRepository } from '../murid/murid.repository';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
 import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
+import { CpTpRepository } from '../cp-tp/cp-tp.repository';
 
 @Injectable()
 export class NilaiMingguanRepository {
     constructor(
         private readonly nilaiMingguanQuery: NilaiMingguanQuery,
-        private readonly modulAjarRepository: ModulAjarRepository,
+        private readonly cptpRepository: CpTpRepository,
         private readonly authRepository: AuthRepository,
         private readonly muridRepository: MuridRepository,
         private readonly rombelQuery: RombelQuery
@@ -29,7 +30,7 @@ export class NilaiMingguanRepository {
     }
 
     async findByIdWithModulAjarOrThrow(id: string) {
-        const nilaiMingguan = await this.nilaiMingguanQuery.findByIdWithModulAjar(id);
+        const nilaiMingguan = await this.nilaiMingguanQuery.findByIdWithTp(id);
         if (!nilaiMingguan) throw new BadRequestException('Nilai Mingguan tidak ditemukan');
         return nilaiMingguan
     }
@@ -42,9 +43,9 @@ export class NilaiMingguanRepository {
         const idsRombel = rombelSemesterGuru.map(rombel => rombel.id);
 
         // check modul ajar exist
-        const modulAjar = await this.modulAjarRepository.findByIdOrThrow(dto.idModulAjar);
+        await this.cptpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
 
-        if (!idsRombelSemesterGuru.includes(modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(dto.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         // check murid exist
         const murid = await this.muridRepository.findByIdOrThrow(dto.idMurid);
@@ -56,10 +57,10 @@ export class NilaiMingguanRepository {
     async updateById(token: string, id: string, dto: UpdatePenilaianMingguanDto) {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        if (dto.idMurid && dto.idModulAjar) throw new BadRequestException('Tidak boleh memasukkan idMurid dan idModulAjar');
+        if (dto.idMurid && dto.idTujuanPembelajaran) throw new BadRequestException('Tidak boleh memasukkan idMurid dan idModulAjar');
         const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
 
-        if (!idsRombelSemesterGuru.includes(nilaiMingguan.modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.updateById(id, dto)
     }
 
@@ -67,7 +68,7 @@ export class NilaiMingguanRepository {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
-        if (!idsRombelSemesterGuru.includes(nilaiMingguan.modulAjar.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.deleteById(id)
     }
 }

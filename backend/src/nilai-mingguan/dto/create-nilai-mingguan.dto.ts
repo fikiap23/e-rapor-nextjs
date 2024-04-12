@@ -28,9 +28,13 @@ export class CreatePenilaianMingguanDto {
 
     @IsString()
     @IsNotEmpty()
-    idModulAjar: string;
+    idTujuanPembelajaran: string;
 
     @IsString()
     @IsNotEmpty()
     idMurid: string;
+
+    @IsNotEmpty()
+    @IsString()
+    idRombelSemesterGuru: string;
 }

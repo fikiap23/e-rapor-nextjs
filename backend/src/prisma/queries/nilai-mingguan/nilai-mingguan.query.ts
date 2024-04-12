@@ -14,12 +14,12 @@ export class NilaiMingguanQuery extends DbService {
         return await this.prisma.penilaianMingguan.findUnique({ where: { id } })
     }
 
-    async findByIdAndIdModulAjarAndIdMurid(id: string, idModulAjar: string, idMurid: string) {
-        return await this.prisma.penilaianMingguan.findUnique({ where: { id, idModulAjar, idMurid } })
+    async findByIdAndIdTpAndIdMurid(id: string, idTujuanPembelajaran: string, idMurid: string) {
+        return await this.prisma.penilaianMingguan.findUnique({ where: { id, idTujuanPembelajaran, idMurid } })
     }
 
-    async findByIdWithModulAjar(id: string) {
-        return await this.prisma.penilaianMingguan.findUnique({ where: { id }, select: { modulAjar: true } })
+    async findByIdWithTp(id: string) {
+        return await this.prisma.penilaianMingguan.findUnique({ where: { id }, include: { tujuanPembelajaran: true } })
     }
 
     async findByIdMurid(id: string) {
