@@ -27,30 +27,27 @@ const SidebarTeacher = () => {
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </Link>
           </li>
-          <li>
-            <Link href="/guru/rombel">
-              <i className="fa fa-book"></i> <span>Raport Siswa</span>
-            </Link>
-          </li>
+
           <li>
             <Link href="/guru/modul-ajar">
               <i className="fa fa-edit"></i> <span>Modul Ajar</span>
             </Link>
           </li>
-          {/* <li>
-            <a href="/guru/absensi">
-              <i className="fa fa-calendar"></i> <span>Input Absen</span>
-            </a>
-          </li> */}
 
           <li>
-            <Link href="/guru/validation">
-              <i className="fa fa-edit"></i> <span>Validasi Nilai</span>
+            <Link href="/guru/penilaian">
+              <i className="fa fa-pencil"></i> <span>Penilaian</span>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/guru/rombel">
+              <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
           </li>
           <li className="active">
             <Link href="/guru/rapor">
-              <i className="fa fa-print"></i> <span>Cetak Raport</span>
+              <i className="fa fa-print"></i> <span>Cetak Data</span>
             </Link>
           </li>
         </ul>
