@@ -1,14 +1,30 @@
 import { Nilai } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePenilaianMingguanDto {
     @IsEnum(Nilai)
     @IsNotEmpty()
-    nilai: Nilai;
+    nilaiAgamaBudipekerti: Nilai;
 
     @IsString()
     @IsNotEmpty()
-    deskripsi: string;
+    deskripsiAgamaBudipekerti: string;
+
+    @IsEnum(Nilai)
+    @IsNotEmpty()
+    nilaiJatiDiri: Nilai;
+
+    @IsString()
+    @IsNotEmpty()
+    deskripsiJatiDiri: string;
+
+    @IsEnum(Nilai)
+    @IsNotEmpty()
+    nilaiLiterasiSains: Nilai;
+
+    @IsString()
+    @IsNotEmpty()
+    deskripsiLiterasiSains: string;
 
     @IsString()
     @IsNotEmpty()

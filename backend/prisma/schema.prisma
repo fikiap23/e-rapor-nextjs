@@ -259,9 +259,15 @@ model Absensi {
 }
 
 model PenilaianMingguan {
-  id        String @id @default(uuid())
-  nilai     Nilai
-  deskripsi String
+  id                        String @id @default(uuid())
+  nilaiAgamaBudipekerti     Nilai
+  deskripsiAgamaBudipekerti String
+
+  nilaiJatiDiri     Nilai
+  deskripsiJatiDiri String
+
+  nilaiLiterasiSains     Nilai
+  deskripsiLiterasiSains String
 
   // Relation
   idModulAjar String

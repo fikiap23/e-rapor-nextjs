@@ -17,18 +17,20 @@ const UpdateJadwalModal = ({
   const [jumlahKegiatan, setJumlahKegiatan] = useState(null)
 
   useEffect(() => {
-    form.setFieldsValue({
-      idModulAjar: defaultValues.idModulAjar,
-      tanggal: moment(defaultValues.tanggal),
-      jumlahKegiatan: defaultValues.kegiatanInti.length,
-    })
-    setJumlahKegiatan(defaultValues.kegiatanInti.length)
-    defaultValues.kegiatanInti.forEach((kegiatan, index) => {
+    if (isOpen) {
       form.setFieldsValue({
-        [`kegiatanInti${index + 1}`]: kegiatan,
+        idModulAjar: defaultValues.idModulAjar,
+        tanggal: moment(defaultValues.tanggal),
+        jumlahKegiatan: defaultValues.kegiatanInti.length,
       })
-    })
-  }, [defaultValues])
+      setJumlahKegiatan(defaultValues.kegiatanInti.length)
+      defaultValues.kegiatanInti.forEach((kegiatan, index) => {
+        form.setFieldsValue({
+          [`kegiatanInti${index + 1}`]: kegiatan,
+        })
+      })
+    }
+  }, [defaultValues, form, isOpen])
 
   const handleSubmit = async () => {
     let payload
