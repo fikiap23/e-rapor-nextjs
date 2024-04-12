@@ -6,8 +6,6 @@ import useAuth from '@/hooks/useAuth'
 import InputModulAjar from './component/inputModulAjar'
 import ActivitiesView from './component/activitiesView'
 import modulAjarService from '@/services/modul-ajar.service'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import EditModulAjar from './component/editModulAjar'
 import { useModulAjars } from '@/hooks/useModulAjar'
 import { useCpTp } from '@/hooks/useCpTp'
@@ -98,7 +96,13 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
       dataIndex: 'tujuanKegiatan',
       key: 'tujuanKegiatan',
       render: (text, record, index) => (
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div>
+          {text.map((tujuan, idx) => (
+            <p key={idx}>
+              {idx + 1}. {tujuan}
+            </p>
+          ))}
+        </div>
       ),
     },
     {
@@ -120,7 +124,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
           >
             Hapus
           </Button>
-          <Link href={`/module_print/${record.id}`}>
+          <Link href={`/module_print/${record.id}`} target="_blank">
             <Button
               style={{ backgroundColor: 'green', color: 'white' }}
               icon={<PrinterOutlined />}
@@ -170,7 +174,9 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                     </div>
                   </TabPane>
                   <TabPane tab="Jadwal Ajar" key="activitiesTab">
-                    <ActivitiesView />
+                    <ActivitiesView
+                      idRombelSemesterGuru={idRombelSemesterGuru}
+                    />
                   </TabPane>
                 </Tabs>
                 {activeTab === 'learningOutcomesTab' && (
@@ -183,7 +189,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                 )}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (
                   <EditModulAjar
-                    modulAjarData={selectedModulAjar}
+                    dataToUpdate={selectedModulAjar}
                     refetch={refetchModulAjars}
                     token={token}
                     tujuanPembelajarans={mingguTpUncreated}

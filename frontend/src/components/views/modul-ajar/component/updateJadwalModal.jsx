@@ -1,17 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Select, Input, Button, DatePicker, Form } from 'antd'
 import jadwalAjarService from '@/services/jadwal-ajar.service'
+import moment from 'moment'
 
 const { Option } = Select
 
-const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
+const UpdateJadwalModal = ({
+  isOpen,
+  closeModal,
+  modulAjars,
+  token,
+  refetch,
+  defaultValues,
+}) => {
   const [form] = Form.useForm()
-  const [jumlahKegiatan, setJumlahKegiatan] = useState(1) // State untuk jumlah kegiatan inti
+  const [jumlahKegiatan, setJumlahKegiatan] = useState(null)
+
+  useEffect(() => {
+    form.setFieldsValue({
+      idModulAjar: defaultValues.idModulAjar,
+      tanggal: moment(defaultValues.tanggal),
+      jumlahKegiatan: defaultValues.kegiatanInti.length,
+    })
+    setJumlahKegiatan(defaultValues.kegiatanInti.length)
+    defaultValues.kegiatanInti.forEach((kegiatan, index) => {
+      form.setFieldsValue({
+        [`kegiatanInti${index + 1}`]: kegiatan,
+      })
+    })
+  }, [defaultValues])
 
   const handleSubmit = async () => {
     let payload
     await form.validateFields().then((values) => {
-      // Mendapatkan nilai dari setiap kegiatan inti dan menyimpannya dalam bentuk array
       const kegiatanIntiValues = []
       for (let i = 1; i <= jumlahKegiatan; i++) {
         kegiatanIntiValues.push(values[`kegiatanInti${i}`])
@@ -23,13 +44,12 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
       }
     })
     await jadwalAjarService
-      .create(payload, token)
+      .update(defaultValues.id, payload, token)
       .then(() => {
         Modal.success({
           title: 'Berhasil',
-          content: 'Berhasil menambahkan jadwal ajar',
+          content: 'Berhasil mengupdate jadwal ajar',
         })
-        form.resetFields()
         refetch()
         closeModal()
       })
@@ -48,7 +68,7 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
   return (
     <Modal
       visible={isOpen}
-      title="Jadwal Ajar"
+      title="Update Jadwal Ajar"
       onCancel={closeModal}
       footer={[
         <Button key="back" onClick={closeModal}>
@@ -93,7 +113,6 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
             ))}
           </Select>
         </Form.Item>
-        {/* Input untuk setiap kegiatan inti */}
         {[...Array(jumlahKegiatan)].map((_, index) => (
           <Form.Item
             key={index}
@@ -112,4 +131,4 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
   )
 }
 
-export default AddModal
+export default UpdateJadwalModal

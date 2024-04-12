@@ -52,11 +52,11 @@ export class JadwalAjarController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
     }
 
-    @Get()
+    @Get('rombel-semester-guru/:id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.GURU)
-    async findAll(@Res() res, @Request() req) {
-        const result = await this.jadwalAjarService.findAll(req.headers.authorization);
+    async findAll(@Res() res, @Request() req, @Param('id') id) {
+        const result = await this.jadwalAjarService.findAll(req.headers.authorization, id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
