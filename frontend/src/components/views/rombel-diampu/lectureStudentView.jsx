@@ -55,7 +55,7 @@ const LectureStudentView = () => {
                     </div>
 
                     <div className="box-body">
-                      <StudentTable siswa={listRombelSemesterMurid?.murid} fetching={isFetching} />
+                      <StudentTable siswa={listRombelSemesterMurid} fetching={isFetching} />
                     </div>
                   </>
                 )}
