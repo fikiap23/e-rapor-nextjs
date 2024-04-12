@@ -70,7 +70,7 @@ const RombelDiampuView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-book"></i> Input Modul Ajar
+                    <i className="fa fa-pencil"></i> Input Penilaian Mingguan
                   </h3>
                 </div>
                 <div className="box-body">

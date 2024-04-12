@@ -58,34 +58,55 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
       title: 'Nilai Agama Budipekerti',
       dataIndex: 'nilaiAgamaBudipekerti',
       key: 'nilaiAgamaBudipekerti',
-      render: (text, record) => (
-        <div>
-          <b>{text}</b>
-          <br /> {record.deskripsiAgamaBudipekerti}
-        </div>
-      ),
+      children: [
+        {
+          title: 'Nilai',
+          dataIndex: 'nilaiAgamaBudipekerti',
+          key: 'nilaiAgamaBudipekerti',
+          render: (text, record) => (
+            <div>
+              <b>{text}</b>
+              <br /> {record.deskripsiAgamaBudipekerti}
+            </div>
+          ),
+        },
+      ],
     },
     {
       title: 'Nilai Jati Diri',
       dataIndex: 'nilaiJatiDiri',
       key: 'nilaiJatiDiri',
-      render: (text, record) => (
-        <div>
-          <b>{text}</b>
-          <br /> {record.deskripsiJatiDiri}
-        </div>
-      ),
+      children: [
+        {
+          title: 'Nilai',
+          dataIndex: 'nilaiJatiDiri',
+          key: 'nilaiJatiDiri',
+          render: (text, record) => (
+            <div>
+              <b>{text}</b>
+              <br /> {record.deskripsiJatiDiri}
+            </div>
+          ),
+        },
+      ],
     },
     {
       title: 'Nilai Literasi Sains',
       dataIndex: 'nilaiLiterasiSains',
       key: 'nilaiLiterasiSains',
-      render: (text, record) => (
-        <div>
-          <b>{text}</b>
-          <br /> {record.deskripsiLiterasiSains}
-        </div>
-      ),
+      children: [
+        {
+          title: 'Nilai',
+          dataIndex: 'nilaiLiterasiSains',
+          key: 'nilaiLiterasiSains',
+          render: (text, record) => (
+            <div>
+              <b>{text}</b>
+              <br /> {record.deskripsiLiterasiSains}
+            </div>
+          ),
+        },
+      ],
     },
     {
       title: 'Aksi',
