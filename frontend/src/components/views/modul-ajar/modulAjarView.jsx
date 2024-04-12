@@ -6,8 +6,6 @@ import useAuth from '@/hooks/useAuth'
 import InputModulAjar from './component/inputModulAjar'
 import ActivitiesView from './component/activitiesView'
 import modulAjarService from '@/services/modul-ajar.service'
-import Loading from '@/components/shared/Loading'
-import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import EditModulAjar from './component/editModulAjar'
 import { useModulAjars } from '@/hooks/useModulAjar'
 import { useCpTp } from '@/hooks/useCpTp'
@@ -176,7 +174,9 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                     </div>
                   </TabPane>
                   <TabPane tab="Jadwal Ajar" key="activitiesTab">
-                    <ActivitiesView />
+                    <ActivitiesView
+                      idRombelSemesterGuru={idRombelSemesterGuru}
+                    />
                   </TabPane>
                 </Tabs>
                 {activeTab === 'learningOutcomesTab' && (

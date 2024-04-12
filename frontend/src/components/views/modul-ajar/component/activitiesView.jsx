@@ -1,9 +1,28 @@
 import React, { useState } from 'react'
-import { Button, Table, Modal } from 'antd'
+import { Button, Modal, Space, Table } from 'antd'
 import AddSubjectModal from './addSubjectModal'
+import useAuth from '@/hooks/useAuth'
+import { useModulAjars } from '@/hooks/useModulAjar'
+import { useJadwalAjars } from '@/hooks/useJadwalAjar'
+import { formatDate } from '@/lib/helperDate'
+import UpdateJadwalModal from './updateJadwalModal'
+import jadwalAjarService from '@/services/jadwal-ajar.service'
 
-const ActivitiesView = () => {
+const ActivitiesView = ({ idRombelSemesterGuru }) => {
+  const { token } = useAuth()
+  const { data: modulAjars, isFetching: isFetchingModulAjars } = useModulAjars(
+    token,
+    idRombelSemesterGuru
+  )
+
+  const {
+    data: jadwalAjars,
+    isFetching: isFetchingJadwal,
+    refetch: refetchJadwal,
+  } = useJadwalAjars(token, idRombelSemesterGuru)
+  const [selectedJadwal, setSelectedJadwal] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -13,63 +32,102 @@ const ActivitiesView = () => {
     setIsModalOpen(false)
   }
 
-  const activityDummy = [
-    {
-      id: 1,
-      week: 'Minggu 1',
-      day: 'Senin',
-      date: '10 Juli 2024',
-      activity: 'Modul Ajar 1',
-    },
-  ]
+  const openModalEdit = (jadwal) => {
+    setSelectedJadwal(jadwal)
+    setIsOpenEditModal(true)
+  }
+
+  const closeModalEdit = () => {
+    setIsOpenEditModal(false)
+  }
+
+  const handleDelete = (id) => {
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content: 'Anda akan menghapus data jadwal ajar!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await jadwalAjarService
+          .delete(token, id)
+          .then(() => {
+            Modal.success({
+              title: 'Berhasil',
+              content: 'Data jadwal ajar telah dihapus.',
+            })
+            refetchJadwal()
+          })
+          .catch((err) => {
+            Modal.error({
+              title: 'Gagal',
+              content: err,
+            })
+          })
+      },
+      onCancel: () => {},
+    })
+  }
 
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
       title: 'Minggu',
-      dataIndex: 'week',
-      key: 'week',
+      dataIndex: 'minggu',
+      key: 'minggu',
     },
     {
       title: 'Hari',
-      dataIndex: 'day',
-      key: 'day',
+      dataIndex: 'hari',
+      key: 'hari',
     },
     {
       title: 'Tanggal',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'tanggal',
+      key: 'tanggal',
+      render: (text, record) => formatDate(new Date(record.tanggal)),
+    },
+    {
+      title: 'Topik',
+      dataIndex: 'topik',
+      key: 'topik',
+    },
+    {
+      title: 'Sub Topik',
+      dataIndex: 'subtopik',
+      key: 'subtopik',
     },
     {
       title: 'Kegiatan Inti',
-      dataIndex: 'activity',
-      key: 'activity',
+      dataIndex: 'kegiatanInti',
+      key: 'kegiatanInti',
+      render: (text, record, index) => (
+        <div>
+          {text.map((kegiatan, idx) => (
+            <p key={idx}>
+              {idx + 1}. {kegiatan}
+            </p>
+          ))}
+        </div>
+      ),
     },
     {
       title: 'Aksi',
       key: 'action',
-      render: () => (
-        <span>
+      render: (text, record, index) => (
+        <Space size={'middle'}>
           <Button
             type="primary"
             icon={<i className="icon fa fa-edit"></i>}
+            onClick={() => openModalEdit(record)}
             style={{ marginRight: '2px', marginLeft: '2px' }}
           />
+
           <Button
-            type="info"
-            icon={<i className="icon fa fa-eye"></i>}
-            style={{ marginRight: '2px', marginLeft: '2px' }}
-          />
-          <Button
-            type="danger"
+            danger
             icon={<i className="icon fa fa-trash"></i>}
+            onClick={() => handleDelete(record.id)}
             style={{ marginRight: '2px', marginLeft: '2px' }}
           />
-        </span>
+        </Space>
       ),
     },
   ]
@@ -82,13 +140,32 @@ const ActivitiesView = () => {
             <i className="icon fa fa-plus"></i> Tambah
           </Button>
         </div>
-        <Table dataSource={activityDummy} columns={columns} />
+        <Table
+          dataSource={jadwalAjars}
+          columns={columns}
+          loading={isFetchingJadwal}
+        />
       </div>
       {/* ADD MODUL AJAR */}
-      <AddSubjectModal
-        isOpen={isModalOpen}
-        closeModal={closeModal}
-      ></AddSubjectModal>
+      {!isFetchingModulAjars && (
+        <AddSubjectModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          modulAjars={modulAjars?.modulAjars}
+          token={token}
+          refetch={refetchJadwal}
+        ></AddSubjectModal>
+      )}
+      {selectedJadwal && isOpenEditModal && (
+        <UpdateJadwalModal
+          isOpen={isOpenEditModal}
+          closeModal={closeModalEdit}
+          modulAjars={modulAjars?.modulAjars}
+          token={token}
+          refetch={refetchJadwal}
+          defaultValues={selectedJadwal}
+        ></UpdateJadwalModal>
+      )}
     </div>
   )
 }
