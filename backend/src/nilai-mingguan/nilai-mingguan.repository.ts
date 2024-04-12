@@ -39,8 +39,7 @@ export class NilaiMingguanRepository {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
-        const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdsOrThrow(idsRombelSemesterGuru);
-        const idsRombel = rombelSemesterGuru.map(rombel => rombel.id);
+        const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(dto.idRombelSemesterGuru);
 
         // check modul ajar exist
         await this.cptpRepository.findTpByIdOrThrow(dto.idTujuanPembelajaran);
@@ -49,7 +48,7 @@ export class NilaiMingguanRepository {
 
         // check murid exist
         const murid = await this.muridRepository.findByIdOrThrow(dto.idMurid);
-        if (!idsRombel.includes(murid.idRombel)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (rombelSemesterGuru.idRombel !== murid.idRombel) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         return await this.nilaiMingguanQuery.create(dto)
     }
