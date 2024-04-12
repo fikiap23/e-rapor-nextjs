@@ -2,11 +2,12 @@
 import { useState } from 'react'
 import AddNilaiModal from './inputNilaiModal'
 import { Button, Table, Tag, Modal, Input } from 'antd'
+import { useParams } from 'next/navigation'
 
 const StudentTable = ({ siswa, fetching }) => {
-  // console.log(siswa.map(index => index.rapor.length));
-  // console.log(siswa);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const id = useParams()
+  const idRombelDiampu = id.id
 
   const columns = [
     {
@@ -21,8 +22,8 @@ const StudentTable = ({ siswa, fetching }) => {
       key: 'nis',
       filteredValue: [searchKeyword],
       onFilter: (value, record) => {
-        return String(record.nis).toLowerCase().includes(value.toLowerCase()) || 
-        String(record.nama).toLowerCase().includes(value.toLowerCase())
+        return String(record.nis).toLowerCase().includes(value.toLowerCase()) ||
+          String(record.nama).toLowerCase().includes(value.toLowerCase())
       },
       sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
@@ -61,8 +62,9 @@ const StudentTable = ({ siswa, fetching }) => {
           <Button
             type="primary"
             onClick={() => {
-              const url = `/guru/rombel/${record.id}`;
+              const url = `/guru/rapor/${record.id}/${idRombelDiampu}`;
               window.location.href = url;
+              // console.log(record);
             }}
             style={{ marginRight: 8 }}
           >
@@ -82,10 +84,10 @@ const StudentTable = ({ siswa, fetching }) => {
           {record.rapor && record.rapor.length !== 0 && (
             <Button
               type="primary"
-              // onClick={() => {
-              //   const url = `/guru/rombel/${record.id}`;
-              //   window.location.href = url;
-              // }}
+              onClick={() => {
+                const url = `/guru/rombel/${record.id}`;
+                window.location.href = url;
+              }}
               style={{ marginRight: 8 }}
             >
               <i className="fa fa-print" style={{ marginRight: '8px' }}></i> Cetak Raport
@@ -104,6 +106,13 @@ const StudentTable = ({ siswa, fetching }) => {
     setSearchKeyword(e.target.value)
   }
 
+  const { murid, rombel, semester } = siswa;
+
+  const dataSource = murid.map(data => ({
+    ...data,
+    rombel,
+    tahunAjaran: semester
+  }));
 
   return (
     <>
@@ -117,7 +126,7 @@ const StudentTable = ({ siswa, fetching }) => {
       </div>
       <Table
         columns={columns}
-        dataSource={siswa}
+        dataSource={dataSource}
         loading={fetching}
         scroll={{ x: 1000 }}
       />

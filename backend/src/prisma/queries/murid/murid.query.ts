@@ -135,6 +135,7 @@ export class MuridQuery extends DbService {
                         name: true,
                         murid: {
                             select: {
+                                id: true,
                                 nama: true,
                                 nis: true,
                                 rapor: {

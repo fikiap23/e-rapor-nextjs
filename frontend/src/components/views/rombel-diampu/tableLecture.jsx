@@ -72,11 +72,6 @@ const TableLecture = ({ rombels, fetching }) => {
     setSearchKeyword(e.target.value)
   }
 
-  // // Filter data berdasarkan nilai pencarian
-  // const filteredRombels = rombels.filter((rombel) =>
-  //   rombel.name.toLowerCase().includes(searchKeyword.toLowerCase())
-  // );
-
   return (
     <>
       <div style={{width: '30%'}}>
