@@ -1,23 +1,39 @@
-import React from 'react'
-import { Button, Table } from 'antd'
+import React, { useState } from 'react'
+import { Button, Table, Select } from 'antd'
+
+const { Option } = Select
 
 const PenilaianView = ({ idRombelSemesterGuru }) => {
+  const [selectedWeek, setSelectedWeek] = useState(1)
+
   const dummyData = [
     {
       id: 1,
       nis: '1234567890',
-      nama: 'Nama Siswa 1',
-      BELUM_BERKEMBANG: '70',
-      MULAI_BERKEMBANG: '80',
-      SUDAH_BERKEMBANG: '90',
+      nama: 'John Doe',
+      nilaiAgamaBudipekerti: 'SUDAH_BERKEMBANG',
+      deskripsiAgamaBudipekerti:
+        'John adalah siswa yang memiliki pemahaman yang baik tentang nilai-nilai agama dan budipekerti.',
+      nilaiJatiDiri: 'SUDAH_BERKEMBANG',
+      deskripsiJatiDiri:
+        'John telah menunjukkan perkembangan yang positif dalam memahami jati dirinya sebagai individu.',
+      nilaiLiterasiSains: 'SUDAH_BERKEMBANG',
+      deskripsiLiterasiSains:
+        'John memiliki kemampuan literasi sains yang baik dan dapat menerapkan pengetahuannya dalam kehidupan sehari-hari.',
     },
     {
       id: 2,
       nis: '0987654321',
-      nama: 'Nama Siswa 2',
-      BELUM_BERKEMBANG: '65',
-      MULAI_BERKEMBANG: '75',
-      SUDAH_BERKEMBANG: '85',
+      nama: 'Jane Doe',
+      nilaiAgamaBudipekerti: 'MULAI_BERKEMBANG',
+      deskripsiAgamaBudipekerti:
+        'Jane masih dalam tahap perkembangan dalam memahami nilai-nilai agama dan budipekerti.',
+      nilaiJatiDiri: 'BELUM_BERKEMBANG',
+      deskripsiJatiDiri:
+        'Jane perlu bimbingan lebih lanjut untuk memahami jati dirinya sebagai individu.',
+      nilaiLiterasiSains: 'BELUM_BERKEMBANG',
+      deskripsiLiterasiSains:
+        'Jane memerlukan bimbingan ekstra dalam meningkatkan kemampuan literasi sainsnya.',
     },
     // Tambahkan data siswa lainnya sesuai kebutuhan
   ]
@@ -42,67 +58,34 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
       title: 'Nilai Agama Budipekerti',
       dataIndex: 'nilaiAgamaBudipekerti',
       key: 'nilaiAgamaBudipekerti',
-      children: [
-        {
-          title: 'Belum Berkembang',
-          dataIndex: 'BELUM_BERKEMBANG',
-          key: 'BELUM_BERKEMBANG',
-        },
-        {
-          title: 'Mulai Berkembang',
-          dataIndex: 'MULAI_BERKEMBANG',
-          key: 'MULAI_BERKEMBANG',
-        },
-        {
-          title: 'Sudah Berkembang',
-          dataIndex: 'SUDAH_BERKEMBANG',
-          key: 'SUDAH_BERKEMBANG',
-        },
-      ],
+      render: (text, record) => (
+        <div>
+          <b>{text}</b>
+          <br /> {record.deskripsiAgamaBudipekerti}
+        </div>
+      ),
     },
     {
       title: 'Nilai Jati Diri',
       dataIndex: 'nilaiJatiDiri',
       key: 'nilaiJatiDiri',
-      children: [
-        {
-          title: 'Belum Berkembang',
-          dataIndex: 'BELUM_BERKEMBANG',
-          key: 'BELUM_BERKEMBANG',
-        },
-        {
-          title: 'Mulai Berkembang',
-          dataIndex: 'MULAI_BERKEMBANG',
-          key: 'MULAI_BERKEMBANG',
-        },
-        {
-          title: 'Sudah Berkembang',
-          dataIndex: 'SUDAH_BERKEMBANG',
-          key: 'SUDAH_BERKEMBANG',
-        },
-      ],
+      render: (text, record) => (
+        <div>
+          <b>{text}</b>
+          <br /> {record.deskripsiJatiDiri}
+        </div>
+      ),
     },
     {
       title: 'Nilai Literasi Sains',
       dataIndex: 'nilaiLiterasiSains',
       key: 'nilaiLiterasiSains',
-      children: [
-        {
-          title: 'Belum Berkembang',
-          dataIndex: 'BELUM_BERKEMBANG',
-          key: 'BELUM_BERKEMBANG',
-        },
-        {
-          title: 'Mulai Berkembang',
-          dataIndex: 'MULAI_BERKEMBANG',
-          key: 'MULAI_BERKEMBANG',
-        },
-        {
-          title: 'Sudah Berkembang',
-          dataIndex: 'SUDAH_BERKEMBANG',
-          key: 'SUDAH_BERKEMBANG',
-        },
-      ],
+      render: (text, record) => (
+        <div>
+          <b>{text}</b>
+          <br /> {record.deskripsiLiterasiSains}
+        </div>
+      ),
     },
     {
       title: 'Aksi',
@@ -129,6 +112,11 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
     },
   ]
 
+  const handleWeekChange = (value) => {
+    setSelectedWeek(value)
+    // Fetch data for the selected week
+  }
+
   return (
     <>
       <div className="content-wrapper">
@@ -140,13 +128,26 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
                   <h3 className="box-title">
                     <i className="fa fa-calendar"></i> Data Penilaian Mingguan
                   </h3>
+                  <div style={{ float: 'right' }}>
+                    <b>Rombel:</b> XII IPA 1 | <b>Semester:</b> Genap
+                  </div>
                 </div>
 
                 <div className="box-body">
+                  <Select
+                    defaultValue={1}
+                    style={{ width: 120, marginBottom: 16 }}
+                    onChange={handleWeekChange}
+                  >
+                    <Option value={1}>Minggu 1</Option>
+                    <Option value={2}>Minggu 2</Option>
+                    {/* Tambahkan opsi minggu lainnya sesuai kebutuhan */}
+                  </Select>
+
                   <Table
                     dataSource={dummyData}
                     columns={columns}
-                    scroll={{ x: 1500 }}
+                    scroll={{ x: 1000 }}
                   />
                 </div>
               </div>
