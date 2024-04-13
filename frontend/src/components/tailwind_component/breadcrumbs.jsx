@@ -6,7 +6,7 @@ const Breadcrumbs = ({ paths }) => {
       <ol className="list-none p-0 inline-flex">
         {paths.map((path, index) => (
           <li key={index} className="flex items-center">
-            {index > 0 && <span className="mx-1">/</span>}
+            {index > 0 && <span className="mx-1 text-white">/</span>}
             {path.href ? (
               <Link href={path.href}>
                 <span className="text-white hover:underline">{path.text}</span>

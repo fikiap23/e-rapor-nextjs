@@ -90,8 +90,31 @@ export default function SearchRaportPage() {
               </tbody>
             </table>
           </div>
-          <div className="w-3/4 hover:bg-white hover:drop-shadow-md transition duration-[0.5s] rounded-xl overflow-auto">
-            {dataAccordion.map((item, index) => (
+          <div className="w-1/2 bg-white drop-shadow-md transition duration-[0.5s] rounded-xl overflow-auto p-4">
+            <form action="" className="max-w-[50%] mx-auto">
+              <label
+                htmlFor="semester"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Pilih Semester
+              </label>
+              <select
+                name="semester"
+                id="semester"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5"
+              >
+                {dataAccordion.map((item, index) => (
+                  <option value={`semester${index + 1}`}>{item.title}</option>
+                ))}
+              </select>
+              <button
+                className="px-4 py-2 bg-blue-500 rounded-xl text-white mt-5 text-sm"
+                type="submit"
+              >
+                Print
+              </button>
+            </form>
+            {/* {dataAccordion.map((item, index) => (
               <Accordion title={item.title} key={index + 1}>
                 <div className="flex justify-between items-center transition duration-[0.5s]">
                   <h1>Raport {item.title}</h1>
@@ -100,7 +123,7 @@ export default function SearchRaportPage() {
                   </button>
                 </div>
               </Accordion>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
