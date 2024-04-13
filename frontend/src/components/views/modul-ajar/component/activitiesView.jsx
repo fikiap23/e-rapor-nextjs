@@ -147,25 +147,23 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
         />
       </div>
       {/* ADD MODUL AJAR */}
-      {!isFetchingModulAjars && (
-        <AddSubjectModal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-          modulAjars={modulAjars?.modulAjars}
-          token={token}
-          refetch={refetchJadwal}
-        ></AddSubjectModal>
-      )}
-      {selectedJadwal && isOpenEditModal && (
-        <UpdateJadwalModal
-          isOpen={isOpenEditModal}
-          closeModal={closeModalEdit}
-          modulAjars={modulAjars?.modulAjars}
-          token={token}
-          refetch={refetchJadwal}
-          defaultValues={selectedJadwal}
-        ></UpdateJadwalModal>
-      )}
+
+      <AddSubjectModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        modulAjars={modulAjars?.modulAjars}
+        token={token}
+        refetch={refetchJadwal}
+      ></AddSubjectModal>
+
+      <UpdateJadwalModal
+        isOpen={isOpenEditModal}
+        closeModal={closeModalEdit}
+        modulAjars={modulAjars?.modulAjars}
+        token={token}
+        refetch={refetchJadwal}
+        defaultValues={selectedJadwal}
+      ></UpdateJadwalModal>
     </div>
   )
 }
