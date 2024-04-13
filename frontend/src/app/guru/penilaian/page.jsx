@@ -52,12 +52,26 @@ const RombelDiampuView = () => {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
-        <Link href={`/guru/penilaian/${record.id}`}>
-          <Button type="primary" style={{ marginRight: 8 }}>
-            <i className="fa fa-plus" style={{ marginRight: '8px' }}></i> Input
-            Penilaian Mingguan
-          </Button>
-        </Link>
+        <div>
+          <Link href={`/guru/penilaian/${record.id}`}>
+            <Button type="primary" style={{ marginRight: 8 }}>
+              <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>{' '}
+              Input Penilaian Mingguan
+            </Button>
+          </Link>
+          <Link href={`/guru/penilaian/analisis/${record.id}`}>
+            <Button
+              style={{
+                marginRight: 8,
+                backgroundColor: 'green',
+                color: 'white',
+              }}
+              icon={<i className="fa fa-bar-chart"></i>}
+            >
+              Analisis Penilaian
+            </Button>
+          </Link>
+        </div>
       ),
     },
   ]
