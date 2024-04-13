@@ -17,7 +17,11 @@ const Accordion = ({ title, children }) => {
         <div className="font-semibold">{title}</div>
         <div>{isOpen ? "-" : "+"}</div>
       </div>
-      {isOpen && <div className="p-4 bg-white overflow-hidden">{children}</div>}
+      {isOpen && (
+        <div className="p-4 bg-white transition duration-[0.5s] overflow-hidden">
+          {children}
+        </div>
+      )}
     </div>
   );
 };

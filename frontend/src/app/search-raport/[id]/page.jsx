@@ -29,10 +29,10 @@ export default function SearchRaportPage() {
   return (
     <div>
       <Navbar role={userData?.role} />
-      <div className="w-full mx-auto bg-blue-500 h-screen p-8">
-        <div className="w-full h-full flex flex-col gap-10 justify-center items-center bg-red-400 rounded p-5">
+      <div className="w-full mx-auto bg-utama h-screen p-8">
+        <div className="w-full h-full flex flex-col gap-10 justify-center items-center  rounded p-5">
           <table className="w-1/2 h-fit table-auto">
-            <thead className="rounded">
+            <thead className="rounded border">
               <tr className="bg-white">
                 <th>Nama</th>
                 <th>:</th>
@@ -41,14 +41,14 @@ export default function SearchRaportPage() {
               <tr>
                 <th>NISN</th>
                 <th>:</th>
-                <th>1234567890</th>
+                <th>{id}</th>
               </tr>
             </thead>
           </table>
           <div className="w-full">
             {dataAccordion.map((item, index) => (
               <Accordion title={item.title} key={index + 1}>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center transition duration-[0.5s]">
                   <h1>Raport {item.title}</h1>
                   <button className="bg-blue-500 px-3 py-1 rounded-full text-white">
                     Cetak

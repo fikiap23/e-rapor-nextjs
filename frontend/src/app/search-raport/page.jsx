@@ -34,40 +34,40 @@ export default function Home() {
   return (
     <div>
       <Navbar role={userData?.role} />
-      <header className="grid grid-cols-2 bg-blue-500 w-full p-20 gap-10 h-auto">
+      <header className="grid grid-cols-2 bg-utama w-full p-20 gap-10 h-auto">
         <div className="max-w-2xl">
-          <h1 className="text-4xl text-white font-bold">Cari Siswa</h1>
+          <h1 className="text-4xl text-kedua font-bold">Cari Siswa</h1>
           <form
             action=""
             method="post"
-            className="flex flex-col gap-5"
+            className="flex flex-col gap-5 text-kedua"
             onSubmit={handleSearch}
           >
             <div className="flex flex-col">
-              <label htmlFor="nisn" className="text-white font-normal">
+              <label htmlFor="nisn" className=" font-normal">
                 Masukkan NISN
               </label>
               <input
                 type="number"
                 name="nisn"
                 placeholder="NISN"
-                className="p-6"
+                className="p-6 rounded-md text-black"
                 onChange={handleChange}
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="nama" className="text-white font-normal">
+              <label htmlFor="nama" className=" font-normal">
                 Masukkan Nama
               </label>
               <input
                 type="text"
                 name="nama"
                 placeholder="Nama"
-                className="p-6"
+                className="p-6 rounded-md text-black"
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" className="bg-white p-3 rounded-lg">
+            <button type="submit" className="p-3 rounded-lg bg-blue-500">
               Cari
             </button>
           </form>
