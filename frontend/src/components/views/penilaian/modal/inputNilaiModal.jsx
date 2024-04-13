@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Form, Input, Select } from 'antd'
+import penilaianService from '@/services/penilaian.service'
 
 const { Option } = Select
 
@@ -17,17 +18,39 @@ const InputPenilaianModal = ({
 
   const handleOk = async () => {
     try {
-      setLoading(true)
       const values = await form.validateFields()
       const payload = {
         idMurid: idMurid,
         idRombelSemesterGuru: idRombelSemesterGuru,
+        idTujuanPembelajaran: tp.id,
         ...values,
       }
-      console.log('Form values:', payload)
-      form.resetFields()
+      setLoading(true)
+      await penilaianService
+        .create(payload, token)
+        .then(() => {
+          Modal.success({
+            title: 'Berhasil',
+            content: 'Berhasil menambahkan penilaian',
+          })
+          setLoading(false)
+          refetch()
+          form.resetFields()
+          closeModal()
+        })
+        .catch((error) => {
+          setLoading(false)
+          Modal.error({
+            title: 'Oops...',
+            content: 'Terjadi kesalahan: ' + error,
+          })
+        })
     } catch (error) {
-      console.error('Failed to validate form', error)
+      setLoading(false)
+      Modal.error({
+        title: 'Oops...',
+        content: 'Terjadi kesalahan',
+      })
     } finally {
       setLoading(false)
     }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, Menu, Tag } from 'antd'
+import { Button, Table, Dropdown, Menu, Tag, Modal } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
 import InputPenilaianModal from '../modal/inputNilaiModal'
+import penilaianService from '@/services/penilaian.service'
 
 const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   const {
@@ -27,13 +28,49 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
     setIsOpenInputModal(false)
   }
 
+  const handleDelete = (id) => {
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content: 'Anda akan menghapus data penilaian!',
+      okText: 'Ya, hapus!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await penilaianService
+          .delete(token, id)
+          .then(() => {
+            Modal.success({
+              title: 'Berhasil',
+              content: 'Data penilaian telah dihapus!',
+            })
+            refetch()
+          })
+          .catch((err) => {
+            Modal.error({
+              title: 'Gagal',
+              content: err,
+            })
+          })
+      },
+      onCancel: () => {},
+    })
+  }
+
   const menu = (record) => (
     <Menu>
-      <Menu.Item key="edit">Edit Nilai</Menu.Item>
-      <Menu.Item key="delete">Hapus Nilai</Menu.Item>
-      <Menu.Item key="input" onClick={() => handleOpenInputModal(record.id)}>
-        Input Nilai
-      </Menu.Item>
+      {record.penilaianMingguan && <Menu.Item key="edit">Edit Nilai</Menu.Item>}
+      {record.penilaianMingguan && (
+        <Menu.Item
+          key="delete"
+          onClick={() => handleDelete(record.penilaianMingguan?.id)}
+        >
+          Hapus Nilai
+        </Menu.Item>
+      )}
+      {!record.penilaianMingguan && (
+        <Menu.Item key="input" onClick={() => handleOpenInputModal(record.id)}>
+          Input Nilai
+        </Menu.Item>
+      )}
     </Menu>
   )
 
