@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/update-nilai-mingguan.dto';
+import { SemesterType } from '@prisma/client';
 
 @Injectable()
 export class NilaiMingguanQuery extends DbService {
@@ -90,5 +91,61 @@ export class NilaiMingguanQuery extends DbService {
                 penilaianMingguan: murid.penilaianMingguan[0] || null
             }
         })
+    }
+
+    async printPenilaianByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+        const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id: idRombelSemesterGuru
+            },
+            select: {
+                semester: true,
+                rombel: {
+                    select: {
+                        name: true,
+                        kategoriRombel: true
+                    }
+                },
+                guru: {
+                    select: {
+                        nama: true,
+                        nip: true
+                    }
+                }
+            }
+        })
+        if (!checkRombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
+        const checkTp = await this.prisma.tujuanPembelajaran.findUnique({
+            where: {
+                id: idTujuanPembelajaran
+            }
+        })
+        if (!checkTp) {
+            throw new BadRequestException('Tujuan pembelajaran tidak ditemukan')
+        }
+        const sekolah = await this.prisma.sekolah.findFirst(
+            {
+                select: {
+                    nama: true
+                }
+            }
+        )
+        const murids = await this.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran)
+
+        return {
+            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
+            nameRombel: checkRombelSemesterGuru.rombel.name,
+            kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
+            nameGuru: checkRombelSemesterGuru.guru.nama,
+            nipGuru: checkRombelSemesterGuru.guru.nip,
+            namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
+            nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
+            tp: checkTp,
+            murids: murids
+
+        }
     }
 }

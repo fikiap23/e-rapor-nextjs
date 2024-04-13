@@ -60,4 +60,10 @@ export class NilaiMingguanController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 
+    @Post('read/print')
+    async printByTp(@Res() res, @Request() req, @Body() dto: GetMuridByMingguDto) {
+        const result = await this.nilaiMingguanService.printPenilaianByIdRombelSemesterGuruAndIdTp(dto.idRombelSemesterGuru, dto.idTujuanPembelajaran)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
+
 }
