@@ -191,7 +191,10 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
 
   return (
     <>
-      <Link href={`/assessment_input_print`} target="_blank">
+      <Link
+        href={`/assessment_input_print/${idRombelSemesterGuru}/${tp?.id}`}
+        target="_blank"
+      >
         <Button
           type="primary"
           style={{

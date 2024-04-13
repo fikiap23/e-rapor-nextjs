@@ -115,7 +115,7 @@ export class NilaiMingguanQuery extends DbService {
             }
         })
         if (!checkRombelSemesterGuru) {
-            throw new BadRequestException('Rombel tidak ditemukan')
+            return null
         }
         const checkTp = await this.prisma.tujuanPembelajaran.findUnique({
             where: {
@@ -123,7 +123,7 @@ export class NilaiMingguanQuery extends DbService {
             }
         })
         if (!checkTp) {
-            throw new BadRequestException('Tujuan pembelajaran tidak ditemukan')
+            return null
         }
         const sekolah = await this.prisma.sekolah.findFirst(
             {
