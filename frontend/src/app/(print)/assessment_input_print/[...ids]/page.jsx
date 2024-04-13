@@ -1,5 +1,6 @@
 'use client'
 import Loading from '@/components/shared/Loading'
+import PrintAssesmnetInput from '@/components/views/penilaian/component/print/printAssesmentInput'
 
 import { usePrintNilaiByMinggu } from '@/hooks/usePrintNilaiByMinggu'
 import { Empty } from 'antd'
@@ -11,11 +12,11 @@ const PrintPenilaianPage = () => {
   // ids[1] = idTujuanPembelajaran
   const { ids } = useParams()
   const { data, isFetching } = usePrintNilaiByMinggu(ids[0], ids[1])
-  console.log(data)
   return (
     <>
       {isFetching && <Loading />}
       {!isFetching && !data && <Empty />}
+      {!isFetching && data && <PrintAssesmnetInput data={data} />}
     </>
   )
 }

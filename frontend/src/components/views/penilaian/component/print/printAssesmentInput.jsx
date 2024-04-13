@@ -2,21 +2,21 @@
 import { useEffect } from 'react'
 import './style_assesment_input.css'
 
-function PrintAssesmnetInput() {
-  useEffect(() => {
-    window.print()
-  }, [])
+function PrintAssesmnetInput({ data }) {
+  // useEffect(() => {
+  //   window.print()
+  // }, [])
+  // console.log(`from print assesment input ${JSON.stringify(data)}`)
 
   return (
     <div>
       <body>
         <div className="header">
-          <h4 className="tbl">PENILAIAN HARIAN ANAK MINGGU KE 11</h4>
+          <h4 className="tbl">{`PENILAIAN HARIAN ANAK MINGGU KE ${data.tp?.minggu}`}</h4>
           <h5 className="tbl text-red">
-            Kelompok Kelompok Usia 4-5 tahun TK ERLANGGA CIRACAS ASY SYAMS
-            ISLAMIC SCHOOL
+            {`Kelompok Kelompok Usia ${data.kelompokUsia} ${data.nameSekolah}`}
           </h5>
-          <h5 className="tbl">Semester 1 Tahun Pelajaran 2023/2024</h5>
+          <h5 className="tbl">{data.semester}</h5>
           <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
         </div>
         <table
@@ -57,14 +57,13 @@ function PrintAssesmnetInput() {
             </tr>
             <tr className="row1">
               <td className="column2 style1 s style3" colSpan={3}>
-                Memiliki sikap sabar, ikhlas, dan tawakal untuk kedamaian hati
+                {data.tp?.tujuanPembelajaranAgamaBudipekerti}
               </td>
               <td className="column5 style1 s style3" colSpan={3}>
-                Memiliki sikap sabar, ikhlas, dan tawakal untuk kedamaian hati
+                {data.tp?.tujuanPembelajaranJatiDiri}
               </td>
               <td className="column8 style1 s style3" colSpan={3}>
-                Melakukan aktivitas yang mengembangkan kreatifitas dan imajinasi
-                melalui sebuah karya
+                {data.tp?.tujuanPembelajaranLiterasiSains}
               </td>
             </tr>
             <tr className="row2">
