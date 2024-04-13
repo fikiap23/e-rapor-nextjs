@@ -200,6 +200,7 @@ export class MuridQuery extends DbService {
                                 id: true,
                                 nama: true,
                                 nis: true,
+                                foto: true,
                             }
                         }
                     }

@@ -1,48 +1,59 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { useRombelWithSemester } from '@/hooks/useRombelWithSemester'
-import { Table, Button, Avatar } from 'antd'
+import { Table, Button, Input } from 'antd'
+import { useSiswasByIdSemesterGuru } from '@/hooks/useSiswasByIdRombelSemesterGuru'
+import { apiUrl } from '@/services/apiUrls'
 
 const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
   const { data: rombelWithSemester, isFetching: isFetchingRombelWithSemester } =
     useRombelWithSemester(idRombelSemesterGuru)
 
-  const dataSource = [
-    {
-      id: '1',
-      nama: 'Salsa Sabila',
-      nis: '12345',
-      foto: 'https://example.com/salsa.jpg',
-    },
-    {
-      id: '2',
-      nama: 'Muhammad Rusdi',
-      nis: '54321',
-      foto: 'https://example.com/rusdi.jpg',
-    },
-  ]
+  const { data: siswas, isFetching: isFetchingSiswas } =
+    useSiswasByIdSemesterGuru(idRombelSemesterGuru)
+
+  const [searchText, setSearchText] = useState('')
+  const filteredSiswa = siswas.filter((siswa) =>
+    Object.values(siswa).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
 
   const columns = [
     {
-      title: 'ID',
+      title: 'No',
       dataIndex: 'id',
       key: 'id',
-    },
-    {
-      title: 'Foto',
-      dataIndex: 'foto',
-      key: 'foto',
-      render: (foto) => <Avatar src={foto} />,
-    },
-    {
-      title: 'Nama',
-      dataIndex: 'nama',
-      key: 'nama',
+      render: (text, record, index) => index + 1,
     },
     {
       title: 'NIS',
       dataIndex: 'nis',
       key: 'nis',
+      sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
+    {
+      title: 'Nama',
+      dataIndex: 'nama',
+      key: 'nama',
+      sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Foto',
+      dataIndex: 'foto',
+      key: 'foto',
+      render: (text) => (
+        <img
+          src={text ? `${apiUrl}/${text}` : '/images/students.png'}
+          alt={text}
+          width={50}
+          height={50}
+        />
+      ),
+    },
+
     {
       title: 'Aksi',
       key: 'aksi',
@@ -83,7 +94,17 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
                 </div>
 
                 <div className="box-body">
-                  <Table dataSource={dataSource} columns={columns} />
+                  <Input
+                    placeholder="Cari siswa..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    style={{ width: 200, margin: '10px' }}
+                  />
+                  <Table
+                    dataSource={filteredSiswa}
+                    columns={columns}
+                    loading={isFetchingSiswas}
+                  />
                 </div>
               </div>
             </div>
