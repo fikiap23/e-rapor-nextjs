@@ -12,10 +12,6 @@ export class RombelRepository {
     constructor(private readonly rombelQuery: RombelQuery, private readonly guruRepository: GuruRepository) { }
 
     async createRombel(dto: CreateRombelDto) {
-        if (dto.idGuru) {
-            // check guru exist
-            await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
-        }
         // check name and name rombel exist
         const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
         if (rombel.length > 0) throw new BadRequestException('Rombel sudah ada');
@@ -36,10 +32,7 @@ export class RombelRepository {
     async updateRombelById(id: string, dto: UpdateRombelDto) {
         // check rombel exist
         const existRombel = await this.findRombelByIdOrThrow(id);
-        if (dto.idGuru) {
-            // check guru exist
-            await this.guruRepository.findGuruByIdOrThrow(dto.idGuru);
-        }
+
         // check name and name rombel exist
         if (dto.name && dto.name !== existRombel.name) {
             const rombel = await this.rombelQuery.findRombelByNameAndIdKategoriRombel(dto.idKategoriRombel, dto.name);
@@ -75,8 +68,16 @@ export class RombelRepository {
     async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
         // check rombel exist
         await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
-        await this.updateRombelById(payload.idRombel, { idGuru: payload.idGuru })
         return await this.rombelQuery.createRombelSemesterGuru(payload)
+    }
+
+    async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
+        // find rombelSemesterGuru
+        const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(id)
+        if (payload.idGuru !== rombelSemesterGuru.idGuru || payload.idSemester !== rombelSemesterGuru.idSemester || payload.idRombel !== rombelSemesterGuru.idRombel) {
+            await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
+        }
+        return await this.rombelQuery.updateRombelSemesterGuruById(id, payload)
     }
 
     async deleteRombelSemesterGuruById(id: string) {

@@ -1,23 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateJadwalAjarDto } from '../../../jadwal-ajar/dto/create-jadwal-ajar.dto';
-import { HariType } from '@prisma/client';
 import { UpdateJadwalAjarDto } from '../../../jadwal-ajar/dto/update-jadwal-ajar.dto';
 
 @Injectable()
 export class JadwalAjarQuery extends DbService {
 
-    async findAll(idRombel: string) {
-        return await this.prisma.jadwalAjar.findMany({
-            where: { idRombel }, include: {
+    async findAll(idRombelSemesterGuru: string) {
+        const result = await this.prisma.jadwalAjar.findMany({
+            where: { idRombelSemesterGuru }, include: {
                 modulAjar: {
                     select: {
-                        minggu: true
+                        minggu: true,
+                        topik: true,
+                        subtopik: true,
                     }
                 }
             },
             orderBy: {
                 tanggal: 'asc'
+            }
+        })
+        const days: string[] = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+        return result.map(item => {
+            const date = new Date(item.tanggal)
+            const dayName = days[date.getDay()]
+            return {
+                id: item.id,
+                idModulAjar: item.idModulAjar,
+                minggu: item.modulAjar.minggu,
+                hari: dayName,
+                tanggal: item.tanggal,
+                topik: item.modulAjar.topik,
+                subtopik: item.modulAjar.subtopik,
+                kegiatanInti: item.kegiatanInti
             }
         })
     }
@@ -30,13 +46,8 @@ export class JadwalAjarQuery extends DbService {
         return await this.prisma.jadwalAjar.findMany({ where: { idModulAjar } })
     }
 
-    async checkIsHariHasUsed(idModulAjar: string, hari: HariType): Promise<boolean> {
-        const isHariHasUsed = await this.prisma.jadwalAjar.findFirst({ where: { idModulAjar, hari } })
-        return isHariHasUsed ? true : false
-    }
-
-    async create(idRombel: string, payload: CreateJadwalAjarDto) {
-        return await this.prisma.jadwalAjar.create({ data: { ...payload, idRombel } })
+    async create(idRombelSemesterGuru: string, payload: CreateJadwalAjarDto) {
+        return await this.prisma.jadwalAjar.create({ data: { ...payload, idRombelSemesterGuru } })
     }
 
     async updateById(id: string, payload: UpdateJadwalAjarDto) {

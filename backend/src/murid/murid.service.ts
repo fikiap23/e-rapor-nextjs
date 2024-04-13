@@ -2,19 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { MuridRepository } from './murid.repository';
 import CreateMuridDto from './dto/create-murid.dto';
 import { UpdateMuridDto } from './dto/update-murid.dto';
-import { RombelRepository } from '../rombel/rombel.repository';
-
 
 @Injectable()
 export class MuridService {
     constructor(private readonly muridRepository: MuridRepository) { }
 
-    async create(dto: CreateMuridDto) {
-        return await this.muridRepository.create(dto);
+    async create(dto: CreateMuridDto, file: Express.Multer.File) {
+        return await this.muridRepository.create(dto, file);
     }
 
-    async updateById(id: string, dto: UpdateMuridDto) {
-        return await this.muridRepository.updateById(id, dto);
+    async updateById(id: string, dto: UpdateMuridDto, file: Express.Multer.File) {
+        return await this.muridRepository.updateById(id, dto, file);
     }
 
     async deleteById(id: string) {
@@ -31,5 +29,17 @@ export class MuridService {
 
     async findByNullRombel() {
         return await this.muridRepository.findByNullRombel();
+    }
+
+    async removeRombelById(id: string) {
+        return await this.muridRepository.removeRombelById(id);
+    }
+
+    async createMany(data: CreateMuridDto[]) {
+        return await this.muridRepository.createMany(data);
+    }
+
+    async findOneStudentByIdRombelSemesterGuru(id: string) {
+        return await this.muridRepository.findOneStudentByIdRombelSemesterGuru(id);
     }
 }

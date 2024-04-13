@@ -70,6 +70,11 @@ enum StatusAbsensi {
   ALPA
 }
 
+enum ModelPembelajaranType {
+  TATAP_MUKA
+  DARLING
+}
+
 // /*
 // |--------------------------------------------------------------------------
 // | Model
@@ -101,7 +106,6 @@ model Guru {
   // Relation
   idUser             String               @unique
   user               User                 @relation(fields: [idUser], references: [id], onDelete: Cascade)
-  rombel             Rombel[]
   rapor              Rapor[]
   rombelSemesterGuru RombelSemesterGuru[]
 
@@ -128,11 +132,10 @@ model Murid {
   pekerjaanAyah     String?
   pekerjaanIbu      String?
   status            StatusAkun          @default(AKTIF)
-  rapor             Rapor?
+  rapor             Rapor[]
   penilaianMingguan PenilaianMingguan[]
 
   // Relation
-
   idRombel String?
   rombel   Rombel?   @relation(fields: [idRombel], references: [id])
   absensi  Absensi[]
@@ -148,23 +151,18 @@ model Rombel {
   isFull Boolean @default(false)
 
   // Relation
-  idGuru             String?
-  guru               Guru?                @relation(fields: [idGuru], references: [id])
   idKategoriRombel   String
   kategoriRombel     KategoriRombel       @relation(fields: [idKategoriRombel], references: [id])
   rapor              Rapor[]
   murid              Murid[]
-  modulAjar          ModulAjar[]
-  jadwalAjar         JadwalAjar[]
   rombelSemesterGuru RombelSemesterGuru[]
 
   // index
-  @@index([id, idGuru, idKategoriRombel, name])
+  @@index([id, idKategoriRombel, name])
 }
 
 model KategoriRombel {
   id           String   @id @default(uuid())
-  name         String
   kelompokUsia String
   kode         String   @unique
   rombel       Rombel[]
@@ -174,12 +172,18 @@ model KategoriRombel {
 }
 
 model ModulAjar {
-  id                String              @id @default(uuid())
+  id                String                @id @default(uuid())
   minggu            Int
   topik             String
   subtopik          String
-  startDate         DateTime
-  endDate           DateTime
+  alokasiWaktu      String?
+  deskripsiUmum     String?
+  modelPembelajaran ModelPembelajaranType @default(TATAP_MUKA)
+  komponenInti      String?
+  curahIdeKegiatan  String?
+  kegiatanPembukaan String?
+  istirahat         String?
+  kegiatanPenutupan String?
   katakunci         String[]
   tujuanKegiatan    String[]
   alatBahan         String[]
@@ -189,9 +193,9 @@ model ModulAjar {
 
   // Relation
   idTujuanPembelajaran String
-  tujuanPembelajaran   TujuanPembelajaran @relation(fields: [idTujuanPembelajaran], references: [id])
-  idRombel             String
-  rombel               Rombel             @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  tujuanPembelajaran   TujuanPembelajaran  @relation(fields: [idTujuanPembelajaran], references: [id])
+  idRombelSemesterGuru String
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
 
   // index
   @@index([id, minggu])
@@ -227,19 +231,18 @@ model TujuanPembelajaran {
 
 model JadwalAjar {
   id           String   @id @default(uuid())
-  hari         HariType
   tanggal      DateTime
-  kegiatanInti String
+  kegiatanInti String[]
 
   // Relation
-  idModulAjar String
-  modulAjar   ModulAjar @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
-  idRombel    String
-  rombel      Rombel    @relation(fields: [idRombel], references: [id], onDelete: Cascade)
-  absensi     Absensi[]
+  idModulAjar          String
+  modulAjar            ModulAjar           @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
+  idRombelSemesterGuru String
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
+  absensi              Absensi[]
 
   // index
-  @@index([id, idModulAjar, idRombel])
+  @@index([id, idModulAjar, idRombelSemesterGuru])
 }
 
 model Absensi {
@@ -303,16 +306,15 @@ model Rapor {
   sekolah    Sekolah  @relation(fields: [idSekolah], references: [id], onDelete: Cascade)
   idSemester String
   semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
-  idMurid    String   @unique
+  idMurid    String
   murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
   idGuru     String
   guru       Guru     @relation(fields: [idGuru], references: [id])
   idRombel   String
   rombel     Rombel   @relation(fields: [idRombel], references: [id])
 
-  rombelSemesterId     String?
-  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [rombelSemesterGuruId], references: [id])
-  rombelSemesterGuruId String?
+  idRombelSemesterGuru String?
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id])
 
   // index
   @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])
@@ -339,14 +341,16 @@ model Sekolah {
 }
 
 model RombelSemesterGuru {
-  id         String   @id @default(uuid())
+  id         String       @id @default(uuid())
   idRombel   String
   idSemester String
   idGuru     String
-  guru       Guru     @relation(fields: [idGuru], references: [id], onDelete: Cascade)
-  rombel     Rombel   @relation(fields: [idRombel], references: [id], onDelete: Cascade)
-  semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
+  guru       Guru         @relation(fields: [idGuru], references: [id], onDelete: Cascade)
+  rombel     Rombel       @relation(fields: [idRombel], references: [id], onDelete: Cascade)
+  semester   Semester     @relation(fields: [idSemester], references: [id], onDelete: Cascade)
   rapor      Rapor[]
+  modulAjar  ModulAjar[]
+  jadwalAjar JadwalAjar[]
 
   @@index([id, idRombel, idSemester, idGuru])
 }

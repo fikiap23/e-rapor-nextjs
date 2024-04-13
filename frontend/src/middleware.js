@@ -12,7 +12,7 @@ export function middleware(request) {
   }
 
   if (userData?.role === 'GURU' && pathname === '/') {
-    return NextResponse.redirect(new URL('/teacher', request.url))
+    return NextResponse.redirect(new URL('/guru', request.url))
   } else if (userData?.role === 'ADMIN' && pathname === '/') {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
@@ -29,9 +29,9 @@ export function middleware(request) {
   if (pathname.startsWith('/admin' || '/admin/')) {
     if (userData.role !== 'ADMIN') {
       // Redirect unauthorized users (non-admins) to a specific page (e.g., teacher dashboard)
-      return NextResponse.redirect(new URL('/teacher', request.url))
+      return NextResponse.redirect(new URL('/guru', request.url))
     }
-  } else if (pathname.startsWith('/teacher') || '/teacher/') {
+  } else if (pathname.startsWith('/guru') || '/guru/') {
     if (userData.role !== 'GURU') {
       // Redirect unauthorized users (non-teachers) to a specific page (e.g., admin dashboard or login)
       return NextResponse.redirect(new URL('/admin', request.url))
@@ -43,5 +43,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/teacher/:path*', '/'],
+  matcher: ['/admin/:path*', '/guru/:path*', '/'],
 }

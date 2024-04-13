@@ -7,6 +7,7 @@ import { SekolahRepository } from '../sekolah/sekolah.repository';
 import { MuridRepository } from '../murid/murid.repository';
 import { SemesterRepository } from '../semester/semester.repository';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
+import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 
 @Injectable()
 export class RaporRepository {
@@ -15,7 +16,8 @@ export class RaporRepository {
         private readonly authRepository: AuthRepository,
         private readonly sekolaRepository: SekolahRepository,
         private readonly muridRepository: MuridRepository,
-        private readonly semesterRepository: SemesterRepository
+        private readonly semesterRepository: SemesterRepository,
+        private readonly rombelQuery: RombelQuery
     ) { }
 
     async findByIdOrThrow(id: string) {
@@ -37,14 +39,18 @@ export class RaporRepository {
 
     async checkIsRaporExist(idMurid: string, idSemester: string) {
         const rapor = await this.raporQuery.findByIdMuridAndSemester(idMurid, idSemester);
-        if (rapor) throw new BadRequestException('Rapor sudah ada');
+        if (rapor && rapor.length > 0) throw new BadRequestException('Rapor sudah ada');
         return
     }
 
     async create(token: string, dto: CreateRaporDto) {
         try {
             const sekolah = await this.sekolaRepository.findSekolah()
-            const { idsRombel, idGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+            const { idsRombelSemesterGuru, idGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+
+            // check rombel semester guru exist
+            const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdsOrThrow(idsRombelSemesterGuru);
+            const idsRombel = rombelSemesterGuru.map(rombel => rombel.idRombel);
 
             // check semester and murid exist
             await this.semesterRepository.findByIdOrThrow(dto.idSemester);
@@ -53,7 +59,7 @@ export class RaporRepository {
             // check rapor exist
             await this.checkIsRaporExist(dto.idMurid, dto.idSemester);
 
-            if (murid.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+            if (!idsRombel.includes(murid.idRombel)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
             const data = await this.raporQuery.create(sekolah.id, idsRombel[0], idGuru, dto);
             if (!data) throw new BadRequestException('Rapor gagal ditambahkan');
@@ -65,11 +71,15 @@ export class RaporRepository {
 
     async update(token: string, id: string, dto: UpdateRaporDto) {
         const rapor = await this.findByIdOrThrow(id);
-        const { idsRombel } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
 
-        if (rapor.idRombel !== idsRombel[0]) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(rapor.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         return await this.raporQuery.updateById(id, dto);
+    }
+
+    async findByIdRombelAndSemester(idRombel: string, idSemester: string) {
+        return await this.raporQuery.findByIdRombelAndSemester(idRombel, idSemester)
     }
 
 }

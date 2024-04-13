@@ -63,8 +63,8 @@ export class AuthRepository {
 
             if (user.role === Role.GURU) {
                 // find guru by user id
-                const guru = await this.prisma.guru.findFirst({ where: { idUser: user.id }, include: { rombel: { select: { id: true } } } });
-                const idsRombel = guru.rombel.map((rombel) => rombel.id);
+                const guru = await this.prisma.guru.findUnique({ where: { idUser: user.id }, include: { rombelSemesterGuru: { select: { id: true } } } });
+                const idsRombelSemesterGuru = guru.rombelSemesterGuru.map((rombel) => rombel.id);
                 if (!guru) throw new BadRequestException('Akun Guru tidak ditemukan');
 
                 // return token
@@ -73,7 +73,7 @@ export class AuthRepository {
                     user.role,
                     TokenType.FULL,
                     '7d',
-                    idsRombel,
+                    idsRombelSemesterGuru,
                     guru.id
                 )
             }
@@ -125,7 +125,7 @@ export class AuthRepository {
         role: string,
         access: string,
         expire: string,
-        idsRombel?: any,
+        idsRombelSemesterGuru?: any,
         idGuru?: string
     ): Promise<{ access_token: string }> {
         //  payload user data for jwt token
@@ -134,7 +134,7 @@ export class AuthRepository {
             role: role,
             access: access,
             expire: expire,
-            idsRombel,
+            idsRombelSemesterGuru,
             idGuru
         };
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateRombelDto } from '../../../rombel/dto/create-rombel.dto';
 import { CreateKategoriRombelDto } from '../../../rombel/dto/create-kategori-rombel.dto';
@@ -56,7 +56,7 @@ export class RombelQuery extends DbService {
                 murid: true
             }
         })
-
+        if (!rombel) return null
         return {
             id: rombel.id,
             name: rombel.name,
@@ -69,6 +69,7 @@ export class RombelQuery extends DbService {
             murid: rombel.murid
         }
     }
+
 
     async updateRombelById(id: string, payload: UpdateRombelDto) {
         return await this.prisma.rombel.update({ where: { id }, data: payload })
@@ -128,20 +129,21 @@ export class RombelQuery extends DbService {
     }
 
     async deleteRombelSemesterGuruById(id: string) {
-        await this.prisma.rombelSemesterGuru.update({
-            where: { id }, data: {
-                rombel: {
-                    update: {
-                        idGuru: null
-                    }
-                }
-            }
-        })
         return await this.prisma.rombelSemesterGuru.delete({ where: { id } })
     }
 
     async updateRombelSemesterGuruById(id: string, payload: UpdateRombelSemesterGuruDto) {
         return await this.prisma.rombelSemesterGuru.update({ where: { id }, data: payload })
+    }
+
+    async findRombelSemesterGuruByIdOrThrow(id: string) {
+        const rombel = await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
+        if (!rombel) throw new BadRequestException('Rombel tidak ditemukan')
+        return await this.prisma.rombelSemesterGuru.findUnique({ where: { id } })
+    }
+
+    async findRombelSemesterGuruByIdsOrThrow(ids: string[]) {
+        return await this.prisma.rombelSemesterGuru.findMany({ where: { id: { in: ids } } })
     }
 
     async checkIsRombelSemesterGuruExist(idRombel: string, idSemester: string, idGuru: string) {

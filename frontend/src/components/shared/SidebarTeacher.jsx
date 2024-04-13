@@ -22,35 +22,32 @@ const SidebarTeacher = () => {
 
         <ul className="sidebar-menu" data-widget="tree">
           <li>
-            <Link href="/teacher">
+            <Link href="/guru">
               {' '}
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </Link>
           </li>
+
           <li>
-            <Link href="/teacher/lecture">
-              <i className="fa fa-book"></i> <span>Rombel Diampu</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/teacher/subject">
+            <Link href="/guru/modul-ajar">
               <i className="fa fa-edit"></i> <span>Modul Ajar</span>
             </Link>
           </li>
+
           <li>
-            <a href="/teacher/absence">
-              <i className="fa fa-calendar"></i> <span>Input Absen</span>
-            </a>
+            <Link href="/guru/penilaian">
+              <i className="fa fa-pencil"></i> <span>Penilaian</span>
+            </Link>
           </li>
 
           <li>
-            <Link href="/teacher/validation">
-              <i className="fa fa-edit"></i> <span>Validasi Nilai</span>
+            <Link href="/guru/rombel">
+              <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
           </li>
           <li className="active">
-            <Link href="/teacher/raport">
-              <i className="fa fa-print"></i> <span>Cetak Raport</span>
+            <Link href="/guru/rapor">
+              <i className="fa fa-print"></i> <span>Cetak Data</span>
             </Link>
           </li>
         </ul>

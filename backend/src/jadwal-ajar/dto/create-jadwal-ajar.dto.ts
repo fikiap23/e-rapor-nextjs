@@ -1,17 +1,13 @@
-import { IsString, IsDate, IsNotEmpty, IsEnum } from 'class-validator';
-import { HariType } from '@prisma/client';
+import { IsString, IsDate, IsNotEmpty, IsArray } from 'class-validator';
 export class CreateJadwalAjarDto {
-    @IsEnum(HariType)
-    @IsNotEmpty()
-    hari: HariType;
 
     @IsDate()
     @IsNotEmpty()
     tanggal: Date;
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    kegiatanInti: string;
+    kegiatanInti: string[];
 
     @IsString()
     @IsNotEmpty()

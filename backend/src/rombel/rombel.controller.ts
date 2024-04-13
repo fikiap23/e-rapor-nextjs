@@ -48,6 +48,14 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }
 
+    @Put('rombel-semester-guru/:id')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    async updateRombelSemesterGuru(@Body() dto: UpdateRombelSemesterGuruDto, @Param('id') id, @Res() res) {
+        const result = await this.rombelService.updateRombelSemesterGuruById(id, dto);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
     @Put(':id')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
