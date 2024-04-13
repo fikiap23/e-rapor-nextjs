@@ -42,4 +42,8 @@ export class MuridService {
     async findOneStudentByIdRombelSemesterGuru(id: string) {
         return await this.muridRepository.findOneStudentByIdRombelSemesterGuru(id);
     }
+
+    async findManyStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        return await this.muridRepository.findManyStudentByIdRombelSemesterGuru(idRombelSemesterGuru);
+    }
 }

@@ -177,5 +177,37 @@ export class MuridQuery extends DbService {
         return newData;
     }
 
+    async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id: idRombelSemesterGuru
+            }
+        })
+        if (!checkRombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
+        const originalData = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id: idRombelSemesterGuru
+            },
+            select: {
+                rombel: {
+                    select: {
+                        id: true,
+                        name: true,
+                        murid: {
+                            select: {
+                                id: true,
+                                nama: true,
+                                nis: true,
+                            }
+                        }
+                    }
+                },
+            }
 
+        })
+
+        return originalData.rombel?.murid || [];
+    }
 }

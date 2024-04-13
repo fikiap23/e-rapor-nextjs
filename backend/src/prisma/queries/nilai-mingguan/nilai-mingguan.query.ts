@@ -85,7 +85,7 @@ export class NilaiMingguanQuery extends DbService {
 
         })
 
-        return originalData.rombel.murid.map(murid => {
+        return originalData.rombel?.murid.map(murid => {
             return {
                 ...murid,
                 penilaianMingguan: murid.penilaianMingguan[0] || null

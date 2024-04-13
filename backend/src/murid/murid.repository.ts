@@ -147,4 +147,8 @@ export class MuridRepository {
         }
         return murid;
     }
+
+    async findManyStudentByIdRombelSemesterGuru(id: string) {
+        return await this.muridQuery.findStudentByIdRombelSemesterGuru(id);
+    }
 }
