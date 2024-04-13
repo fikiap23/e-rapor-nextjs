@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { apiUrl } from './apiUrls'
 
-const BASE_URL = `${apiUrl}/raport`
+const BASE_URL = `${apiUrl}/rapor`
 const raportService = {
   create: async (data, token) => {
     try {
