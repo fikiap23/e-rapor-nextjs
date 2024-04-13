@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
-function RaportInput({ idStudent, idRombelSemesterGuru }) {
+function RaportInput({ idStudent, idSemester }) {
   const { token } = useAuth()
   const id = useParams()
   // const [idStudent, setIdStudent] = useState('')
@@ -25,7 +25,8 @@ function RaportInput({ idStudent, idRombelSemesterGuru }) {
     refetch,
   } = useOneStudent(token, idStudent)
 
-  // // console.log(idRombel);
+  console.log(idStudent);
+  console.log(idSemester);
   // const {
   //   data: listRombelSemesterMurid,
   //   isFetching: fetchingRombelSemester
@@ -43,8 +44,8 @@ function RaportInput({ idStudent, idRombelSemesterGuru }) {
     catatanPertumbuhan: '',
     catatanPancasila: '',
     catatanGuru: '',
-    idSemester: '',
-    idMurid: '',
+    idSemester: idSemester,
+    idMurid: idStudent,
   })
 
   const handleChange = (e) => {
@@ -66,7 +67,7 @@ function RaportInput({ idStudent, idRombelSemesterGuru }) {
       })
 
       if (result.isConfirmed) {
-        // await raportService.create(formData, token);
+        await raportService.create(formData, token);
         // console.log(formData);
         // setFormData({
         //   ...formData,

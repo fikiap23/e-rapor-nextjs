@@ -11,6 +11,7 @@ const StudentTable = ({ siswa, fetching }) => {
   const [activeTab, setActiveTab] = useState('daftarSiswaTab')
   // const [dataUncreated, setDataUncreated] = useState([])
   const [idStudent, setIdStudent] = useState('');
+  const [idSemester, setIdSemester] = useState('');
   const id = useParams()
   const idRombelSemesterGuru = id.id
 
@@ -20,7 +21,6 @@ const StudentTable = ({ siswa, fetching }) => {
     ...data,
     rombel,
     tahunAjaran: semester,
-    idRombelSemesterGuru: idRombelSemesterGuru
   }));
 
   // console.log(idStudent);
@@ -100,9 +100,10 @@ const StudentTable = ({ siswa, fetching }) => {
               // const url = `/guru/rapor/${record.id}/${idRombelSemesterGuru}`;
               // window.location.href = url;
               setIdStudent(record.id)
+              setIdSemester(record.tahunAjaran?.id)
               handleTabChange('inputCatatanRaportTab')
               // setIdRombelSemesterGuru(record.idRombelSemesterGuru)
-              // console.log(idRombelSemesterGuru);
+              // console.log(record.tahunAjaran?.id);
             }}
             // onClick={() => handleTabChange('inputCatatanRaportTab')}
             style={{ marginRight: 8 }}
@@ -198,7 +199,7 @@ const StudentTable = ({ siswa, fetching }) => {
         {activeTab === 'inputCatatanRaportTab' && (
           <RaportInput
             idStudent={idStudent}
-            idRombelSemesterGuru={idRombelSemesterGuru}
+            idSemester={idSemester}
           />
         )}
         {/* {activeTab === 'moduleEditTab' && selectedModulAjar && (
