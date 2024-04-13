@@ -53,7 +53,7 @@ export default function LoginPage() {
               TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
             </p>
             <a
-              href="/search-raport"
+              href="/cari-rapor"
               className="block w-fit px-5 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold"
             >
               Beranda

@@ -9,9 +9,9 @@ const Accordion = ({ title, children }) => {
   };
 
   return (
-    <div className="border w-full">
+    <div className="border-collapse w-full transition duration-[0.5s]">
       <div
-        className="flex justify-between p-4 cursor-pointer bg-slate-200 hover:bg-gray-300 transition duration-[0.5s] ease-in-out"
+        className="flex justify-between p-4 cursor-pointer bg-kedua/50 backdrop-blur-2xl transition duration-[0.5s] ease-in-out"
         onClick={toggleAccordion}
       >
         <div className="font-semibold">{title}</div>

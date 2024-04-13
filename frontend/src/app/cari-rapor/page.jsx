@@ -29,7 +29,7 @@ export default function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    router.push(`/search-raport/${dataSearch.nisn}`);
+    router.push(`/cari-rapor/${dataSearch.nisn}`);
   };
   return (
     <div>
