@@ -58,6 +58,7 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
                     <MuridTable
                       idRombelSemesterGuru={idRombelSemesterGuru}
                       tp={selectedWeek}
+                      token={token}
                     />
                   )}
                   {!selectedWeek && (

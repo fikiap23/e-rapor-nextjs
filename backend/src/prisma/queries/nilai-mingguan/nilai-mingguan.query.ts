@@ -58,6 +58,7 @@ export class NilaiMingguanQuery extends DbService {
                         name: true,
                         murid: {
                             select: {
+                                id: true,
                                 nama: true,
                                 nis: true,
                                 penilaianMingguan: {

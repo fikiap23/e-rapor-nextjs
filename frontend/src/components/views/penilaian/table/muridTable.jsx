@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Table, Dropdown, Menu, Tag } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
+import InputPenilaianModal from '../modal/inputNilaiModal'
 
-const MuridTable = ({ idRombelSemesterGuru, tp }) => {
+const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   const {
     data: muridWithPenilaian,
     isFetching: isFetchingMuridWithPenilaian,
@@ -13,11 +14,26 @@ const MuridTable = ({ idRombelSemesterGuru, tp }) => {
   useEffect(() => {
     refetch()
   }, [idRombelSemesterGuru, tp.id])
+
+  const [isOpenInputModal, setIsOpenInputModal] = useState(false)
+  const [selectedIdMurid, setSelectedIdMurid] = useState(null)
+
+  const handleOpenInputModal = (idMurid) => {
+    setSelectedIdMurid(idMurid)
+    setIsOpenInputModal(true)
+  }
+
+  const handleCloseInputModal = () => {
+    setIsOpenInputModal(false)
+  }
+
   const menu = (record) => (
     <Menu>
       <Menu.Item key="edit">Edit Nilai</Menu.Item>
       <Menu.Item key="delete">Hapus Nilai</Menu.Item>
-      <Menu.Item key="input">Input Nilai</Menu.Item>
+      <Menu.Item key="input" onClick={() => handleOpenInputModal(record.id)}>
+        Input Nilai
+      </Menu.Item>
     </Menu>
   )
 
@@ -81,7 +97,8 @@ const MuridTable = ({ idRombelSemesterGuru, tp }) => {
       ],
     },
     {
-      title: 'Nilai Literasi Sains',
+      title:
+        'Nilai Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni',
       dataIndex: 'penilaianMingguan',
       key: 'nilaiLiterasiSains',
       children: [
@@ -113,13 +130,27 @@ const MuridTable = ({ idRombelSemesterGuru, tp }) => {
   ]
 
   return (
-    <Table
-      columns={columns}
-      dataSource={muridWithPenilaian}
-      loading={isFetchingMuridWithPenilaian}
-      scroll={{ x: 1000 }}
-      bordered
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={muridWithPenilaian}
+        loading={isFetchingMuridWithPenilaian}
+        scroll={{ x: 1000 }}
+        bordered
+      />
+
+      {isOpenInputModal && selectedIdMurid && (
+        <InputPenilaianModal
+          isOpen={isOpenInputModal}
+          closeModal={handleCloseInputModal}
+          refetch={refetch}
+          token={token}
+          tp={tp}
+          idMurid={selectedIdMurid}
+          idRombelSemesterGuru={idRombelSemesterGuru}
+        />
+      )}
+    </>
   )
 }
 
