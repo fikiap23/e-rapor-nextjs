@@ -5,9 +5,9 @@ import { NilaiType } from '@/lib/helper'
 import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 
 function PrintAssesmnetInput({ data }) {
-  // useEffect(() => {
-  //   window.print()
-  // }, [])
+  useEffect(() => {
+    window.print()
+  }, [])
   // console.log(`from print assesment input ${JSON.stringify(data)}`)
 
   return (
