@@ -72,6 +72,6 @@ export class NilaiMingguanRepository {
     }
 
     async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
-        return await this.nilaiMingguanQuery.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran);
+        return await this.nilaiMingguanQuery.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran);
     }
 }

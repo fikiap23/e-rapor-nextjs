@@ -56,7 +56,7 @@ export class NilaiMingguanController {
 
     @Post('read/murid/')
     async findManyByMurid(@Res() res, @Request() req, @Body() dto: GetMuridByMingguDto) {
-        const result = await this.nilaiMingguanService.findStudentByIdRombelSemesterGuru(dto.idRombelSemesterGuru, dto.idTujuanPembelajaran)
+        const result = await this.nilaiMingguanService.findStudentByIdRombelSemesterGuruAndIdTp(dto.idRombelSemesterGuru, dto.idTujuanPembelajaran)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 

@@ -39,7 +39,7 @@ export class NilaiMingguanQuery extends DbService {
         return await this.prisma.penilaianMingguan.delete({ where: { id } })
     }
 
-    async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+    async findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
         const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
             where: {
                 id: idRombelSemesterGuru
@@ -132,7 +132,7 @@ export class NilaiMingguanQuery extends DbService {
                 }
             }
         )
-        const murids = await this.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran)
+        const murids = await this.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran)
 
         return {
             nameSekolah: sekolah?.nama || 'Belum ada sekolah',
