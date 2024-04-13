@@ -1,6 +1,8 @@
 'use client'
 import { useEffect } from 'react'
 import './style_assesment_input.css'
+import { NilaiType } from '@/lib/helper'
+import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 
 function PrintAssesmnetInput({ data }) {
   // useEffect(() => {
@@ -67,196 +69,90 @@ function PrintAssesmnetInput({ data }) {
               </td>
             </tr>
             <tr className="row2">
+              {/* Agama */}
               <td className="column2 style4 s">Belum Berkembang</td>
               <td className="column3 style4 s">Mulai Berkembang</td>
               <td className="column4 style4 s">Sudah Berkembang</td>
+              {/* Jati diri */}
               <td className="column5 style4 s">Belum Berkembang</td>
               <td className="column6 style4 s">Mulai Berkembang</td>
               <td className="column7 style4 s">Sudah Berkembang</td>
+              {/* Literasi */}
               <td className="column8 style4 s">Belum Berkembang</td>
               <td className="column9 style4 s">Mulai Berkembang</td>
               <td className="column10 style4 s">Sudah Berkembang</td>
             </tr>
-            <tr className="row3">
-              <td className="column0 style5 n">1</td>
-              <td className="column1 style6 f">Nama lengkap</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
-            <tr className="row4">
-              <td className="column0 style5 n">2</td>
-              <td className="column1 style6 f">0</td>
-              <td className="column2 style7 null"></td>
-              <td className="column3 style7 s">
-                ananda sudah mulai muncul menghafalkan surah-surah pendek
-              </td>
-              <td className="column4 style7 null"></td>
-              <td className="column5 style7 null"></td>
-              <td className="column6 style7 s">
-                ananda sudah mulai muncul menjaga kebersihannya dengan mencuci
-                tangan sebelum makan
-              </td>
-              <td className="column7 style7 null"></td>
-              <td className="column8 style7 null"></td>
-              <td className="column9 style7 s">
-                ananada sudah mulai muncul keaktifannya saat bertanya
-              </td>
-              <td className="column10 style7 null"></td>
-            </tr>
+            {data.murids?.map((murid, index) => {
+              return (
+                <tr className="row3">
+                  {/* No */}
+                  <td className="column0 style5 n">{index + 1}</td>
+
+                  {/* Nama Anak */}
+                  <td className="column1 style6 f">{murid.nama}</td>
+
+                  {/* Agama */}
+                  <td className="column2 style7 null">
+                    {murid.penilaianMingguan?.nilaiAgamaBudipekerti ===
+                    NilaiType.BELUM_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiAgamaBudipekerti
+                      : ''}
+                  </td>
+                  <td className="column3 style7 s">
+                    {murid.penilaianMingguan?.nilaiAgamaBudipekerti ===
+                    NilaiType.MULAI_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiAgamaBudipekerti
+                      : ''}
+                  </td>
+                  <td className="column4 style7 null">
+                    {murid.penilaianMingguan?.nilaiAgamaBudipekerti ===
+                    NilaiType.SUDAH_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiAgamaBudipekerti
+                      : ''}
+                  </td>
+
+                  {/* Jati diri */}
+                  <td className="column5 style7 null">
+                    {murid.penilaianMingguan?.nilaiJatiDiri ===
+                    NilaiType.BELUM_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiJatiDiri
+                      : ''}
+                  </td>
+                  <td className="column6 style7 s">
+                    {murid.penilaianMingguan?.nilaiJatiDiri ===
+                    NilaiType.MULAI_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiJatiDiri
+                      : ''}
+                  </td>
+                  <td className="column7 style7 null">
+                    {murid.penilaianMingguan?.nilaiJatiDiri ===
+                    NilaiType.SUDAH_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiJatiDiri
+                      : ''}
+                  </td>
+
+                  {/* Literasi */}
+                  <td className="column8 style7 null">
+                    {murid.penilaianMingguan?.nilaiLiterasiSains ===
+                    NilaiType.BELUM_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiLiterasiSains
+                      : ''}
+                  </td>
+                  <td className="column9 style7 s">
+                    {murid.penilaianMingguan?.nilaiLiterasiSains ===
+                    NilaiType.MULAI_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiLiterasiSains
+                      : ''}
+                  </td>
+                  <td className="column10 style7 null">
+                    {murid.penilaianMingguan?.nilaiLiterasiSains ===
+                    NilaiType.SUDAH_BERKEMBANG
+                      ? murid.penilaianMingguan?.deskripsiLiterasiSains
+                      : ''}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
 
@@ -265,17 +161,15 @@ function PrintAssesmnetInput({ data }) {
             <td width="5%" style={{ textAlign: 'center' }}>
               Mengetahui :
               <p style={{ marginTop: '5px' }}>
-                Kepala TK ERLANGGA CIRACAS
-                <br />
-                ASY SYAMS ISLAMIC SCHOOL
+                {`Kepala Sekolah ${data.nameSekolah}`}
               </p>
               <div style={{ marginTop: '20%' }}>
                 <p style={{ margin: '-15px' }}>
-                  <b>LILIANA ASTUTI</b>
+                  <b>{data.namaKapsek}</b>
                 </p>
                 <hr style={{ color: 'black' }} />
                 <p style={{ margin: '-15px' }}>
-                  <b>NIP. 1234567890</b>
+                  <b>{`NIP. ${data.nipKapsek}`}</b>
                 </p>
               </div>
             </td>
@@ -283,15 +177,15 @@ function PrintAssesmnetInput({ data }) {
             <td width="8%"></td>
 
             <td width="5%" style={{ textAlign: 'center' }}>
-              Jakarta, 14 Februari 2024 :
+              {` Jakarta, ${formatDateWithIndonesianMonth(new Date())}`}
               <p style={{ marginTop: '5px' }}>Guru Kelompok</p>
               <div style={{ marginTop: '25%' }}>
                 <p style={{ margin: '-15px' }}>
-                  <b>DWI ANGGRAINI</b>
+                  <b>{data.nameGuru}</b>
                 </p>
                 <hr style={{ color: 'black' }} />
                 <p style={{ margin: '-15px' }}>
-                  <b>NIP/NUPTK 987654</b>
+                  <b>{`NIP/NUPTK ${data.nipGuru}`}</b>
                 </p>
               </div>
             </td>
