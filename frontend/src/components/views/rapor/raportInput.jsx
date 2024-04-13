@@ -7,16 +7,16 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
-function RaportInput() {
+function RaportInput({ idStudent, idSemester }) {
   const { token } = useAuth()
   const id = useParams()
-  const [idStudent, setIdStudent] = useState('')
-  const [idRombel, setIdRombel] = useState('')
+  // const [idStudent, setIdStudent] = useState('')
+  // const [idRombel, setIdRombel] = useState('')
 
-  useEffect(() => {
-    setIdStudent(id.id[0])
-    setIdRombel(id.id[1])
-  })
+  // useEffect(() => {
+  //   setIdStudent(id.id[0])
+  //   setIdRombel(id.id[1])
+  // })
 
   const {
     data: listStudent,
@@ -25,15 +25,15 @@ function RaportInput() {
     refetch,
   } = useOneStudent(token, idStudent)
 
-  // console.log(idRombel);
-  const {
-    dataRombelSemesterMurid: listRombelSemesterMurid,
-    errorRombelSemesterMurid,
-    isFetchingRombelSemesterMurid,
-    refetchRombelSemesterMurid,
-  } = useOneStudentByIdSemesterGuru(idRombel)
+  console.log(idStudent);
+  console.log(idSemester);
+  // const {
+  //   data: listRombelSemesterMurid,
+  //   isFetching: fetchingRombelSemester
+  // } = useOneStudentByIdSemesterGuru(idRombelSemesterGuru)
 
-  console.log(listRombelSemesterMurid);
+  // console.log("ini test " + listRombelSemesterMurid);
+
   const [formData, setFormData] = useState({
     totalSakit: 0,
     totalIzin: 0,
@@ -44,8 +44,8 @@ function RaportInput() {
     catatanPertumbuhan: '',
     catatanPancasila: '',
     catatanGuru: '',
-    idSemester: '',
-    idMurid: '',
+    idSemester: idSemester,
+    idMurid: idStudent,
   })
 
   const handleChange = (e) => {
@@ -67,7 +67,7 @@ function RaportInput() {
       })
 
       if (result.isConfirmed) {
-        // await raportService.create(formData, token);
+        await raportService.create(formData, token);
         // console.log(formData);
         // setFormData({
         //   ...formData,
@@ -116,7 +116,7 @@ function RaportInput() {
       id="input-siswa"
     >
       <div className="box-body">
-        <button
+        {/* <button
           className="btn btn-default"
           onClick={() => {
             window.history.back()
@@ -124,7 +124,7 @@ function RaportInput() {
           style={{ marginBottom: '2%', marginTop: '-2%' }}
         >
           <i className="fa fa-arrow-left"></i> Kembali
-        </button>
+        </button> */}
         <div className="box-body bg-danger">
           <p>
             <b>Nama Siswa: {listStudent.nama}</b>

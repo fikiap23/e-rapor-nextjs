@@ -25,10 +25,10 @@ const LectureView = () => {
                   </h3>
                 </div>
                 <div className="box-body">
-                  {isFetching && <Loading />}
+                  {/* {isFetching && <Loading />}
                   {!isFetching && listRombel && (
-                    <TableLecture rombels={listRombel} fetching={isFetching} />
-                  )}
+                  )} */}
+                  <TableLecture rombels={listRombel} fetching={isFetching} />
                 </div>
               </div>
             </div>

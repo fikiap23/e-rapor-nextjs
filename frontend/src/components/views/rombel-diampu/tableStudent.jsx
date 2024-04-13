@@ -1,13 +1,48 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddNilaiModal from './inputNilaiModal'
-import { Button, Table, Tag, Modal, Input } from 'antd'
+import { Button, Table, Tag, Modal, Input, Tabs } from 'antd'
 import { useParams } from 'next/navigation'
+import RaportInput from '../rapor/raportInput'
 
+const { TabPane } = Tabs
 const StudentTable = ({ siswa, fetching }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [activeTab, setActiveTab] = useState('daftarSiswaTab')
+  // const [dataUncreated, setDataUncreated] = useState([])
+  const [idStudent, setIdStudent] = useState('');
+  const [idSemester, setIdSemester] = useState('');
   const id = useParams()
-  const idRombelDiampu = id.id
+  const idRombelSemesterGuru = id.id
+
+  const { murid, rombel, semester } = siswa;
+
+  const dataSource = murid.map(data => ({
+    ...data,
+    rombel,
+    tahunAjaran: semester,
+  }));
+
+  // console.log(idStudent);
+
+  // useEffect(() => {
+  //   if (!fetching) {
+  //     const siswas = dataSource?.map((siswa) => {
+  //       return console.log(siswa);
+  //     })
+  //     // const tp = cpTps?.tujuanPembelajaran.filter(
+  //     //   (tujuanPembelajaran) =>
+  //     //     !siswas.includes(tujuanPembelajaran?.minggu)
+  //     // )
+  //     // setMingguTpUncreated(tp)
+  //   }
+  // })
+
+
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab)
+  }
 
   const columns = [
     {
@@ -62,10 +97,15 @@ const StudentTable = ({ siswa, fetching }) => {
           <Button
             type="primary"
             onClick={() => {
-              const url = `/guru/rapor/${record.id}/${idRombelDiampu}`;
-              window.location.href = url;
-              // console.log(record);
+              // const url = `/guru/rapor/${record.id}/${idRombelSemesterGuru}`;
+              // window.location.href = url;
+              setIdStudent(record.id)
+              setIdSemester(record.tahunAjaran?.id)
+              handleTabChange('inputCatatanRaportTab')
+              // setIdRombelSemesterGuru(record.idRombelSemesterGuru)
+              // console.log(record.tahunAjaran?.id);
             }}
+            // onClick={() => handleTabChange('inputCatatanRaportTab')}
             style={{ marginRight: 8 }}
           >
             {record.rapor && record.rapor.length === 0 ? (
@@ -106,17 +146,11 @@ const StudentTable = ({ siswa, fetching }) => {
     setSearchKeyword(e.target.value)
   }
 
-  const { murid, rombel, semester } = siswa;
 
-  const dataSource = murid.map(data => ({
-    ...data,
-    rombel,
-    tahunAjaran: semester
-  }));
 
   return (
     <>
-      <div style={{ width: '30%' }}>
+      {/* <div style={{ width: '30%' }}>
         <Input.Search
           placeholder="Cari data..."
           onSearch={handleSearch}
@@ -129,7 +163,55 @@ const StudentTable = ({ siswa, fetching }) => {
         dataSource={dataSource}
         loading={fetching}
         scroll={{ x: 1000 }}
-      />
+      /> */}
+      <div className="box-body">
+        <Tabs activeKey={activeTab} onChange={handleTabChange}>
+          <TabPane key="daftarSiswaTab" style={{ marginTop: '-5%' }}>
+            <div className="box-body table-responsive no-padding">
+              <div style={{ margin: '0 20px 20px 20px' }}>
+                <div style={{ width: '30%' }}>
+                  <Input.Search
+                    placeholder="Cari data..."
+                    onSearch={handleSearch}
+                    onChange={handleChangeSearch}
+                    style={{ marginBottom: 16 }}
+                  />
+                </div>
+              </div>
+
+              <Table
+                columns={columns}
+                dataSource={dataSource}
+                loading={fetching}
+                scroll={{ x: 1000 }}
+              />
+            </div>
+          </TabPane>
+          {/* <TabPane tab="Jadwal Ajar" key="activitiesTab">
+            <Table
+              columns={columns}
+              dataSource={dataSource}
+              loading={fetching}
+              scroll={{ x: 1000 }}
+            />
+          </TabPane> */}
+        </Tabs>
+        {activeTab === 'inputCatatanRaportTab' && (
+          <RaportInput
+            idStudent={idStudent}
+            idSemester={idSemester}
+          />
+        )}
+        {/* {activeTab === 'moduleEditTab' && selectedModulAjar && (
+          <EditModulAjar
+            dataToUpdate={selectedModulAjar}
+            refetch={refetchModulAjars}
+            token={token}
+            tujuanPembelajarans={mingguTpUncreated}
+            idRombelSemesterGuru={idRombelSemesterGuru}
+          />
+        )} */}
+      </div>
     </>
   )
 }
