@@ -198,7 +198,15 @@ export class NilaiMingguanQuery extends DbService {
                                 nama: true,
                                 nis: true,
                                 nisn: true,
-                                penilaianMingguan: true
+                                penilaianMingguan: {
+                                    include: {
+                                        tujuanPembelajaran: {
+                                            select: {
+                                                minggu: true
+                                            }
+                                        }
+                                    }
+                                },
                             }
                         }
                     }
@@ -209,6 +217,13 @@ export class NilaiMingguanQuery extends DbService {
         if (!muridWithPenilaian.rombel.murid[0]) {
             return null
         }
+
+        const penilaianMingguan = muridWithPenilaian.rombel.murid[0].penilaianMingguan.map(penilaian => {
+            return {
+                ...penilaian,
+                minggu: penilaian.tujuanPembelajaran.minggu
+            }
+        })
 
         return {
             nameSekolah: sekolah?.nama || 'Belum ada sekolah',
@@ -225,8 +240,7 @@ export class NilaiMingguanQuery extends DbService {
                 nis: muridWithPenilaian.rombel.murid[0].nis,
                 nisn: muridWithPenilaian.rombel.murid[0].nisn
             },
-            penilaian: muridWithPenilaian.rombel.murid[0].penilaianMingguan
-
+            penilaian: penilaianMingguan
         }
     }
 }

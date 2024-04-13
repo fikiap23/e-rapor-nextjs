@@ -59,7 +59,10 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
       title: 'Aksi',
       key: 'aksi',
       render: (text, record) => (
-        <Link href={`/assesment_analysis_print`} target="_blank">
+        <Link
+          href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
+          target="_blank"
+        >
           <Button type="primary" icon={<i className="fa fa-print"></i>}>
             Cetak Analisis
           </Button>
