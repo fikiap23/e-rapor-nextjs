@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Table, Dropdown, Menu, Tag, Modal } from 'antd'
-import { MoreOutlined } from '@ant-design/icons'
+import { MoreOutlined, PrinterOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
 import InputPenilaianModal from '../modal/inputNilaiModal'
 import penilaianService from '@/services/penilaian.service'
 import EditPenilaianModal from '../modal/editNilaiModal'
+import Link from 'next/link'
 
 const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   const {
@@ -190,6 +191,19 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
 
   return (
     <>
+      <Link href={`/assessment_input_print`} target="_blank">
+        <Button
+          type="primary"
+          style={{
+            marginLeft: '10px',
+            marginBottom: '10px',
+            backgroundColor: 'green',
+          }}
+          icon={<PrinterOutlined />}
+        >
+          Print Penilaian
+        </Button>
+      </Link>
       <Table
         columns={columns}
         dataSource={muridWithPenilaian}
