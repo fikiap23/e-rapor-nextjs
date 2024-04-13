@@ -20,6 +20,7 @@ import { Role } from '@prisma/client';
 import { CreatePenilaianMingguanDto } from './dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
 import { GetMuridByMingguDto } from './dto/get-murid-by-minggu.dto';
+import { GetNilaiByMuridSemesterDto } from './dto/get-nilai-by-murid-semester.dto';
 
 
 @Controller('nilai-mingguan')
@@ -66,4 +67,9 @@ export class NilaiMingguanController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 
+    @Post('read/print/one-murid')
+    async printByIdMurid(@Res() res, @Request() req, @Body() dto: GetNilaiByMuridSemesterDto) {
+        const result = await this.nilaiMingguanService.printPenilaianByIdRombelSemesterGuruAndIdMurid(dto.idRombelSemesterGuru, dto.idMurid)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
 }

@@ -148,4 +148,85 @@ export class NilaiMingguanQuery extends DbService {
 
         }
     }
+
+    async printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru: string, idMurid: string) {
+        const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id: idRombelSemesterGuru
+            },
+            select: {
+                semester: true,
+                rombel: {
+                    select: {
+                        name: true,
+                        kategoriRombel: true
+                    }
+                },
+                guru: {
+                    select: {
+                        nama: true,
+                        nip: true
+                    }
+                }
+            }
+        })
+        if (!checkRombelSemesterGuru) {
+            return null
+        }
+
+        const sekolah = await this.prisma.sekolah.findFirst(
+            {
+                select: {
+                    nama: true
+                }
+            }
+        )
+
+        const muridWithPenilaian = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id: idRombelSemesterGuru
+            },
+            select: {
+                rombel: {
+                    select: {
+                        murid: {
+                            where: {
+                                id: idMurid
+                            },
+                            select: {
+                                id: true,
+                                nama: true,
+                                nis: true,
+                                nisn: true,
+                                penilaianMingguan: true
+                            }
+                        }
+                    }
+                },
+            }
+        })
+
+        if (!muridWithPenilaian.rombel.murid[0]) {
+            return null
+        }
+
+        return {
+            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
+            nameRombel: checkRombelSemesterGuru.rombel.name,
+            kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
+            nameGuru: checkRombelSemesterGuru.guru.nama,
+            nipGuru: checkRombelSemesterGuru.guru.nip,
+            namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
+            nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
+            murid: {
+                id: muridWithPenilaian.rombel.murid[0].id,
+                name: muridWithPenilaian.rombel.murid[0].nama,
+                nis: muridWithPenilaian.rombel.murid[0].nis,
+                nisn: muridWithPenilaian.rombel.murid[0].nisn
+            },
+            penilaian: muridWithPenilaian.rombel.murid[0].penilaianMingguan
+
+        }
+    }
 }

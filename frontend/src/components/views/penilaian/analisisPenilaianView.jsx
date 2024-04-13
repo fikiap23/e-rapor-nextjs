@@ -4,6 +4,7 @@ import { useRombelWithSemester } from '@/hooks/useRombelWithSemester'
 import { Table, Button, Input } from 'antd'
 import { useSiswasByIdSemesterGuru } from '@/hooks/useSiswasByIdRombelSemesterGuru'
 import { apiUrl } from '@/services/apiUrls'
+import Link from 'next/link'
 
 const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
   const { data: rombelWithSemester, isFetching: isFetchingRombelWithSemester } =
@@ -58,21 +59,14 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
       title: 'Aksi',
       key: 'aksi',
       render: (text, record) => (
-        <Button
-          type="primary"
-          onClick={() => handlePrint(record)}
-          icon={<i className="fa fa-print"></i>}
-        >
-          Cetak Analisis
-        </Button>
+        <Link href={`/assesment_analysis_print`} target="_blank">
+          <Button type="primary" icon={<i className="fa fa-print"></i>}>
+            Cetak Analisis
+          </Button>
+        </Link>
       ),
     },
   ]
-
-  const handlePrint = (record) => {
-    // Implementasi logika untuk mencetak analisis
-    console.log('Mencetak analisis untuk:', record)
-  }
 
   return (
     <>
