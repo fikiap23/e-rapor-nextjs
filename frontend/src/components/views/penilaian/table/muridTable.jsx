@@ -4,6 +4,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
 import InputPenilaianModal from '../modal/inputNilaiModal'
 import penilaianService from '@/services/penilaian.service'
+import EditPenilaianModal from '../modal/editNilaiModal'
 
 const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   const {
@@ -17,7 +18,9 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   }, [idRombelSemesterGuru, tp.id])
 
   const [isOpenInputModal, setIsOpenInputModal] = useState(false)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const [selectedIdMurid, setSelectedIdMurid] = useState(null)
+  const [selectedNilai, setSelectedNilai] = useState(null)
 
   const handleOpenInputModal = (idMurid) => {
     setSelectedIdMurid(idMurid)
@@ -26,6 +29,16 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
 
   const handleCloseInputModal = () => {
     setIsOpenInputModal(false)
+  }
+
+  const handleOpenEditModal = (nilai, idMurid) => {
+    setSelectedIdMurid(idMurid)
+    setSelectedNilai(nilai)
+    setIsOpenEditModal(true)
+  }
+
+  const handleCloseEditModal = () => {
+    setIsOpenEditModal(false)
   }
 
   const handleDelete = (id) => {
@@ -57,7 +70,16 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
 
   const menu = (record) => (
     <Menu>
-      {record.penilaianMingguan && <Menu.Item key="edit">Edit Nilai</Menu.Item>}
+      {record.penilaianMingguan && (
+        <Menu.Item
+          key="edit"
+          onClick={() =>
+            handleOpenEditModal(record.penilaianMingguan, record.id)
+          }
+        >
+          Edit Nilai
+        </Menu.Item>
+      )}
       {record.penilaianMingguan && (
         <Menu.Item
           key="delete"
@@ -185,6 +207,18 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
           tp={tp}
           idMurid={selectedIdMurid}
           idRombelSemesterGuru={idRombelSemesterGuru}
+        />
+      )}
+      {isOpenEditModal && selectedIdMurid && selectedNilai && (
+        <EditPenilaianModal
+          isOpen={isOpenEditModal}
+          closeModal={handleCloseEditModal}
+          refetch={refetch}
+          token={token}
+          tp={tp}
+          idMurid={selectedIdMurid}
+          idRombelSemesterGuru={idRombelSemesterGuru}
+          initialValues={selectedNilai}
         />
       )}
     </>
