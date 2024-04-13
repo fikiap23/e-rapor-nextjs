@@ -4,6 +4,12 @@ import AddNilaiModal from './inputNilaiModal'
 import { Button, Table, Tag, Modal, Input, Tabs } from 'antd'
 import { useParams } from 'next/navigation'
 import RaportInput from '../rapor/raportInput'
+import Link from 'next/link'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PrinterOutlined,
+} from '@ant-design/icons'
 
 const { TabPane } = Tabs
 const StudentTable = ({ siswa, fetching }) => {
@@ -122,16 +128,14 @@ const StudentTable = ({ siswa, fetching }) => {
           </Button>
 
           {record.rapor && record.rapor.length !== 0 && (
-            <Button
-              type="primary"
-              onClick={() => {
-                const url = `/guru/rombel/${record.id}`;
-                window.location.href = url;
-              }}
-              style={{ marginRight: 8 }}
-            >
-              <i className="fa fa-print" style={{ marginRight: '8px' }}></i> Cetak Raport
-            </Button>
+            <Link href={`/module_print/${record.id}`} target="_blank">
+              <Button
+                style={{ backgroundColor: 'green', color: 'white' }}
+                icon={<PrinterOutlined />}
+              >
+                Print
+              </Button>
+            </Link>
           )}
         </span>
       ),
