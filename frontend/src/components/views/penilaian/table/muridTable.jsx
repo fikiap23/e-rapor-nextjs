@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Table, Dropdown, Menu, Tag } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
 
 const MuridTable = ({ idRombelSemesterGuru, tp }) => {
-  const { data: muridWithPenilaian, isFetching: isFetchingMuridWithPenilaian } =
-    useMuridWithPenilaian(idRombelSemesterGuru, tp.id)
+  const {
+    data: muridWithPenilaian,
+    isFetching: isFetchingMuridWithPenilaian,
+    refetch,
+  } = useMuridWithPenilaian(idRombelSemesterGuru, tp.id)
 
+  useEffect(() => {
+    refetch()
+  }, [idRombelSemesterGuru, tp.id])
   const menu = (record) => (
     <Menu>
       <Menu.Item key="edit">Edit Nilai</Menu.Item>
