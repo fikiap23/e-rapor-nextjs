@@ -19,6 +19,8 @@ import { JwtGuard, RoleGuard } from '../auth/guard';
 import { Role } from '@prisma/client';
 import { CreatePenilaianMingguanDto } from './dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
+import { GetMuridByMingguDto } from './dto/get-murid-by-minggu.dto';
+import { GetNilaiByMuridSemesterDto } from './dto/get-nilai-by-murid-semester.dto';
 
 
 @Controller('nilai-mingguan')
@@ -52,4 +54,22 @@ export class NilaiMingguanController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
     }
 
+
+    @Post('read/murid/')
+    async findManyByMurid(@Res() res, @Request() req, @Body() dto: GetMuridByMingguDto) {
+        const result = await this.nilaiMingguanService.findStudentByIdRombelSemesterGuruAndIdTp(dto.idRombelSemesterGuru, dto.idTujuanPembelajaran)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
+
+    @Post('read/print')
+    async printByTp(@Res() res, @Request() req, @Body() dto: GetMuridByMingguDto) {
+        const result = await this.nilaiMingguanService.printPenilaianByIdRombelSemesterGuruAndIdTp(dto.idRombelSemesterGuru, dto.idTujuanPembelajaran)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
+
+    @Post('read/print/one-murid')
+    async printByIdMurid(@Res() res, @Request() req, @Body() dto: GetNilaiByMuridSemesterDto) {
+        const result = await this.nilaiMingguanService.printPenilaianByIdRombelSemesterGuruAndIdMurid(dto.idRombelSemesterGuru, dto.idMurid)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
 }

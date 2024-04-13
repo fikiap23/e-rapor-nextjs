@@ -72,6 +72,12 @@ export class RombelController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('rombel-semester-guru/:id')
+    async findRombelSemesterGuru(@Param('id') id, @Res() res) {
+        const result = await this.rombelService.findRombelAndSemesterById(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
     @Get('guru')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN, Role.GURU)

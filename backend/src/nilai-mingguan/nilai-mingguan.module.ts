@@ -12,6 +12,7 @@ import { ModulAjarModule } from '../modul-ajar/modul-ajar.module';
 import { AuthModule } from '../auth/auth.module';
 import { MuridModule } from '../murid/murid.module';
 import { RombelModule } from '../rombel/rombel.module';
+import { CpTpModule } from '../cp-tp/cp-tp.module';
 
 
 @Module({
@@ -24,7 +25,8 @@ import { RombelModule } from '../rombel/rombel.module';
         AuthModule,
         ModulAjarModule,
         MuridModule,
-        RombelModule
+        RombelModule,
+        CpTpModule
     ],
     providers: [NilaiMingguanService, NilaiMingguanRepository, NilaiMingguanQuery],
     controllers: [NilaiMingguanController],

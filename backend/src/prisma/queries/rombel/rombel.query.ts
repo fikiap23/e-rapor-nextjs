@@ -150,6 +150,32 @@ export class RombelQuery extends DbService {
         return await this.prisma.rombelSemesterGuru.findFirst({ where: { idRombel, idSemester, idGuru } })
     }
 
+    async findRombelAndSemesterById(idRombelSemesterGuru: string) {
+        const result = await this.prisma.rombelSemesterGuru.findUnique({
+            where: { id: idRombelSemesterGuru }, include: {
+                rombel: {
+                    select: {
+                        id: true,
+                        name: true,
+                        kategoriRombel: true
+                    }
+                }, semester: true
+            }
+        })
+        if (!result) throw new BadRequestException('Rombel tidak ditemukan')
+        return {
+            id: result.id,
+            idRombel: result.idRombel,
+            idSemester: result.idSemester,
+            idGuru: result.idGuru,
+            name: result.rombel.name,
+            semester: `${result.semester.tahunAjaranAwal}-${result.semester.tahunAjaranAkhir} (${result.semester.jenisSemester})`,
+            rombel: result.rombel.name,
+            kelompokUsia: result.rombel.kategoriRombel.kelompokUsia
+        }
+
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Kategori Rombel Query

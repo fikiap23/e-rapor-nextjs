@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { NilaiMingguanRepository } from './nilai-mingguan.repository';
 import { CreatePenilaianMingguanDto } from './dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
+import { NilaiMingguanQuery } from '../prisma/queries/nilai-mingguan/nilai-mingguan.query';
 
 @Injectable()
 export class NilaiMingguanService {
-    constructor(private readonly nilaiMingguanRepository: NilaiMingguanRepository) { }
+    constructor(private readonly nilaiMingguanRepository: NilaiMingguanRepository, private readonly nilaiMingguanQuery: NilaiMingguanQuery) { }
 
     async findAll() {
         return await this.nilaiMingguanRepository.findAll();
@@ -25,5 +26,17 @@ export class NilaiMingguanService {
 
     async deleteById(token: string, id: string) {
         return await this.nilaiMingguanRepository.deleteById(token, id);
+    }
+
+    async findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+        return await this.nilaiMingguanRepository.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
+
+    async printPenilaianByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+        return await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
+
+    async printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru: string, idMurid: string) {
+        return await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
     }
 }
