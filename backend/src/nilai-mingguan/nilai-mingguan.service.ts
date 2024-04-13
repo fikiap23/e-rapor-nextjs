@@ -26,4 +26,8 @@ export class NilaiMingguanService {
     async deleteById(token: string, id: string) {
         return await this.nilaiMingguanRepository.deleteById(token, id);
     }
+
+    async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+        return await this.nilaiMingguanRepository.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
 }

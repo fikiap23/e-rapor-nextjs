@@ -70,4 +70,8 @@ export class NilaiMingguanRepository {
         if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.deleteById(id)
     }
+
+    async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
+        return await this.nilaiMingguanQuery.findStudentByIdRombelSemesterGuru(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
 }

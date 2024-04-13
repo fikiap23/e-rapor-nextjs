@@ -5,10 +5,14 @@ import { CreateKategoriRombelDto } from './dto/create-kategori-rombel.dto';
 import { UpdatKategoriRombelDto } from './dto/update-kategori-rombel.dto';
 import { UpdateRombelDto } from './dto/update-rombel.dto';
 import { UpdateRombelSemesterGuruDto } from './dto/update-rombel-semester-guru.dto';
+import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 
 @Injectable()
 export class RombelService {
-    constructor(private readonly rombelRepository: RombelRepository) { }
+    constructor(
+        private readonly rombelRepository: RombelRepository,
+        private readonly rombelQuery: RombelQuery
+    ) { }
 
     async createRombel(dto: CreateRombelDto) {
         return await this.rombelRepository.createRombel(dto)
@@ -48,6 +52,10 @@ export class RombelService {
 
     async deleteRombelSemesterGuruById(id: string) {
         return await this.rombelRepository.deleteRombelSemesterGuruById(id)
+    }
+
+    async findRombelAndSemesterById(idRombelSemesterGuru: string) {
+        return await this.rombelQuery.findRombelAndSemesterById(idRombelSemesterGuru)
     }
 
     /*
