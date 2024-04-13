@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Table, Dropdown, Menu } from 'antd'
+import { Button, Table, Dropdown, Menu, Tag } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { useMuridWithPenilaian } from '@/hooks/useMuridWithPenilaian'
 
@@ -34,55 +34,64 @@ const MuridTable = ({ idRombelSemesterGuru, tp }) => {
     },
     {
       title: 'Nilai Agama Budipekerti',
-      dataIndex: 'nilaiAgamaBudipekerti',
+      dataIndex: 'penilaianMingguan',
       key: 'nilaiAgamaBudipekerti',
       children: [
         {
           title: tp?.tujuanPembelajaranAgamaBudipekerti,
-          dataIndex: 'nilaiAgamaBudipekerti',
+          dataIndex: 'penilaianMingguan',
           key: 'nilaiAgamaBudipekerti',
-          render: (text, record) => (
-            <div>
-              <b>{text}</b>
-              <br /> {record.deskripsiAgamaBudipekerti}
-            </div>
-          ),
+          render: (penilaianMingguan) =>
+            penilaianMingguan ? (
+              <div>
+                <b>{penilaianMingguan.nilaiAgamaBudipekerti}</b>
+                <br /> {penilaianMingguan.deskripsiAgamaBudipekerti}
+              </div>
+            ) : (
+              <Tag color="warning">Nilai belum diinput</Tag>
+            ),
         },
       ],
     },
     {
       title: 'Nilai Jati Diri',
-      dataIndex: 'nilaiJatiDiri',
+      dataIndex: 'penilaianMingguan',
       key: 'nilaiJatiDiri',
       children: [
         {
           title: tp?.tujuanPembelajaranJatiDiri,
-          dataIndex: 'nilaiJatiDiri',
+          dataIndex: 'penilaianMingguan',
           key: 'nilaiJatiDiri',
-          render: (text, record) => (
-            <div>
-              <b>{text}</b>
-              <br /> {record.deskripsiJatiDiri}
-            </div>
-          ),
+          render: (penilaianMingguan) =>
+            penilaianMingguan ? (
+              <div>
+                <b>{penilaianMingguan.nilaiJatiDiri}</b>
+                <br /> {penilaianMingguan.deskripsiJatiDiri}
+              </div>
+            ) : (
+              <Tag color="warning">Nilai belum diinput</Tag>
+            ),
         },
       ],
     },
     {
       title: 'Nilai Literasi Sains',
-      dataIndex: 'nilaiLiterasiSains',
+      dataIndex: 'penilaianMingguan',
       key: 'nilaiLiterasiSains',
       children: [
         {
           title: tp?.tujuanPembelajaranLiterasiSains,
-          dataIndex: 'nilaiLiterasiSains',
+          dataIndex: 'penilaianMingguan',
           key: 'nilaiLiterasiSains',
-          render: (text, record) => (
-            <div>
-              <b>{text}</b>
-              <br /> {record.deskripsiLiterasiSains}
-            </div>
-          ),
+          render: (penilaianMingguan) =>
+            penilaianMingguan ? (
+              <div>
+                <b>{penilaianMingguan.nilaiLiterasiSains}</b>
+                <br /> {penilaianMingguan.deskripsiLiterasiSains}
+              </div>
+            ) : (
+              <Tag color="warning">Nilai belum diinput</Tag>
+            ),
         },
       ],
     },
@@ -96,6 +105,7 @@ const MuridTable = ({ idRombelSemesterGuru, tp }) => {
       ),
     },
   ]
+
   return (
     <Table
       columns={columns}

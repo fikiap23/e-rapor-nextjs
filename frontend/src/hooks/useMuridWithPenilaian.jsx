@@ -11,7 +11,7 @@ export function useMuridWithPenilaian(
   }
   return useQuery({
     queryKey: ['get-murid-with-penilaian'],
-    initialData: {},
+    initialData: [],
     queryFn: async () => {
       const res = await ApiClient.post(`/nilai-mingguan/read/murid/`, payload)
       const data = res.data.data
