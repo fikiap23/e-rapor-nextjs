@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { SekolahQuery } from '../prisma/queries/sekolah/sekolah.query';
 import { CreateSekolahDto } from './dto/create-sekolah.dto';
 import { UpdateSekolahDto } from './dto/update-sekolah.dto';
+import { _validateFile, createFileImageHelper, deleteFileImageHelper, getCustomFilename } from '../helpers/helper';
 
 @Injectable()
 export class SekolahRepository {
@@ -18,15 +19,62 @@ export class SekolahRepository {
         return sekolah[0]
     }
 
-    async create(dto: CreateSekolahDto) {
+    async create(dto: CreateSekolahDto, file: Express.Multer.File) {
         const isExist = await this.sekolahQuery.findAll()
         if (isExist.length > 0) throw new BadRequestException('Sekolah sudah ada')
+
+        let urlFileFoto: string;
+        // check if new file exists
+        if (file) {
+            _validateFile(
+                `Logo Sekolah`,
+                file,
+                ['.jpeg', '.jpg', '.png'],
+                1,
+            );
+
+            urlFileFoto = getCustomFilename("logo_sekolah", file);
+            // store file
+            await createFileImageHelper(
+                file,
+                `./public/foto/sekolah`,
+                urlFileFoto,
+            );
+            dto.logo = `foto/sekolah/${urlFileFoto}`;
+        }
         return await this.sekolahQuery.create(dto)
     }
 
-    async update(dto: UpdateSekolahDto) {
+    async update(dto: UpdateSekolahDto, file: Express.Multer.File) {
         const sekolah = await this.sekolahQuery.findAll()
         if (!sekolah || sekolah.length == 0) throw new BadRequestException('Sekolah tidak ditemukan')
+
+        let urlFileFoto: string;
+        // check if new file exists
+        if (file) {
+            _validateFile(
+                `Logo Sekolah`,
+                file,
+                ['.jpeg', '.jpg', '.png'],
+                1,
+            );
+
+            urlFileFoto = getCustomFilename("logo_sekolah", file);
+            if (sekolah[0].logo) {
+                await deleteFileImageHelper(
+                    `./public`,
+                    sekolah[0].logo,
+                );
+            }
+
+            // store file
+            await createFileImageHelper(
+                file,
+                `./public/foto/sekolah`,
+                urlFileFoto,
+            );
+            dto.logo = `foto/sekolah/${urlFileFoto}`;
+        }
 
         const id = sekolah[0].id
         return await this.sekolahQuery.updateById(id, dto)

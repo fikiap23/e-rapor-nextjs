@@ -11,11 +11,11 @@ export class SekolahService {
         return await this.sekolahRepository.findSekolah();
     }
 
-    async create(dto: CreateSekolahDto) {
-        return await this.sekolahRepository.create(dto)
+    async create(dto: CreateSekolahDto, file: Express.Multer.File) {
+        return await this.sekolahRepository.create(dto, file)
     }
 
-    async update(dto: UpdateSekolahDto) {
-        return await this.sekolahRepository.update(dto)
+    async update(dto: UpdateSekolahDto, file: Express.Multer.File) {
+        return await this.sekolahRepository.update(dto, file)
     }
 }
