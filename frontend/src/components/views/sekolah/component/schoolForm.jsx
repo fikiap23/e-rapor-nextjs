@@ -70,7 +70,7 @@ function SchoolForm({ sekolahData, token }) {
     console.log(payload)
     try {
       sekolahService
-        .update(token, logo)
+        .update(token, payload)
         .then((result) => {
           Swal.fire({
             icon: 'success',

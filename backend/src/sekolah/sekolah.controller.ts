@@ -42,8 +42,9 @@ export class SekolahController {
     @Put()
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
-    async update(@Body() dto: UpdateSekolahDto, @Res() res) {
-        await this.sekolahService.update(dto);
+    @UseInterceptors(FileInterceptor('logo'))
+    async update(@Body() dto: UpdateSekolahDto, @Res() res, @UploadedFile() file: Express.Multer.File) {
+        await this.sekolahService.update(dto, file);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {});
     }
 
