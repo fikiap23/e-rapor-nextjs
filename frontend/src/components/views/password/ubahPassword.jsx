@@ -1,17 +1,32 @@
+'use client'
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
+import authService from '@/services/auth.service';
+import useAuth from '@/hooks/useAuth';
 
 const UbahPassword = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const { token } = useAuth()
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         setLoading(true);
-        setTimeout(() => {
-            console.log('Received values:', values);
-            setLoading(false);
+        try {
+            const newPassword = values.newPassword;
+            console.log(newPassword);
+            await authService.changePassword(token, newPassword);
+
+            message.success('Password berhasil diubah!');
             form.resetFields();
-        }, 1000);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        } catch (error) {
+            console.error('Error changing password:', error);
+            message.error(error.message || 'Gagal mengubah password!');
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -35,49 +50,49 @@ const UbahPassword = () => {
                                     onFinish={onFinish}
                                     layout="vertical"
                                 >
-                                    <Form.Item
+                                    {/* <Form.Item
                                         name="currentPassword"
-                                        label="Current Password"
+                                        label="Password Lama"
                                         rules={[
-                                            { required: true, message: 'Please enter your current password!' },
+                                            { required: true, message: 'Masukan password lama!' },
                                         ]}
                                     >
-                                        <Input.Password placeholder="Enter current password" />
-                                    </Form.Item>
+                                        <Input.Password placeholder="Masukan dulu password lama" />
+                                    </Form.Item> */}
 
                                     <Form.Item
                                         name="newPassword"
-                                        label="New Password"
+                                        label="Password Baru"
                                         rules={[
-                                            { required: true, message: 'Please enter your new password!' },
-                                            { min: 6, message: 'Password must be at least 6 characters!' },
+                                            { required: true, message: 'Masukan dulu password baru !' },
+                                            { min: 6, message: 'Password minimal 6 karakter!' },
                                         ]}
                                     >
-                                        <Input.Password placeholder="Enter new password" />
+                                        <Input.Password placeholder="Masukan password baru" disabled={loading} />
                                     </Form.Item>
 
                                     <Form.Item
                                         name="confirmNewPassword"
-                                        label="Confirm New Password"
+                                        label="Konfirmasi password baru"
                                         dependencies={['newPassword']}
                                         rules={[
-                                            { required: true, message: 'Please confirm your new password!' },
+                                            { required: true, message: 'Masukan dulu konfirmasi password baru!' },
                                             ({ getFieldValue }) => ({
                                                 validator(_, value) {
                                                     if (!value || getFieldValue('newPassword') === value) {
                                                         return Promise.resolve();
                                                     }
-                                                    return Promise.reject('The two passwords do not match!');
+                                                    return Promise.reject('Password tidak sama, silahkan ubah lagi password baru!');
                                                 },
                                             }),
                                         ]}
                                     >
-                                        <Input.Password placeholder="Confirm new password" />
+                                        <Input.Password placeholder="Konfirmasi password baru" />
                                     </Form.Item>
 
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit" loading={loading}>
-                                            Change Password
+                                            Ubah Password
                                         </Button>
                                     </Form.Item>
                                 </Form>
@@ -87,7 +102,6 @@ const UbahPassword = () => {
                 </div>
             </section>
         </div>
-
     );
 };
 

@@ -6,8 +6,8 @@ import React, { useState } from 'react'
 const Header = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { removeToken, token } = useAuth()
-
   const userData = getTokenData(token)
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
@@ -17,8 +17,6 @@ const Header = ({ toggleSidebar }) => {
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     window.location.reload()
   }
-
-  console.log(userData);
 
   return (
     <header className="main-header">
