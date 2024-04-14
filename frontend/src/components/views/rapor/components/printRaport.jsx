@@ -7,9 +7,9 @@ import SchoolIdentity from './schoolIdentity'
 import StudentIdentity from './studentIdentity'
 
 const Raport = () => {
-  useEffect(() => {
-    window.print()
-  }, [])
+  // useEffect(() => {
+  //   window.print()
+  // }, [])
   return (
     <div className="body">
       <Cover></Cover>

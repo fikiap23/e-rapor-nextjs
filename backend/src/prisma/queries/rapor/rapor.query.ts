@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateRaporDto } from '../../../rapor/dto/create-rapor.dto';
 import { UpdateRaporDto } from '../../../rapor/dto/update-rapor.dto';
+import { SemesterType } from '@prisma/client';
 
 @Injectable()
 export class RaporQuery extends DbService {
@@ -84,6 +85,13 @@ export class RaporQuery extends DbService {
 
     async updateById(id: string, payload: UpdateRaporDto) {
         return await this.prisma.rapor.update({ where: { id }, data: payload })
+    }
+
+    async printById(id: string) {
+        const result = await this.prisma.rapor.findUnique({ where: { id }, include: { murid: true, semester: true, guru: true, sekolah: true } })
+        return {
+            semester: `Semester ${result.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir}`,
+        }
     }
 
 }
