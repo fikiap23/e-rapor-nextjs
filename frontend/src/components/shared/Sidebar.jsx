@@ -1,10 +1,13 @@
+import useAuth from '@/hooks/useAuth'
+import { useMe } from '@/hooks/useMe'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const Sidebar = () => {
   const router = usePathname()
-
+  const { token } = useAuth();
+  const { data } = useMe(token)
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
@@ -17,7 +20,7 @@ const Sidebar = () => {
             />
           </div>
           <div className="pull-left info">
-            <p>Admin</p>
+            <p>{data?.username}</p>
             <a href="#">
               <i className="fa fa-circle text-success"></i> Online
             </a>

@@ -1,6 +1,10 @@
+import useAuth from '@/hooks/useAuth'
+import { useMe } from '@/hooks/useMe'
 import Link from 'next/link'
 
 const SidebarTeacher = () => {
+  const {token} = useAuth();
+  const {data} = useMe(token)
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
@@ -13,7 +17,7 @@ const SidebarTeacher = () => {
             />
           </div>
           <div className="pull-left info">
-            <p>User Name</p>
+            <p>{data?.guru?.nama}</p>
             <a href="#">
               <i className="fa fa-circle text-success"></i> Online
             </a>

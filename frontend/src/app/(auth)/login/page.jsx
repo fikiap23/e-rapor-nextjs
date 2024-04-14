@@ -41,6 +41,10 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  if (token) {
+    push("/");
+  }
   return (
     <>
       <div className="h-screen md:flex">

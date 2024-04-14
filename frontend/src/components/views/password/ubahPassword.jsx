@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import authService from '@/services/auth.service';
 import useAuth from '@/hooks/useAuth';
+import getTokenData from '@/lib/getTokenData';
 
 const UbahPassword = () => {
     const [form] = Form.useForm();
@@ -13,17 +14,23 @@ const UbahPassword = () => {
         setLoading(true);
         try {
             const newPassword = values.newPassword;
-            console.log(newPassword);
-            await authService.changePassword(token, newPassword);
-
-            message.success('Password berhasil diubah!');
-            form.resetFields();
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 1000);
+            const currentPassword = values.currentPassword;
+            const payload = {
+                currentPassword,
+                newPassword,
+            }
+            // console.log(currentPassword);
+            await authService.changePassword(token, payload).then((res) => {
+                message.success('Password berhasil diubah!');
+                form.resetFields();
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            }).catch((error) => {
+                message.error(error || 'Gagal mengubah password!');
+            });
         } catch (error) {
             console.error('Error changing password:', error);
-            message.error(error.message || 'Gagal mengubah password!');
         }
 
         setLoading(false);
@@ -50,7 +57,7 @@ const UbahPassword = () => {
                                     onFinish={onFinish}
                                     layout="vertical"
                                 >
-                                    {/* <Form.Item
+                                    <Form.Item
                                         name="currentPassword"
                                         label="Password Lama"
                                         rules={[
@@ -58,7 +65,7 @@ const UbahPassword = () => {
                                         ]}
                                     >
                                         <Input.Password placeholder="Masukan dulu password lama" />
-                                    </Form.Item> */}
+                                    </Form.Item>
 
                                     <Form.Item
                                         name="newPassword"

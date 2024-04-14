@@ -10,4 +10,8 @@ export class UserService {
     async updateUser(id: string, dto: UpdateUserDto) {
         return await this.userRepository.update(id, dto)
     }
+
+    async findMe(token: string) {
+        return await this.userRepository.findMe(token)
+    }
 }

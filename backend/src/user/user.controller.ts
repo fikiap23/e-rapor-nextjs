@@ -10,6 +10,7 @@ import {
     Delete,
     Query,
     UseGuards,
+    Headers,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard, RoleGuard } from '../auth/guard';
@@ -31,5 +32,13 @@ export class UserController {
     async update(@Body() dto: UpdateUserDto, @Res() res, @Param('id') id) {
         const result = await this.userService.updateUser(id, dto)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
+    }
+
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN, Role.GURU)
+    @Get('me')
+    async me(@Res() res, @Headers('authorization') authorization) {
+        const result = await this.userService.findMe(authorization)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 }

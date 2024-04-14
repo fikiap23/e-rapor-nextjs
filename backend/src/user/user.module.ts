@@ -8,6 +8,7 @@ import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UserQuery } from '../prisma/queries/user/user.query';
 import { UserController } from './user.controller';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { UserController } from './user.controller';
         MomentModule,
         ConfigModule,
         HelperModule,
+        AuthModule,
     ],
     providers: [UserService, UserRepository, UserQuery],
     controllers: [UserController],

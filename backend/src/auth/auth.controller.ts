@@ -9,6 +9,7 @@ import {
   UseGuards,
   Headers,
   Patch,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,7 @@ import { Role } from '@prisma/client';
 import { TokenType } from '../helpers/helper';
 import { LoginUserDto } from './dto/login-user.dto';
 import { Request } from 'express'
+import { UpdatePassword } from './dto/update-password.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -41,6 +43,15 @@ export class AuthController {
   @Patch('password/update')
   async updateForgotPassword(@Req() req: Request, @Body('newPassword') newPassword: string, @Res() res) {
     const result = await this.authService.updateForgotPassword(req.headers.authorization, newPassword)
+    return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+  }
+
+  @UseGuards(JwtGuard, AccessGuard)
+  @Access(TokenType.FULL)
+  @Roles(Role.ADMIN, Role.GURU)
+  @Patch('change-password')
+  async updatePassword(@Req() req: Request, @Body() dto: UpdatePassword, @Res() res) {
+    const result = await this.authService.updatePassword(req.headers.authorization, dto)
     return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
   }
 

@@ -1,6 +1,8 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
+import { useMe } from '@/hooks/useMe'
 import getTokenData from '@/lib/getTokenData'
+import Link from 'next/link'
 import React, { useState } from 'react'
 
 const Header = ({ toggleSidebar }) => {
@@ -11,6 +13,8 @@ const Header = ({ toggleSidebar }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
+  
+  const {data} = useMe(token);
 
   const handleLogout = () => {
     removeToken()
@@ -67,7 +71,7 @@ const Header = ({ toggleSidebar }) => {
                     className="img-circle"
                     alt="User Image"
                   />
-                  <p>Username: User Name</p>
+                  <p>Username: {data?.username}</p>
                 </li>
                 <li className="user-footer">
                   <div className="pull-right">
@@ -79,15 +83,12 @@ const Header = ({ toggleSidebar }) => {
                     </button>
                   </div>
                   <div className="pull-left">
-                    <button
+                    <Link
+                      href={`/${userData?.role.toLowerCase()}/ubah-password`}
                       className="btn btn-default btn-flat"
-                      onClick={() => {
-                        const url = `/guru/ubah-password`;
-                        window.location.href = url;
-                      }}
                     >
                       Setting
-                    </button>
+                    </Link>
                   </div>
                 </li>
               </ul>

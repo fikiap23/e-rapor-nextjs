@@ -10,6 +10,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UserQuery } from '../prisma/queries/user/user.query';
 import { use } from 'passport';
 import { Role } from '@prisma/client';
+import { UpdatePassword } from './dto/update-password.dto';
 @Injectable()
 export class AuthRepository {
     constructor(
@@ -103,6 +104,19 @@ export class AuthRepository {
         return await this.register(dto, RoleEnum.GURU);
     }
 
+    async updatePassword(token: string, dto: UpdatePassword) {
+        const { sub } = await this.decodeJwtToken(token);
+        const user = await this.findUserByIdOrThrow(sub);
+        const validPassword = await bcrypt.compare(dto.currentPassword, user.password);
+        if (!validPassword) {
+            throw new BadRequestException('Password salah');
+        }
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(dto.newPassword, salt);
+        const userUpdate = await this.userQuery.update(user.id, { password: hash });
+        if (!userUpdate) throw new BadRequestException('Password gagal diubah');
+        return userUpdate;
+    }
     /*
       |--------------------------------------------------------------------------
       | Auth admin function

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateUserDto } from '../../../auth/dto/create-user.dto';
 import { UpdateUserDto } from '../../../auth/dto/update-user.dto';
@@ -37,6 +37,25 @@ export class UserQuery extends DbService {
         });
     }
 
+    async findMe(id: string) {
+        const data = await this.prisma.user.findUnique({
+            where: {
+                id,
+            },
+            select: {
+                id: true,
+                username: true,
+                guru: true,
+            }
+        });
+
+        if (!data) {
+            throw new BadRequestException('User tidak ada')
+        }
+
+        return data
+    }
+
     async create(data: CreateUserDto) {
         return await this.prisma.user.create({ data })
     }
@@ -48,4 +67,5 @@ export class UserQuery extends DbService {
     async delete(id: string) {
         return await this.prisma.user.delete({ where: { id } })
     }
+
 }

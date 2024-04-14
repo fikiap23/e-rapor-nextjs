@@ -3,6 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthRepository } from './auth.repository';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdatePassword } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,10 @@ export class AuthService {
   async updateForgotPassword(token: string, password: string) {
     if (!password) throw new BadRequestException('newPassword tidak boleh kosong');
     return await this.authRepository.updateForgotPassword(token, password);
+  }
+
+  async updatePassword(token: string, dto: UpdatePassword) {
+    return await this.authRepository.updatePassword(token, dto);
   }
 
   /*
