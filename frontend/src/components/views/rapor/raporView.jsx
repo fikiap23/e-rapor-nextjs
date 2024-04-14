@@ -6,6 +6,7 @@ import TabPane from 'antd/es/tabs/TabPane'
 import Link from 'next/link'
 import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
 import RaportInput from './components/raportInput'
+import RaportEdit from './components/raportEdit'
 
 const RaporView = ({ idRombelSemesterGuru }) => {
   const [rombel, setRombel] = useState('')
@@ -95,7 +96,10 @@ const RaporView = ({ idRombelSemesterGuru }) => {
             <Button
               type="primary"
               icon={<EditOutlined />}
-              onClick={() => handleEdit(record)}
+              onClick={() => {
+                setSelectedMurid(record)
+                setActiveTab('editCatatanRaportTab')
+              }}
             >
               Edit Catatan Raport
             </Button>
@@ -122,11 +126,6 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
   const handleChangeSearch = (e) => {
     setSearchKeyword(e.target.value)
-  }
-
-  const handleEdit = (data) => {
-    setActiveTab('editCatatanRaportTab')
-    // setDataRaport(data)
   }
 
   return (
@@ -189,17 +188,17 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                       listMurid={murid}
                       semester={semester}
                       btnBack={handleBack}
+                      refetch={refetch}
                     />
                   )}
 
-                  {/* {activeTab === 'editCatatanRaportTab' && dataRaport && (
-                      <RaportEdit
-                        data={dataRaport}
-                        fetching={fetching}
-                        idStudent={idStudent}
-                        idSemester={idSemester}
-                      />
-                    )} */}
+                  {activeTab === 'editCatatanRaportTab' && selectedMurid && (
+                    <RaportEdit
+                      murid={selectedMurid}
+                      btnBack={handleBack}
+                      refetch={refetch}
+                    />
+                  )}
                 </>
               </div>
             </div>

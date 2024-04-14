@@ -7,7 +7,7 @@ import RichTextEditor from '@/components/shared/editor/Editor'
 
 const { confirm } = Modal
 const { Option } = Select
-function RaportInput({ murid, semester, listMurid, btnBack }) {
+function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const [muridNullRapor, setMuridNullRapor] = useState([])
@@ -47,6 +47,7 @@ function RaportInput({ murid, semester, listMurid, btnBack }) {
               setMuridNullRapor(
                 muridNullRapor.filter((m) => m.id !== values.idMurid)
               )
+              refetch()
             })
             .catch((err) => {
               Modal.error({
