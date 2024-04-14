@@ -52,16 +52,12 @@ export class SemesterController {
     }
 
     @Get()
-    @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     async findAll(@Res() res) {
         const result = await this.semesterService.findAll();
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
     @Get(':id')
-    @UseGuards(JwtGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     async findOne(@Res() res, @Param('id') id) {
         const result = await this.semesterService.findOne(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);

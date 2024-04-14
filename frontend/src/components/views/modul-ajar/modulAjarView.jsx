@@ -71,7 +71,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
         })
         refetchModulAjars()
       },
-      onCancel: () => { },
+      onCancel: () => {},
     })
   }
 

@@ -1,194 +1,290 @@
-'use client'
 import useAuth from '@/hooks/useAuth'
-import { useOneStudent } from '@/hooks/useOneStudent'
-import { useOneStudentByIdSemesterGuru } from '@/hooks/useOneStudentByIdSemesterGuru'
 import raportService from '@/services/rapor.service'
-import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
+import { Button, Col, Form, Input, Modal, Row, Select } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import RichTextEditor from '@/components/shared/editor/Editor'
 
-function RaportInput({ idStudent, idSemester }) {
+const { confirm } = Modal
+const { Option } = Select
+function RaportInput({ murid, semester, listMurid, btnBack }) {
   const { token } = useAuth()
-  const id = useParams()
-  // const [idStudent, setIdStudent] = useState('')
-  // const [idRombel, setIdRombel] = useState('')
+  const [form] = Form.useForm()
+  const [selectedMurid, setSelectedMurid] = useState(murid)
+  const dummyMuridList = [
+    { id: 1, nama: 'John Doe' },
+    { id: 2, nama: 'Jane Doe' },
+    { id: 3, nama: 'Alice Smith' },
+    { id: 4, nama: 'Bob Johnson' },
+  ]
 
-  // useEffect(() => {
-  //   setIdStudent(id.id[0])
-  //   setIdRombel(id.id[1])
-  // })
+  useEffect(() => {
+    if (murid) {
+      form.setFieldsValue({
+        idMurid: murid.id,
+      })
+    }
+  }, [murid, form])
 
-  const {
-    data: listStudent,
-    error,
-    isFetching,
-    refetch,
-  } = useOneStudent(token, idStudent)
-
-  console.log(idStudent);
-  console.log(idSemester);
-  // const {
-  //   data: listRombelSemesterMurid,
-  //   isFetching: fetchingRombelSemester
-  // } = useOneStudentByIdSemesterGuru(idRombelSemesterGuru)
-
-  // console.log("ini test " + listRombelSemesterMurid);
-
-  const [formData, setFormData] = useState({
-    totalSakit: 0,
-    totalIzin: 0,
-    totalAlpa: 0,
-    catatanAgamaBudipekerti: '',
-    catatanJatiDiri: '',
-    catatanLiterasiSains: '',
-    catatanPertumbuhan: '',
-    catatanPancasila: '',
-    catatanGuru: '',
-    idSemester: idSemester,
-    idMurid: idStudent,
-  })
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+  const handleMuridChange = (value) => {
+    setSelectedMurid(listMurid.find((m) => m.id === value))
+    form.setFieldsValue({
+      idMurid: value,
+    })
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     try {
-      const result = await Swal.fire({
+      const values = await form.validateFields()
+      confirm({
         title: 'Apakah Catatan Sudah Benar?',
-        text: 'Anda akan memasukan catatan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, masukan!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
+        icon: <ExclamationCircleOutlined />,
+        content: 'Anda akan memasukan catatan!',
+        onOk: async () => {
+          // await raportService.create(
+          //   {
+          //     ...values,
+          //     idsemester: semester.id,
+          //     idMurid: murid.id,
+          //   },
+          //   token
+          // )
+          console.log(values)
+          Modal.success({
+            content: 'Data Ditambahkan! Siswa telah ditambahkan.',
+          })
+        },
+        onCancel() {},
       })
-
-      if (result.isConfirmed) {
-        await raportService.create(formData, token);
-        // console.log(formData);
-        // setFormData({
-        //   ...formData,
-        //   totalSakit: 0,
-        //   totalIzin: 0,
-        //   totalAlpa: 0,
-        //   catatanAgamaBudipekerti: '',
-        //   catatanJatiDiri: '',
-        //   catatanLiterasiSains: '',
-        //   catatanPertumbuhan: '',
-        //   catatanPancasila: '',
-        //   catatanGuru: '',
-        //   idSemester: '',
-        //   idMurid: '',
-        // })
-        Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success')
-        // window.history.back()
-      }
     } catch (error) {
       console.error('Error:', error.message)
-      Swal.fire('Error', 'Ada masalah, silahkan simpan lagi', 'error')
+      Modal.error({ content: 'Ada masalah, silahkan simpan lagi' })
     }
   }
 
-  // NAMA LABEL
-  const labels = {
-    totalSakit: 'Total Sakit',
-    totalIzin: 'Total Izin',
-    totalAlpa: 'Total Alpa',
-    catatanAgamaBudipekerti: 'Catatan Agama dan Budi Pekerti',
-    catatanJatiDiri: 'Catatan Jati Diri',
-    catatanLiterasiSains: 'Catatan Literasi Sains',
-    catatanPertumbuhan: 'Catatan Pertumbuhan',
-    catatanPancasila: 'Catatan Pancasila',
-    catatanGuru: 'Catatan Guru',
-    idSemester: 'ID Semester',
-    idMurid: 'ID Murid',
-  }
-
-  const jenisKelaminOptions = ['LAKI-LAKI', 'PEREMPUAN']
-
   return (
-    <div
-      className="active tab-pane p-px"
-      style={{ padding: '10px' }}
-      id="input-siswa"
-    >
+    <div style={{ marginTop: '-2%' }}>
+      <button
+        className="btn btn-default"
+        style={{ marginBottom: '2%', marginTop: '1%', marginLeft: '1%' }}
+        onClick={() => btnBack()}
+      >
+        <i className="fa fa-arrow-left"></i> Kembali
+      </button>
       <div className="box-body">
-        {/* <button
-          className="btn btn-default"
-          onClick={() => {
-            window.history.back()
-          }}
-          style={{ marginBottom: '2%', marginTop: '-2%' }}
-        >
-          <i className="fa fa-arrow-left"></i> Kembali
-        </button> */}
         <div className="box-body bg-danger">
           <p>
-            <b>Nama Siswa: {listStudent.nama}</b>
+            <b>Nama Siswa: {murid.nama}</b>
           </p>
           <p>
-            <b>Nis: {listStudent.nis}</b>
+            <b>Nis: {murid.nis}</b>
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            {Object.keys(formData).map((key, index) => (
-              <div
-                className={`${key.includes('total') ? 'col-md-4' : 'col-md-8'}`}
-                key={index}
+        <Form form={form} onFinish={handleSubmit} layout="vertical">
+          <Col md={12} xs={24} sm={24}>
+            <Form.Item
+              label="Murid"
+              name="murid"
+              rules={[{ required: true, message: 'Pilih murid' }]}
+            >
+              <Select placeholder="Pilih murid">
+                {dummyMuridList.map((murid) => (
+                  <Option key={murid.id} value={murid.id}>
+                    {murid.nama}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                label="Total Sakit"
+                name="totalSakit"
+                initialValue={0}
+                rules={[{ type: 'number', min: 0 }]}
               >
-                <div className="form-group">
-                  <label
-                    htmlFor={key}
-                    className={`control-label
-                                        ${key === 'idSemester'
-                        ? 'hide'
-                        : key === 'idMurid'
-                          ? 'hide'
-                          : ''
-                      }`}
-                  >
-                    {labels[key]}
-                  </label>
-                  {key.includes('catatan') ? (
-                    <textarea
-                      name={key}
-                      className="form-control"
-                      id={key}
-                      onChange={handleChange}
-                      value={formData[key]}
-                    // required
-                    ></textarea>
-                  ) : (
-                    <input
-                      type={key.includes('total') ? 'number' : 'text'}
-                      min={key.includes('total') ? 0 : ''}
-                      name={key}
-                      className={`form-control ${key === 'idSemester'
-                        ? 'hide'
-                        : key === 'idMurid'
-                          ? 'hide'
-                          : ''
-                        }`}
-                      id={key}
-                      onChange={handleChange}
-                      value={formData[key]}
-                    // required
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                <Input type="number" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Total Izin"
+                name="totalIzin"
+                initialValue={0}
+                rules={[{ type: 'number', min: 0 }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Total Alpa"
+                name="totalAlpa"
+                initialValue={0}
+                rules={[{ type: 'number', min: 0 }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Agama dan Budi Pekerti"
+                name="catatanAgamaBudipekerti"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Jati Diri"
+                name="catatanJatiDiri"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Literasi Sains"
+                name="catatanLiterasiSains"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Pertumbuhan"
+                name="catatanPertumbuhan"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Pancasila"
+                name="catatanPancasila"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Guru"
+                name="catatanGuru"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor />
+              </Form.Item>
+            </Col>
+          </Row>
+
           <div className="box-footer">
-            <button type="submit" className="btn btn-primary pull-left">
+            <Button type="primary" htmlType="submit">
               Simpan
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   )
