@@ -46,15 +46,15 @@ export default function SearchRaportPage() {
   return (
     <div>
       <Navbar role={userData?.role} />
-      <div className="w-full h-fit p-4 bg-gradient-to-r from-blue-400 to-purple-400">
-        <div className="px-16 py-6">
+      <div className="w-full h-fit p-1 bg-gradient-to-r from-blue-400 to-purple-400">
+        <div className="mx-auto w-2/3 py-5">
           <h1 className="text-white text-4xl font-semibold mb-3">Data Siswa</h1>
           <Breadcrumbs paths={paths} />
         </div>
       </div>
-      <div className="w-full mx-auto h-full p-8">
+      <div className="w-full mx-auto h-full p-1 md:p-8">
         <div className="w-full flex flex-col gap-16 justify-center items-center py-4">
-          <div className="rounded-md w-1/2 overflow-auto drop-shadow-md">
+          <div className="rounded-md w-3/4 md:w-1/2 overflow-auto drop-shadow-md">
             <table className="w-full h-fit table-auto border-collapse bg-white/30 backdrop-blur-2xl">
               <thead>
                 <tr>
@@ -90,7 +90,10 @@ export default function SearchRaportPage() {
               </tbody>
             </table>
           </div>
-          <div className="w-1/2 bg-white drop-shadow-md transition duration-[0.5s] rounded-xl overflow-auto p-4">
+          <div className="w-3/4 md:w-1/2 bg-white drop-shadow-md transition duration-[0.5s] rounded-xl overflow-auto p-4">
+            <h1 className="mx-auto font-semibold underline underline-offset-4 text-center mb-2">
+              Cetak Raport
+            </h1>
             <form action="" className="max-w-[50%] mx-auto">
               <label
                 htmlFor="semester"
@@ -104,14 +107,20 @@ export default function SearchRaportPage() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5"
               >
                 {dataAccordion.map((item, index) => (
-                  <option value={`semester${index + 1}`}>{item.title}</option>
+                  <option
+                    value={`semester${index + 1}`}
+                    key={index}
+                    className="p-2.5"
+                  >
+                    {item.title}
+                  </option>
                 ))}
               </select>
               <button
-                className="px-4 py-2 bg-blue-500 rounded-xl text-white mt-5 text-sm"
+                className=" py-2 bg-blue-500 rounded-xl text-white mt-5 text-sm w-full"
                 type="submit"
               >
-                Print
+                Cetak
               </button>
             </form>
             {/* {dataAccordion.map((item, index) => (
