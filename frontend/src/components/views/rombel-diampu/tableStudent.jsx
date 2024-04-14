@@ -10,6 +10,7 @@ import {
   EditOutlined,
   PrinterOutlined,
 } from '@ant-design/icons'
+import RaportEdit from '../rapor/raportEdit'
 
 const { TabPane } = Tabs
 const StudentTable = ({ siswa, fetching }) => {
@@ -20,6 +21,7 @@ const StudentTable = ({ siswa, fetching }) => {
   const [idSemester, setIdSemester] = useState('');
   const id = useParams()
   const idRombelSemesterGuru = id.id
+  const [dataRaport, setDataRaport] = useState(null)
 
   const { murid, rombel, semester } = siswa;
 
@@ -100,32 +102,34 @@ const StudentTable = ({ siswa, fetching }) => {
       key: 'action',
       render: (text, record) => (
         <span>
-          <Button
-            type="primary"
-            onClick={() => {
-              // const url = `/guru/rapor/${record.id}/${idRombelSemesterGuru}`;
-              // window.location.href = url;
-              setIdStudent(record.id)
-              setIdSemester(record.tahunAjaran?.id)
-              handleTabChange('inputCatatanRaportTab')
-              // setIdRombelSemesterGuru(record.idRombelSemesterGuru)
-              // console.log(record.tahunAjaran?.id);
-            }}
-            // onClick={() => handleTabChange('inputCatatanRaportTab')}
-            style={{ marginRight: 8 }}
-          >
-            {record.rapor && record.rapor.length === 0 ? (
-              <>
-                <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
-                Input Catatan Raport
-              </>
-            ) : (
-              <>
-                <i className="fa fa-edit" style={{ marginRight: '8px' }}></i>
-                Edit Catatan Raport
-              </>
-            )}
-          </Button>
+          {record.rapor && record.rapor.length === 0 ? (
+            <Button
+              type="primary"
+              onClick={() => {
+                // const url = `/guru/rapor/${record.id}/${idRombelSemesterGuru}`;
+                // window.location.href = url;
+                setIdStudent(record.id)
+                setIdSemester(record.tahunAjaran?.id)
+                handleTabChange('inputCatatanRaportTab')
+                // setIdRombelSemesterGuru(record.idRombelSemesterGuru)
+                // console.log(record.tahunAjaran?.id);
+              }}
+              // onClick={() => handleTabChange('inputCatatanRaportTab')}
+              style={{ marginRight: 8 }}
+            >
+              <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
+              Input Catatan Raport
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+            >
+              Edit Catatan Raport
+            </Button>
+          )}
+
 
           {record.rapor && record.rapor.length !== 0 && (
             <Link href={`/module_print/${record.id}`} target="_blank">
@@ -150,7 +154,10 @@ const StudentTable = ({ siswa, fetching }) => {
     setSearchKeyword(e.target.value)
   }
 
-
+  const handleEdit = (data) => {
+    setActiveTab('editCatatanRaportTab')
+    setDataRaport(data)
+  }
 
   return (
     <>
@@ -206,15 +213,15 @@ const StudentTable = ({ siswa, fetching }) => {
             idSemester={idSemester}
           />
         )}
-        {/* {activeTab === 'moduleEditTab' && selectedModulAjar && (
-          <EditModulAjar
-            dataToUpdate={selectedModulAjar}
-            refetch={refetchModulAjars}
-            token={token}
-            tujuanPembelajarans={mingguTpUncreated}
-            idRombelSemesterGuru={idRombelSemesterGuru}
+
+        {activeTab === 'editCatatanRaportTab' && dataRaport && (
+          <RaportEdit
+            data={dataRaport}
+            fetching={fetching}
+            idStudent={idStudent}
+            idSemester={idSemester}
           />
-        )} */}
+        )}
       </div>
     </>
   )
