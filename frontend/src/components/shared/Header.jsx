@@ -18,6 +18,8 @@ const Header = ({ toggleSidebar }) => {
     window.location.reload()
   }
 
+  console.log(userData);
+
   return (
     <header className="main-header">
       <a href="/" className="logo">
@@ -25,7 +27,7 @@ const Header = ({ toggleSidebar }) => {
           <b>E</b>-R
         </span>
         <span className="logo-lg">
-          <b>E</b>-Rapor
+          <b>E</b>-Raport
         </span>
       </a>
       <nav className="navbar navbar-static-top">
@@ -41,9 +43,8 @@ const Header = ({ toggleSidebar }) => {
         <div className="navbar-custom-menu">
           <ul className="nav navbar-nav">
             <li
-              className={`dropdown user user-menu ${
-                isDropdownOpen ? 'open' : ''
-              }`}
+              className={`dropdown user user-menu ${isDropdownOpen ? 'open' : ''
+                }`}
             >
               <a href="#" className="dropdown-toggle" onClick={toggleDropdown}>
                 <img
@@ -77,6 +78,17 @@ const Header = ({ toggleSidebar }) => {
                       onClick={handleLogout}
                     >
                       Sign Out
+                    </button>
+                  </div>
+                  <div className="pull-left">
+                    <button
+                      className="btn btn-default btn-flat"
+                      onClick={() => {
+                        const url = `/guru/ubah-password`;
+                        window.location.href = url;
+                      }}
+                    >
+                      Setting
                     </button>
                   </div>
                 </li>
