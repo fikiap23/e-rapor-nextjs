@@ -3,8 +3,8 @@ import { useMe } from '@/hooks/useMe'
 import Link from 'next/link'
 
 const SidebarTeacher = () => {
-  const {token} = useAuth();
-  const {data} = useMe(token)
+  const { token } = useAuth()
+  const { data } = useMe(token)
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
@@ -45,7 +45,7 @@ const SidebarTeacher = () => {
           </li>
 
           <li>
-            <Link href="/guru/rombel">
+            <Link href="/guru/rapor">
               <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
           </li>

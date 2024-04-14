@@ -10,14 +10,11 @@ const { Option } = Select
 function RaportInput({ murid, semester, listMurid, btnBack }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
-  const [selectedMurid, setSelectedMurid] = useState(murid)
-  const dummyMuridList = [
-    { id: 1, nama: 'John Doe' },
-    { id: 2, nama: 'Jane Doe' },
-    { id: 3, nama: 'Alice Smith' },
-    { id: 4, nama: 'Bob Johnson' },
-  ]
-
+  const [muridNullRapor, setMuridNullRapor] = useState([])
+  useEffect(() => {
+    const murids = listMurid?.filter((m) => m?.rapor.length === 0)
+    setMuridNullRapor(murids)
+  }, [listMurid])
   useEffect(() => {
     if (murid) {
       form.setFieldsValue({
@@ -26,38 +23,41 @@ function RaportInput({ murid, semester, listMurid, btnBack }) {
     }
   }, [murid, form])
 
-  const handleMuridChange = (value) => {
-    setSelectedMurid(listMurid.find((m) => m.id === value))
-    form.setFieldsValue({
-      idMurid: value,
-    })
-  }
-
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
+      const payload = {
+        ...values,
+        idSemester: semester.id,
+      }
+
       confirm({
         title: 'Apakah Catatan Sudah Benar?',
         icon: <ExclamationCircleOutlined />,
         content: 'Anda akan memasukan catatan!',
         onOk: async () => {
-          // await raportService.create(
-          //   {
-          //     ...values,
-          //     idsemester: semester.id,
-          //     idMurid: murid.id,
-          //   },
-          //   token
-          // )
-          console.log(values)
-          Modal.success({
-            content: 'Data Ditambahkan! Siswa telah ditambahkan.',
-          })
+          await raportService
+            .create(payload, token)
+            .then((res) => {
+              Modal.success({
+                title: 'Data Rapor Ditambahkan!',
+                content: 'Data Rapor Telah Ditambahkan',
+              })
+              // remove values.idmurid from list
+              setMuridNullRapor(
+                muridNullRapor.filter((m) => m.id !== values.idMurid)
+              )
+            })
+            .catch((err) => {
+              Modal.error({
+                title: 'Oops...',
+                content: err,
+              })
+            })
         },
         onCancel() {},
       })
     } catch (error) {
-      console.error('Error:', error.message)
       Modal.error({ content: 'Ada masalah, silahkan simpan lagi' })
     }
   }
@@ -72,25 +72,17 @@ function RaportInput({ murid, semester, listMurid, btnBack }) {
         <i className="fa fa-arrow-left"></i> Kembali
       </button>
       <div className="box-body">
-        <div className="box-body bg-danger">
-          <p>
-            <b>Nama Siswa: {murid.nama}</b>
-          </p>
-          <p>
-            <b>Nis: {murid.nis}</b>
-          </p>
-        </div>
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Col md={12} xs={24} sm={24}>
             <Form.Item
               label="Murid"
-              name="murid"
+              name="idMurid"
               rules={[{ required: true, message: 'Pilih murid' }]}
             >
               <Select placeholder="Pilih murid">
-                {dummyMuridList.map((murid) => (
+                {muridNullRapor.map((murid) => (
                   <Option key={murid.id} value={murid.id}>
-                    {murid.nama}
+                    {`${murid.nis} - ${murid.nama}`}
                   </Option>
                 ))}
               </Select>

@@ -84,7 +84,6 @@ const RaporView = ({ idRombelSemesterGuru }) => {
               type="primary"
               onClick={() => {
                 setSelectedMurid(record)
-                console.log(record)
                 handleTabChange('inputCatatanRaportTab')
               }}
               style={{ marginRight: 8 }}
@@ -187,6 +186,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                   {activeTab === 'inputCatatanRaportTab' && selectedMurid && (
                     <RaportInput
                       murid={selectedMurid}
+                      listMurid={murid}
                       semester={semester}
                       btnBack={handleBack}
                     />
