@@ -1,5 +1,6 @@
 'use client'
 import useAuth from '@/hooks/useAuth'
+import { useMe } from '@/hooks/useMe'
 import getTokenData from '@/lib/getTokenData'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -12,6 +13,8 @@ const Header = ({ toggleSidebar }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
+  
+  const {data} = useMe(token);
 
   const handleLogout = () => {
     removeToken()
@@ -68,7 +71,7 @@ const Header = ({ toggleSidebar }) => {
                     className="img-circle"
                     alt="User Image"
                   />
-                  <p>Username: User Name</p>
+                  <p>Username: {data?.username}</p>
                 </li>
                 <li className="user-footer">
                   <div className="pull-right">
