@@ -12,11 +12,10 @@ const authService = {
     }
   },
 
-  changePassword: async (token, newPassword) => {
+  changePassword: async (token, data) => {
     try {
-      const response = await axios.patch(`${BASE_URL}/password/update`, {
-        newPassword,
-      }, {
+      const response = await axios.patch(`${BASE_URL}/change-password`,
+        data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
