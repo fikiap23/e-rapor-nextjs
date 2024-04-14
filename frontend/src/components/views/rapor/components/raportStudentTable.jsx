@@ -6,8 +6,8 @@ import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
 import siswaService from '@/services/siswa.service'
 import { useGetAllStudentData } from '@/hooks/useStudent'
-import TabInputSiswa from '../siswa/TabInputStudent'
-import TabUpdateSiswa from '../siswa/TabUpdateStudent'
+import TabInputSiswa from '../../siswa/TabInputStudent'
+import TabUpdateSiswa from '../../siswa/TabUpdateStudent'
 import { useGetAllRombel } from '@/hooks/useRombel'
 
 const RaportStudentTable = () => {

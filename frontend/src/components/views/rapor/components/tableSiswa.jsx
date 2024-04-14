@@ -1,26 +1,19 @@
 'use client'
-import { useEffect, useState } from 'react'
-import AddNilaiModal from './inputNilaiModal'
+import { useState } from 'react'
 import { Button, Table, Tag, Modal, Input, Tabs } from 'antd'
 import { useParams } from 'next/navigation'
-import RaportInput from '../rapor/components/raportInput'
 import Link from 'next/link'
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PrinterOutlined,
-} from '@ant-design/icons'
-import RaportEdit from '../rapor/components/raportEdit'
+import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
+import RaportEdit from './raportEdit'
+import RaportInput from './raportInput'
 
 const { TabPane } = Tabs
-const StudentTable = ({ siswa, fetching }) => {
+const TableSiswa = ({ siswa, fetching }) => {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [activeTab, setActiveTab] = useState('daftarSiswaTab')
-  // const [dataUncreated, setDataUncreated] = useState([])
   const [idStudent, setIdStudent] = useState('')
   const [idSemester, setIdSemester] = useState('')
   const id = useParams()
-  const idRombelSemesterGuru = id.id
   const [dataRaport, setDataRaport] = useState(null)
 
   const { murid, rombel, semester } = siswa
@@ -30,21 +23,6 @@ const StudentTable = ({ siswa, fetching }) => {
     rombel,
     tahunAjaran: semester,
   }))
-
-  // console.log(idStudent);
-
-  // useEffect(() => {
-  //   if (!fetching) {
-  //     const siswas = dataSource?.map((siswa) => {
-  //       return console.log(siswa);
-  //     })
-  //     // const tp = cpTps?.tujuanPembelajaran.filter(
-  //     //   (tujuanPembelajaran) =>
-  //     //     !siswas.includes(tujuanPembelajaran?.minggu)
-  //     // )
-  //     // setMingguTpUncreated(tp)
-  //   }
-  // })
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -98,15 +76,10 @@ const StudentTable = ({ siswa, fetching }) => {
             <Button
               type="primary"
               onClick={() => {
-                // const url = `/guru/rapor/${record.id}/${idRombelSemesterGuru}`;
-                // window.location.href = url;
                 setIdStudent(record.id)
                 setIdSemester(record.tahunAjaran?.id)
                 handleTabChange('inputCatatanRaportTab')
-                // setIdRombelSemesterGuru(record.idRombelSemesterGuru)
-                // console.log(record.tahunAjaran?.id);
               }}
-              // onClick={() => handleTabChange('inputCatatanRaportTab')}
               style={{ marginRight: 8 }}
             >
               <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
@@ -152,20 +125,6 @@ const StudentTable = ({ siswa, fetching }) => {
 
   return (
     <>
-      {/* <div style={{ width: '30%' }}>
-        <Input.Search
-          placeholder="Cari data..."
-          onSearch={handleSearch}
-          onChange={handleChangeSearch}
-          style={{ marginBottom: 16 }}
-        />
-      </div>
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        loading={fetching}
-        scroll={{ x: 1000 }}
-      /> */}
       <div className="box-body">
         <Tabs activeKey={activeTab} onChange={handleTabChange}>
           <TabPane key="daftarSiswaTab" style={{ marginTop: '-5%' }}>
@@ -189,14 +148,6 @@ const StudentTable = ({ siswa, fetching }) => {
               />
             </div>
           </TabPane>
-          {/* <TabPane tab="Jadwal Ajar" key="activitiesTab">
-            <Table
-              columns={columns}
-              dataSource={dataSource}
-              loading={fetching}
-              scroll={{ x: 1000 }}
-            />
-          </TabPane> */}
         </Tabs>
         {activeTab === 'inputCatatanRaportTab' && (
           <RaportInput idStudent={idStudent} idSemester={idSemester} />
@@ -215,4 +166,4 @@ const StudentTable = ({ siswa, fetching }) => {
   )
 }
 
-export default StudentTable
+export default TableSiswa

@@ -1,5 +1,5 @@
 import React from 'react'
-import RaportStudentTable from './raportStudentTable'
+import RaportStudentTable from './components/raportStudentTable'
 
 export default function RaportView() {
   return (
