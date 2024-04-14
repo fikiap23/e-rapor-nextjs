@@ -17,6 +17,7 @@ export default function Home() {
   const [dataSearch, setDataSearch] = useState({
     nis: "",
     nama: "",
+    semester: "",
   });
 
   const handleChange = (e) => {
@@ -27,9 +28,24 @@ export default function Home() {
     });
   };
 
+  const dataAccordion = [
+    {
+      title: "2023 - 2024 Ganjil",
+    },
+    {
+      title: "2023 - 2024 Genap",
+    },
+    {
+      title: "2024 - 2025 Ganjil",
+    },
+    {
+      title: "2024 - 2025 Genap",
+    },
+  ];
+
   const handleSearch = (e) => {
     e.preventDefault();
-    router.push(`/cari-rapor/${dataSearch.nis}`);
+    console.log(dataSearch);
   };
   return (
     <div>
@@ -44,7 +60,7 @@ export default function Home() {
             onSubmit={handleSearch}
           >
             <div className="flex flex-col gap-2">
-              <label htmlFor="nis" className=" font-normal">
+              <label htmlFor="nis" className="block text-sm font-medium">
                 Masukkan NIS
               </label>
               <input
@@ -57,7 +73,7 @@ export default function Home() {
               <p className="text-sm font-mono">Contoh: 023422</p>
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="nama" className=" font-normal">
+              <label htmlFor="nama" className="block text-sm font-medium">
                 Masukkan Nama
               </label>
               <input
@@ -68,34 +84,45 @@ export default function Home() {
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" className="p-3 rounded-lg bg-blue-500">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="semester" className="block text-sm font-medium">
+                Pilih Semester
+              </label>
+              <select
+                name="semester"
+                id="semester"
+                onChange={handleChange}
+                value={dataSearch.semester}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-3 md:p-6"
+              >
+                {dataAccordion.map((item, index) => (
+                  <option
+                    value={`semester${index + 1}`}
+                    key={index}
+                    className="p-3 md:p-6"
+                  >
+                    {item.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="submit"
+              className="p-3 rounded-lg bg-blue-500"
+              target="_blank"
+            >
               Cari
             </button>
           </form>
         </div>
         <div className="text-white">
           <h1 className="text-2xl text-white font-bold mb-3">Petunjuk</h1>
-          <p className="text-justify text-sm md:text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo, animi
-            qui! Beatae amet, reprehenderit mollitia repellendus repudiandae
-            neque sapiente consequuntur temporibus, pariatur recusandae vitae
-            unde maxime architecto ipsum voluptatem error itaque dolore repellat
-            magni ut rem. Obcaecati reprehenderit architecto totam cupiditate
-            unde, enim et, id rerum maxime natus iusto nobis quasi mollitia quos
-            distinctio animi! Explicabo a voluptas eveniet, vel pariatur ad
-            ratione totam molestiae, nemo sint quasi itaque, consequuntur saepe
-            modi suscipit dignissimos sapiente ab. Inventore vel harum et
-            numquam doloremque ut sit ad id vitae aperiam, consectetur possimus
-            reiciendis sequi dignissimos, enim veniam sunt! Ullam nostrum
-            mollitia vel adipisci beatae! Perferendis ipsam totam molestiae
-            dolores ea temporibus ab architecto aliquid explicabo qui molestias
-            cumque delectus laudantium sit, laboriosam quidem magnam, sed
-            consequuntur? Quaerat quia aperiam quas impedit! Reprehenderit neque
-            perspiciatis cumque vel ipsa eveniet ducimus porro eius facilis
-            voluptate saepe nobis pariatur, placeat adipisci quibusdam
-            voluptatem aliquid unde. Voluptate iste beatae magnam saepe at
-            inventore maxime qui obcaecati suscipit,
-          </p>
+
+          <ul className="list-disc list-inside text-sm md:text-base">
+            <li>Masukkan NIS sesuai yang terdata</li>
+            <li>Masukkan Nama yang sesuai</li>
+            <li>Pilih semester yang diinginkan</li>
+          </ul>
         </div>
       </header>
       <Footer />

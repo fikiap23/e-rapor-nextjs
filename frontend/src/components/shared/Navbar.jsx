@@ -1,7 +1,7 @@
 export default function Navbar(props) {
   const { role } = props;
   return (
-    <nav className="w-full px-10 py-6 bg-white">
+    <nav className="w-full px-10 py-4 bg-white">
       <div className="flex justify-between items-center">
         <a className="font-bold text-sm md:text-base" href="/">
           School Management
