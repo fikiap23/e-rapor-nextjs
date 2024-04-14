@@ -342,6 +342,7 @@ model Sekolah {
   namaDisdik String
   namaKapsek String
   nipKepsek  String
+  logo       String?
   rapor      Rapor[]
 
   // index

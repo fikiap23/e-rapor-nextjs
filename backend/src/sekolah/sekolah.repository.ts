@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { SekolahQuery } from '../prisma/queries/sekolah/sekolah.query';
 import { CreateSekolahDto } from './dto/create-sekolah.dto';
 import { UpdateSekolahDto } from './dto/update-sekolah.dto';
+import { _validateFile, createFileImageHelper, getCustomFilename } from '../helpers/helper';
 
 @Injectable()
 export class SekolahRepository {
@@ -18,9 +19,29 @@ export class SekolahRepository {
         return sekolah[0]
     }
 
-    async create(dto: CreateSekolahDto) {
+    async create(dto: CreateSekolahDto, file: Express.Multer.File) {
         const isExist = await this.sekolahQuery.findAll()
         if (isExist.length > 0) throw new BadRequestException('Sekolah sudah ada')
+
+        let urlFileFoto: string;
+        // check if new file exists
+        if (file) {
+            _validateFile(
+                `Logo Sekolah`,
+                file,
+                ['.jpeg', '.jpg', '.png'],
+                1,
+            );
+
+            urlFileFoto = getCustomFilename("logo_sekolah", file);
+            // store file
+            await createFileImageHelper(
+                file,
+                `./public/foto/sekolah`,
+                urlFileFoto,
+            );
+            dto.logo = `foto/sekolah/${urlFileFoto}`;
+        }
         return await this.sekolahQuery.create(dto)
     }
 

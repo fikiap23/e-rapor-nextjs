@@ -1,23 +1,76 @@
 'use client'
+import { getBase64 } from '@/lib/helper'
+import { apiUrl } from '@/services/apiUrls'
 import sekolahService from '@/services/sekolah.service'
+import { PlusOutlined } from '@ant-design/icons'
+import { Image, Upload } from 'antd'
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
 function SchoolForm({ sekolahData, token }) {
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState(sekolahData)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [fileList, setFileList] = useState([])
   useEffect(() => {
     setFormData(sekolahData)
-  }, [sekolahData])
+    setFileList(
+      sekolahData.logo
+        ? [{ uid: '-1', url: `${apiUrl}/${sekolahData.logo}` }]
+        : []
+    )
+  }, [sekolahData, formData])
 
   const handleEditClick = () => {
     setIsEditing(true)
   }
 
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+  }
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: 'none',
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  )
+
   const handleSubmit = (event) => {
+    let payload
+    if (fileList[0]?.originFileObj) {
+      const fotoBinary = fileList[0].originFileObj
+      payload = {
+        ...formData,
+        logo: fotoBinary, // Menggunakan binary data foto
+      }
+    } else {
+      payload = {
+        ...formData,
+      }
+    }
+
+    console.log(payload)
     try {
       sekolahService
-        .update(token, formData)
+        .update(token, logo)
         .then((result) => {
           Swal.fire({
             icon: 'success',
@@ -227,6 +280,36 @@ function SchoolForm({ sekolahData, token }) {
                 readOnly={!isEditing}
                 onChange={handleInputChange}
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="logo" className="control-label">
+                Logo Sekolah
+              </label>
+              <>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  accept="image/*"
+                  multiple={true}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                >
+                  {fileList.length > 0 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{ display: 'none' }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(''),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+              </>
             </div>
           </div>
         </div>

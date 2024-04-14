@@ -2,6 +2,9 @@
 import sekolahService from '@/services/sekolah.service'
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
+import { PlusOutlined } from '@ant-design/icons'
+import { Image, Upload } from 'antd'
+import { getBase64 } from '@/lib/helper'
 
 function CreateSchoolForm({ token }) {
   const [formData, setFormData] = useState({
@@ -19,10 +22,54 @@ function CreateSchoolForm({ token }) {
     namaKapsek: '',
   })
 
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [fileList, setFileList] = useState([])
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+  }
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList)
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: 'none',
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  )
+
   const handleSubmit = (event) => {
+    event.preventDefault()
+    let payload
+    if (fileList[0]?.originFileObj) {
+      const fotoBinary = fileList[0].originFileObj
+      payload = {
+        ...formData,
+        logo: fotoBinary, // Menggunakan binary data foto
+      }
+    } else {
+      payload = {
+        ...formData,
+      }
+    }
     try {
       sekolahService
-        .create(token, formData)
+        .create(token, payload)
         .then((result) => {
           Swal.fire({
             icon: 'success',
@@ -230,6 +277,35 @@ function CreateSchoolForm({ token }) {
                 value={formData.namaKapsek}
                 onChange={handleInputChange}
               />
+            </div>
+            <div className="form-group">
+              <label htmlFor="logo" className="control-label">
+                Logo Sekolah
+              </label>
+              <>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  accept="image/*"
+                  multiple={true}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                >
+                  {fileList.length > 0 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{ display: 'none' }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(''),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+              </>
             </div>
           </div>
         </div>

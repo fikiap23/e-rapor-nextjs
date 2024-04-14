@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateSekolahDto {
     @IsNotEmpty()
@@ -48,4 +48,8 @@ export class CreateSekolahDto {
     @IsNotEmpty()
     @IsString()
     nipKepsek: string;
+
+    @IsOptional()
+    @IsString()
+    logo: string;
 }

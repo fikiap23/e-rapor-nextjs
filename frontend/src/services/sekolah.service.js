@@ -21,6 +21,7 @@ const sekolahService = {
       const response = await axios.post(`${BASE_URL}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       })
       return response.data.data
