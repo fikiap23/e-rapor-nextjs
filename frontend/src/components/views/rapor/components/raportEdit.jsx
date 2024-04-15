@@ -82,33 +82,18 @@ function RaportEdit({ murid, btnBack, refetch }) {
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item
-                label="Total Sakit"
-                name="totalSakit"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Sakit" name="totalSakit" initialValue={0}>
+                <Input type="number" min={0} />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Total Izin"
-                name="totalIzin"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Izin" name="totalIzin" initialValue={0}>
+                <Input type="number" min={0} />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Total Alpa"
-                name="totalAlpa"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Alpa" name="totalAlpa" initialValue={0}>
+                <Input type="number" min={0} />
               </Form.Item>
             </Col>
           </Row>

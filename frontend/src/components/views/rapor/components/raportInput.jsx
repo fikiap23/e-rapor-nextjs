@@ -91,33 +91,18 @@ function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
           </Col>
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item
-                label="Total Sakit"
-                name="totalSakit"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Sakit" name="totalSakit" initialValue={0}>
+                <Input min={0} type="number" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Total Izin"
-                name="totalIzin"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Izin" name="totalIzin" initialValue={0}>
+                <Input min={0} type="number" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                label="Total Alpa"
-                name="totalAlpa"
-                initialValue={0}
-                rules={[{ type: 'number', min: 0 }]}
-              >
-                <Input type="number" />
+              <Form.Item label="Total Alpa" name="totalAlpa" initialValue={0}>
+                <Input min={0} type="number" />
               </Form.Item>
             </Col>
           </Row>
