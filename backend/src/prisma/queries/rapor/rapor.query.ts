@@ -105,6 +105,7 @@ export class RaporQuery extends DbService {
             },
             rapor: {
                 id: result.id,
+                tanggalBagiRapor: result.semester.tglBagiRapor,
                 catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,
                 catatanGuru: result.catatanGuru,
                 catatanJatiDiri: result.catatanJatiDiri,

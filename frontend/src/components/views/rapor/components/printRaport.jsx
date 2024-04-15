@@ -27,11 +27,19 @@ const Raport = ({ data }) => {
         semester={semester}
       ></Cover>
 
-      <SchoolIdentity></SchoolIdentity>
+      <SchoolIdentity semester={semester} sekolah={sekolah}></SchoolIdentity>
 
-      <StudentIdentity></StudentIdentity>
+      <StudentIdentity murid={murid} kapsek={kapsek}></StudentIdentity>
 
-      <Narrative></Narrative>
+      <Narrative
+        murid={murid}
+        rapor={rapor}
+        guru={guru}
+        rombel={rombel}
+        sekolah={sekolah}
+        semester={semester}
+        kapsek={kapsek}
+      ></Narrative>
     </div>
   )
 }
