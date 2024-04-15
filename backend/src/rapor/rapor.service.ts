@@ -34,4 +34,8 @@ export class RaporService {
     async printById(id: string) {
         return await this.raporRepository.printById(id)
     }
+
+    async findByNisNamaMuridAndSemester(nis: string, nama: string, idSemester: string) {
+        return await this.raporRepository.findByNisNamaMuridAndSemester(nis, nama, idSemester)
+    }
 }
