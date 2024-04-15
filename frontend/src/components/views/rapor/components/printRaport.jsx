@@ -6,10 +6,11 @@ import Narrative from './narrative'
 import SchoolIdentity from './schoolIdentity'
 import StudentIdentity from './studentIdentity'
 
-const Raport = () => {
+const Raport = ({ data }) => {
   // useEffect(() => {
   //   window.print()
   // }, [])
+  console.log(data)
   return (
     <div className="body">
       <Cover></Cover>

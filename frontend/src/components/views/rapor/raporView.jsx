@@ -106,7 +106,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
           )}
 
           {record.rapor && record.rapor.length !== 0 && (
-            <Link href={`/module_print/${record.id}`} target="_blank">
+            <Link href={`/raport_print/${record.rapor[0].id}`} target="_blank">
               <Button
                 style={{ backgroundColor: 'green', color: 'white' }}
                 icon={<PrinterOutlined />}
