@@ -1,130 +1,258 @@
-'use client'
 import useAuth from '@/hooks/useAuth'
-import { useOneStudent } from '@/hooks/useOneStudent'
-import { useOneStudentByIdSemesterGuru } from '@/hooks/useOneStudentByIdSemesterGuru'
 import raportService from '@/services/rapor.service'
-import { Col, Form, Input, Row } from 'antd'
-import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
+import React, { useEffect } from 'react'
+import { Button, Col, Form, Input, Modal, Row } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import RichTextEditor from '@/components/shared/editor/Editor'
 
-function RaportEdit({ data, fetching, idStudent, idSemester }) {
+const { confirm } = Modal
+function RaportEdit({ murid, btnBack, refetch }) {
   const { token } = useAuth()
-  const [selectedForm, setSelectedForm] = useState(null)
   const [form] = Form.useForm()
-  const [raport, setRaport] = useState({});
-
+  const rapor = murid?.rapor[0]
   useEffect(() => {
-    setSelectedForm(data)
-    if (data && data.rapor) {
-      const mappedRaport = data.rapor.map((item) => ({
-        ...item
-      }));
-      setRaport(mappedRaport[0]);
-    }
-  }, [data])
-
-  const handleFormChange = (changedValues, allValues) => {
-    if (changedValues.minggu) {
-      const selected = tujuanPembelajarans.find(
-        (tp) => tp.minggu.toString() === changedValues.minggu.toString()
-      )
-      setSelectedTp(selected)
-    }
-  }
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const result = await Swal.fire({
-        title: 'Apakah Catatan Sudah Benar?',
-        text: 'Anda akan memasukan catatan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, masukan!',
-        cancelButtonText: 'Tidak, cek lagi',
-        reverseButtons: true,
+    if (rapor) {
+      form.setFieldsValue({
+        ...rapor,
       })
+    }
+  }, [rapor, form])
 
-      if (result.isConfirmed) {
-        await raportService.create(formData, token);
-        Swal.fire('Data Ditambahkan!', 'Siswa telah ditambahkan.', 'success')
-        // window.history.back()
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields()
+      const payload = {
+        totalSakit: values.totalSakit,
+        totalIzin: values.totalIzin,
+        totalAlpa: values.totalAlpa,
+        catatanAgamaBudipekerti: values.catatanAgamaBudipekerti,
+        catatanJatiDiri: values.catatanJatiDiri,
+        catatanLiterasiSains: values.catatanLiterasiSains,
+        catatanPertumbuhan: values.catatanPertumbuhan,
+        catatanPancasila: values.catatanPancasila,
+        catatanGuru: values.catatanGuru,
       }
+
+      confirm({
+        title: 'Apakah Catatan Sudah Benar?',
+        icon: <ExclamationCircleOutlined />,
+        content: 'Anda akan memasukan catatan!',
+        onOk: async () => {
+          await raportService
+            .update(token, rapor.id, payload)
+            .then((res) => {
+              Modal.success({
+                title: 'Data Rapor Diperbarui!',
+                content: 'Data Rapor Telah Diperbarui',
+              })
+              refetch()
+            })
+            .catch((err) => {
+              Modal.error({
+                title: 'Oops...',
+                content: err,
+              })
+            })
+        },
+        onCancel() {},
+      })
     } catch (error) {
-      console.error('Error:', error.message)
-      Swal.fire('Error', 'Ada masalah, silahkan simpan lagi', 'error')
+      Modal.error({ content: 'Ada masalah, silahkan simpan lagi' })
     }
   }
 
   return (
-    <div
-      className="active tab-pane p-px"
-      style={{ padding: '10px' }}
-      id="input-siswa"
-    >
+    <div style={{ marginTop: '-2%' }}>
+      <button
+        className="btn btn-default"
+        style={{ marginBottom: '2%', marginTop: '1%', marginLeft: '1%' }}
+        onClick={() => btnBack()}
+      >
+        <i className="fa fa-arrow-left"></i> Kembali
+      </button>
       <div className="box-body">
         <div className="box-body bg-danger" style={{ marginBottom: '3%' }}>
           <p>
-            <b>Nama Siswa: {selectedForm?.nama}</b>
+            <b>Nama: {murid.nama}</b>
           </p>
           <p>
-            <b>Nis: {selectedForm?.nis}</b>
+            <b>NIS: {murid.nis}</b>
           </p>
         </div>
-        <Form
-          form={form}
-          onFinish={handleSubmit}
-          // onValuesChange={handleFormChange}
-          layout="vertical"
-        >
+        <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Row gutter={16}>
-            <Col xs={24} md={30}>
-              <>
-                <Form.Item label="Catatan Agama dan Budi Pekerti">
-                  <Input.TextArea
-                    value={raport?.catatanAgamaBudipekerti}
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Catatan Jati Diri">
-                  <Input.TextArea
-                    value={raport?.catatanJatiDiri}
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Catatan Literasi Sains">
-                  <Input.TextArea
-                    value={raport?.catatanLiterasiSains}
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Catatan Pertumbuhan">
-                  <Input.TextArea
-                    value={raport?.catatanPertumbuhan}
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Catatan Pancasila">
-                  <Input.TextArea
-                    value={raport?.catatanPancasila}
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Catatan Guru">
-                  <Input.TextArea
-                    value={raport?.catatanGuru}
-                    rows={5}
-                  />
-                </Form.Item>
-              </>
+            <Col span={8}>
+              <Form.Item label="Total Sakit" name="totalSakit" initialValue={0}>
+                <Input type="number" min={0} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Total Izin" name="totalIzin" initialValue={0}>
+                <Input type="number" min={0} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Total Alpa" name="totalAlpa" initialValue={0}>
+                <Input type="number" min={0} />
+              </Form.Item>
             </Col>
           </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Agama dan Budi Pekerti"
+                name="catatanAgamaBudipekerti"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanAgamaBudipekerti} />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Jati Diri"
+                name="catatanJatiDiri"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanJatiDiri} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Literasi Sains"
+                name="catatanLiterasiSains"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanLiterasiSains} />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Pertumbuhan"
+                name="catatanPertumbuhan"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanPertumbuhan} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Pancasila"
+                name="catatanPancasila"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanPancasila} />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24} sm={24}>
+              <Form.Item
+                label="Catatan Guru"
+                name="catatanGuru"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Catatan harus diisi',
+                    whitespace: true,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value === '<p></p>\n') {
+                        return Promise.reject('Catatan harus diisi')
+                      }
+                      return Promise.resolve()
+                    },
+                  },
+                ]}
+              >
+                <RichTextEditor initialData={rapor?.catatanGuru} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <div className="box-footer">
+            <Button type="primary" htmlType="submit">
+              Simpan
+            </Button>
+          </div>
         </Form>
       </div>
     </div>

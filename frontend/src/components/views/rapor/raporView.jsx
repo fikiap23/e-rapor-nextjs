@@ -6,6 +6,7 @@ import TabPane from 'antd/es/tabs/TabPane'
 import Link from 'next/link'
 import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
 import RaportInput from './components/raportInput'
+import RaportEdit from './components/raportEdit'
 
 const RaporView = ({ idRombelSemesterGuru }) => {
   const [rombel, setRombel] = useState('')
@@ -84,7 +85,6 @@ const RaporView = ({ idRombelSemesterGuru }) => {
               type="primary"
               onClick={() => {
                 setSelectedMurid(record)
-                console.log(record)
                 handleTabChange('inputCatatanRaportTab')
               }}
               style={{ marginRight: 8 }}
@@ -96,14 +96,17 @@ const RaporView = ({ idRombelSemesterGuru }) => {
             <Button
               type="primary"
               icon={<EditOutlined />}
-              onClick={() => handleEdit(record)}
+              onClick={() => {
+                setSelectedMurid(record)
+                setActiveTab('editCatatanRaportTab')
+              }}
             >
               Edit Catatan Raport
             </Button>
           )}
 
           {record.rapor && record.rapor.length !== 0 && (
-            <Link href={`/module_print/${record.id}`} target="_blank">
+            <Link href={`/raport_print/${record.rapor[0].id}`} target="_blank">
               <Button
                 style={{ backgroundColor: 'green', color: 'white' }}
                 icon={<PrinterOutlined />}
@@ -123,11 +126,6 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
   const handleChangeSearch = (e) => {
     setSearchKeyword(e.target.value)
-  }
-
-  const handleEdit = (data) => {
-    setActiveTab('editCatatanRaportTab')
-    // setDataRaport(data)
   }
 
   return (
@@ -187,19 +185,20 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                   {activeTab === 'inputCatatanRaportTab' && selectedMurid && (
                     <RaportInput
                       murid={selectedMurid}
+                      listMurid={murid}
                       semester={semester}
                       btnBack={handleBack}
+                      refetch={refetch}
                     />
                   )}
 
-                  {/* {activeTab === 'editCatatanRaportTab' && dataRaport && (
-                      <RaportEdit
-                        data={dataRaport}
-                        fetching={fetching}
-                        idStudent={idStudent}
-                        idSemester={idSemester}
-                      />
-                    )} */}
+                  {activeTab === 'editCatatanRaportTab' && selectedMurid && (
+                    <RaportEdit
+                      murid={selectedMurid}
+                      btnBack={handleBack}
+                      refetch={refetch}
+                    />
+                  )}
                 </>
               </div>
             </div>

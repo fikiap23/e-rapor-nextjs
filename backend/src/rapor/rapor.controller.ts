@@ -64,4 +64,10 @@ export class RaporController {
         await this.raporService.updateById(req.headers.authorization, id, dto)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
     }
+
+    @Get('print/:id')
+    async printById(@Res() res, @Param('id') id) {
+        const result = await this.raporService.printById(id)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
 }

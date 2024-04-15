@@ -6,19 +6,40 @@ import Narrative from './narrative'
 import SchoolIdentity from './schoolIdentity'
 import StudentIdentity from './studentIdentity'
 
-const Raport = () => {
+const Raport = ({ data }) => {
   useEffect(() => {
     window.print()
   }, [])
+
+  const murid = data?.murid
+  const guru = data?.guru
+  const kapsek = data?.kapsek
+  const rombel = data?.rombel
+  const semester = data?.semester
+  const sekolah = data?.sekolah
+  const rapor = data?.rapor
   return (
     <div className="body">
-      <Cover></Cover>
+      <Cover
+        murid={murid}
+        rombel={rombel}
+        sekolah={sekolah}
+        semester={semester}
+      ></Cover>
 
-      <SchoolIdentity></SchoolIdentity>
+      <SchoolIdentity semester={semester} sekolah={sekolah}></SchoolIdentity>
 
-      <StudentIdentity></StudentIdentity>
+      <StudentIdentity murid={murid} kapsek={kapsek}></StudentIdentity>
 
-      <Narrative></Narrative>
+      <Narrative
+        murid={murid}
+        rapor={rapor}
+        guru={guru}
+        rombel={rombel}
+        sekolah={sekolah}
+        semester={semester}
+        kapsek={kapsek}
+      ></Narrative>
     </div>
   )
 }
