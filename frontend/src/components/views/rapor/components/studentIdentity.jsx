@@ -47,7 +47,7 @@ function StudentIdentity({ murid, kapsek }) {
           <tr>
             <td>6. Anak Ke-</td>
             <td width={20}>:</td>
-            <td className="tbl">3 (Masih dummy)</td>
+            <td className="tbl">{murid.anakKe}</td>
           </tr>
 
           <tr>
@@ -83,37 +83,37 @@ function StudentIdentity({ murid, kapsek }) {
           </tr>
 
           <tr>
-            <td>9. Alamat (Masih dummy)</td>
+            <td>9. Alamat</td>
           </tr>
 
           <tr>
             <td style={{ paddingLeft: '30px' }}>Jalan</td>
             <td width={20}>:</td>
-            <td className="tbl">Cianjur Kulon</td>
+            <td className="tbl">{murid.jalan}</td>
           </tr>
 
           <tr>
             <td style={{ paddingLeft: '30px' }}>Kelurahan/Desa</td>
             <td width={20}>:</td>
-            <td className="tbl">Gunung Tandala</td>
+            <td className="tbl">{murid.kelurahan}</td>
           </tr>
 
           <tr>
             <td style={{ paddingLeft: '30px' }}>Kecamatan/Kota</td>
             <td width={20}>:</td>
-            <td className="tbl">Kawalu</td>
+            <td className="tbl">{murid.kecamatan}</td>
           </tr>
 
           <tr>
             <td style={{ paddingLeft: '30px' }}>Kabupaten/Kota</td>
             <td width={20}>:</td>
-            <td className="tbl">Jakarta</td>
+            <td className="tbl">{murid.kota}</td>
           </tr>
 
           <tr>
             <td>10. Provinsi</td>
             <td width={20}>:</td>
-            <td className="tbl">DKI Jakarta</td>
+            <td className="tbl">{murid.provinsi}</td>
           </tr>
         </table>
       </div>
