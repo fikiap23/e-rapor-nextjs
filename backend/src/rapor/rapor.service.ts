@@ -30,4 +30,8 @@ export class RaporService {
     async findByIdRombelAndSemester(dto: GetRaporByIdRombelSemesterDto) {
         return await this.raporRepository.findByIdRombelAndSemester(dto.idRombel, dto.idSemester)
     }
+
+    async printById(id: string) {
+        return await this.raporRepository.printById(id)
+    }
 }

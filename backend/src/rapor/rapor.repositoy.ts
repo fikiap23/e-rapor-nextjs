@@ -82,4 +82,8 @@ export class RaporRepository {
         return await this.raporQuery.findByIdRombelAndSemester(idRombel, idSemester)
     }
 
+    async printById(id: string) {
+        return await this.raporQuery.printById(id)
+    }
+
 }

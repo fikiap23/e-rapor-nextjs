@@ -88,9 +88,29 @@ export class RaporQuery extends DbService {
     }
 
     async printById(id: string) {
-        const result = await this.prisma.rapor.findUnique({ where: { id }, include: { murid: true, semester: true, guru: true, sekolah: true } })
+        const result = await this.prisma.rapor.findUnique({ where: { id }, include: { murid: true, semester: true, guru: true, sekolah: true, rombel: { include: { kategoriRombel: true } } } })
+        if (!result) return null
         return {
             semester: `Semester ${result.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir}`,
+            namaKapsek: result.semester.namaKepsek,
+            nipKapsek: result.semester.nipKepsek,
+            rombel: result.rombel.name,
+            kelompokUsia: result.rombel.kategoriRombel.kelompokUsia,
+            sekolah: result.sekolah,
+            murid: result.murid,
+            guru: result.guru,
+            rapor: {
+                id: result.id,
+                catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,
+                catatanGuru: result.catatanGuru,
+                catatanJatiDiri: result.catatanJatiDiri,
+                catatanLiterasiSains: result.catatanLiterasiSains,
+                catatanPancasila: result.catatanPancasila,
+                catatanPertumbuhan: result.catatanPertumbuhan,
+                totalAlpa: result.totalAlpa,
+                totalIzin: result.totalIzin,
+                totalSakit: result.totalSakit
+            }
         }
     }
 
