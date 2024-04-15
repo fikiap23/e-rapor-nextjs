@@ -92,13 +92,17 @@ export class RaporQuery extends DbService {
         if (!result) return null
         return {
             semester: `Semester ${result.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir}`,
-            namaKapsek: result.semester.namaKepsek,
-            nipKapsek: result.semester.nipKepsek,
-            rombel: result.rombel.name,
-            kelompokUsia: result.rombel.kategoriRombel.kelompokUsia,
             sekolah: result.sekolah,
             murid: result.murid,
             guru: result.guru,
+            rombel: {
+                nama: result.rombel.name,
+                kelompokUsia: result.rombel.kategoriRombel.kelompokUsia
+            },
+            kapsek: {
+                nama: result.semester.namaKepsek,
+                nip: result.semester.nipKepsek
+            },
             rapor: {
                 id: result.id,
                 catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,

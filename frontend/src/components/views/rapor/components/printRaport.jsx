@@ -10,7 +10,9 @@ const Raport = ({ data }) => {
   // useEffect(() => {
   //   window.print()
   // }, [])
-  console.log(data)
+  const murid = data?.murid
+  const guru = data?.guru
+  const sekolah = data?.sekolah
   return (
     <div className="body">
       <Cover></Cover>
