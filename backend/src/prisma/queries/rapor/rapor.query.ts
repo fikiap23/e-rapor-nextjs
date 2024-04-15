@@ -37,23 +37,29 @@ export class RaporQuery extends DbService {
     }
 
     async findByIdMuridAndSemester(idMurid: string, idSemester: string) {
-        return await this.prisma.rapor.findMany({
+        const result = await this.prisma.rapor.findFirst({
             where: { idMurid, idSemester }, select: {
                 id: true,
-                catatanAgamaBudipekerti: true,
-                catatanGuru: true,
-                catatanJatiDiri: true,
-                catatanLiterasiSains: true,
-                catatanPancasila: true,
-                catatanPertumbuhan: true,
-                rombel: true,
-                guru: true,
-                sekolah: true,
-                totalAlpa: true,
-                totalIzin: true,
-                totalSakit: true,
+                murid: true,
+                rombel: {
+                    include: {
+                        kategoriRombel: true
+                    }
+                },
+                semester: true
             }
         })
+
+        if (!result) return null
+
+        return {
+            nama: result.murid.nama,
+            nis: result.murid.nis,
+            rombel: result.rombel.name,
+            kelompokUsia: result.rombel.kategoriRombel.kelompokUsia,
+            semester: `${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir} (${result.semester.jenisSemester})`,
+            idRapor: result.id
+        }
     }
 
     async findByIdRombelAndSemester(idRombel: string, idSemester: string) {

@@ -28,7 +28,7 @@ export class RaporRepository {
 
     async findByIdMuridAndSemesterOrThrow(idMurid: string, idSemester: string) {
         const data = await this.raporQuery.findByIdMuridAndSemester(idMurid, idSemester);
-        if (data.length == 0) throw new BadRequestException('Rapor tidak ditemukan');
+        if (!data) throw new BadRequestException('Rapor tidak ditemukan');
         return data
     }
 
@@ -39,7 +39,7 @@ export class RaporRepository {
 
     async checkIsRaporExist(idMurid: string, idSemester: string) {
         const rapor = await this.raporQuery.findByIdMuridAndSemester(idMurid, idSemester);
-        if (rapor && rapor.length > 0) throw new BadRequestException('Rapor sudah ada');
+        if (rapor) throw new BadRequestException('Rapor sudah ada');
         return
     }
 
