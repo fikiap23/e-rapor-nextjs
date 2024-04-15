@@ -7,9 +7,9 @@ import SchoolIdentity from './schoolIdentity'
 import StudentIdentity from './studentIdentity'
 
 const Raport = ({ data }) => {
-  // useEffect(() => {
-  //   window.print()
-  // }, [])
+  useEffect(() => {
+    window.print()
+  }, [])
 
   const murid = data?.murid
   const guru = data?.guru
