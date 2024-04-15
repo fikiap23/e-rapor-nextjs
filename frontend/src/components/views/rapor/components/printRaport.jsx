@@ -10,12 +10,22 @@ const Raport = ({ data }) => {
   // useEffect(() => {
   //   window.print()
   // }, [])
+
   const murid = data?.murid
   const guru = data?.guru
+  const kapsek = data?.kapsek
+  const rombel = data?.rombel
+  const semester = data?.semester
   const sekolah = data?.sekolah
+  const rapor = data?.rapor
   return (
     <div className="body">
-      <Cover></Cover>
+      <Cover
+        murid={murid}
+        rombel={rombel}
+        sekolah={sekolah}
+        semester={semester}
+      ></Cover>
 
       <SchoolIdentity></SchoolIdentity>
 

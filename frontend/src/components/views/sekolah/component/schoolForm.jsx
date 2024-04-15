@@ -20,7 +20,7 @@ function SchoolForm({ sekolahData, token }) {
         ? [{ uid: '-1', url: `${apiUrl}/${sekolahData.logo}` }]
         : []
     )
-  }, [sekolahData, formData])
+  }, [sekolahData])
 
   const handleEditClick = () => {
     setIsEditing(true)
@@ -66,8 +66,6 @@ function SchoolForm({ sekolahData, token }) {
         ...formData,
       }
     }
-
-    console.log(payload)
     try {
       sekolahService
         .update(token, payload)

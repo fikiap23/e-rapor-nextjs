@@ -1,11 +1,14 @@
+import { apiUrl } from '@/services/apiUrls'
 import './style_raport.css'
 
-function Cover() {
+function Cover({ semester, murid, rombel, sekolah }) {
   return (
     <div className="body_cover">
       <div className="header">
         <img
-          src="https://picsum.photos/200"
+          src={`${apiUrl}/${sekolah.logo}`}
+          width={150}
+          height={150}
           alt="circle-image"
           className="circle-image"
         />
@@ -16,7 +19,7 @@ function Cover() {
           <b>HASIL PERKEMBANGAN ANAK DIDIK</b>
         </h2>
         <h3>
-          <b>Semester 1 Tahun Pelajaran 2023/2024</b>
+          <b>{semester}</b>
         </h3>
       </div>
 
@@ -26,21 +29,21 @@ function Cover() {
             <td>Nama</td>
             <td>:</td>
             <td width="70%" className="tbl">
-              ANAK 1
+              {murid.nama}
             </td>
           </tr>
           <tr>
             <td>Nis</td>
             <td>:</td>
             <td width="70%" className="tbl">
-              123
+              {murid.nis}
             </td>
           </tr>
           <tr>
             <td>Kelompok</td>
             <td>:</td>
             <td width="70%" className="tbl">
-              A
+              {rombel.nama}
             </td>
           </tr>
         </table>
@@ -48,15 +51,12 @@ function Cover() {
 
       <div className="footer">
         <h3>
-          <b>DINAS PENDIDIKAN DKI JAKARTA</b>
+          <b>{sekolah.namaDisdik.toUpperCase()}</b>
         </h3>
         <h3>
-          <b>TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL</b>
+          <b>{sekolah.nama.toUpperCase()}</b>
         </h3>
-        <h4>
-          JI. H. Baping No.100 Kelurahan Ciracas Kecamatan Ciracas Kota Jakarta
-          Timur
-        </h4>
+        <h4>{sekolah.alamat}</h4>
       </div>
     </div>
   )
