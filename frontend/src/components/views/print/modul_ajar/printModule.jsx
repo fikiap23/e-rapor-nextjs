@@ -203,7 +203,7 @@ function PrintModule({ data }) {
         </thead>
         <tbody>
           {modulAjar.tujuanKegiatan.map((tujuan) => (
-            <tr>
+            <tr key={tujuan}>
               <td>{tujuan}</td>
               <td></td>
               <td></td>

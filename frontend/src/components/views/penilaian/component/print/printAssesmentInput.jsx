@@ -84,7 +84,7 @@ function PrintAssesmnetInput({ data }) {
             </tr>
             {data.murids?.map((murid, index) => {
               return (
-                <tr className="row3">
+                <tr className="row3" key={murid.id}>
                   {/* No */}
                   <td className="column0 style5 n">{index + 1}</td>
 

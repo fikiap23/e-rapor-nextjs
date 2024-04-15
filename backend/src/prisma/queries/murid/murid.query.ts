@@ -3,6 +3,8 @@ import { DbService } from '../../db.service';
 import CreateMuridDto from '../../../murid/dto/create-murid.dto';
 import { UpdateMuridDto } from '../../../murid/dto/update-murid.dto';
 import { Agama, JenisKelamin } from '@prisma/client';
+import { createDateFromDDMMYYYY } from '../../../helpers/helper-date';
+import BulkMuridDto from '../../../murid/dto/bulk-muri.dto';
 
 
 
@@ -67,7 +69,7 @@ export class MuridQuery extends DbService {
         return await this.prisma.murid.delete({ where: { id } })
     }
 
-    async createMany(data: CreateMuridDto[]) {
+    async createMany(data: BulkMuridDto[]) {
         if (!data || data.length === 0) {
             throw new BadRequestException('Data cannot be empty');
         }
@@ -79,11 +81,11 @@ export class MuridQuery extends DbService {
 
             for (const murid of data) {
                 if (!Object.values(JenisKelamin).includes(murid.jenisKelamin)) {
-                    throw new BadRequestException(`Siswa dengan NIS ${murid.nis} tidak valid: ${murid.jenisKelamin}`);
+                    throw new BadRequestException(`Siswa dengan NIS ${murid.nis} tidak valid: Jenis Kelamin tidak valid: ${murid.jenisKelamin}`);
                 }
 
                 if (murid.agama && !Object.values(Agama).includes(murid.agama)) {
-                    throw new BadRequestException(`Siswa dengan NIS ${murid.nis} tidak valid: ${murid.agama}`);
+                    throw new BadRequestException(`Siswa dengan NIS ${murid.nis} tidak valid: Agama tidak valid: ${murid.agama}`);
                 }
 
                 const existingMurid = await this.prisma.murid.findFirst({
@@ -99,6 +101,9 @@ export class MuridQuery extends DbService {
                     duplicateNisn.add(murid.nisn);
                     duplicateNis.add(murid.nis);
                 } else {
+                    murid.tanggalLahir = createDateFromDDMMYYYY(murid.tanggalLahir);
+                    murid.tanggalMasuk = createDateFromDDMMYYYY(murid.tanggalMasuk);
+                    if (!murid.tanggalLahir || !murid.tanggalMasuk) throw new BadRequestException(`Siswa dengan NIS ${murid.nis} tidak valid: Tanggal lahir atau tanggal masuk tidak valid`);
                     newData.push(murid);
                 }
             }

@@ -65,7 +65,7 @@ function PrintAssesmnet({ data }) {
 
             {penilaian?.map((item, index) => {
               return (
-                <tr className="row3">
+                <tr className="row3" key={item.id}>
                   {/* Minggu  */}
                   <td className="column0 style25 n">{item.minggu}</td>
 

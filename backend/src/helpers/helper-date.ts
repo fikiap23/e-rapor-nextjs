@@ -52,3 +52,22 @@ export function getIndonesianDayFromDate(date: Date): string {
     const days: string[] = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
     return days[date.getDay()]
 }
+
+export function createDateFromDDMMYYYY(dateStr: string): Date | null {
+    const match = dateStr.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (!match) {
+        console.error("Invalid date format. Please use DD-MM-YYYY format.");
+        return null;
+    }
+
+    const [, day, month, year] = match.map(Number);
+    const date = new Date(year, month - 1, day);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+        console.error("Invalid date values.");
+        return null;
+    }
+
+    return date;
+}

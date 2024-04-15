@@ -4,6 +4,7 @@ import CreateMuridDto from './dto/create-murid.dto';
 import { UpdateMuridDto } from './dto/update-murid.dto';
 import { RombelRepository } from '../rombel/rombel.repository';
 import { _validateFile, createFileImageHelper, deleteFileImageHelper, getCustomFilename } from '../helpers/helper';
+import BulkMuridDto from './dto/bulk-muri.dto';
 
 
 @Injectable()
@@ -136,7 +137,7 @@ export class MuridRepository {
         return await this.muridQuery.findByNullIdRombel()
     }
 
-    async createMany(data: CreateMuridDto[]) {
+    async createMany(data: BulkMuridDto[]) {
         return await this.muridQuery.createMany(data)
     }
 

@@ -1,8 +1,8 @@
 import { Agama, JenisKelamin, StatusAkun } from '@prisma/client';
-import { IsString, IsOptional, IsEnum, IsInt, IsDate } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsInt } from 'class-validator';
 
 
-class CreateMuridDto {
+class BulkMuridDto {
     @IsString()
     @IsOptional()
     idRombel?: string;
@@ -28,8 +28,7 @@ class CreateMuridDto {
     tempatLahir?: string;
 
     @IsOptional()
-    @IsDate()
-    tanggalLahir?: Date;
+    tanggalLahir?: any;
 
     @IsOptional()
     @IsEnum(Agama)
@@ -40,8 +39,7 @@ class CreateMuridDto {
     alamat?: string;
 
     @IsOptional()
-    @IsDate()
-    tanggalMasuk?: Date;
+    tanggalMasuk?: any
 
     @IsOptional()
     @IsInt()
@@ -96,4 +94,4 @@ class CreateMuridDto {
     status?: StatusAkun;
 }
 
-export default CreateMuridDto;
+export default BulkMuridDto;

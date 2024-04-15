@@ -72,8 +72,8 @@ const AddModal = ({ isOpen, closeModal, refetch, token }) => {
           rules={[{ required: true, message: 'Pilih Jenis Kelamin' }]}
         >
           <Select placeholder="Pilih Jenis Kelamin">
-            <Option value="LAKI_LAKI">Pria</Option>
-            <Option value="PEREMPUAN">Wanita</Option>
+            <Option value="L">Pria</Option>
+            <Option value="P">Wanita</Option>
           </Select>
         </Form.Item>
       </Form>

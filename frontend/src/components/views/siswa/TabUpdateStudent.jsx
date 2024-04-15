@@ -35,10 +35,15 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
       nama: dataSiswa.nama,
       tempatLahir: dataSiswa.tempatLahir,
       tanggalLahir: moment(dataSiswa.tanggalLahir),
-      alamat: dataSiswa.alamat,
+      anakKe: dataSiswa.anakKe,
       noHp: dataSiswa.noHp,
       agama: dataSiswa.agama,
       jenisKelamin: dataSiswa.jenisKelamin,
+      jalan: dataSiswa.jalan,
+      kelurahan: dataSiswa.kelurahan,
+      kecamatan: dataSiswa.kecamatan,
+      kota: dataSiswa.kota,
+      provinsi: dataSiswa.provinsi,
       namaAyah: dataSiswa.namaAyah,
       namaIbu: dataSiswa.namaIbu,
       pekerjaanAyah: dataSiswa.pekerjaanAyah,
@@ -104,7 +109,7 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
       })
     }
   }
-  const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
+  const jenisKelaminOptions = ['L', 'P']
   const agamaOptions = [
     'ISLAM',
     'KRISTEN',
@@ -176,7 +181,7 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
               <Select>
                 {jenisKelaminOptions.map((option, index) => (
                   <Option key={index} value={option}>
-                    {option}
+                    {option === 'L' ? 'Laki-laki' : 'Perempuan'}
                   </Option>
                 ))}
               </Select>
@@ -195,49 +200,13 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
             >
               <DatePicker style={{ width: '100%' }} />
             </Form.Item>
+
             <Form.Item
-              label="Nama Ayah"
-              name="namaAyah"
-              rules={[{ required: true, message: 'Masukkan Nama Ayah' }]}
+              label="Anak Ke-"
+              name="anakKe"
+              rules={[{ required: true, message: 'Masukkan Anak Ke' }]}
             >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Nama Ibu"
-              name="namaIbu"
-              rules={[{ required: true, message: 'Masukkan Nama Ibu' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Pekerjaan Ayah"
-              name="pekerjaanAyah"
-              rules={[{ required: true, message: 'Masukkan Pekerjaan Ayah' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              label="Pekerjaan Ibu"
-              name="pekerjaanIbu"
-              rules={[{ required: true, message: 'Masukkan Pekerjaan Ibu' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Alamat"
-              name="alamat"
-              rules={[{ required: true, message: 'Masukkan Alamat' }]}
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              label="Tanggal Masuk"
-              name="tanggalMasuk"
-              rules={[{ required: true, message: 'Pilih Tanggal Masuk' }]}
-            >
-              <DatePicker style={{ width: '100%' }} />
+              <Input type="number" />
             </Form.Item>
             <Form.Item
               label="Tinggi Badan"
@@ -268,18 +237,83 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
               </Select>
             </Form.Item>
             <Form.Item
-              label="Status"
-              name="status"
-              rules={[{ required: true, message: 'Pilih Status' }]}
+              label="Tanggal Masuk"
+              name="tanggalMasuk"
+              rules={[{ required: true, message: 'Pilih Tanggal Masuk' }]}
             >
-              <Select>
-                {statusOptions.map((option, index) => (
-                  <Option key={index} value={option}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
+              <DatePicker style={{ width: '100%' }} />
             </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label="Nama Ayah"
+              name="namaAyah"
+              rules={[{ required: true, message: 'Masukkan Nama Ayah' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Nama Ibu"
+              name="namaIbu"
+              rules={[{ required: true, message: 'Masukkan Nama Ibu' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Pekerjaan Ayah"
+              name="pekerjaanAyah"
+              rules={[{ required: true, message: 'Masukkan Pekerjaan Ayah' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Pekerjaan Ibu"
+              name="pekerjaanIbu"
+              rules={[{ required: true, message: 'Masukkan Pekerjaan Ibu' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <h4>Data Alamat</h4>
+            <Form.Item
+              label="Jalan"
+              name="jalan"
+              rules={[{ required: true, message: 'Masukkan Jalan' }]}
+            >
+              <Input type="text" />
+            </Form.Item>
+            <Form.Item
+              label="Kelurahan"
+              name="kelurahan"
+              rules={[{ required: true, message: 'Masukkan Kelurahan' }]}
+            >
+              <Input type="text" />
+            </Form.Item>
+
+            <Form.Item
+              label="Kecamatan"
+              name="kecamatan"
+              rules={[{ required: true, message: 'Masukkan Kecamatan' }]}
+            >
+              <Input type="text" />
+            </Form.Item>
+
+            <Form.Item
+              label="Kota"
+              name="kota"
+              rules={[{ required: true, message: 'Masukkan Kota' }]}
+            >
+              <Input type="text" />
+            </Form.Item>
+
+            <Form.Item
+              label="Provinsi"
+              name="provinsi"
+              rules={[{ required: true, message: 'Masukkan Provinsi' }]}
+            >
+              <Input type="text" />
+            </Form.Item>
+
             <Form.Item
               label="Foto"
               name="foto"

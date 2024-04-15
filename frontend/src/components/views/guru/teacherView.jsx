@@ -21,15 +21,12 @@ const TeacherView = () => {
           description={
             <>
               <p>
-                1. Untuk Login Guru (PNS) gunakan{' '}
-                <b>username : NIP dan password : guru123 </b>
+                1. Untuk Login Akun Guru baru harap gunakan{' '}
+                <b>username dan password: NIP </b>
               </p>
+
               <p>
-                2. Untuk Login Guru (Honor) gunakan{' '}
-                <b>username : NIK dan password : guru123 </b>
-              </p>
-              <p>
-                3. <b>PASTIKAN GURU SUDAH AKTIF!! </b>
+                2. <b>PASTIKAN GURU SUDAH AKTIF!! </b>
               </p>
             </>
           }
