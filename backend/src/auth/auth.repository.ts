@@ -8,8 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserQuery } from '../prisma/queries/user/user.query';
-import { use } from 'passport';
-import { Role } from '@prisma/client';
+import { Role, StatusAkun } from '@prisma/client';
 import { UpdatePassword } from './dto/update-password.dto';
 @Injectable()
 export class AuthRepository {
@@ -55,11 +54,14 @@ export class AuthRepository {
     async login(dto: LoginUserDto) {
         try {
             const user = await this.findUserByUsernameOrEmailOrThrow(dto.username || dto.email);
-
             const validPassword = await bcrypt.compare(dto.password, user.password);
 
             if (!validPassword) {
                 throw new BadRequestException('Password salah');
+            }
+
+            if (user.status === StatusAkun.TIDAK_AKTIF) {
+                throw new BadRequestException('Akun anda sedang di nonaktifkan');
             }
 
             if (user.role === Role.GURU) {
