@@ -21,7 +21,7 @@ import { CreateRaporDto } from './dto/create-rapor.dto';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
 import { GetRaporDto } from './dto/get-rapor.dto';
 import { GetRaporByIdRombelSemesterDto } from './dto/get-rapor-by-idRombel-semester.dto';
-
+import { GetRaporByNisNamaDto } from './dto/get-rapor-by-nis-nama.dto';
 
 @Controller('rapor')
 export class RaporController {
@@ -68,6 +68,12 @@ export class RaporController {
     @Get('print/:id')
     async printById(@Res() res, @Param('id') id) {
         const result = await this.raporService.printById(id)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+    @Get('search-by-semester/:idSemester')
+    async search(@Res() res, @Query() dto: GetRaporByNisNamaDto, @Param('idSemester') idSemester) {
+        const result = await this.raporService.findByNisNamaMuridAndSemester(dto.nis, dto.nama, idSemester)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 }

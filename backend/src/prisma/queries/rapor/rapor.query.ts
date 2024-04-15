@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateRaporDto } from '../../../rapor/dto/create-rapor.dto';
 import { UpdateRaporDto } from '../../../rapor/dto/update-rapor.dto';
@@ -51,6 +51,46 @@ export class RaporQuery extends DbService {
         })
 
         if (!result) return null
+
+        return {
+            nama: result.murid.nama,
+            nis: result.murid.nis,
+            rombel: result.rombel.name,
+            kelompokUsia: result.rombel.kategoriRombel.kelompokUsia,
+            semester: `${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir} (${result.semester.jenisSemester})`,
+            idRapor: result.id
+        }
+    }
+
+    async findByNisNamaMuridAndSemester(nis: string, nama: string, idSemester: string) {
+        const semester = await this.prisma.semester.findUnique({
+            where: { id: idSemester }
+        })
+        if (!semester) throw new BadRequestException('Semester tidak ditemukan')
+
+        const murid = await this.prisma.murid.findFirst({
+            where: { nis },
+        })
+
+        // check if murid exists
+        if (!murid) throw new BadRequestException('NIS tidak terdaftar')
+
+        if (murid.nama.toLocaleLowerCase() !== nama.trim().toLocaleLowerCase()) throw new BadRequestException('Nama terdaftar bukan ' + nama)
+
+        const result = await this.prisma.rapor.findFirst({
+            where: { idMurid: murid.id, idSemester }, select: {
+                id: true,
+                murid: true,
+                rombel: {
+                    include: {
+                        kategoriRombel: true
+                    }
+                },
+                semester: true
+            }
+        })
+
+        if (!result) throw new BadRequestException('Rapor tidak ditemukan')
 
         return {
             nama: result.murid.nama,
