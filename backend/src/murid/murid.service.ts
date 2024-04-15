@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MuridRepository } from './murid.repository';
 import CreateMuridDto from './dto/create-murid.dto';
 import { UpdateMuridDto } from './dto/update-murid.dto';
+import BulkMuridDto from './dto/bulk-muri.dto';
 
 @Injectable()
 export class MuridService {
@@ -35,7 +36,7 @@ export class MuridService {
         return await this.muridRepository.removeRombelById(id);
     }
 
-    async createMany(data: CreateMuridDto[]) {
+    async createMany(data: BulkMuridDto[]) {
         return await this.muridRepository.createMany(data);
     }
 

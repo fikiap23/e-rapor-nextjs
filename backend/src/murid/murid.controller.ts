@@ -21,6 +21,7 @@ import CreateMuridDto from './dto/create-murid.dto';
 import { HttpHelper } from '../helpers/http-helper';
 import { UpdateMuridDto } from './dto/update-murid.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import BulkMuridDto from './dto/bulk-muri.dto';
 
 
 @Controller('murid')
@@ -39,7 +40,7 @@ export class MuridController {
     @Post('bulk')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.ADMIN)
-    async createMany(@Body() dto: CreateMuridDto[], @Res() res) {
+    async createMany(@Body() dto: BulkMuridDto[], @Res() res) {
         const result = await this.muridService.createMany(dto);
         return this.httpHelper.formatResponse(res, HttpStatus.CREATED, result);
     }

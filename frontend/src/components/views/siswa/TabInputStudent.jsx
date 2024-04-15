@@ -80,7 +80,7 @@ function TabInputSiswa({ refetch }) {
     }
   }
 
-  const jenisKelaminOptions = ['LAKI_LAKI', 'PEREMPUAN']
+  const jenisKelaminOptions = ['L', 'P']
   const agamaOptions = [
     'ISLAM',
     'KRISTEN',

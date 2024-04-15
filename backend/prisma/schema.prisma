@@ -34,8 +34,8 @@ enum StatusAkun {
 }
 
 enum JenisKelamin {
-  LAKI_LAKI
-  PEREMPUAN
+  L
+  P
 }
 
 enum Agama {
@@ -114,23 +114,31 @@ model Guru {
 }
 
 model Murid {
-  id                String              @id @default(uuid())
-  nisn              String              @unique
-  nis               String              @unique
-  nama              String
-  jenisKelamin      JenisKelamin
-  tempatLahir       String?
-  tanggalLahir      DateTime?
-  agama             Agama?
-  alamat            String?
-  tanggalMasuk      DateTime?
-  tinggiBadan       Int?
-  beratBadan        Int?
-  foto              String?
-  namaAyah          String?
-  namaIbu           String?
-  pekerjaanAyah     String?
-  pekerjaanIbu      String?
+  id            String       @id @default(uuid())
+  nisn          String       @unique
+  nis           String       @unique
+  nama          String
+  anakKe        Int?
+  jenisKelamin  JenisKelamin
+  tempatLahir   String?
+  tanggalLahir  DateTime?
+  agama         Agama?
+  tanggalMasuk  DateTime?
+  tinggiBadan   Int?
+  beratBadan    Int?
+  foto          String?
+  namaAyah      String?
+  namaIbu       String?
+  pekerjaanAyah String?
+  pekerjaanIbu  String?
+
+  //Alamat
+  jalan     String?
+  kelurahan String?
+  kecamatan String?
+  kota      String?
+  provinsi  String?
+
   status            StatusAkun          @default(AKTIF)
   rapor             Rapor[]
   penilaianMingguan PenilaianMingguan[]

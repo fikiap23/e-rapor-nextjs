@@ -35,9 +35,7 @@ function StudentIdentity({ murid, kapsek }) {
           <tr>
             <td>4. Jenis Kelamin</td>
             <td width={20}>:</td>
-            <td className="tbl">
-              {murid.jenisKelamin === 'LAKI_LAKI' ? 'L' : 'P'}
-            </td>
+            <td className="tbl">{murid.jenisKelamin === 'L' ? 'L' : 'P'}</td>
           </tr>
 
           <tr>
