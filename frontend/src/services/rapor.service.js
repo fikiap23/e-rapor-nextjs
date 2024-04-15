@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { apiUrl } from './apiUrls'
+import axios from "axios";
+import { apiUrl } from "./apiUrls";
 
-const BASE_URL = `${apiUrl}/rapor`
+const BASE_URL = `${apiUrl}/rapor`;
 const raportService = {
   create: async (data, token) => {
     try {
@@ -9,10 +9,10 @@ const raportService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      return response.data?.data || 'Raport Berhasil Di Ditambahkan'
+      });
+      return response.data?.data || "Raport Berhasil Di Ditambahkan";
     } catch (error) {
-      throw error.response?.data?.message || 'Raport Gagal Ditambahkan'
+      throw error.response?.data?.message || "Raport Gagal Ditambahkan";
     }
   },
 
@@ -22,10 +22,10 @@ const raportService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      return response.data.data
+      });
+      return response.data.data;
     } catch (error) {
-      throw error.response?.data?.message || 'Raport Gagal Diupdate'
+      throw error.response?.data?.message || "Raport Gagal Diupdate";
     }
   },
 
@@ -35,10 +35,10 @@ const raportService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      return response.data
+      });
+      return response.data;
     } catch (error) {
-      throw error.response?.data?.message || 'Raport Gagal Diupdate'
+      throw error.response?.data?.message || "Raport Gagal Diupdate";
     }
   },
 
@@ -48,10 +48,10 @@ const raportService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      return response.data
+      });
+      return response.data;
     } catch (error) {
-      throw error.response?.data?.message || 'Raport Gagal Dihapus'
+      throw error.response?.data?.message || "Raport Gagal Dihapus";
     }
   },
 
@@ -61,15 +61,35 @@ const raportService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      return response.data
+      });
+      return response.data;
     } catch (error) {
       throw (
         error.response?.data?.message ||
-        'Ada kesalahan saat mengambil data guru'
-      )
+        "Ada kesalahan saat mengambil data guru"
+      );
     }
   },
-}
 
-export default raportService
+  getOne: async (nama, nis, idSemester) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/search-by-semester/${idSemester}`,
+        {
+          params: {
+            nama: nama,
+            nis: nis,
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      throw (
+        error.response?.data?.message ||
+        "Ada kesalahan saat mengambil data rapor"
+      );
+    }
+  },
+};
+
+export default raportService;

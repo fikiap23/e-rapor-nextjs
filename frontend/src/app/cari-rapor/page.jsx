@@ -6,19 +6,21 @@ import useAuth from "@/hooks/useAuth";
 import getTokenData from "@/lib/getTokenData";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import raportService from "@/services/rapor.service";
+import { useGetAllSemesterData } from "@/hooks/useSemester";
+import { toast } from "react-toastify";
 export default function Home() {
   const { token } = useAuth();
   // console.log(token);
   const userData = getTokenData(token);
-  // console.log(userData);
-
-  const router = useRouter();
-
+  const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [dataSearch, setDataSearch] = useState({
     nis: "",
     nama: "",
     semester: "",
   });
+  const { push } = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,24 +30,44 @@ export default function Home() {
     });
   };
 
-  const dataAccordion = [
-    {
-      title: "2023 - 2024 Ganjil",
-    },
-    {
-      title: "2023 - 2024 Genap",
-    },
-    {
-      title: "2024 - 2025 Ganjil",
-    },
-    {
-      title: "2024 - 2025 Genap",
-    },
-  ];
+  const {
+    data: listSemester,
+    error: errorSemester,
+    isFetching: isFetchingSemester,
+    refetch: refetchSemester,
+  } = useGetAllSemesterData(token);
 
-  const handleSearch = (e) => {
+  const filteredSemesters = listSemester.filter((semester) =>
+    Object.values(semester).some(
+      (value) =>
+        typeof value === "string" &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
+  const handleSearch = async (e) => {
     e.preventDefault();
     console.log(dataSearch);
+    try {
+      setIsLoading(true);
+      const result = await raportService.getOne(
+        dataSearch.nama,
+        dataSearch.nis,
+        dataSearch.semester
+      );
+
+      const idRapor = result.idRapor;
+
+      // Redirect to home
+      push(`/raport_print/${idRapor}`);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+      });
+      console.log(`Gagal mendapatkan Raport: ${error}`);
+      setIsLoading(false);
+    }
   };
   return (
     <div>
@@ -95,13 +117,13 @@ export default function Home() {
                 value={dataSearch.semester}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-3 md:p-6"
               >
-                {dataAccordion.map((item, index) => (
-                  <option
-                    value={`semester${index + 1}`}
-                    key={index}
-                    className="p-3 md:p-6"
-                  >
-                    {item.title}
+                <option value="#" selected>
+                  --- PILIH SEMESTER ---
+                </option>
+                {filteredSemesters.map((item, index) => (
+                  <option value={item.id} key={index} className="p-3 md:p-6">
+                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{" "}
+                    {item.jenisSemester}
                   </option>
                 ))}
               </select>
