@@ -49,11 +49,6 @@ const SidebarTeacher = () => {
               <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
           </li>
-          <li className="active">
-            <Link href="/guru/rapor">
-              <i className="fa fa-print"></i> <span>Cetak Data</span>
-            </Link>
-          </li>
         </ul>
       </section>
     </aside>
