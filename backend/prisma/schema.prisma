@@ -137,8 +137,7 @@ model Murid {
 
   // Relation
   idRombel String?
-  rombel   Rombel?   @relation(fields: [idRombel], references: [id])
-  absensi  Absensi[]
+  rombel   Rombel? @relation(fields: [idRombel], references: [id])
 
   // index
   @@index([id, nis, nisn])
@@ -239,23 +238,9 @@ model JadwalAjar {
   modulAjar            ModulAjar           @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
   idRombelSemesterGuru String
   rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
-  absensi              Absensi[]
 
   // index
   @@index([id, idModulAjar, idRombelSemesterGuru])
-}
-
-model Absensi {
-  id           String        @id @default(uuid())
-  status       StatusAbsensi
-  keterangan   String?
-  idJadwalAjar String
-  jadwalAjar   JadwalAjar    @relation(fields: [idJadwalAjar], references: [id], onDelete: Cascade)
-  idMurid      String
-  murid        Murid         @relation(fields: [idMurid], references: [id], onDelete: Cascade)
-
-  // index
-  @@index([id, idJadwalAjar, idMurid])
 }
 
 model PenilaianMingguan {
@@ -311,9 +296,9 @@ model Rapor {
 
   // Relation
   idSekolah  String
-  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id], onDelete: Cascade)
+  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id])
   idSemester String
-  semester   Semester @relation(fields: [idSemester], references: [id], onDelete: Cascade)
+  semester   Semester @relation(fields: [idSemester], references: [id])
   idMurid    String
   murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
   idGuru     String
