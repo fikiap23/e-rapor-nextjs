@@ -172,17 +172,22 @@ export class GuruQuery extends DbService {
             }
         })
 
-        return data.map(d => {
-            return {
-                id: d.id,
-                idRombel: d.rombel.id,
-                idSemester: d.semester.id,
-                name: d.rombel.name,
-                semester: `${d.semester.tahunAjaranAwal}-${d.semester.tahunAjaranAkhir} (${d.semester.jenisSemester})`,
-                statusSemester: d.semester.isAktif,
-                kelompokUsia: d.rombel.kategoriRombel.kelompokUsia
-            }
+        const rombelAktif = []
 
-        })
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].semester.isAktif) {
+                rombelAktif.push({
+                    id: data[i].id,
+                    idRombel: data[i].rombel.id,
+                    idSemester: data[i].semester.id,
+                    name: data[i].rombel.name,
+                    semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
+                    statusSemester: data[i].semester.isAktif,
+                    kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
+                })
+            }
+        }
+
+        return rombelAktif
     }
 }

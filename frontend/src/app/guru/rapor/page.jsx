@@ -5,7 +5,7 @@ import { Button, Input, Space, Table, Tag } from 'antd'
 import Link from 'next/link'
 import { useState } from 'react'
 
-const LectureView = () => {
+const RombelDiampuPage = () => {
   const { token } = useAuth()
   const {
     data: listRombel,
@@ -15,6 +15,14 @@ const LectureView = () => {
   } = useRombelDiampu(token)
 
   const [searchKeyword, setSearchKeyword] = useState('')
+
+  const filteredRombel = listRombel.filter((rombel) =>
+    Object.values(rombel).some(
+      (value) =>
+        typeof value === 'string' &&
+        value.toLowerCase().includes(searchKeyword.toLowerCase())
+    )
+  )
 
   const columns = [
     {
@@ -28,12 +36,6 @@ const LectureView = () => {
       title: 'Kelompok Usia',
       dataIndex: 'kelompokUsia',
       key: 'kelompokUsia',
-      filteredValue: [searchKeyword],
-      onFilter: (value, record) => {
-        return String(record.semester)
-          .toLowerCase()
-          .includes(value.toLowerCase())
-      },
       sorter: (a, b) => a.kelompokUsia.localeCompare(b.kelompokUsia),
     },
     {
@@ -90,7 +92,7 @@ const LectureView = () => {
               <div className="box box-solid box-primary">
                 <div className="box-header">
                   <h3 className="box-title">
-                    <i className="fa fa-book"></i> Input Nilai Raport
+                    <i className="fa fa-book"></i> Input Raport Anak
                   </h3>
                 </div>
                 <div className="box-body">
@@ -106,7 +108,7 @@ const LectureView = () => {
 
                     <Table
                       columns={columns}
-                      dataSource={listRombel}
+                      dataSource={filteredRombel}
                       loading={isFetching}
                       scroll={{ x: 1000 }}
                     />
@@ -121,4 +123,4 @@ const LectureView = () => {
   )
 }
 
-export default LectureView
+export default RombelDiampuPage

@@ -8,7 +8,11 @@ import StudentIdentity from './studentIdentity'
 
 const Raport = ({ data }) => {
   useEffect(() => {
-    window.print()
+    const timeout = setTimeout(() => {
+      window.print()
+    }, 1000) // Delay 1 detik
+
+    return () => clearTimeout(timeout)
   }, [])
 
   const murid = data?.murid

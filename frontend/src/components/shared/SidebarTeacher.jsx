@@ -11,7 +11,7 @@ const SidebarTeacher = () => {
         <div className="user-panel">
           <div className="pull-left image">
             <img
-              src="https://picsum.photos/200"
+              src="/images/teacher.png"
               className="img-circle"
               alt="User Image"
             />
