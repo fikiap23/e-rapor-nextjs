@@ -3,8 +3,8 @@ export default function Navbar(props) {
   return (
     <nav className="w-full px-10 py-4 bg-white">
       <div className="flex justify-between items-center">
-        <a className="font-bold text-sm md:text-base" href="/">
-          School Management
+        <a className="font-bold text-xs max-w-52" href="/">
+          TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
         </a>
         {role === "ADMIN" ? (
           <a
