@@ -73,7 +73,19 @@ export default function SearchView() {
   return (
     <div>
       <Navbar role={userData?.role} />
-      <header className="grid grid-cols-none md:grid-cols-2 bg-gradient-to-r from-blue-400 to-purple-400 w-full p-10 md:p-20 gap-10 h-auto">
+      <section
+        id="hero"
+        className="hero-content flex-col lg:flex-row-reverse bg-no-repeat bg-cover bg-center bg-hero-pattern h-screen w-full"
+      >
+        <div className="h-full w-full flex justify-center items-center bg-gradient-to-t from-purple-400 to-transparent">
+          <div className="w-1/2 text-center bg-white/30 backdrop-blur-md p-2 md:p-7 rounded-xl shadow-md">
+            <h1 className="text-base md:text-4xl font-bold text-white">
+              TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
+            </h1>
+          </div>
+        </div>
+      </section>
+      <header className="grid grid-cols-none md:grid-cols-2 bg-gradient-to-t from-blue-400 to-purple-400 w-full p-10 md:p-20 gap-10 h-auto">
         <div className="max-w-2xl">
           <h1 className="text-4xl text-white font-bold mb-5">Cari Siswa</h1>
           <form
