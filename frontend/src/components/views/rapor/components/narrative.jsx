@@ -1,11 +1,34 @@
 import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 
 function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
+  console.log(rapor.catatanAgamaBudipekerti.length);
+  console.log(rapor.catatanJatiDiri.length);
+  console.log(rapor.catatanLiterasiSains.length);
+  console.log(rapor.catatanPancasila.length);
+  const pointBLogic =
+    (rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length > 1500) ||
+    (rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanJatiDiri.length > 2500) ||
+    (rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length > 2500);
+  const point_b_logic = `point_b ${pointBLogic ? 'extra-margin' : ''}`;
+
+  const pointCLogic =
+    // (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length > 210) ||
+    // (rapor.catatanLiterasiSains.length > 210 && rapor.catatanJatiDiri.length > 2000) ||
+    // rapor.catatanAgamaBudipekerti.length > 2000 && rapor.catatanJatiDiri.length > 290 ||
+    (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length > 20000);
+  const point_c_logic = `point_c ${pointCLogic ? 'extra-margin' : ''}`;
+
+  const pointDLogic =
+    // (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanPancasila.length > 210) ||
+    // (rapor.catatanLiterasiSains.length > 210 && rapor.catatanPancasila.length > 2000) ||
+    (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanPancasila.length > 20000);
+  const point_d_logic = `point_c ${pointDLogic ? 'extra-margin' : ''}`;
+
   return (
     <>
       <div style={{ pageBreakBefore: 'always', marginTop: '8%' }}>
         <h3 style={{ textAlign: 'center' }}>LAPORAN PERKEMBANGAN ANAK DIDIK</h3>
-        <table>
+        <table style={{ width: '100%' }}>
           <tr>
             <td width="15%">Nama Peserta Didik</td>
             <td width="1%">:</td>
@@ -37,134 +60,106 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             <td>:</td>
             <td className="tbl">{semester}</td>
           </tr>
-
-          <tr>
-            <td colSpan={6} style={{ textAlign: 'center', fontWeight: 'bold' }}>
-              {/* <h3>===============================================</h3> */}
-              <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
-            </td>
-          </tr>
-
-          <tr>
-            <td colSpan={6}>
-              <div className="point_a">
-                <p style={{ fontSize: '20px' }}>
-                  <b>A. NILAI AGAMA DAN BUDI PEKERTI</b>
-                </p>
-                <div
-                  style={{
-                    padding: '5px',
-                    border: '4px solid black',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <p
-                    style={{
-                      textIndent: '2em',
-                      textAlign: 'justify',
-                      lineHeight: '1.4',
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: rapor.catatanAgamaBudipekerti,
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
-
-              <div className="point_b">
-                <p style={{ fontSize: '20px' }}>
-                  <b>B. JATI DIRI</b>
-                </p>
-                <div
-                  style={{
-                    padding: '5px',
-                    border: '4px solid black',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <p
-                    style={{
-                      textIndent: '2em',
-                      textAlign: 'justify',
-                      lineHeight: '1.4',
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: rapor.catatanJatiDiri,
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
-
-              <div className="point_c">
-                <p style={{ fontSize: '20px' }}>
-                  <b>
-                    C. DASAR LITERASI, MATEMATIKA, SAINS, TEKNOLOGI, REKAYASA
-                    DAN SENI
-                  </b>
-                </p>
-                <div
-                  style={{
-                    padding: '5px',
-                    border: '4px solid black',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <p
-                    style={{
-                      textIndent: '2em',
-                      textAlign: 'justify',
-                      lineHeight: '1.4',
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: rapor.catatanLiterasiSains,
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td colSpan={6}>
-              <div className="point_d" style={{ marginTop: '8%' }}>
-                <p style={{ fontSize: '20px' }}>
-                  <b>D. PROJEK PENGUATAN PROFIL PELAJAR PANCASILA</b>
-                </p>
-                <div
-                  style={{
-                    padding: '5px',
-                    border: '4px solid black',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <p
-                    style={{
-                      textIndent: '2em',
-                      textAlign: 'justify',
-                      lineHeight: '1.4',
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: rapor.catatanPancasila,
-                      }}
-                    />
-                  </p>
-                </div>
-              </div>
-            </td>
-          </tr>
         </table>
-        <div className="note_growth_child">
+
+        <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
+
+        <div className='point'>
+          <div className="point_a">
+            <p style={{ fontSize: '20px' }}><b>A. NILAI AGAMA DAN BUDI PEKERTI</b></p>
+            <div className="content" style={{
+              padding: '5px',
+              border: '4px solid black',
+              marginBottom: '10px',
+              textAlign: 'justify',
+              textIndent: '2em',
+            }}
+              dangerouslySetInnerHTML={{ __html: rapor.catatanAgamaBudipekerti }} />
+          </div>
+
+          <div
+            className={point_b_logic}
+            style={{
+              pageBreakBefore:
+                rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length <= 800 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
+                    'auto'
+            }}>
+            <p style={{ fontSize: '20px' }}><b>B. JATI DIRI</b></p>
+            <div className="content" style={{
+              padding: '5px',
+              border: '4px solid black',
+              marginBottom: '10px',
+              textAlign: 'justify',
+              textIndent: '2em',
+            }}
+              dangerouslySetInnerHTML={{ __html: rapor.catatanJatiDiri }} />
+          </div>
+
+          {/* 3 pendek S
+3 panjang S
+a b panjang S
+a b pendek S
+b c panjang S
+a c panjang S
+
+4 pendek S
+4 panjang S
+a b c panjang S
+a b c pendek S
+b c panjang
+b c pendek */}
+
+
+
+          <div
+            className={point_c_logic}
+            style={{
+              pageBreakBefore:
+                rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanLiterasiSains.length > 1700 && rapor.catatanJatiDiri.length > 2500 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
+                    rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
+                      'auto'
+            }}
+          >
+            <p style={{ fontSize: '20px' }}><b>C. DASAR LITERASI, MATEMATIKA, SAINS, TEKNOLOGI, REKAYASA DAN SENI</b></p>
+            <div className="content" style={{
+              padding: '5px',
+              border: '4px solid black',
+              marginBottom: '10px',
+              textAlign: 'justify',
+              textIndent: '2em',
+            }}
+              dangerouslySetInnerHTML={{ __html: rapor.catatanLiterasiSains }} />
+          </div>
+
+          <div
+            className={point_d_logic}
+            style={{
+              pageBreakBefore:
+                rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length <= 400 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length <= 3400 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length <= 2900 && rapor.catatanPancasila.length > 2000 ? 'always' :
+
+                    // rapor.catatanLiterasiSains.length > 1500 && rapor.catatanPancasila.length > 300 ? 'always' :
+                    //   rapor.catatanLiterasiSains.length > 210 && rapor.catatanJatiDiri.length > 2000 ? 'auto' :
+                    //     rapor.catatanLiterasiSains.length > 300 && rapor.catatanPancasila.length > 1500 ? 'always' :
+                    //       rapor.catatanLiterasiSains.length > 1500 && rapor.catatanPancasila.length > 1500 ? 'always' :
+                    'auto'
+            }}
+          >
+            <p style={{ fontSize: '20px' }}><b>D. PROJEK PENGUATAN PROFIL PELAJAR PANCASILA</b></p>
+            <div className="content" style={{
+              padding: '5px',
+              border: '4px solid black',
+              textAlign: 'justify',
+              marginBottom: '10px',
+              textIndent: '2em',
+            }}
+              dangerouslySetInnerHTML={{ __html: rapor.catatanPancasila }} />
+          </div>
+        </div>
+
+        <div className="note_growth_child" style={{ pageBreakBefore: 'always' }}>
           <p style={{ fontSize: '20px' }}>
             <b>CATATAN PERTUMBUHAN ANAK</b>
           </p>
@@ -180,7 +175,6 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
               style={{
                 textIndent: '2em',
                 textAlign: 'justify',
-                lineHeight: '1.2',
               }}
             >
               <div

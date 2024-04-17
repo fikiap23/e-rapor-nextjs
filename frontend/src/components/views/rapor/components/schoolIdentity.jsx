@@ -2,7 +2,7 @@ import { apiUrl } from '@/services/apiUrls'
 
 function SchoolIdentity({ semester, sekolah }) {
   return (
-    <div>
+    <div style={{paddingTop: '100px'}}>
       <div className="header">
         <img
           src={`${apiUrl}/${sekolah.logo}`}
