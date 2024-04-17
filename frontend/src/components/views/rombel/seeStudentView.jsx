@@ -138,7 +138,7 @@ export default function SeeStudentView({ id }) {
                 <div className="tab-pane " id="input-siswa">
                   <div className="box-body table-responsive no-padding">
                     <div style={{ margin: '0 20px 20px 20px' }}>
-                      <Input
+                      <Input.Search
                         placeholder="Cari siswa..."
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}

@@ -184,7 +184,7 @@ const StudentView = () => {
                           justifyContent: 'space-between',
                         }}
                       >
-                        <Input
+                        <Input.Search
                           placeholder="Cari siswa..."
                           value={searchText}
                           onChange={(e) => setSearchText(e.target.value)}

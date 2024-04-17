@@ -1,12 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
-import Link from 'next/link'
+import { Tabs } from 'antd'
 import CapaianPage from './component/capaianPage'
 import TujuanPage from './component/tujuanPage'
 import useAuth from '@/hooks/useAuth'
 import Loading from '@/components/shared/Loading'
 import cpTpService from '@/services/cp-tp.service'
+
+const { TabPane } = Tabs
 
 const SubjecetView = () => {
   const [activeTab, setActiveTab] = useState('view')
@@ -41,23 +42,6 @@ const SubjecetView = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab)
   }
-  const handleDelete = () => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Anda akan menghapus siswa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Data Dihapus!', 'Siswa telah dihapus.', 'success')
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Dibatalkan', 'Tidak ada perubahan pada data siswa.', 'error')
-      }
-    })
-  }
 
   return (
     <div className="content-wrapper">
@@ -76,42 +60,29 @@ const SubjecetView = () => {
                 </h3>
               </div>
               <div className="box-body">
-                <div className="nav-tabs-pills">
-                  <ul className="nav nav-tabs">
-                    <li className={activeTab === 'view' ? 'active' : ''}>
-                      <Link href="" onClick={() => handleTabChange('view')}>
-                        Tujuan Pembelajaran
-                      </Link>
-                    </li>
-                    <li className={activeTab === 'input' ? 'active' : ''}>
-                      <Link href="" onClick={() => handleTabChange('input')}>
-                        Capaian Pembelajaran
-                      </Link>
-                    </li>
-                  </ul>
-                  <div className="tab-content">
+                <Tabs activeKey={activeTab} onChange={handleTabChange}>
+                  <TabPane tab="Tujuan Pembelajaran" key="view">
                     {isFetching && <Loading />}
                     {!isFetching && (
-                      <div className="tab-content">
-                        {activeTab === 'view' && (
-                          <TujuanPage
-                            cp={cpData}
-                            token={token}
-                            isLoading={isFetching}
-                            refetch={handleRefetch}
-                          />
-                        )}
-                        {activeTab === 'input' && (
-                          <CapaianPage
-                            cp={cpData}
-                            token={token}
-                            refetch={handleRefetch}
-                          />
-                        )}
-                      </div>
+                      <TujuanPage
+                        cp={cpData}
+                        token={token}
+                        isLoading={isFetching}
+                        refetch={handleRefetch}
+                      />
                     )}
-                  </div>
-                </div>
+                  </TabPane>
+                  <TabPane tab="Capaian Pembelajaran" key="input">
+                    {isFetching && <Loading />}
+                    {!isFetching && (
+                      <CapaianPage
+                        cp={cpData}
+                        token={token}
+                        refetch={handleRefetch}
+                      />
+                    )}
+                  </TabPane>
+                </Tabs>
               </div>
             </div>
           </div>

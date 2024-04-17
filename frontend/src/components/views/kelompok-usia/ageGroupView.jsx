@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Table, Button, Input, Modal } from 'antd'
+import { Table, Button, Input, Modal, Flex } from 'antd'
 import AddGroupModal from './modal/addGroupModal'
 import useAuth from '@/hooks/useAuth'
 import UpdateGroupModal from './modal/updateGroupModal'
@@ -132,23 +132,25 @@ const AgeGroupView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: '0 20px 20px 20px' }}>
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={openModal}
-                    >
-                      <i className="icon fa fa-plus"></i> Tambah
-                    </button>
-                  </div>
-                  <div style={{ margin: '0 20px 20px 20px' }}>
-                    <Input
-                      placeholder="Cari kelompok usia..."
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      style={{ width: 200, marginRight: 10 }}
-                    />
-                  </div>
+                  <Flex justify="space-between" align="center">
+                    <div style={{ margin: '0 20px 20px 0px' }}>
+                      <Input.Search
+                        placeholder="Cari kelompok usia..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                      />
+                    </div>
+                    <div style={{ margin: '0 20px 20px 0px' }}>
+                      <Button
+                        type="primary"
+                        // className="btn btn-success"
+                        onClick={openModal}
+                        icon={<i className="fa fa-plus"></i>}
+                      >
+                        Tambah
+                      </Button>
+                    </div>
+                  </Flex>
                   <Table
                     columns={columns}
                     dataSource={filteredKategories}

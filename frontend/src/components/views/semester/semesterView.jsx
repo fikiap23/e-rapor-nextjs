@@ -6,7 +6,8 @@ import useAuth from '@/hooks/useAuth'
 import { formatDate } from '@/lib/helperDate'
 import semesterService from '@/services/semester.service'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
-import { Table, Button, Tag, Space, Input, Modal } from 'antd'
+import { Table, Button, Tag, Space, Input, Modal, Flex } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 const SemesterView = () => {
   const { token } = useAuth()
   const [selectedSemester, setSelectedSemester] = useState({})
@@ -154,23 +155,25 @@ const SemesterView = () => {
                 </div>
 
                 <div className="box-body">
-                  <div style={{ margin: '0 20px 20px 20px' }}>
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={openModalAdd}
-                    >
-                      <i className="icon fa fa-plus"></i> Tambah
-                    </button>
-                  </div>
-                  <div style={{ margin: '0 20px 20px 20px' }}>
-                    <Input
-                      placeholder="Cari semester..."
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      style={{ width: 200, marginRight: 10 }}
-                    />
-                  </div>
+                  <Flex justify="space-between" align="center">
+                    <div style={{ margin: '0 20px 20px 20px' }}>
+                      <Input.Search
+                        placeholder="Cari semester..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                      />
+                    </div>
+                    <div style={{ margin: '0 20px 20px 20px' }}>
+                      <Button
+                        type="primary"
+                        // className="btn btn-success"
+                        onClick={openModalAdd}
+                        icon={<i className="fa fa-plus"></i>}
+                      >
+                        {'Tambah'}
+                      </Button>
+                    </div>
+                  </Flex>
 
                   <Table
                     bordered

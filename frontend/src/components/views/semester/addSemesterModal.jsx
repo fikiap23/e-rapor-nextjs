@@ -51,7 +51,7 @@ const AddSemesterModal = ({ isOpen, closeModal, refetch, token }) => {
 
   return (
     <Modal
-      title="Tambah Semester"
+      title="Tambah Data Semester"
       visible={isOpen}
       onCancel={closeModal}
       footer={[
