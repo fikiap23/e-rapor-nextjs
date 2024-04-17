@@ -64,7 +64,7 @@ const EditSemesterModal = ({
 
   return (
     <Modal
-      title="Edit"
+      title="Perbarui Data Semester"
       visible={isOpen}
       onCancel={closeModal}
       footer={[
