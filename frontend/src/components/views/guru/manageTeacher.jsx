@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Table, Tag, Modal, Input } from 'antd'
+import { Button, Table, Tag, Modal, Input, Flex } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import AddGuruModal from './modal/addGuruModal'
 import UpdateGuruModal from './modal/updateGuruModal'
@@ -173,19 +173,25 @@ const ManageTeacher = () => {
   return (
     <>
       <div className="box-body">
-        <div style={{ margin: '0 20px 20px 20px' }}>
-          <Button type="primary" onClick={openModal}>
-            Tambah
-          </Button>
-        </div>
-        <div style={{ margin: '0 20px 20px 20px' }}>
-          <Input
-            placeholder="Cari guru..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200, marginRight: 10 }}
-          />
-        </div>
+        <Flex justify="space-between" align="center">
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Input.Search
+              placeholder="Cari Guru..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Button
+              type="primary"
+              // className="btn btn-success"
+              onClick={openModal}
+              icon={<i className="fa fa-plus"></i>}
+            >
+              Tambah
+            </Button>
+          </div>
+        </Flex>
         <Table
           columns={columns}
           dataSource={filteredTeachers}

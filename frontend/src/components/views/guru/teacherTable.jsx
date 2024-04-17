@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Table, Modal, message, Input, Space } from 'antd'
+import { Button, Table, Modal, message, Input, Space, Flex } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import rombelService from '@/services/rombel.service'
 import { useGetAllRombelWithGuru } from '@/hooks/useRombelGuru'
@@ -139,19 +139,25 @@ const TeacherTable = () => {
   return (
     <>
       <div className="box-body">
-        <div style={{ margin: '0 20px 20px 20px' }}>
-          <Button type="primary" onClick={openAddModal}>
-            Tambah
-          </Button>
-        </div>
-        <div style={{ margin: '0 20px 20px 20px' }}>
-          <Input
-            placeholder="Cari guru..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200, marginRight: 10 }}
-          />
-        </div>
+        <Flex justify="space-between" align="center">
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Input.Search
+              placeholder="Cari Guru..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Button
+              type="primary"
+              // className="btn btn-success"
+              onClick={openAddModal}
+              icon={<i className="fa fa-plus"></i>}
+            >
+              Tambah
+            </Button>
+          </div>
+        </Flex>
         <Table
           scroll={{ x: 1000 }}
           dataSource={filteredRombels}

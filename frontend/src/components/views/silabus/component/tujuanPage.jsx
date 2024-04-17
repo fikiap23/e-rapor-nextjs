@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Table, Modal, message, Space, Input } from 'antd'
+import { Button, Table, Modal, message, Space, Input, Flex } from 'antd'
 import AddTujuanModal from './addTujuanModal'
 import cpTpService from '@/services/cp-tp.service'
 import UpdateTujuanModal from './updateTujuanModal'
@@ -92,19 +92,25 @@ const TujuanPage = ({ cp, token, isLoading, refetch }) => {
   return (
     <div className="active tab-pane" id="activity">
       <div className="box-body table-responsive no-padding">
-        <div style={{ margin: '10px 20px 20px 20px' }}>
-          <Button type="primary" onClick={openModal}>
-            Tambah
-          </Button>
-        </div>
-        <div style={{ margin: '0 20px 20px 20px' }}>
-          <Input
-            placeholder="Cari tujuan pembelajaran..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200, marginRight: 10 }}
-          />
-        </div>
+        <Flex justify="space-between" align="center">
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Input.Search
+              placeholder="Cari tujuan pembelajaran..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
+          <div style={{ margin: '0 20px 20px 0px' }}>
+            <Button
+              type="primary"
+              // className="btn btn-success"
+              onClick={openModal}
+              icon={<i className="fa fa-plus"></i>}
+            >
+              Tambah
+            </Button>
+          </div>
+        </Flex>
         <Table
           dataSource={filteredTp}
           columns={columns}

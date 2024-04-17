@@ -1,5 +1,5 @@
 'use client'
-import { Button, Input, Modal, Table, Tooltip } from 'antd'
+import { Button, Flex, Input, Modal, Table, Tooltip } from 'antd'
 import {
   EyeOutlined,
   EditOutlined,
@@ -128,19 +128,25 @@ export default function TabTableClass({
 
   return (
     <div className="box-body">
-      <div style={{ margin: '0 20px 20px 20px' }}>
-        <button type="button" className="btn btn-success" onClick={openModal}>
-          <i className="icon fa fa-plus"></i> Tambah
-        </button>
-      </div>
-      <div style={{ margin: '0 20px 20px 20px' }}>
-        <Input
-          placeholder="Cari rombel..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ width: 200, marginRight: 10 }}
-        />
-      </div>
+      <Flex justify="space-between" align="center">
+        <div style={{ margin: '0 20px 20px 0px' }}>
+          <Input.Search
+            placeholder="Cari rombel..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
+        <div style={{ margin: '0 20px 20px 0px' }}>
+          <Button
+            type="primary"
+            // className="btn btn-success"
+            onClick={openModal}
+            icon={<i className="fa fa-plus"></i>}
+          >
+            Tambah
+          </Button>
+        </div>
+      </Flex>
       <Table
         dataSource={filteredRombels}
         columns={columns}
