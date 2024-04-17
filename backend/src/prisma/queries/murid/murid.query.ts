@@ -31,13 +31,6 @@ export class MuridQuery extends DbService {
         })
     }
 
-    async findByNisn(nisn: string) {
-        return await this.prisma.murid.findUnique({
-            where: {
-                nisn
-            }
-        })
-    }
 
     async findByNullIdRombel() {
         return await this.prisma.murid.findMany({
@@ -47,9 +40,9 @@ export class MuridQuery extends DbService {
         })
     }
 
-    async checkIsNisOrNisnHasUsed(nis: string, nisn: string): Promise<boolean> {
-        const isNisOrNisnHasUsed = await this.prisma.murid.findFirst({ where: { OR: [{ nis }, { nisn }] } })
-        return isNisOrNisnHasUsed ? true : false
+    async checkIsNisHasUsed(nis: string): Promise<boolean> {
+        const isNisHasUsed = await this.prisma.murid.findFirst({ where: { nis } })
+        return isNisHasUsed ? true : false
     }
 
     async create(data: CreateMuridDto) {
@@ -76,7 +69,6 @@ export class MuridQuery extends DbService {
 
         try {
             const newData = []; // Menyimpan data yang valid dan tidak duplikat
-            const duplicateNisn = new Set(); // Menyimpan NISN duplikat untuk memberikan informasi kepada pengguna
             const duplicateNis = new Set(); // Menyimpan NIS duplikat untuk memberikan informasi kepada pengguna
 
             for (const murid of data) {
@@ -90,15 +82,10 @@ export class MuridQuery extends DbService {
 
                 const existingMurid = await this.prisma.murid.findFirst({
                     where: {
-                        OR: [
-                            { nisn: murid.nisn },
-                            { nis: murid.nis }
-                        ]
-                    }
-                });
-
+                        nis: murid.nis,
+                    },
+                })
                 if (existingMurid) {
-                    duplicateNisn.add(murid.nisn);
                     duplicateNis.add(murid.nis);
                 } else {
                     murid.tanggalLahir = createDateFromDDMMYYYY(murid.tanggalLahir);
@@ -108,8 +95,8 @@ export class MuridQuery extends DbService {
                 }
             }
 
-            if (duplicateNisn.size > 0 || duplicateNis.size > 0) {
-                throw new BadRequestException(`Data duplikat: NISN (${[...duplicateNisn].join(', ')}), NIS (${[...duplicateNis].join(', ')})`);
+            if (duplicateNis.size > 0) {
+                throw new BadRequestException(`Data duplikat: NIS (${[...duplicateNis].join(', ')})`);
             }
 
             const result = await this.prisma.murid.createMany({ data: newData });

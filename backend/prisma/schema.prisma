@@ -115,7 +115,6 @@ model Guru {
 
 model Murid {
   id            String       @id @default(uuid())
-  nisn          String       @unique
   nis           String       @unique
   nama          String
   anakKe        Int?
@@ -148,7 +147,7 @@ model Murid {
   rombel   Rombel? @relation(fields: [idRombel], references: [id])
 
   // index
-  @@index([id, nis, nisn])
+  @@index([id, nis])
 }
 
 model Rombel {

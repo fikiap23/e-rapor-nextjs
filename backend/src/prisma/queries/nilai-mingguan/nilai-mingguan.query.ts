@@ -197,7 +197,6 @@ export class NilaiMingguanQuery extends DbService {
                                 id: true,
                                 nama: true,
                                 nis: true,
-                                nisn: true,
                                 penilaianMingguan: {
                                     include: {
                                         tujuanPembelajaran: {
@@ -238,7 +237,6 @@ export class NilaiMingguanQuery extends DbService {
                 id: muridWithPenilaian.rombel.murid[0].id,
                 name: muridWithPenilaian.rombel.murid[0].nama,
                 nis: muridWithPenilaian.rombel.murid[0].nis,
-                nisn: muridWithPenilaian.rombel.murid[0].nisn
             },
             penilaian: penilaianMingguan
         }

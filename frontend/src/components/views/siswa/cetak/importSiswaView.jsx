@@ -23,7 +23,6 @@ const UploadSiswaExcel = ({ token, refetch }) => {
   const handleDownloadTemplate = () => {
     const templateData = [
       {
-        nisn: '1234567890',
         nis: '12345',
         nama: 'Nama Murid 1',
         anakKe: 1,
@@ -45,7 +44,6 @@ const UploadSiswaExcel = ({ token, refetch }) => {
         provinsi: 'Provinsi 1',
       },
       {
-        nisn: '0987654321',
         nis: '54321',
         nama: 'Nama Murid 2',
         anakKe: 2,

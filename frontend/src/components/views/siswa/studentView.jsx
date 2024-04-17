@@ -76,13 +76,12 @@ const StudentView = () => {
     const dataToExport = filteredSiswa.map((siswa) => {
       return {
         NIS: siswa.nis,
-        NISN: siswa.nisn,
         Nama: siswa.nama,
+        'Anak Ke': siswa.anakKe,
         'Jenis Kelamin': siswa.jenisKelamin,
         'Tempat Lahir': siswa.tempatLahir,
         'Tanggal Lahir': formatDate(new Date(siswa.tanggalLahir)),
         Agama: siswa.agama,
-        Alamat: siswa.alamat,
         'Tinggi Badan': siswa.tinggiBadan,
         'Berat Badan': siswa.beratBadan,
         'Nama Ayah': siswa.namaAyah,
@@ -90,6 +89,11 @@ const StudentView = () => {
         'Pekerjaan Ayah': siswa.pekerjaanAyah,
         'Pekerjaan Ibu': siswa.pekerjaanIbu,
         'Tanggal Masuk': formatDate(new Date(siswa.tanggalMasuk)),
+        Jalan: siswa.jalan,
+        Kelurahan: siswa.kelurahan,
+        Kecamatan: siswa.kecamatan,
+        Kota: siswa.kota,
+        Provinsi: siswa.provinsi,
         Status: siswa.status,
       }
     })
@@ -112,12 +116,6 @@ const StudentView = () => {
       dataIndex: 'nis',
       key: 'nis',
       sorter: (a, b) => a.nis.localeCompare(b.nis),
-    },
-    {
-      title: 'NISN',
-      dataIndex: 'nisn',
-      key: 'nisn',
-      sorter: (a, b) => a.nisn.localeCompare(b.nisn),
     },
     {
       title: 'Nama',
