@@ -41,14 +41,6 @@ export class CreateSekolahDto {
     @IsString()
     namaDisdik: string;
 
-    @IsNotEmpty()
-    @IsString()
-    namaKapsek: string;
-
-    @IsNotEmpty()
-    @IsString()
-    nipKepsek: string;
-
     @IsOptional()
     @IsString()
     logo: string;

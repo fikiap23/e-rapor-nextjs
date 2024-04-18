@@ -133,6 +133,19 @@ function CreateSchoolForm({ token }) {
               />
             </div>
             <div className="form-group">
+              <label htmlFor="npsn" className="control-label">
+                NPSN
+              </label>
+              <input
+                type="number"
+                name="npsn"
+                className="form-control"
+                id="npsn"
+                value={formData.npsn}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="alamat" className="control-label">
                 Alamat Sekolah
               </label>
@@ -143,6 +156,19 @@ function CreateSchoolForm({ token }) {
                 value={formData.alamat}
                 onChange={handleInputChange}
               ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="kodePos" className="control-label">
+                Kode Pos
+              </label>
+              <input
+                type="number"
+                name="kodePos"
+                className="form-control"
+                id="kodePos"
+                value={formData.kodePos}
+                onChange={handleInputChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="noTelepon" className="control-label">
@@ -157,19 +183,7 @@ function CreateSchoolForm({ token }) {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="npsn" className="control-label">
-                NPSN
-              </label>
-              <input
-                type="number"
-                name="npsn"
-                className="form-control"
-                id="npsn"
-                value={formData.npsn}
-                onChange={handleInputChange}
-              />
-            </div>
+
             <div className="form-group">
               <label htmlFor="kelurahan" className="control-label">
                 Kelurahan/Desa
@@ -180,19 +194,6 @@ function CreateSchoolForm({ token }) {
                 className="form-control"
                 id="kelurahan"
                 value={formData.kelurahan}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="nipKepsek" className="control-label">
-                NIP Kepala Sekolah
-              </label>
-              <input
-                type="text"
-                name="nipKepsek"
-                className="form-control"
-                id="nipKepsek"
-                value={formData.nipKepsek}
                 onChange={handleInputChange}
               />
             </div>
@@ -213,19 +214,6 @@ function CreateSchoolForm({ token }) {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="kodePos" className="control-label">
-                Kode Pos
-              </label>
-              <input
-                type="number"
-                name="kodePos"
-                className="form-control"
-                id="kodePos"
-                value={formData.kodePos}
-                onChange={handleInputChange}
-              />
-            </div>
             <div className="form-group">
               <label htmlFor="kota" className="control-label">
                 Kabupaten
@@ -265,19 +253,7 @@ function CreateSchoolForm({ token }) {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="namaKapsek" className="control-label">
-                Nama Kepala Sekolah
-              </label>
-              <input
-                type="text"
-                name="namaKapsek"
-                className="form-control"
-                id="namaKapsek"
-                value={formData.namaKapsek}
-                onChange={handleInputChange}
-              />
-            </div>
+
             <div className="form-group">
               <label htmlFor="logo" className="control-label">
                 Logo Sekolah

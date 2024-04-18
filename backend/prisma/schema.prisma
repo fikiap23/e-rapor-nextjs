@@ -332,8 +332,6 @@ model Sekolah {
   kecamatan  String
   kelurahan  String
   namaDisdik String
-  namaKapsek String
-  nipKepsek  String
   logo       String?
   rapor      Rapor[]
 
