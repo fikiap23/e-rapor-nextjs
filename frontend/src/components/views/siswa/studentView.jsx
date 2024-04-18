@@ -125,6 +125,13 @@ const StudentView = () => {
       render: (text) => <span>{text.toUpperCase()}</span>,
     },
     {
+      title: 'Jenis Kelamin',
+      dataIndex: 'jenisKelamin',
+      key: 'jenisKelamin',
+      sorter: (a, b) => a.jenisKelamin.localeCompare(b.jenisKelamin),
+      render: (text) => <span>{text === 'L' ? 'Laki-laki' : 'Perempuan'}</span>,
+    },
+    {
       title: 'Foto',
       dataIndex: 'foto',
       key: 'foto',
@@ -216,11 +223,13 @@ const StudentView = () => {
                     </div>
                   </TabPane>
                   <TabPane tab="Input Siswa" key="input">
-                    <TabInputSiswa refetch={refetchStudents} />
+                    <div style={{ padding: '0 20px' }}>
+                      <TabInputSiswa refetch={refetchStudents} />
+                    </div>
                   </TabPane>
                   <TabPane tab="" key="update">
                     {selectedSiswa && (
-                      <div>
+                      <div style={{ padding: '0 20px' }}>
                         <Button
                           onClick={() => {
                             setActiveTab('view')
