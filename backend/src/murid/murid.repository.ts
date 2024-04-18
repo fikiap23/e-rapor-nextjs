@@ -73,7 +73,8 @@ export class MuridRepository {
             // check kuota rombel sudah penuh
             if (rombel.kuota - rombel.coutMurid <= 0) throw new BadRequestException('Kuota rombel sudah penuh');
         }
-        if (murid.nis !== dto.nis) {
+
+        if (dto.nis && murid.nis !== dto.nis) {
             await this.isNisHasUsed(dto.nis);
         }
 
