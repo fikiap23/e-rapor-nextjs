@@ -5,6 +5,7 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
   console.log(rapor.catatanJatiDiri.length);
   console.log(rapor.catatanLiterasiSains.length);
   console.log(rapor.catatanPancasila.length);
+  console.log(rapor.catatanPertumbuhan.length);
   const pointBLogic =
     (rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length > 1500) ||
     (rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanJatiDiri.length > 2500) ||
@@ -23,6 +24,12 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
     // (rapor.catatanLiterasiSains.length > 210 && rapor.catatanPancasila.length > 2000) ||
     (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanPancasila.length > 20000);
   const point_d_logic = `point_c ${pointDLogic ? 'extra-margin' : ''}`;
+
+  const noteGrowthChild =
+    // (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanPancasila.length > 210) ||
+    // (rapor.catatanLiterasiSains.length > 210 && rapor.catatanPancasila.length > 2000) ||
+    (rapor.catatanLiterasiSains.length > 2000 && rapor.catatanPancasila.length > 20000);
+  const note_growth_child = `point_c ${pointDLogic ? 'extra-margin' : ''}`;
 
   return (
     <>
@@ -67,9 +74,9 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
         <div className='point'>
           <div className="point_a">
             <p style={{ fontSize: '20px' }}><b>A. NILAI AGAMA DAN BUDI PEKERTI</b></p>
-            <div className="content" style={{
+            <div style={{
               padding: '5px',
-              border: '4px solid black',
+              border: '2px solid black',
               marginBottom: '10px',
               textAlign: 'justify',
               textIndent: '2em',
@@ -81,14 +88,15 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             className={point_b_logic}
             style={{
               pageBreakBefore:
-                rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
+                rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanJatiDiri.length > 700 ? 'always' :
                   rapor.catatanAgamaBudipekerti.length <= 800 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
-                    'auto'
+                    rapor.catatanAgamaBudipekerti.length > 2000 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
+                      'auto'
             }}>
             <p style={{ fontSize: '20px' }}><b>B. JATI DIRI</b></p>
-            <div className="content" style={{
+            <div style={{
               padding: '5px',
-              border: '4px solid black',
+              border: '2px solid black',
               marginBottom: '10px',
               textAlign: 'justify',
               textIndent: '2em',
@@ -96,36 +104,21 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
               dangerouslySetInnerHTML={{ __html: rapor.catatanJatiDiri }} />
           </div>
 
-          {/* 3 pendek S
-3 panjang S
-a b panjang S
-a b pendek S
-b c panjang S
-a c panjang S
-
-4 pendek S
-4 panjang S
-a b c panjang S
-a b c pendek S
-b c panjang
-b c pendek */}
-
-
-
           <div
             className={point_c_logic}
             style={{
               pageBreakBefore:
-                rapor.catatanAgamaBudipekerti.length > 2500 && rapor.catatanLiterasiSains.length > 1700 && rapor.catatanJatiDiri.length > 2500 ? 'always' :
-                  rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
-                    rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
-                      'auto'
+                rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanLiterasiSains.length > 1500 && rapor.catatanJatiDiri.length > 1500 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanLiterasiSains.length > 1500 || rapor.catatanLiterasiSains.length <= 800 ? 'always' :
+                    rapor.catatanAgamaBudipekerti.length <= 1500 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
+                      rapor.catatanAgamaBudipekerti.length <= 1500 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length > 1800 ? 'always' :
+                        'auto'
             }}
           >
             <p style={{ fontSize: '20px' }}><b>C. DASAR LITERASI, MATEMATIKA, SAINS, TEKNOLOGI, REKAYASA DAN SENI</b></p>
-            <div className="content" style={{
+            <div style={{
               padding: '5px',
-              border: '4px solid black',
+              border: '2px solid black',
               marginBottom: '10px',
               textAlign: 'justify',
               textIndent: '2em',
@@ -137,20 +130,15 @@ b c pendek */}
             className={point_d_logic}
             style={{
               pageBreakBefore:
-                rapor.catatanAgamaBudipekerti.length <= 1000 && rapor.catatanLiterasiSains.length <= 400 && rapor.catatanJatiDiri.length <= 800 ? 'always' :
-                  rapor.catatanAgamaBudipekerti.length <= 3400 && rapor.catatanLiterasiSains.length > 2000 && rapor.catatanJatiDiri.length <= 2900 && rapor.catatanPancasila.length > 2000 ? 'always' :
-
-                    // rapor.catatanLiterasiSains.length > 1500 && rapor.catatanPancasila.length > 300 ? 'always' :
-                    //   rapor.catatanLiterasiSains.length > 210 && rapor.catatanJatiDiri.length > 2000 ? 'auto' :
-                    //     rapor.catatanLiterasiSains.length > 300 && rapor.catatanPancasila.length > 1500 ? 'always' :
-                    //       rapor.catatanLiterasiSains.length > 1500 && rapor.catatanPancasila.length > 1500 ? 'always' :
+                rapor.catatanAgamaBudipekerti.length <= 1500 && rapor.catatanLiterasiSains.length <= 1500 && rapor.catatanJatiDiri.length > 1000 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length <= 3400 && rapor.catatanLiterasiSains.length <= 2000 && rapor.catatanJatiDiri.length <= 2900 && rapor.catatanPancasila.length > 2000 ? 'always' :
                     'auto'
             }}
           >
             <p style={{ fontSize: '20px' }}><b>D. PROJEK PENGUATAN PROFIL PELAJAR PANCASILA</b></p>
-            <div className="content" style={{
+            <div style={{
               padding: '5px',
-              border: '4px solid black',
+              border: '2px solid black',
               textAlign: 'justify',
               marginBottom: '10px',
               textIndent: '2em',
@@ -159,14 +147,22 @@ b c pendek */}
           </div>
         </div>
 
-        <div className="note_growth_child" style={{ pageBreakBefore: 'always' }}>
+        <div
+          className={note_growth_child}
+          style={{
+            pageBreakBefore:
+              rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanLiterasiSains.length > 1500 && rapor.catatanPancasila.length > 1500 && rapor.catatanPertumbuhan.length > 1500 ? 'always' :
+                rapor.catatanAgamaBudipekerti.length > 1500 && rapor.catatanLiterasiSains.length <= 2000 && rapor.catatanPancasila.length <= 2000 && rapor.catatanPertumbuhan.length > 2000 ? 'always' :
+                  'auto'
+          }}
+        >
           <p style={{ fontSize: '20px' }}>
             <b>CATATAN PERTUMBUHAN ANAK</b>
           </p>
           <div
             style={{
               padding: '5px',
-              border: '4px solid black',
+              border: '2px solid black',
               marginBottom: '10px',
               marginTop: '-10px',
             }}
@@ -190,7 +186,7 @@ b c pendek */}
           <table
             width="100%"
             border={4}
-            style={{ borderCollapse: 'collapse', border: '4px solid black' }}
+            style={{ borderCollapse: 'collapse', border: '2px solid black' }}
           >
             <tbody>
               <tr style={{ textAlign: 'left' }}>
@@ -219,7 +215,7 @@ b c pendek */}
         >
           <table
             width="100%"
-            style={{ borderCollapse: 'collapse', border: '4px solid black' }}
+            style={{ borderCollapse: 'collapse', border: '2px solid black' }}
           >
             <tbody>
               <tr style={{ textAlign: 'left' }}>
