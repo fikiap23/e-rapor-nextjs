@@ -86,12 +86,6 @@ export default function AddStudentToClassView({ id }) {
       sorter: (a, b) => a.nis.localeCompare(b.nis),
     },
     {
-      title: 'NiSN',
-      dataIndex: 'nisn',
-      key: 'nisn',
-      sorter: (a, b) => a.nisn.localeCompare(b.nisn),
-    },
-    {
       title: 'Nama',
       dataIndex: 'nama',
       key: 'nama',

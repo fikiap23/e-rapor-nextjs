@@ -131,13 +131,6 @@ function TabInputSiswa({ refetch }) {
               <Input type="number" />
             </Form.Item>
             <Form.Item
-              label="NISN"
-              name="nisn"
-              rules={[{ required: true, message: 'Masukkan NISN' }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-            <Form.Item
               label="Nama"
               name="nama"
               rules={[{ required: true, message: 'Masukkan Nama' }]}

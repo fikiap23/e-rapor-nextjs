@@ -30,7 +30,6 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
   useEffect(() => {
     form.setFieldsValue({
       id: dataSiswa.id,
-      nisn: dataSiswa.nisn,
       nis: dataSiswa.nis,
       nama: dataSiswa.nama,
       tempatLahir: dataSiswa.tempatLahir,
@@ -156,13 +155,6 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
               label="NIS"
               name="nis"
               rules={[{ required: true, message: 'Masukkan NIS' }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-            <Form.Item
-              label="NISN"
-              name="nisn"
-              rules={[{ required: true, message: 'Masukkan NISN' }]}
             >
               <Input type="number" />
             </Form.Item>

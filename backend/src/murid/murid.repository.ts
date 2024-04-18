@@ -27,17 +27,9 @@ export class MuridRepository {
         return murid;
     }
 
-    async findByNisnOrThrow(nisn: string) {
-        const murid = await this.muridQuery.findByNisn(nisn);
-        if (!murid) {
-            throw new BadRequestException('Anak belum terdaftar');
-        }
-        return murid;
-    }
-
-    async isNisOrNisnHasUsed(nis: string, nisn: string) {
-        const isNisOrNisnHasUsed = await this.muridQuery.checkIsNisOrNisnHasUsed(nis, nisn);
-        if (isNisOrNisnHasUsed) throw new BadRequestException('NIS/NISN sudah terdaftar');
+    async isNisHasUsed(nis: string) {
+        const isNisHasUsed = await this.muridQuery.checkIsNisHasUsed(nis);
+        if (isNisHasUsed) throw new BadRequestException('NIS sudah terdaftar');
         return
     }
 
@@ -47,8 +39,8 @@ export class MuridRepository {
             // check rombel exist
             await this.rombelRepository.findRombelByIdOrThrow(dto.idRombel);
         }
-        // check is nis or nisn has been used
-        await this.isNisOrNisnHasUsed(dto.nis, dto.nisn);
+        // check is nis has been used
+        await this.isNisHasUsed(dto.nis);
 
         let urlFileFoto: string;
         // check if new file exists
@@ -81,8 +73,8 @@ export class MuridRepository {
             // check kuota rombel sudah penuh
             if (rombel.kuota - rombel.coutMurid <= 0) throw new BadRequestException('Kuota rombel sudah penuh');
         }
-        if (murid.nis !== dto.nis || murid.nisn !== dto.nisn) {
-            await this.isNisOrNisnHasUsed(dto.nis, dto.nisn);
+        if (murid.nis !== dto.nis) {
+            await this.isNisHasUsed(dto.nis);
         }
 
         let urlFileFoto: string;

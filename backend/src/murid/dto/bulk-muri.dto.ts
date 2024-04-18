@@ -8,9 +8,6 @@ class BulkMuridDto {
     idRombel?: string;
 
     @IsString()
-    nisn: string;
-
-    @IsString()
     nis: string;
 
     @IsString()

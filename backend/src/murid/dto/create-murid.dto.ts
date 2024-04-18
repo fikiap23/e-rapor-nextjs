@@ -8,9 +8,6 @@ class CreateMuridDto {
     idRombel?: string;
 
     @IsString()
-    nisn: string;
-
-    @IsString()
     nis: string;
 
     @IsString()
