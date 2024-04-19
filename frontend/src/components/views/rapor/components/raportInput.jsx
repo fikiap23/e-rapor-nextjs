@@ -6,28 +6,16 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import RichTextEditor from '@/components/shared/editor/Editor'
 
 const { confirm } = Modal
-const { Option } = Select
-function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
+function RaportInput({ murid, semester, btnBack, refetch }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
-  const [muridNullRapor, setMuridNullRapor] = useState([])
-  useEffect(() => {
-    const murids = listMurid?.filter((m) => m?.rapor.length === 0)
-    setMuridNullRapor(murids)
-  }, [listMurid])
-  useEffect(() => {
-    if (murid) {
-      form.setFieldsValue({
-        idMurid: murid.id,
-      })
-    }
-  }, [murid, form])
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
       const payload = {
         ...values,
+        idMurid: murid.id,
         idSemester: semester.id,
       }
 
@@ -43,11 +31,9 @@ function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
                 title: 'Data Rapor Ditambahkan!',
                 content: 'Data Rapor Telah Ditambahkan',
               })
-              // remove values.idmurid from list
-              setMuridNullRapor(
-                muridNullRapor.filter((m) => m.id !== values.idMurid)
-              )
+              form.resetFields()
               refetch()
+              btnBack()
             })
             .catch((err) => {
               Modal.error({
@@ -73,22 +59,15 @@ function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
         <i className="fa fa-arrow-left"></i> Kembali
       </button>
       <div className="box-body">
+        <div className="box-body bg-danger" style={{ marginBottom: '3%' }}>
+          <p>
+            <b>Nama: {murid.nama}</b>
+          </p>
+          <p>
+            <b>NIS: {murid.nis}</b>
+          </p>
+        </div>
         <Form form={form} onFinish={handleSubmit} layout="vertical">
-          <Col md={12} xs={24} sm={24}>
-            <Form.Item
-              label="Murid"
-              name="idMurid"
-              rules={[{ required: true, message: 'Pilih murid' }]}
-            >
-              <Select placeholder="Pilih murid">
-                {muridNullRapor.map((murid) => (
-                  <Option key={murid.id} value={murid.id}>
-                    {`${murid.nis} - ${murid.nama}`}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item label="Total Sakit" name="totalSakit" initialValue={0}>
@@ -107,155 +86,137 @@ function RaportInput({ murid, semester, listMurid, btnBack, refetch }) {
             </Col>
           </Row>
 
-          <Row gutter={16}>
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Agama dan Budi Pekerti"
-                name="catatanAgamaBudipekerti"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
+          <Form.Item
+            label="NILAI AGAMA DAN BUDIPEKERTI"
+            name="catatanAgamaBudipekerti"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Jati Diri"
-                name="catatanJatiDiri"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            label="JATI DIRI"
+            name="catatanJatiDiri"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
-          <Row gutter={16}>
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Literasi Sains"
-                name="catatanLiterasiSains"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
+          <Form.Item
+            label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI"
+            name="catatanLiterasiSains"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Pertumbuhan"
-                name="catatanPertumbuhan"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            label="CATATAN PERTUMBUHAN ANAK"
+            name="catatanPertumbuhan"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
-          <Row gutter={16}>
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Pancasila"
-                name="catatanPancasila"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
+          <Form.Item
+            label="PROJEK PENGUATAN PROFILE PELAJAR PANCASILA"
+            name="catatanPancasila"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
-            <Col md={12} xs={24} sm={24}>
-              <Form.Item
-                label="Catatan Guru"
-                name="catatanGuru"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Catatan harus diisi',
-                    whitespace: true,
-                  },
-                  {
-                    validator: (_, value) => {
-                      if (value === '<p></p>\n') {
-                        return Promise.reject('Catatan harus diisi')
-                      }
-                      return Promise.resolve()
-                    },
-                  },
-                ]}
-              >
-                <RichTextEditor />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            label="CATATATAN TAMBAHAN GURU"
+            name="catatanGuru"
+            rules={[
+              {
+                required: true,
+                message: 'Catatan harus diisi',
+                whitespace: true,
+              },
+              {
+                validator: (_, value) => {
+                  if (value === '<p></p>\n') {
+                    return Promise.reject('Catatan harus diisi')
+                  }
+                  return Promise.resolve()
+                },
+              },
+            ]}
+          >
+            <RichTextEditor />
+          </Form.Item>
 
           <div className="box-footer">
             <Button type="primary" htmlType="submit">
