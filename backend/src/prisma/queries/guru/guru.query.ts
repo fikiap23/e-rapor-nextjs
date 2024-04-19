@@ -86,6 +86,7 @@ export class GuruQuery extends DbService {
                             status: true,
                             email: true,
                             foto: true,
+                            username: true
                         }
                     }
                 }
@@ -98,6 +99,7 @@ export class GuruQuery extends DbService {
                     nama: item.nama,
                     nip: item.nip,
                     jenisKelamin: item.jenisKelamin,
+                    username: item.user.username,
                     status: item.user.status,
                     email: item.user.email,
                     foto: item.user.foto,

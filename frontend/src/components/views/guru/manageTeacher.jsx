@@ -118,6 +118,31 @@ const ManageTeacher = () => {
       sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
+      title: 'Jenis Kelamin',
+      dataIndex: 'jenisKelamin',
+      key: 'jenisKelamin',
+      filters: [
+        {
+          text: 'Laki-laki',
+          value: 'L',
+        },
+        {
+          text: 'Perempuan',
+          value: 'P',
+        },
+      ],
+      onFilter: (value, record) => record.jenisKelamin.indexOf(value) === 0,
+      render: (text, record) => (
+        <span>{record.jenisKelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</span>
+      ),
+    },
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      sorter: (a, b) => a.username.localeCompare(b.username),
+    },
+    {
       title: 'Status User',
       dataIndex: 'status',
       key: 'status',

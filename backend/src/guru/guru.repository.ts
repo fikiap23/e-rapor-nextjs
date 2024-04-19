@@ -3,19 +3,21 @@ import { GuruQuery } from '../prisma/queries/guru/guru.query';
 import { AuthRepository } from '../auth/auth.repository';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import CreateGuruDto from './dto/create-guru.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { RoleEnum } from '../helpers/helper';
 import { UpdateGuruDto } from './dto/update-guru.dto';
 import { GuruQueryDto } from './dto/guru.query.dto';
 import { UserQuery } from '../prisma/queries/user/user.query';
-
-
-
-
+import { UserRepository } from '../user/user.repository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class GuruRepository {
-    constructor(private readonly guruQuery: GuruQuery, private readonly authRepository: AuthRepository, private readonly userQuery: UserQuery) { }
+    constructor(
+        private readonly guruQuery: GuruQuery,
+        private readonly authRepository: AuthRepository,
+        private readonly userQuery: UserQuery,
+        private readonly userRepository: UserRepository
+    ) { }
 
     async create(dto: CreateGuruDto) {
         try {
@@ -23,14 +25,27 @@ export class GuruRepository {
             await this.checkGuruExist(dto.nip)
 
             // buat akun guru
-            const akunGuruDto: CreateUserDto = {
+            let akunGuruDto: CreateUserDto = {
                 username: dto.nip,
                 password: dto.nip
             }
+            if (dto.username && dto.password) {
+                akunGuruDto = {
+                    username: dto.username,
+                    password: dto.password
+                }
+            }
             const akunGuru = await this.registerAkunGuru(akunGuruDto);
 
+            // payload
+            const payload = {
+                nip: dto.nip,
+                nama: dto.nama,
+                jenisKelamin: dto.jenisKelamin,
+            }
+
             // buat data guru
-            const dataGuru = await this.guruQuery.create(akunGuru.id, dto);
+            const dataGuru = await this.guruQuery.create(akunGuru.id, payload);
             if (!dataGuru) throw new BadRequestException('Guru gagal ditambahkan');
             return dataGuru
 
@@ -66,7 +81,34 @@ export class GuruRepository {
         const nipGuru = await this.guruQuery.findByNip(dto.nip);
         if (nipGuru && nipGuru.id !== id) throw new BadRequestException('NIP sudah terdaftar');
 
-        return await this.guruQuery.updateById(id, dto)
+        if (dto.idUser) {
+            if (dto.username && dto.password) {
+                const salt = await bcrypt.genSalt();
+                const hash = await bcrypt.hash(dto.password, salt);
+                await this.userRepository.update(dto.idUser, {
+                    username: dto.username,
+                    password: hash
+                })
+            } else if (dto.username) {
+                await this.userRepository.update(dto.idUser, {
+                    username: dto.username
+                })
+            } else if (dto.password) {
+                const salt = await bcrypt.genSalt();
+                const hash = await bcrypt.hash(dto.password, salt);
+                await this.userRepository.update(dto.idUser, {
+                    password: hash
+                })
+            }
+        }
+
+        const payload = {
+            nip: dto.nip,
+            nama: dto.nama,
+            jenisKelamin: dto.jenisKelamin,
+        }
+
+        return await this.guruQuery.updateById(id, payload)
     }
 
     findAllGuru(dto: GuruQueryDto) {
