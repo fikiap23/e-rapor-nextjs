@@ -1,4 +1,5 @@
-import { Modal, Form, Input, Select, Button } from 'antd'
+import { Modal, Form, Input, Select, Button, Switch, Tooltip } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import teacherService from '@/services/guru.service'
 import { useState } from 'react'
 
@@ -7,6 +8,7 @@ const { Option } = Select
 const AddModal = ({ isOpen, closeModal, refetch, token }) => {
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
+  const [isAccountActive, setIsAccountActive] = useState(false)
 
   const handleSubmit = async () => {
     const values = await form.validateFields()
@@ -30,6 +32,10 @@ const AddModal = ({ isOpen, closeModal, refetch, token }) => {
           content: 'Terjadi kesalahan: ' + error,
         })
       })
+  }
+
+  const handleSwitchChange = (checked) => {
+    setIsAccountActive(checked)
   }
 
   return (
@@ -76,6 +82,35 @@ const AddModal = ({ isOpen, closeModal, refetch, token }) => {
             <Option value="P">Wanita</Option>
           </Select>
         </Form.Item>
+        <Form.Item label="Custom Account" valuePropName="checked">
+          <Tooltip title="Secara default, username dan password guru adalah NIP. Aktifkan Custom Account, untuk mengatur username dan password guru">
+            <Switch onChange={handleSwitchChange} />
+          </Tooltip>
+        </Form.Item>
+        {isAccountActive && (
+          <>
+            <Form.Item
+              name="username"
+              label="Username"
+              rules={[{ required: true, message: 'Masukkan Username' }]}
+            >
+              <Input placeholder="Masukkan Username" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                {
+                  required: true,
+                  message: 'Masukkan Password, min. 6 karakter',
+                  min: 6,
+                },
+              ]}
+            >
+              <Input.Password placeholder="Masukkan Password" min={6} />
+            </Form.Item>
+          </>
+        )}
       </Form>
     </Modal>
   )

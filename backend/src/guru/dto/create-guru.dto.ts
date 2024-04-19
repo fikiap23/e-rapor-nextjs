@@ -19,6 +19,14 @@ class CreateGuruDto {
     @IsString()
     @IsOptional()
     idUser?: string;
+
+    @IsString()
+    @IsOptional()
+    username?: string;
+
+    @IsString()
+    @IsOptional()
+    password?: string;
 }
 
 export default CreateGuruDto;

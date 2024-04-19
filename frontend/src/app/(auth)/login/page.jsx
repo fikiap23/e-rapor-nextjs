@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
 import useAuth from '@/hooks/useAuth'
 import getTokenData from '@/lib/getTokenData'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -31,7 +32,7 @@ export default function LoginPage() {
         position: 'top-right',
       })
       // Redirect to home
-      push('/')
+      push(`/${jwtPayload.role.toLowerCase()}`)
       setIsLoading(false)
     } catch (error) {
       toast.error(error, {
@@ -43,7 +44,8 @@ export default function LoginPage() {
   }
 
   if (token) {
-    push('/')
+    const jwtPayload = getTokenData(token)
+    push(`/${jwtPayload.role.toLowerCase()}`)
   }
   return (
     <>
@@ -56,12 +58,12 @@ export default function LoginPage() {
             <p className="text-indigo-800 mt-4 font-medium">
               {`RA. Daarun Na'im Ambon`}
             </p>
-            <a
-              href="/cari-rapor"
+            <Link
+              href="/"
               className="block w-fit px-5 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold"
             >
               Beranda
-            </a>
+            </Link>
           </div>
           <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
           <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>

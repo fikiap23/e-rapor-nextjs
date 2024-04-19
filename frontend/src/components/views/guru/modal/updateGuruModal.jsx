@@ -14,6 +14,8 @@ const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
     if (isOpen && teacherData) {
       form.setFieldsValue({
         nip: teacherData.nip,
+        username: teacherData.username,
+        password: '',
         nama: teacherData.nama,
         jenisKelamin: teacherData.jenisKelamin,
       })
@@ -24,7 +26,7 @@ const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
     const values = await form.validateFields()
     setIsLoading(true)
     await teacherService
-      .update(token, teacherData.id, values)
+      .update(token, teacherData.id, { ...values, idUser: teacherData.idUser })
       .then((res) => {
         Modal.success({
           title: 'Update Berhasil!',
@@ -90,6 +92,27 @@ const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
             <Option value="L">Pria</Option>
             <Option value="P">Wanita</Option>
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="username"
+          label="Username"
+          rules={[{ required: true, message: 'Masukkan Username' }]}
+        >
+          <Input placeholder="Masukkan Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[
+            {
+              required: false,
+              min: 6,
+              message: 'Masukkan Password, min. 6 karakter',
+            },
+          ]}
+        >
+          <Input.Password placeholder="Masukkan Password" min={6} />
         </Form.Item>
       </Form>
     </Modal>

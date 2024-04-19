@@ -9,6 +9,7 @@ import { GuruService } from './guru.service';
 import { GuruRepository } from './guru.repository';
 import { GuruQuery } from '../prisma/queries/guru/guru.query';
 import { AuthRepository } from '../auth/auth.repository';
+import { UserModule } from '../user/user.module';
 
 
 @Module({
@@ -18,6 +19,7 @@ import { AuthRepository } from '../auth/auth.repository';
         MomentModule,
         ConfigModule,
         HelperModule,
+        UserModule
     ],
     providers: [GuruService, GuruRepository, GuruQuery, AuthRepository],
     controllers: [GuruController],

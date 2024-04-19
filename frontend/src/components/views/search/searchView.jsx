@@ -1,85 +1,83 @@
-"use client";
-import "@/components/tailwind_component/tailwind.css";
-import useAuth from "@/hooks/useAuth";
-import getTokenData from "@/lib/getTokenData";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import raportService from "@/services/rapor.service";
-import { useGetAllSemesterData } from "@/hooks/useSemester";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+'use client'
+import '@/components/tailwind_component/tailwind.css'
+import useAuth from '@/hooks/useAuth'
+import getTokenData from '@/lib/getTokenData'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import raportService from '@/services/rapor.service'
+import { useGetAllSemesterData } from '@/hooks/useSemester'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function SearchView() {
-  const { token } = useAuth();
-  // console.log(token);
-  const userData = getTokenData(token);
-  const [searchText, setSearchText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { token } = useAuth()
+  const [searchText, setSearchText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [dataSearch, setDataSearch] = useState({
-    nis: "",
-    nama: "",
-    semester: "",
-  });
-  const { push } = useRouter();
+    nis: '',
+    nama: '',
+    semester: '',
+  })
+  const { push } = useRouter()
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setDataSearch({
       ...dataSearch,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const {
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
     refetch: refetchSemester,
-  } = useGetAllSemesterData(null, true);
+  } = useGetAllSemesterData(null, true)
 
   const filteredSemesters = listSemester.filter((semester) =>
     Object.values(semester).some(
       (value) =>
-        typeof value === "string" &&
+        typeof value === 'string' &&
         value.toLowerCase().includes(searchText.toLowerCase())
     )
-  );
+  )
 
   const handleSearch = async (e) => {
-    e.preventDefault();
-    console.log(dataSearch);
+    e.preventDefault()
+    console.log(dataSearch)
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       if (
-        dataSearch.semester === "" ||
+        dataSearch.semester === '' ||
         dataSearch.semester === null ||
-        dataSearch.semester === "#"
+        dataSearch.semester === '#'
       ) {
-        toast.error("Semester harus dipilih", {
-          position: "top-right",
-        });
-        setIsLoading(false);
-        return;
+        toast.error('Semester harus dipilih', {
+          position: 'top-right',
+        })
+        setIsLoading(false)
+        return
       }
       const result = await raportService.getOne(
         dataSearch.nama,
         dataSearch.nis,
         dataSearch.semester
-      );
+      )
 
-      const idRapor = result.idRapor;
+      const idRapor = result.idRapor
 
       // Redirect to home
-      push(`/raport_print/${idRapor}`);
-      setIsLoading(false);
+      push(`/raport_print/${idRapor}`)
+      setIsLoading(false)
     } catch (error) {
       toast.error(error, {
-        position: "top-right",
-      });
-      console.log(`Gagal mendapatkan Raport: ${error}`);
-      setIsLoading(false);
+        position: 'top-right',
+      })
+      console.log(`Gagal mendapatkan Raport: ${error}`)
+      setIsLoading(false)
     }
-  };
+  }
   return (
     <div>
       {/* <Navbar role={userData?.role} /> */}
@@ -168,7 +166,7 @@ export default function SearchView() {
                     key={index}
                     className="md:px-5 md:py-2 text-black"
                   >
-                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{" "}
+                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{' '}
                     {item.jenisSemester}
                   </option>
                 ))}
@@ -179,7 +177,7 @@ export default function SearchView() {
               className="px-[35px] py-[10px] border-2 border-white w-fit rounded-lg "
               target="_blank"
             >
-              {isLoading ? "Loading..." : "Cari Raport"}
+              {isLoading ? 'Loading...' : 'Cari Raport'}
             </button>
           </form>
         </div>
@@ -194,5 +192,5 @@ export default function SearchView() {
         </div>
       </header>
     </div>
-  );
+  )
 }

@@ -46,6 +46,7 @@ function RaportEdit({ murid, btnBack, refetch }) {
                 content: 'Data Rapor Telah Diperbarui',
               })
               refetch()
+              btnBack()
             })
             .catch((err) => {
               Modal.error({

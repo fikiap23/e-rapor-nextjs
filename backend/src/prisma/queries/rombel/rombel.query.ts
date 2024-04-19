@@ -20,7 +20,17 @@ export class RombelQuery extends DbService {
         const rombels = await this.prisma.rombel.findMany({
             include: {
                 kategoriRombel: true,
-                murid: true
+                murid: true,
+                rombelSemesterGuru: {
+                    where: {
+                        semester: {
+                            isAktif: true
+                        }
+                    },
+                    include: {
+                        guru: true
+                    }
+                }
             }
         })
 
@@ -34,7 +44,8 @@ export class RombelQuery extends DbService {
                 idKategoriRombel: rombel.idKategoriRombel,
                 kelompokUsia: rombel.kategoriRombel.kelompokUsia,
                 kodeKelompokUsia: rombel.kategoriRombel.kode,
-                murid: rombel.murid
+                murid: rombel.murid,
+                guru: rombel.rombelSemesterGuru.map(rombelSemesterGuru => rombelSemesterGuru.guru)
             }
         })
     }
