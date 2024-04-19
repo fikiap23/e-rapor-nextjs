@@ -19,7 +19,7 @@ const AddGuruToRombelModal = ({
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
-  } = useGetAllSemesterData(token)
+  } = useGetAllSemesterData(token, true)
 
   useEffect(() => {
     if (listGuruRombel && listSemester) {

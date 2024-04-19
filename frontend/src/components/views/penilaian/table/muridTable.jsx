@@ -126,7 +126,9 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
           render: (penilaianMingguan) =>
             penilaianMingguan ? (
               <div>
-                <b>{penilaianMingguan.nilaiAgamaBudipekerti}</b>
+                <b>
+                  {penilaianMingguan.nilaiAgamaBudipekerti?.replace(/_/g, ' ')}
+                </b>
                 <br /> {penilaianMingguan.deskripsiAgamaBudipekerti}
               </div>
             ) : (
@@ -147,7 +149,7 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
           render: (penilaianMingguan) =>
             penilaianMingguan ? (
               <div>
-                <b>{penilaianMingguan.nilaiJatiDiri}</b>
+                <b>{penilaianMingguan.nilaiJatiDiri?.replace(/_/g, ' ')}</b>
                 <br /> {penilaianMingguan.deskripsiJatiDiri}
               </div>
             ) : (
@@ -169,7 +171,9 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
           render: (penilaianMingguan) =>
             penilaianMingguan ? (
               <div>
-                <b>{penilaianMingguan.nilaiLiterasiSains}</b>
+                <b>
+                  {penilaianMingguan.nilaiLiterasiSains?.replace(/_/g, ' ')}
+                </b>
                 <br /> {penilaianMingguan.deskripsiLiterasiSains}
               </div>
             ) : (

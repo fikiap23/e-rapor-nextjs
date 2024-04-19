@@ -6,7 +6,7 @@ import React from 'react'
 
 const Sidebar = () => {
   const router = usePathname()
-  const { token } = useAuth();
+  const { token } = useAuth()
   const { data } = useMe(token)
   return (
     <aside className="main-sidebar">
@@ -33,6 +33,11 @@ const Sidebar = () => {
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </Link>
           </li>
+          <li className={router === '/admin/sekolah' ? 'active' : ''}>
+            <Link href="/admin/sekolah">
+              <i className="fa fa-building"></i> <span>Sekolah</span>
+            </Link>
+          </li>
           <li className={router === '/admin/guru' ? 'active' : ''}>
             <Link href="/admin/guru">
               <i className="fa fa-user"></i> <span>Guru</span>
@@ -41,11 +46,6 @@ const Sidebar = () => {
           <li className={router === '/admin/siswa' ? 'active' : ''}>
             <Link href="/admin/siswa">
               <i className="fa fa-users"></i> <span>Siswa</span>
-            </Link>
-          </li>
-          <li className={router === '/admin/silabus' ? 'active' : ''}>
-            <Link href="/admin/silabus">
-              <i className="fa fa-pencil"></i> <span>Isian CP/TP</span>
             </Link>
           </li>
           <li className={router === '/admin/kelompok-usia' ? 'active' : ''}>
@@ -63,9 +63,9 @@ const Sidebar = () => {
               <i className="fa fa-calendar"></i> <span>Semester</span>
             </Link>
           </li>
-          <li className={router === '/admin/sekolah' ? 'active' : ''}>
-            <Link href="/admin/sekolah">
-              <i className="fa fa-building"></i> <span>Sekolah</span>
+          <li className={router === '/admin/silabus' ? 'active' : ''}>
+            <Link href="/admin/silabus">
+              <i className="fa fa-pencil"></i> <span>Isian CP/TP</span>
             </Link>
           </li>
         </ul>
