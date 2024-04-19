@@ -42,6 +42,13 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
       sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
+      title: 'Jenis Kelamin',
+      dataIndex: 'jenisKelamin',
+      key: 'jenisKelamin',
+      sorter: (a, b) => a.jenisKelamin.localeCompare(b.jenisKelamin),
+      render: (text) => <span>{text === 'L' ? 'Laki-laki' : 'Perempuan'}</span>,
+    },
+    {
       title: 'Foto',
       dataIndex: 'foto',
       key: 'foto',
