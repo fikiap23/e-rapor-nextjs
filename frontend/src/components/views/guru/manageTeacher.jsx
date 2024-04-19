@@ -58,9 +58,12 @@ const ManageTeacher = () => {
   }
 
   const handleNonactiveUserClick = async (idUser, status) => {
+    console.log(idUser, status)
     showConfirm(
       'Apakah Anda yakin?',
-      `Anda akan MENG${status}kAN pengguna ini!`,
+      `Anda akan ${
+        status === 'TIDAK_AKTIF' ? 'MENONAKTIFKAN' : 'MENGAKTIFKAN'
+      } pengguna ini!`,
       async () => {
         const payload = {
           status,
@@ -159,7 +162,7 @@ const ManageTeacher = () => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (text, record) => (
         <Tag color={record.status === 'AKTIF' ? 'green' : 'yellow'}>
-          {record.status}
+          {record.status?.replace(/_/g, ' ')}
         </Tag>
       ),
     },
