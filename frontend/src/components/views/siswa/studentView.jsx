@@ -43,6 +43,10 @@ const StudentView = () => {
     setActiveTab('update')
   }
 
+  const handleBack = () => {
+    setActiveTab('view')
+  }
+
   const handleDelete = (id) => {
     Modal.confirm({
       title: 'Apakah Anda yakin?',
@@ -84,6 +88,7 @@ const StudentView = () => {
         Agama: siswa.agama,
         'Tinggi Badan': siswa.tinggiBadan,
         'Berat Badan': siswa.beratBadan,
+        Lingkar: siswa.lingkar,
         'Nama Ayah': siswa.namaAyah,
         'Nama Ibu': siswa.namaIbu,
         'Pekerjaan Ayah': siswa.pekerjaanAyah,
@@ -231,13 +236,13 @@ const StudentView = () => {
                     {selectedSiswa && (
                       <div style={{ padding: '0 20px' }}>
                         <Button
-                          onClick={() => {
-                            setActiveTab('view')
-                          }}
+                          onClick={() => setActiveTab('view')}
+                          icon={<i className="fa fa-arrow-left"></i>}
                         >
-                          <i className="fa fa-arrow-left"></i> Kembali
+                          Kembali
                         </Button>
                         <TabUpdateSiswa
+                          btnBack={handleBack}
                           dataSiswa={selectedSiswa}
                           refetch={refetchStudents}
                         />

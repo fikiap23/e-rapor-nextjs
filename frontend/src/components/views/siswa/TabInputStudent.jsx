@@ -276,6 +276,14 @@ function TabInputSiswa({ refetch }) {
             <Input type="number" />
           </Form.Item>
 
+          <Form.Item
+            label="Lingkar"
+            name="lingkar"
+            rules={[{ required: true, message: 'Masukkan Lingkar' }]}
+          >
+            <Input type="number" />
+          </Form.Item>
+
           <h4>Data Sekolah</h4>
           <Form.Item
             label="Tanggal Masuk"

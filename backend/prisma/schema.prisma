@@ -125,6 +125,7 @@ model Murid {
   tanggalMasuk  DateTime?
   tinggiBadan   Int?
   beratBadan    Int?
+  lingkar       Int?
   foto          String?
   namaAyah      String?
   namaIbu       String?
