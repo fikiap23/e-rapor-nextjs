@@ -35,7 +35,7 @@ export default function SearchView() {
     error: errorSemester,
     isFetching: isFetchingSemester,
     refetch: refetchSemester,
-  } = useGetAllSemesterData(token);
+  } = useGetAllSemesterData(null, true);
 
   const filteredSemesters = listSemester.filter((semester) =>
     Object.values(semester).some(
@@ -50,6 +50,17 @@ export default function SearchView() {
     console.log(dataSearch);
     try {
       setIsLoading(true);
+      if (
+        dataSearch.semester === "" ||
+        dataSearch.semester === null ||
+        dataSearch.semester === "#"
+      ) {
+        toast.error("Semester harus dipilih", {
+          position: "top-right",
+        });
+        setIsLoading(false);
+        return;
+      }
       const result = await raportService.getOne(
         dataSearch.nama,
         dataSearch.nis,
@@ -150,9 +161,7 @@ export default function SearchView() {
                 value={dataSearch.semester}
                 className="bg-gray-50 border border-gray-300 text-gray-900 px-5 py-2 rounded-full  focus:ring-blue-500 block w-full "
               >
-                <option value="#" selected>
-                  --- PILIH SEMESTER ---
-                </option>
+                <option value="#">--- Pilih Semester ---</option>
                 {filteredSemesters.map((item, index) => (
                   <option
                     value={item.id}
