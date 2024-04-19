@@ -10,7 +10,7 @@ html {
   padding: 10px;
 }
 
-a.comment-indicator:hover + div.comment {
+a.comment-indicator:hover+div.comment {
   background: #ffd;
   position: absolute;
   display: block;
@@ -837,21 +837,19 @@ table.sheet0 tr.row4 {
   font-weight: bold;
 }
 
+.sheet0 td {
+  padding: 5px;
+}
+
 @media print {
   @page {
     margin-top: 0;
     margin-bottom: 0;
-    size: portrait;
+    size: landscape;
   }
 
   body {
     padding-top: 72px;
     padding-bottom: 72px;
   }
-
-  /* td.style7 {
-              background-color: #31ff31 !important; !important
-                            print-color-adjust: exact;
-              print-color-adjust: exact;
-          } */
 }
