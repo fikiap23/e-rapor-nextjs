@@ -31,7 +31,7 @@ export default function LoginPage() {
         position: 'top-right',
       })
       // Redirect to home
-      push('/')
+      push(`/${jwtPayload.role.toLowerCase()}`)
       setIsLoading(false)
     } catch (error) {
       toast.error(error, {
@@ -43,7 +43,8 @@ export default function LoginPage() {
   }
 
   if (token) {
-    push('/')
+    const jwtPayload = getTokenData(token)
+    push(`/${jwtPayload.role.toLowerCase()}`)
   }
   return (
     <>
