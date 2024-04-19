@@ -29,8 +29,8 @@ export default function Navbar(props) {
     <nav
       className={
         scroll
-          ? "w-full px-10 py-4 transition duration-[0.5s] bg-white fixed z-10"
-          : "w-full px-10 py-4 transition duration-[0.5s] bg-transparent fixed"
+          ? "w-full px-10 py-7 transition duration-[0.7s] bg-white fixed z-10"
+          : "w-full px-10 py-4 transition duration-[0.7s] bg-transparent fixed"
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,39 +124,4 @@ export default function Navbar(props) {
       )}
     </nav>
   );
-}
-
-{
-  /* <div className="flex justify-between items-center">
-  <a
-    className={
-      scroll ? "font-bold text-xs md:block" : "font-bold text-xs text-white"
-    }
-    href="/"
-  >
-    TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
-  </a>
-  {role === "ADMIN" ? (
-    <a
-      className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6"
-      href="/admin"
-    >
-      Dashboard
-    </a>
-  ) : role === "TEACHER" ? (
-    <a
-      className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6"
-      href="/teacher"
-    >
-      Dashboard
-    </a>
-  ) : (
-    <a
-      className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
-      href="/login"
-    >
-      Log in
-    </a>
-  )}
-</div>; */
 }
