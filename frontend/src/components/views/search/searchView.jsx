@@ -82,7 +82,7 @@ export default function SearchView() {
               Sistem Informasi Raport Online
             </h1>
             <p className="font-medium text-[21px]">RA. Daarun Na’im</p>
-            <p>
+            <p className="text-sm">
               Raport Online, pelaporan nilai siswa menjadi lebih mudah dan
               efisien. Cukup akses melalui platform online, dan akses raport
               dengan cepat
@@ -165,7 +165,7 @@ export default function SearchView() {
             </div>
             <button
               type="submit"
-              className="px-5 py-2 border w-fit rounded-lg "
+              className="px-[35px] py-[10px] border-2 border-white w-fit rounded-lg "
               target="_blank"
             >
               {isLoading ? "Loading..." : "Cari Raport"}
