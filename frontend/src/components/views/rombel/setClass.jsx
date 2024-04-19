@@ -3,6 +3,7 @@ import EmptyDataIndicator from '@/components/shared/EmptyDataIndicator'
 import Link from 'next/link'
 
 export default function SetClass({ rombels }) {
+  console.log(rombels)
   return (
     <section className="content">
       <div className="row">
@@ -11,10 +12,10 @@ export default function SetClass({ rombels }) {
         )}
         {rombels.length > 0 &&
           rombels.map((rombel) => (
-            <div key={rombel.id} className="col-sm-4">
+            <div key={rombel.id} className="col-sm-6">
               <div
                 className="box box-solid box-primary"
-                style={{ height: '320px', overflow: 'auto' }}
+                style={{ maxHeight: '420px', overflow: 'auto' }}
               >
                 <div className="box-header with-border">
                   <h3
@@ -32,10 +33,36 @@ export default function SetClass({ rombels }) {
 
                 <div className="box-body">
                   <Table
-                    dataSource={rombel.murid}
+                    dataSource={rombel?.guru}
                     rowKey="id"
                     pagination={false}
                     bordered
+                    title={() => (
+                      <div style={{ background: '#f0f0f0', padding: '8px' }}>
+                        <strong>Guru Kelompok</strong>
+                      </div>
+                    )}
+                  >
+                    <Table.Column
+                      title="No"
+                      dataIndex="id"
+                      key="id"
+                      render={(text, record, index) => index + 1}
+                    />
+                    <Table.Column title="NIP" dataIndex="nip" key="nip" />
+                    <Table.Column title="Nama" dataIndex="nama" key="nama" />
+                  </Table>
+
+                  <Table
+                    dataSource={rombel?.murid}
+                    rowKey="id"
+                    pagination={false}
+                    bordered
+                    title={() => (
+                      <div style={{ background: '#f9f9f9', padding: '8px' }}>
+                        <strong>Daftar Murid</strong>
+                      </div>
+                    )}
                   >
                     <Table.Column
                       title="No"
