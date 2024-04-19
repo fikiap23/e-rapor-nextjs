@@ -44,7 +44,7 @@ export default function Navbar(props) {
               }
               href="/"
             >
-              RA. Daarun Na'im Ambon
+              {` RA. Daarun Na'im Ambon`}
             </a>
           </div>
 
