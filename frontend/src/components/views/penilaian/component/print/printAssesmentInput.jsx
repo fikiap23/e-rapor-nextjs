@@ -42,7 +42,7 @@ function PrintAssesmnetInput({ data }) {
           <tbody>
             <tr className="row0">
               <td className="column0 style8 s style8" rowSpan={3}>
-                N O
+                NO
               </td>
               <td className="column1 style9 s style9" rowSpan={3}>
                 NAMA ANAK

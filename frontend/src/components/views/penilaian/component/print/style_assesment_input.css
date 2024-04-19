@@ -492,11 +492,15 @@ table.sheet0 tr.row4 {
   margin-top: 10px;
 }
 
+.sheet0 td {
+  padding: 5px;
+}
+
 @media print {
   @page {
     margin-top: 0;
     margin-bottom: 0;
-    size: portrait;
+    size: landscape;
   }
 
   body {
