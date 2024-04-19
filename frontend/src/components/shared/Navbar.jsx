@@ -1,36 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
 export default function Navbar(props) {
-  const { role } = props;
+  const { role } = props
 
   // bg-white and when scrolling bg into transparent
-  const [scroll, setScroll] = useState(false);
+  const [scroll, setScroll] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setScroll(true);
+        setScroll(true)
       } else {
-        setScroll(false);
+        setScroll(false)
       }
-    };
-    window.addEventListener("scroll", handleScroll);
+    }
+    window.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-  const [isOpen, setIsOpen] = useState(false);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+  const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+    setIsOpen(!isOpen)
+  }
 
   return (
     <nav
       className={
         scroll
-          ? "w-full px-10 py-4 transition duration-[0.5s] bg-white fixed z-10"
-          : "w-full px-10 py-4 transition duration-[0.5s] bg-transparent fixed"
+          ? 'w-full px-10 py-4 transition duration-[0.5s] bg-white fixed z-10'
+          : 'w-full px-10 py-4 transition duration-[0.5s] bg-transparent fixed'
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,23 +39,23 @@ export default function Navbar(props) {
             <a
               className={
                 scroll
-                  ? "font-bold w-1/2 md:w-full text-sm md:block"
-                  : "font-bold w-1/2 md:w-full text-sm text-white"
+                  ? 'font-bold w-1/2 md:w-full text-sm md:block'
+                  : 'font-bold w-1/2 md:w-full text-sm text-white'
               }
               href="/"
             >
-              TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
+              {`RA. Daarun Na'im Ambon`}
             </a>
           </div>
 
-          {role === "ADMIN" ? (
+          {role === 'ADMIN' ? (
             <a
               className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
               href="/admin"
             >
               Dashboard
             </a>
-          ) : role === "TEACHER" ? (
+          ) : role === 'TEACHER' ? (
             <a
               className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
               href="/teacher"
@@ -97,14 +97,14 @@ export default function Navbar(props) {
       {isOpen && (
         <div className="md:hidden w-full bg-white my-4 rounded-2xl">
           <div className="px-2 py-6 sm:px-3 w-fit">
-            {role === "ADMIN" ? (
+            {role === 'ADMIN' ? (
               <a
                 className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6"
                 href="/admin"
               >
                 Dashboard
               </a>
-            ) : role === "TEACHER" ? (
+            ) : role === 'TEACHER' ? (
               <a
                 className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6"
                 href="/teacher"
@@ -123,7 +123,7 @@ export default function Navbar(props) {
         </div>
       )}
     </nav>
-  );
+  )
 }
 
 {
@@ -134,7 +134,7 @@ export default function Navbar(props) {
     }
     href="/"
   >
-    TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
+    {`RA. Daarun Na'im Ambon`}
   </a>
   {role === "ADMIN" ? (
     <a

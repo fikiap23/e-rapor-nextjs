@@ -1,75 +1,75 @@
-"use client";
-import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
-import "@/components/tailwind_component/tailwind.css";
-import useAuth from "@/hooks/useAuth";
-import getTokenData from "@/lib/getTokenData";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import raportService from "@/services/rapor.service";
-import { useGetAllSemesterData } from "@/hooks/useSemester";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+'use client'
+import Navbar from '@/components/shared/Navbar'
+import Footer from '@/components/shared/Footer'
+import '@/components/tailwind_component/tailwind.css'
+import useAuth from '@/hooks/useAuth'
+import getTokenData from '@/lib/getTokenData'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import raportService from '@/services/rapor.service'
+import { useGetAllSemesterData } from '@/hooks/useSemester'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 export default function SearchView() {
-  const { token } = useAuth();
+  const { token } = useAuth()
   // console.log(token);
-  const userData = getTokenData(token);
-  const [searchText, setSearchText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const userData = getTokenData(token)
+  const [searchText, setSearchText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [dataSearch, setDataSearch] = useState({
-    nis: "",
-    nama: "",
-    semester: "",
-  });
-  const { push } = useRouter();
+    nis: '',
+    nama: '',
+    semester: '',
+  })
+  const { push } = useRouter()
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setDataSearch({
       ...dataSearch,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const {
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
     refetch: refetchSemester,
-  } = useGetAllSemesterData(token);
+  } = useGetAllSemesterData(token)
 
   const filteredSemesters = listSemester.filter((semester) =>
     Object.values(semester).some(
       (value) =>
-        typeof value === "string" &&
+        typeof value === 'string' &&
         value.toLowerCase().includes(searchText.toLowerCase())
     )
-  );
+  )
 
   const handleSearch = async (e) => {
-    e.preventDefault();
-    console.log(dataSearch);
+    e.preventDefault()
+    console.log(dataSearch)
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const result = await raportService.getOne(
         dataSearch.nama,
         dataSearch.nis,
         dataSearch.semester
-      );
+      )
 
-      const idRapor = result.idRapor;
+      const idRapor = result.idRapor
 
       // Redirect to home
-      push(`/raport_print/${idRapor}`);
-      setIsLoading(false);
+      push(`/raport_print/${idRapor}`)
+      setIsLoading(false)
     } catch (error) {
       toast.error(error, {
-        position: "top-right",
-      });
-      console.log(`Gagal mendapatkan Raport: ${error}`);
-      setIsLoading(false);
+        position: 'top-right',
+      })
+      console.log(`Gagal mendapatkan Raport: ${error}`)
+      setIsLoading(false)
     }
-  };
+  }
   return (
     <div>
       <Navbar role={userData?.role} />
@@ -80,7 +80,7 @@ export default function SearchView() {
         <div className="h-full w-full flex justify-center items-center bg-gradient-to-t from-purple-400 to-transparent">
           <div className="w-1/2 text-center bg-white/30 backdrop-blur-md p-2 md:p-7 rounded-xl shadow-md">
             <h1 className="text-base md:text-4xl font-bold text-white">
-              TK ERLANGGA CIRACAS ASY SYAMS ISLAMIC SCHOOL
+              {`RA. Daarun Na'im Ambon`}
             </h1>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function SearchView() {
                 </option>
                 {filteredSemesters.map((item, index) => (
                   <option value={item.id} key={index} className="p-3 md:p-6">
-                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{" "}
+                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{' '}
                     {item.jenisSemester}
                   </option>
                 ))}
@@ -146,7 +146,7 @@ export default function SearchView() {
               className="p-3 rounded-lg bg-blue-500"
               target="_blank"
             >
-              {isLoading ? "Loading..." : "Cari"}
+              {isLoading ? 'Loading...' : 'Cari'}
             </button>
           </form>
         </div>
@@ -162,5 +162,5 @@ export default function SearchView() {
       </header>
       <Footer />
     </div>
-  );
+  )
 }
