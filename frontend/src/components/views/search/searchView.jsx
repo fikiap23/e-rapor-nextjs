@@ -1,87 +1,89 @@
-'use client'
-import '@/components/tailwind_component/tailwind.css'
-import useAuth from '@/hooks/useAuth'
-import getTokenData from '@/lib/getTokenData'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import raportService from '@/services/rapor.service'
-import { useGetAllSemesterData } from '@/hooks/useSemester'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+"use client";
+import "@/components/tailwind_component/tailwind.css";
+import useAuth from "@/hooks/useAuth";
+import getTokenData from "@/lib/getTokenData";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import raportService from "@/services/rapor.service";
+import { useGetAllSemesterData } from "@/hooks/useSemester";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SearchView() {
-  const { token } = useAuth()
+  const { token } = useAuth();
   // console.log(token);
-  const userData = getTokenData(token)
-  const [searchText, setSearchText] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const userData = getTokenData(token);
+  const [searchText, setSearchText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [dataSearch, setDataSearch] = useState({
-    nis: '',
-    nama: '',
-    semester: '',
-  })
-  const { push } = useRouter()
+    nis: "",
+    nama: "",
+    semester: "",
+  });
+  const { push } = useRouter();
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setDataSearch({
       ...dataSearch,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const {
     data: listSemester,
     error: errorSemester,
     isFetching: isFetchingSemester,
     refetch: refetchSemester,
-  } = useGetAllSemesterData(token)
+  } = useGetAllSemesterData(token);
 
   const filteredSemesters = listSemester.filter((semester) =>
     Object.values(semester).some(
       (value) =>
-        typeof value === 'string' &&
+        typeof value === "string" &&
         value.toLowerCase().includes(searchText.toLowerCase())
     )
-  )
+  );
 
   const handleSearch = async (e) => {
-    e.preventDefault()
-    console.log(dataSearch)
+    e.preventDefault();
+    console.log(dataSearch);
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const result = await raportService.getOne(
         dataSearch.nama,
         dataSearch.nis,
         dataSearch.semester
-      )
+      );
 
-      const idRapor = result.idRapor
+      const idRapor = result.idRapor;
 
       // Redirect to home
-      push(`/raport_print/${idRapor}`)
-      setIsLoading(false)
+      push(`/raport_print/${idRapor}`);
+      setIsLoading(false);
     } catch (error) {
       toast.error(error, {
-        position: 'top-right',
-      })
-      console.log(`Gagal mendapatkan Raport: ${error}`)
-      setIsLoading(false)
+        position: "top-right",
+      });
+      console.log(`Gagal mendapatkan Raport: ${error}`);
+      setIsLoading(false);
     }
-  }
+  };
   return (
     <div>
       {/* <Navbar role={userData?.role} /> */}
       <section
         id="hero"
-        className="hero-content flex-col lg:flex-row-reverse bg-no-repeat bg-cover bg-center bg-hero-pattern h-full min-h-[700px] w-full"
+        className="hero-content flex-col lg:flex-row-reverse bg-no-repeat bg-right md:bg-cover md:bg-center bg-hero-pattern h-full min-h-[700px] w-full"
       >
-        <div className="h-full w-full min-h-[700px] flex flex-col gap-14  justify-center items-center bg-[#002E1A]/50">
+        <div className="h-full w-full min-h-[700px] flex flex-col gap-14  justify-center items-center bg-[#002E1A]/50 px-10">
           <div className="text-center text-white flex flex-col justify-center items-center gap-7 mb-7">
-            <h1 className="text-base md:text-[42px] font-bold mb-2">
+            <h1 className="text-2xl md:text-[42px] font-bold mb-2">
               Sistem Informasi Raport Online
             </h1>
-            <p className="font-medium text-[21px]">RA. Daarun Na’im</p>
+            <p className="font-medium text-lg md:text-[21px]">
+              RA. Daarun Na’im
+            </p>
             <p className="text-sm">
               Raport Online, pelaporan nilai siswa menjadi lebih mudah dan
               efisien. Cukup akses melalui platform online, dan akses raport
@@ -100,7 +102,7 @@ export default function SearchView() {
         id="cek"
         className="flex flex-col items-center bg-gradient-to-t from-[#007C11] to-[#659165] w-full px-10 py-10 md:px-20 gap-10 h-full"
       >
-        <div className="w-full px-28">
+        <div className="w-full md:px-28">
           <h1 className="text-2xl text-white font-bold mb-5">
             Cari Raport Siswa
           </h1>
@@ -155,9 +157,9 @@ export default function SearchView() {
                   <option
                     value={item.id}
                     key={index}
-                    className="px-5 py-2 text-black"
+                    className="md:px-5 md:py-2 text-black"
                   >
-                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{' '}
+                    {item.tahunAjaranAwal} - {item.tahunAjaranAkhir}{" "}
                     {item.jenisSemester}
                   </option>
                 ))}
@@ -168,11 +170,11 @@ export default function SearchView() {
               className="px-[35px] py-[10px] border-2 border-white w-fit rounded-lg "
               target="_blank"
             >
-              {isLoading ? 'Loading...' : 'Cari Raport'}
+              {isLoading ? "Loading..." : "Cari Raport"}
             </button>
           </form>
         </div>
-        <div className="text-white w-full px-28">
+        <div className="text-white w-full md:px-28">
           <h1 className="text-2xl text-white font-bold mb-3">Petunjuk</h1>
 
           <ul className="list-disc list-inside text-sm md:text-base">
@@ -183,5 +185,5 @@ export default function SearchView() {
         </div>
       </header>
     </div>
-  )
+  );
 }
