@@ -53,6 +53,7 @@ export class JadwalAjarRepository {
         if (!idsRombelSemesterGuru.includes(jadwalAjar.idRombelSemesterGuru)) throw new BadRequestException("Modul Ajar tidak ada")
 
         if (dto.idModulAjar && dto.idModulAjar !== jadwalAjar.idModulAjar) await this.modulAjarRepository.findByIdOrThrow(dto.idModulAjar);
+        await this.checkIsJadwalAjarExist(dto.idModulAjar)
 
         return await this.jadwalAjarQuery.updateById(id, dto);
     }
