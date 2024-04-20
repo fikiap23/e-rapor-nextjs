@@ -48,7 +48,7 @@ export default function SearchView() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    console.log(dataSearch);
+    // console.log(dataSearch);
     try {
       setIsLoading(true);
       if (
@@ -67,10 +67,15 @@ export default function SearchView() {
         dataSearch.nis,
         dataSearch.semester
       );
+      if (result) {
+        const idRapor = result.idRapor;
 
-      const idRapor = result.idRapor;
-
-      window.location.href = `/raport_print/${idRapor}`;
+        window.location.href = `/raport_print/${idRapor}`;
+      } else {
+        toast.error("Data tidak ditemukan", {
+          position: "top-right",
+        });
+      }
       setIsLoading(false);
     } catch (error) {
       toast.error(error, {
