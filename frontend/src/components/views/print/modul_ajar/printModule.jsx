@@ -196,7 +196,7 @@ function PrintModule({ data }) {
         />
       </div>
 
-      <h6 className="tbl">V. Rencana Penilaian</h6>
+      {/* <h6 className="tbl">V. Rencana Penilaian</h6>
       <table
         className="weekly"
         border={3}
@@ -225,7 +225,7 @@ function PrintModule({ data }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
 
       <table width="100%" style={{ marginTop: '20px', marginBottom: '20px' }}>
         <tr>
