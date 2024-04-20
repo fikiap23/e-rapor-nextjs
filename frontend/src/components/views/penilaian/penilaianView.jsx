@@ -43,7 +43,7 @@ const PenilaianView = ({ idRombelSemesterGuru }) => {
                 <div className="box-body">
                   <Select
                     placeholder="Pilih Minggu"
-                    style={{ width: 130, marginBottom: 16 }}
+                    style={{ width: 200, marginBottom: 16 }}
                     onChange={handleWeekChange}
                   >
                     {cpTp?.tujuanPembelajaran?.map((tp) => (
