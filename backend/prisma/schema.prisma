@@ -186,7 +186,7 @@ model ModulAjar {
   alokasiWaktu      String?
   deskripsiUmum     String?
   modelPembelajaran ModelPembelajaranType @default(TATAP_MUKA)
-  komponenInti      String?
+  sumber            String?
   curahIdeKegiatan  String?
   kegiatanPembukaan String?
   istirahat         String?

@@ -44,7 +44,7 @@ class CreateModulAjarDto {
 
     @IsOptional()
     @IsString()
-    komponenInti?: string;
+    sumber?: string;
 
     @IsOptional()
     @IsString()

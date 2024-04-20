@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Form, Input, Select, Button, Modal, Col, Row } from 'antd'
 import modulAjarService from '@/services/modul-ajar.service'
 import RichTextEditor from '@/components/shared/editor/Editor'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
 const { Option } = Select
 
@@ -10,6 +11,7 @@ const InputModulAjar = ({
   refetch,
   token,
   idRombelSemesterGuru,
+  back,
 }) => {
   const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
@@ -30,31 +32,17 @@ const InputModulAjar = ({
   }
 
   const handleSubmit = async (values) => {
-    const tujuanKegiatanValues = []
-    await form.validateFields().then((values) => {
-      // Mendapatkan nilai dari setiap kegiatan inti dan menyimpannya dalam bentuk array
-      for (let i = 1; i <= jumlahKegiatan; i++) {
-        tujuanKegiatanValues.push(values[`tujuanKegiatan${i}`])
-      }
-    })
+    await form.validateFields()
+    // console.log('values', values)
     const payload = {
-      minggu: values.minggu,
-      alokasiWaktu: values.alokasiWaktu,
-      topik: values.topik,
-      subtopik: values.subtopik,
-      deskripsiUmum: values.deskripsiUmum,
+      ...values,
       katakunci: values.katakunci.split(',').map((kata) => kata.trim()),
       alatBahan: values.alatBahan.split(',').map((alat) => alat.trim()),
-      petaKonsep: values.petaKonsep.split(',').map((peta) => peta.trim()),
-      komponenInti: values.komponenInti,
-      curahIdeKegiatan: values.curahIdeKegiatan,
-      kegiatanPembukaan: values.kegiatanPembukaan,
-      istirahat: values.istirahat,
-      kegiatanPenutupan: values.kegiatanPenutupan,
       idTujuanPembelajaran: selectedTp.id,
       idRombelSemesterGuru,
-      tujuanKegiatan: tujuanKegiatanValues,
     }
+
+    // console.log('payload', payload)
 
     try {
       await modulAjarService
@@ -65,6 +53,7 @@ const InputModulAjar = ({
             content: 'Data modul ajar telah ditambahkan',
           })
           clearForm()
+          back()
           refetch()
         })
         .catch((err) => {
@@ -80,9 +69,6 @@ const InputModulAjar = ({
       })
     }
   }
-  const handleJumlahKegiatanChange = (value) => {
-    setJumlahKegiatan(value)
-  }
   return (
     <div className="active tab-pane" id="activity">
       <Form
@@ -91,165 +77,245 @@ const InputModulAjar = ({
         onValuesChange={handleFormChange}
         layout="vertical"
       >
-        <Row gutter={16}>
-          <Col xs={24} md={12}>
-            <Form.Item
-              label="Minggu"
-              name="minggu"
-              rules={[{ required: true, message: 'Pilih Minggu' }]}
-            >
-              <Select placeholder="Pilih Minggu">
-                {tujuanPembelajarans?.map((tp) => (
-                  <Option key={tp.id} value={tp.minggu}>
-                    {tp.minggu}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            {selectedTp && (
-              <>
-                <Form.Item label="Tujuan Pembelajaran Nilai Agama dan Budi Pekerti">
-                  <Input.TextArea
-                    value={selectedTp.tujuanPembelajaranAgamaBudipekerti}
-                    readOnly
-                    disabled
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Tujuan Pembelajaran Jati Diri">
-                  <Input.TextArea
-                    value={selectedTp.tujuanPembelajaranJatiDiri}
-                    readOnly
-                    disabled
-                    rows={5}
-                  />
-                </Form.Item>
-
-                <Form.Item label="Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni">
-                  <Input.TextArea
-                    value={selectedTp.tujuanPembelajaranLiterasiSains}
-                    readOnly
-                    disabled
-                    rows={5}
-                  />
-                </Form.Item>
-              </>
-            )}
-
-            <Form.Item
-              label="Alokasi Waktu (Menit)"
-              name="alokasiWaktu"
-              rules={[{ required: true, message: 'Masukkan Alokasi Waktu' }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-
-            <Form.Item
-              label="Topik"
-              name="topik"
-              rules={[{ required: true, message: 'Masukkan Topik' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Sub Topik"
-              name="subtopik"
-              rules={[{ required: true, message: 'Masukkan Sub Topik' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Deskripsi Umum"
-              name="deskripsiUmum"
-              rules={[{ required: true, message: 'Masukkan Deskripsi' }]}
-            >
-              <Input.TextArea />
-            </Form.Item>
-
-            <Form.Item
-              label="Kata Kunci"
-              name="katakunci"
-              rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Alat dan Bahan"
-              name="alatBahan"
-              rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Peta Konsep"
-              name="petaKonsep"
-              rules={[{ required: true, message: 'Masukkan Peta Konsep' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Jumlah Tujuan Kegiatan"
-              name="jumlahKegiatan"
-              rules={[{ required: true }]}
-            >
-              <Select
-                placeholder="Pilih Jumlah Tujuan Kegiatan"
-                onChange={handleJumlahKegiatanChange}
-                value={jumlahKegiatan}
-              >
-                {[1, 2, 3, 4, 5].map((item) => (
-                  <Option key={item} value={item}>
-                    {item}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            {/* Input untuk setiap tujuan kegiatan */}
-            {[...Array(jumlahKegiatan)].map((_, index) => (
-              <Form.Item
-                key={index}
-                label={`Tujuan Kegiatan ${index + 1}`}
-                name={`tujuanKegiatan${index + 1}`}
-                rules={[
-                  { required: true, message: 'Tujuan Kegiatan harus diisi' },
-                ]}
-              >
-                <Input.TextArea
-                  rows={2}
-                  placeholder={`Masukkan Tujuan Kegiatan ${index + 1}`}
-                />
-              </Form.Item>
+        <Form.Item
+          label="Minggu"
+          name="minggu"
+          rules={[{ required: true, message: 'Pilih Minggu' }]}
+        >
+          <Select placeholder="Pilih Minggu">
+            {tujuanPembelajarans?.map((tp) => (
+              <Option key={tp.id} value={tp.minggu}>
+                {tp.minggu}
+              </Option>
             ))}
-            <Form.Item label="Komponen Inti" name="komponenInti">
-              <RichTextEditor />
+          </Select>
+        </Form.Item>
+
+        {selectedTp && (
+          <>
+            <Form.Item label="Tujuan Pembelajaran Nilai Agama dan Budi Pekerti">
+              <Input.TextArea
+                value={selectedTp.tujuanPembelajaranAgamaBudipekerti}
+                readOnly
+                disabled
+                rows={5}
+              />
             </Form.Item>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Simpan
-              </Button>
+            <Form.Item label="Tujuan Pembelajaran Jati Diri">
+              <Input.TextArea
+                value={selectedTp.tujuanPembelajaranJatiDiri}
+                readOnly
+                disabled
+                rows={5}
+              />
             </Form.Item>
-          </Col>
-          <Col xs={24} md={12}>
-            <Form.Item label="Curah Ide Kegiatan" name="curahIdeKegiatan">
-              <RichTextEditor />
+
+            <Form.Item label="Dasar Literasi, Matematika, Sains, Teknologi, Rekayasa dan Seni">
+              <Input.TextArea
+                value={selectedTp.tujuanPembelajaranLiterasiSains}
+                readOnly
+                disabled
+                rows={5}
+              />
             </Form.Item>
-            <Form.Item label="Kegiatan Pembukaan" name="kegiatanPembukaan">
-              <RichTextEditor />
-            </Form.Item>
-            <Form.Item label="Istirahat" name="istirahat">
-              <RichTextEditor />
-            </Form.Item>
-            <Form.Item label="Kegiatan Penutupan" name="kegiatanPenutupan">
-              <RichTextEditor />
-            </Form.Item>
-          </Col>
-        </Row>
+          </>
+        )}
+
+        <Form.Item
+          label="Topik"
+          name="topik"
+          rules={[{ required: true, message: 'Masukkan Topik' }]}
+        >
+          <Input placeholder="Contoh: Aku Hamba Allah" />
+        </Form.Item>
+
+        <Form.Item
+          label="Sub Topik"
+          name="subtopik"
+          rules={[{ required: true, message: 'Masukkan Sub Topik' }]}
+        >
+          <Input placeholder="Contoh: Identitasku" />
+        </Form.Item>
+
+        <Form.Item
+          label="Kata Kunci"
+          name="katakunci"
+          rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
+        >
+          <Input placeholder="Pisahkan kata kunci dengan koma. Contoh: Namaku, identitasku" />
+        </Form.Item>
+
+        <Form.List name="tujuanKegiatan">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.length === 0 && (
+                <Form.Item
+                  label="Tujuan Kegiatan"
+                  name={[0]}
+                  fieldKey={[0]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Tujuan Kegiatan harus diisi',
+                    },
+                  ]}
+                >
+                  <Input.TextArea
+                    rows={2}
+                    placeholder="Masukkan Tujuan Kegiatan"
+                  />
+                </Form.Item>
+              )}
+              {fields.map((field, index) => (
+                <div key={field.key}>
+                  <Form.Item
+                    style={{ margin: '0px' }}
+                    label={`Tujuan Kegiatan ${index + 1}`}
+                    name={[field.name]}
+                    fieldKey={[field.fieldKey]}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Tujuan Kegiatan harus diisi',
+                      },
+                    ]}
+                  >
+                    <Input.TextArea
+                      rows={2}
+                      placeholder={`Masukkan Tujuan Kegiatan ${index + 1}`}
+                    />
+                  </Form.Item>
+                  <Button
+                    type="link"
+                    onClick={() => remove(field.name)}
+                    icon={<MinusCircleOutlined />}
+                  >
+                    Hapus
+                  </Button>
+                </div>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                >
+                  Tambah Tujuan Kegiatan
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+
+        <Form.Item
+          label="Alat dan Bahan"
+          name="alatBahan"
+          rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
+        >
+          <Input.TextArea placeholder="Pisahkan alat dan bahan dengan koma. Contoh: Pena, pensil, buku" />
+        </Form.Item>
+        <Form.Item
+          label="Sumber"
+          name="sumber"
+          rules={[{ required: true, message: 'Masukkan Sumber' }]}
+        >
+          <Input placeholder=" Contoh: Buku Anak Takzim 4-5 Tahun: Aku Hamba Allah" />
+        </Form.Item>
+
+        <Form.List name="petaKonsep">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.length === 0 && (
+                <Form.Item
+                  label="Peta Konsep"
+                  name={[0]}
+                  fieldKey={[0]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Peta Konsep harus diisi',
+                    },
+                  ]}
+                >
+                  <Input.TextArea
+                    rows={2}
+                    placeholder="Masukkan Peta Konsep 1"
+                  />
+                </Form.Item>
+              )}
+              {fields.map((field, index) => (
+                <div key={field.key}>
+                  <Form.Item
+                    style={{ margin: '0px' }}
+                    label={`Peta Konsep ${index + 1}`}
+                    name={[field.name]}
+                    fieldKey={[field.fieldKey]}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Peta Konsep harus diisi',
+                      },
+                    ]}
+                  >
+                    <Input placeholder={`Masukkan Peta Konsep ${index + 1}`} />
+                  </Form.Item>
+                  <Button
+                    type="link"
+                    onClick={() => remove(field.name)}
+                    icon={<MinusCircleOutlined />}
+                  >
+                    Hapus
+                  </Button>
+                </div>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                >
+                  Tambah Peta Konsep
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+
+        <Form.Item
+          label="Alokasi Waktu (Menit)"
+          name="alokasiWaktu"
+          rules={[{ required: true, message: 'Masukkan Alokasi Waktu' }]}
+        >
+          <Input type="number" min={1} placeholder="Contoh: 60" />
+        </Form.Item>
+
+        <Form.Item
+          label="Deskripsi Umum"
+          name="deskripsiUmum"
+          rules={[{ required: true, message: 'Masukkan Deskripsi' }]}
+        >
+          <Input.TextArea placeholder="Contoh: Anak diajak mengenal Tuhan" />
+        </Form.Item>
+
+        <Form.Item label="Curah Ide Kegiatan" name="curahIdeKegiatan">
+          <RichTextEditor />
+        </Form.Item>
+        <Form.Item label="Kegiatan Pembukaan" name="kegiatanPembukaan">
+          <RichTextEditor />
+        </Form.Item>
+        <Form.Item label="Istirahat" name="istirahat">
+          <RichTextEditor />
+        </Form.Item>
+        <Form.Item label="Kegiatan Penutupan" name="kegiatanPenutupan">
+          <RichTextEditor />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Simpan
+          </Button>
+        </Form.Item>
       </Form>
     </div>
   )

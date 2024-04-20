@@ -185,6 +185,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                     tujuanPembelajarans={mingguTpUncreated}
                     token={token}
                     idRombelSemesterGuru={idRombelSemesterGuru}
+                    back={() => handleTabChange('moduleTab')}
                   />
                 )}
                 {activeTab === 'moduleEditTab' && selectedModulAjar && (

@@ -107,12 +107,13 @@ function PrintModule({ data }) {
       </table>
 
       <h6 className="tbl">B. KOMPONEN INTI</h6>
-      <div style={{ display: 'flex', marginTop: '10px' }}>
-        <div
-          className="ttd"
-          dangerouslySetInnerHTML={{ __html: modulAjar.komponenInti }}
-        />
-      </div>
+      <table style={{ marginBottom: '20px' }}>
+        <tr>
+          <td width={120}>Sumber</td>
+          <td width={25}>:</td>
+          <td>{modulAjar.sumber}</td>
+        </tr>
+      </table>
 
       <h6 className="tbl">C. CURAH IDE KEGIATAN</h6>
       <div style={{ display: 'flex', marginTop: '10px' }}>
