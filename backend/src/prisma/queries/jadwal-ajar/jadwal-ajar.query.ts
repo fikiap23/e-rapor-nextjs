@@ -26,9 +26,7 @@ export class JadwalAjarQuery extends DbService {
 
         return result.map(x => {
             return {
-                id: x.id,
-                idModulAjar: x.idModulAjar,
-                idRombelSemesterGuru: x.idRombelSemesterGuru,
+                ...x,
                 minggu: x.modulAjar.minggu,
                 tanggalMulai: x.tanggalHari1,
                 topik: x.modulAjar.topik,

@@ -1,57 +1,60 @@
-import React, { useState, useEffect } from 'react'
+'use client'
+import React, { useEffect } from 'react'
 import { Modal, Select, Input, Button, DatePicker, Form } from 'antd'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import jadwalAjarService from '@/services/jadwal-ajar.service'
 import moment from 'moment'
 
 const { Option } = Select
 
-const UpdateJadwalModal = ({
+const UpdateModal = ({
   isOpen,
   closeModal,
   modulAjars,
   token,
   refetch,
-  defaultValues,
+  initialValues,
 }) => {
   const [form] = Form.useForm()
-  const [jumlahKegiatan, setJumlahKegiatan] = useState(null)
 
   useEffect(() => {
-    if (isOpen) {
-      form.setFieldsValue({
-        idModulAjar: defaultValues.idModulAjar,
-        tanggal: moment(defaultValues.tanggal),
-        jumlahKegiatan: defaultValues.kegiatanInti.length,
-      })
-      setJumlahKegiatan(defaultValues.kegiatanInti.length)
-      defaultValues.kegiatanInti.forEach((kegiatan, index) => {
-        form.setFieldsValue({
-          [`kegiatanInti${index + 1}`]: kegiatan,
-        })
-      })
-    }
-  }, [defaultValues, form, isOpen])
+    // Set initial form values based on dataToUpdate
+    form.setFieldsValue({
+      ...initialValues,
+      tanggal: moment(initialValues?.tanggalHari1),
+    })
+  }, [initialValues, form])
 
   const handleSubmit = async () => {
-    let payload
-    await form.validateFields().then((values) => {
-      const kegiatanIntiValues = []
-      for (let i = 1; i <= jumlahKegiatan; i++) {
-        kegiatanIntiValues.push(values[`kegiatanInti${i}`])
-      }
-      payload = {
-        idModulAjar: values.idModulAjar,
-        tanggal: values.tanggal,
-        kegiatanInti: kegiatanIntiValues,
-      }
-    })
+    await form.validateFields()
+    const values = form.getFieldsValue()
+
+    const tanggalList = {}
+
+    // generate 6 days from start date
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(values.tanggal)
+      date.setDate(date.getDate() + (i + 1))
+      const formattedDate = date.toISOString().slice(0, 10)
+      tanggalList['tanggalHari' + (i + 1)] = formattedDate
+    }
+
+    const payload = {
+      ...values,
+      idModulAjar: values.idModulAjar,
+      ...tanggalList,
+    }
+    delete payload.tanggal
+    delete payload.modulAjar
+
     await jadwalAjarService
-      .update(defaultValues.id, payload, token)
+      .update(initialValues.id, payload, token) // Assuming you have an update method in your service
       .then(() => {
         Modal.success({
           title: 'Berhasil',
-          content: 'Berhasil mengupdate jadwal ajar',
+          content: 'Berhasil memperbarui jadwal ajar',
         })
+        form.resetFields()
         refetch()
         closeModal()
       })
@@ -63,14 +66,11 @@ const UpdateJadwalModal = ({
       })
   }
 
-  const handleJumlahKegiatanChange = (value) => {
-    setJumlahKegiatan(value)
-  }
-
   return (
     <Modal
       visible={isOpen}
       title="Update Jadwal Ajar"
+      width={800}
       onCancel={closeModal}
       footer={[
         <Button key="back" onClick={closeModal}>
@@ -88,8 +88,8 @@ const UpdateJadwalModal = ({
           rules={[{ required: true }]}
         >
           <Select placeholder="Pilih Modul Ajar">
-            {modulAjars.map((modul, index) => (
-              <Option key={index + 1} value={modul.id}>
+            {modulAjars.map((modul) => (
+              <Option key={modul.id} value={modul.id}>
                 {`Minggu Ke-${modul.minggu} (${modul.topik})`}
               </Option>
             ))}
@@ -98,39 +98,76 @@ const UpdateJadwalModal = ({
         <Form.Item label="Tanggal" name="tanggal" rules={[{ required: true }]}>
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
-        <Form.Item
-          label="Jumlah Kegiatan Inti"
-          name="jumlahKegiatan"
-          rules={[{ required: true }]}
-        >
-          <Select
-            placeholder="Pilih Jumlah Kegiatan Inti"
-            onChange={handleJumlahKegiatanChange}
-            value={jumlahKegiatan}
-          >
-            {[1, 2, 3, 4, 5].map((item) => (
-              <Option key={item} value={item}>
-                {item}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        {[...Array(jumlahKegiatan)].map((_, index) => (
-          <Form.Item
+
+        {[...Array(6)].map((_, index) => (
+          <div
             key={index}
-            label={`Kegiatan Inti ${index + 1}`}
-            name={`kegiatanInti${index + 1}`}
-            rules={[{ required: true, message: 'Kegiatan Inti harus diisi' }]}
+            style={{
+              border: '1px solid black',
+              borderRadius: '5px',
+              marginBottom: '25px ',
+              padding: '5px 10px',
+            }}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder={`Masukkan Kegiatan Inti ${index + 1}`}
-            />
-          </Form.Item>
+            <label
+              htmlFor=""
+              style={{
+                textDecorationLine: 'underline',
+                textUnderlineOffset: '5px',
+                marginBottom: '8px',
+              }}
+            >
+              Kegiatan Inti Hari ke {index + 1}
+            </label>
+            <Form.List name={`kegiatanIntiHari${index + 1}`}>
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map((field, index) => (
+                    <div key={field.key}>
+                      <Form.Item
+                        style={{ margin: '0px' }}
+                        label={`Tujuan Kegiatan ${index + 1}`}
+                        name={[field.name]}
+                        fieldKey={[field.fieldKey]}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Tujuan Kegiatan harus diisi',
+                          },
+                        ]}
+                      >
+                        <Input.TextArea
+                          rows={2}
+                          placeholder={`Masukkan Tujuan Kegiatan ${index + 1}`}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="link"
+                        onClick={() => remove(field.name)}
+                        icon={<MinusCircleOutlined />}
+                        style={{ marginBottom: '10px' }}
+                      >
+                        Hapus
+                      </Button>
+                    </div>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      icon={<PlusOutlined />}
+                    >
+                      Tambah Tujuan Kegiatan
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </div>
         ))}
       </Form>
     </Modal>
   )
 }
 
-export default UpdateJadwalModal
+export default UpdateModal
