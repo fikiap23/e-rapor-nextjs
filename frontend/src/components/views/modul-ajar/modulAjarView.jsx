@@ -195,6 +195,7 @@ const ModulAjarView = ({ idRombelSemesterGuru }) => {
                     token={token}
                     tujuanPembelajarans={mingguTpUncreated}
                     idRombelSemesterGuru={idRombelSemesterGuru}
+                    back={() => handleTabChange('moduleTab')}
                   />
                 )}
               </div>

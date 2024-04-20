@@ -15,7 +15,7 @@ const InputModulAjar = ({
 }) => {
   const [form] = Form.useForm()
   const [selectedTp, setSelectedTp] = useState(null)
-  const [jumlahKegiatan, setJumlahKegiatan] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   const handleFormChange = (changedValues, allValues) => {
     if (changedValues.minggu) {
@@ -45,6 +45,7 @@ const InputModulAjar = ({
     // console.log('payload', payload)
 
     try {
+      setLoading(true)
       await modulAjarService
         .create(payload, token)
         .then(() => {
@@ -52,17 +53,20 @@ const InputModulAjar = ({
             title: 'Success',
             content: 'Data modul ajar telah ditambahkan',
           })
+          setLoading(false)
           clearForm()
           back()
           refetch()
         })
         .catch((err) => {
+          setLoading(false)
           Modal.error({
             content: err,
             title: 'Oops...',
           })
         })
     } catch (error) {
+      setLoading(false)
       Modal.error({
         content: 'Terjadi kesalahan',
         title: 'Oops...',
@@ -312,7 +316,7 @@ const InputModulAjar = ({
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={loading}>
             Simpan
           </Button>
         </Form.Item>
