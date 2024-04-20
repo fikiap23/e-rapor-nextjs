@@ -409,9 +409,7 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             <td width="25%" style={{ textAlign: 'center' }}>
               Mengetahui :
               <p style={{ marginTop: '5px' }}>
-                Kepala TK ERLANGGA CIRACAS
-                <br />
-                ASY SYAMS ISLAMIC SCHOOL
+                {`Kepala ${sekolah.nama.toUpperCase()}`}
               </p>
               <div style={{ marginTop: '40%' }}>
                 <p style={{ margin: '-15px' }}>
