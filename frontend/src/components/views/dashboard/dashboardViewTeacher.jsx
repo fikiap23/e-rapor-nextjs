@@ -6,7 +6,7 @@ const DashboardViewTeacher = () => {
     <div className="content-wrapper">
       <section className="content">
         <div className="callout callout-info">
-          <h3>Selamat datang Dashboard Guru</h3>
+          <h3>Selamat datang di dashboard Guru</h3>
         </div>
         <div className="stats-container">
           <div className="stat-box">
