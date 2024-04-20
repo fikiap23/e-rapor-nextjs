@@ -18,24 +18,13 @@ export class JadwalAjarQuery extends DbService {
                 }
             },
             orderBy: {
-                tanggal: 'asc'
+                modulAjar: {
+                    minggu: 'asc'
+                }
             }
         })
-        const days: string[] = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
-        return result.map(item => {
-            const date = new Date(item.tanggal)
-            const dayName = days[date.getDay()]
-            return {
-                id: item.id,
-                idModulAjar: item.idModulAjar,
-                minggu: item.modulAjar.minggu,
-                hari: dayName,
-                tanggal: item.tanggal,
-                topik: item.modulAjar.topik,
-                subtopik: item.modulAjar.subtopik,
-                kegiatanInti: item.kegiatanInti
-            }
-        })
+
+        return result
     }
 
     async findById(id: string) {
@@ -60,5 +49,9 @@ export class JadwalAjarQuery extends DbService {
 
     async findByIds(ids: string[]) {
         return await this.prisma.jadwalAjar.findMany({ where: { id: { in: ids } } })
+    }
+
+    async findByIdAndIdModulAjar(id: string, idModulAjar: string) {
+        return await this.prisma.jadwalAjar.findFirst({ where: { id, idModulAjar } })
     }
 }

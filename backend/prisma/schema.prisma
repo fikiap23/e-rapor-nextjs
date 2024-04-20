@@ -237,9 +237,20 @@ model TujuanPembelajaran {
 }
 
 model JadwalAjar {
-  id           String   @id @default(uuid())
-  tanggal      DateTime
-  kegiatanInti String[]
+  id                String   @id @default(uuid())
+  kegiatanIntiHari1 String[]
+  kegiatanIntiHari2 String[]
+  kegiatanIntiHari3 String[]
+  kegiatanIntiHari4 String[]
+  kegiatanIntiHari5 String[]
+  kegiatanIntiHari6 String[]
+
+  tanggalHari1 DateTime
+  tanggalHari2 DateTime
+  tanggalHari3 DateTime
+  tanggalHari4 DateTime
+  tanggalHari5 DateTime
+  tanggalHari6 DateTime
 
   // Relation
   idModulAjar          String

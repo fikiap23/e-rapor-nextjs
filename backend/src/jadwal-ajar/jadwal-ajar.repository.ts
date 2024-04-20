@@ -39,6 +39,7 @@ export class JadwalAjarRepository {
         const modulAjar = await this.modulAjarRepository.findByIdOrThrow(dto.idModulAjar)
 
         if (!idsRombelSemesterGuru.includes(modulAjar.idRombelSemesterGuru)) throw new BadRequestException("Modul Ajar tidak ada")
+        await this.checkIsJadwalAjarExist(dto.idModulAjar)
 
         return await this.jadwalAjarQuery.create(modulAjar.idRombelSemesterGuru, dto);
     }
@@ -68,5 +69,11 @@ export class JadwalAjarRepository {
         const jadwalAjar = await this.jadwalAjarQuery.findByIds(ids);
         if (ids.length !== jadwalAjar.length) throw new BadRequestException('Sebagian jadwal ajar tidak ditemukan');
         return jadwalAjar
+    }
+
+    async checkIsJadwalAjarExist(idModulAjar: string) {
+        const jadwal = await this.jadwalAjarQuery.findByIdModulAjar(idModulAjar);
+        if (jadwal) throw new BadRequestException('Jadwal Ajar sudah ada');
+        return
     }
 }
