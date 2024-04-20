@@ -35,7 +35,7 @@ export default function Navbar(props) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <div className="ml-0 md:ml-10 flex justify-between items-baseline space-x-4 w-full">
+          <div className="ml-0 md:ml-10 flex justify-between items-baseline space-x-4 md:w-fit w-full">
             <a
               className={
                 scroll
