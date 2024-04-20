@@ -9,7 +9,7 @@ function SchoolIdentity({ semester, sekolah }) {
           width={150}
           height={150}
           alt="circle-image"
-          className="circle-image"
+          // className="circle-image"
         />
         <h1>
           <b>LAPORAN</b>
@@ -86,7 +86,7 @@ function SchoolIdentity({ semester, sekolah }) {
           <b>{sekolah.namaDisdik.toUpperCase()}</b>
         </h3>
         <h3>
-          <b>KOTA JAKARTA TIMUR</b>
+          <b>{sekolah.provinsi.toUpperCase()}</b>
         </h3>
       </div>
     </div>

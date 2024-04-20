@@ -10,7 +10,7 @@ function Cover({ semester, murid, rombel, sekolah }) {
           width={150}
           height={150}
           alt="circle-image"
-          className="circle-image"
+          // className="circle-image"
         />
         <h1>
           <b>LAPORAN</b>
@@ -51,12 +51,12 @@ function Cover({ semester, murid, rombel, sekolah }) {
 
       <div className="footer">
         <h3>
-          <b>{sekolah.namaDisdik.toUpperCase()}</b>
+          <b>{`${sekolah.namaDisdik.toUpperCase()} ${sekolah.provinsi.toUpperCase()}`}</b>
         </h3>
         <h3>
           <b>{sekolah.nama.toUpperCase()}</b>
         </h3>
-        <h4>{sekolah.alamat}</h4>
+        <h4 style={{marginTop: '20px'}}>{sekolah.alamat}</h4>
       </div>
     </div>
   )
