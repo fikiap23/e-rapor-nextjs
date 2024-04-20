@@ -50,21 +50,21 @@ export default function Navbar(props) {
 
           {role === "ADMIN" ? (
             <a
-              className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
+              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
               href="/admin"
             >
               Dashboard
             </a>
           ) : role === "TEACHER" ? (
             <a
-              className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
+              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
               href="/teacher"
             >
               Dashboard
             </a>
           ) : (
             <a
-              className="bg-blue-500 text-white font-semibold rounded-full py-2 px-6 md:block hidden"
+              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
               href="/login"
             >
               Log in
