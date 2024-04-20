@@ -186,7 +186,7 @@ export default function SearchView() {
 
           <ul className="list-disc list-inside text-sm md:text-base">
             <li>Masukkan NIS sesuai yang terdata</li>
-            <li>Masukkan Nama yang sesuai</li>
+            <li>Nama yang sesuai</li>
             <li>Pilih semester yang diinginkan</li>
           </ul>
         </div>

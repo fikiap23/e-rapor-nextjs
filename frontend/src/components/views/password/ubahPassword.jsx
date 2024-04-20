@@ -24,7 +24,7 @@ const UbahPassword = () => {
                 message.success('Password berhasil diubah!');
                 form.resetFields();
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.href = '/login';
                 }, 1000);
             }).catch((error) => {
                 message.error(error || 'Gagal mengubah password!');
