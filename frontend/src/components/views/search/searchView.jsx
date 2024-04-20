@@ -70,10 +70,8 @@ export default function SearchView() {
 
       const idRapor = result.idRapor;
 
-      setTimeout(() => {
-        push(`/raport_print/${idRapor}`);
-        setIsLoading(false);
-      }, 500);
+      window.location.href = `/raport_print/${idRapor}`;
+      setIsLoading(false);
     } catch (error) {
       toast.error(error, {
         position: "top-right",
