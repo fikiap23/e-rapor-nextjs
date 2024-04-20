@@ -70,9 +70,10 @@ export default function SearchView() {
 
       const idRapor = result.idRapor;
 
-      // Redirect to home
-      push(`/raport_print/${idRapor}`);
-      setIsLoading(false);
+      setTimeout(() => {
+        push(`/raport_print/${idRapor}`);
+        setIsLoading(false);
+      }, 500);
     } catch (error) {
       toast.error(error, {
         position: "top-right",
