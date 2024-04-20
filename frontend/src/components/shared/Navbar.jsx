@@ -73,7 +73,7 @@ export default function Navbar(props) {
           <div className="-mr-2 flex md:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md bg-[#007C11] text-gray-400 transition duration-500 ease-in-out"
+              className="inline-flex items-center justify-center p-1 rounded-lg bg-[#007C11] text-white transition duration-500 ease-in-out"
               onClick={toggleMenu}
             >
               <svg
