@@ -24,9 +24,21 @@ export class JadwalAjarQuery extends DbService {
             }
         })
 
+        const tanggalHari = ['tanggalHari1', 'tanggalHari2', 'tanggalHari3', 'tanggalHari4', 'tanggalHari5', 'tanggalHari6'];
+        const kegiatanIntiHari = ['kegiatanIntiHari1', 'kegiatanIntiHari2', 'kegiatanIntiHari3', 'kegiatanIntiHari4', 'kegiatanIntiHari5', 'kegiatanIntiHari6'];
         return result.map(x => {
+
+            const formatedJadwal = tanggalHari.map((tanggal, index) => ({
+                id: x.id,
+                tanggal: x[tanggal],
+                kegiatanInti: x[kegiatanIntiHari[index]],
+                idModulAjar: x.idModulAjar,
+                idRombelSemesterGuru: x.idRombelSemesterGuru
+            }));
+
             return {
                 ...x,
+                formatedJadwal,
                 minggu: x.modulAjar.minggu,
                 tanggalMulai: x.tanggalHari1,
                 topik: x.modulAjar.topik,

@@ -7,6 +7,7 @@ import { useJadwalAjars } from '@/hooks/useJadwalAjar'
 import { formatDateWithIndonesianMonthAndDay } from '@/lib/helperDate'
 import UpdateJadwalModal from './updateJadwalModal'
 import jadwalAjarService from '@/services/jadwal-ajar.service'
+import JadwalAjarModal from './jadwalAjarTable'
 
 const ActivitiesView = ({ idRombelSemesterGuru }) => {
   const { token } = useAuth()
@@ -23,6 +24,7 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
   const [selectedJadwal, setSelectedJadwal] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -39,6 +41,15 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
 
   const closeModalEdit = () => {
     setIsOpenEditModal(false)
+  }
+
+  const openModalDetail = (jadwal) => {
+    setSelectedJadwal(jadwal)
+    setIsOpenDetailModal(true)
+  }
+
+  const closeModalDetail = () => {
+    setIsOpenDetailModal(false)
   }
 
   const handleDelete = (id) => {
@@ -98,11 +109,16 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
         <Space size={'middle'}>
           <Button
             type="primary"
+            onClick={() => openModalDetail(record)}
+            style={{ marginRight: '2px', marginLeft: '2px' }}
+            icon={<i className="icon fa fa-eye"></i>}
+          />
+          <Button
+            type="primary"
             icon={<i className="icon fa fa-edit"></i>}
             onClick={() => openModalEdit(record)}
             style={{ marginRight: '2px', marginLeft: '2px' }}
           />
-
           <Button
             danger
             icon={<i className="icon fa fa-trash"></i>}
@@ -147,6 +163,13 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
           refetch={refetchJadwal}
           initialValues={selectedJadwal}
         ></UpdateJadwalModal>
+      )}
+      {isOpenDetailModal && (
+        <JadwalAjarModal
+          isOpen={isOpenDetailModal}
+          closeModal={closeModalDetail}
+          JadwalAjar={selectedJadwal}
+        />
       )}
     </div>
   )
