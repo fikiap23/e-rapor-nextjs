@@ -107,11 +107,26 @@ function PrintModule({ data }) {
       </table>
 
       <h6 className="tbl">B. KOMPONEN INTI</h6>
+      <table style={{ marginBottom: '20px' }}>
+        <tr>
+          <td width={120}>Sumber</td>
+          <td width={25}>:</td>
+          <td>{modulAjar.sumber}</td>
+        </tr>
+      </table>
+
       <div style={{ display: 'flex', marginTop: '10px' }}>
-        <div
-          className="ttd"
-          dangerouslySetInnerHTML={{ __html: modulAjar.komponenInti }}
-        />
+        <p>Peta Konsep</p>
+        <span style={{ textIndent: '3.2em', marginLeft: '14px' }}>:</span>
+        <div className="ttd" style={{ marginLeft: '20px' }}>
+          <ol className="dashed-list">
+            {modulAjar.petaKonsep.map((peta) => (
+              <li key={peta}>
+                <p>{peta}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
 
       <h6 className="tbl">C. CURAH IDE KEGIATAN</h6>

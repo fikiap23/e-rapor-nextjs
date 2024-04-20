@@ -186,7 +186,7 @@ model ModulAjar {
   alokasiWaktu      String?
   deskripsiUmum     String?
   modelPembelajaran ModelPembelajaranType @default(TATAP_MUKA)
-  komponenInti      String?
+  sumber            String?
   curahIdeKegiatan  String?
   kegiatanPembukaan String?
   istirahat         String?
@@ -195,7 +195,7 @@ model ModulAjar {
   tujuanKegiatan    String[]
   alatBahan         String[]
   petaKonsep        String[]
-  jadwalAjar        JadwalAjar[]
+  jadwalAjar        JadwalAjar?
 
   // Relation
   idTujuanPembelajaran String
@@ -237,12 +237,23 @@ model TujuanPembelajaran {
 }
 
 model JadwalAjar {
-  id           String   @id @default(uuid())
-  tanggal      DateTime
-  kegiatanInti String[]
+  id                String   @id @default(uuid())
+  kegiatanIntiHari1 String[]
+  kegiatanIntiHari2 String[]
+  kegiatanIntiHari3 String[]
+  kegiatanIntiHari4 String[]
+  kegiatanIntiHari5 String[]
+  kegiatanIntiHari6 String[]
+
+  tanggalHari1 DateTime
+  tanggalHari2 DateTime
+  tanggalHari3 DateTime
+  tanggalHari4 DateTime
+  tanggalHari5 DateTime
+  tanggalHari6 DateTime
 
   // Relation
-  idModulAjar          String
+  idModulAjar          String              @unique
   modulAjar            ModulAjar           @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
   idRombelSemesterGuru String
   rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
