@@ -1,10 +1,10 @@
-import DashboardViewTeacher from '@/components/views/dashboard/dashboardViewTeacher'
+import DashboardViewAdmin from '@/components/views/dashboard/dashboardViewAdmin'
 import React from 'react'
 
 const DashboardPage = () => {
   return (
     <>
-      <DashboardViewTeacher />
+      <DashboardViewAdmin />
     </>
   )
 }
