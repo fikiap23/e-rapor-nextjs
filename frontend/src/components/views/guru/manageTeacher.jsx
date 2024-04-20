@@ -58,9 +58,12 @@ const ManageTeacher = () => {
   }
 
   const handleNonactiveUserClick = async (idUser, status) => {
+    console.log(idUser, status)
     showConfirm(
       'Apakah Anda yakin?',
-      `Anda akan MENG${status}kAN pengguna ini!`,
+      `Anda akan ${
+        status === 'TIDAK_AKTIF' ? 'MENONAKTIFKAN' : 'MENGAKTIFKAN'
+      } pengguna ini!`,
       async () => {
         const payload = {
           status,
@@ -118,6 +121,31 @@ const ManageTeacher = () => {
       sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
+      title: 'Jenis Kelamin',
+      dataIndex: 'jenisKelamin',
+      key: 'jenisKelamin',
+      filters: [
+        {
+          text: 'Laki-laki',
+          value: 'L',
+        },
+        {
+          text: 'Perempuan',
+          value: 'P',
+        },
+      ],
+      onFilter: (value, record) => record.jenisKelamin.indexOf(value) === 0,
+      render: (text, record) => (
+        <span>{record.jenisKelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</span>
+      ),
+    },
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      sorter: (a, b) => a.username.localeCompare(b.username),
+    },
+    {
       title: 'Status User',
       dataIndex: 'status',
       key: 'status',
@@ -134,7 +162,7 @@ const ManageTeacher = () => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (text, record) => (
         <Tag color={record.status === 'AKTIF' ? 'green' : 'yellow'}>
-          {record.status}
+          {record.status?.replace(/_/g, ' ')}
         </Tag>
       ),
     },

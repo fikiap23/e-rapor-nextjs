@@ -19,7 +19,7 @@ import { apiUrl } from '@/services/apiUrls'
 import { getBase64 } from '@/lib/helper'
 const { Option } = Select
 
-const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
+const TabUpdateSiswa = ({ dataSiswa, refetch, btnBack }) => {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
@@ -90,6 +90,7 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
                 content: 'Siswa telah diubah.',
               })
               refetch()
+              btnBack()
             })
             .catch((err) => {
               setIsLoading(false)
@@ -299,6 +300,14 @@ const TabUpdateSiswa = ({ dataSiswa, refetch }) => {
             label="Berat Badan"
             name="beratBadan"
             rules={[{ required: true, message: 'Masukkan Berat Badan' }]}
+          >
+            <Input type="number" />
+          </Form.Item>
+
+          <Form.Item
+            label="Lingkar"
+            name="lingkar"
+            rules={[{ required: true, message: 'Masukkan Lingkar' }]}
           >
             <Input type="number" />
           </Form.Item>

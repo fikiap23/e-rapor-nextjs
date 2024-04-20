@@ -29,6 +29,10 @@ class CreateMuridDto {
     tanggalLahir?: Date;
 
     @IsOptional()
+    @IsInt()
+    lingkar?: number
+
+    @IsOptional()
     @IsEnum(Agama)
     agama?: Agama;
 

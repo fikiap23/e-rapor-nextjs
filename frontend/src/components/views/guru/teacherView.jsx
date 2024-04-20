@@ -22,11 +22,15 @@ const TeacherView = () => {
             <>
               <p>
                 1. Untuk Login Akun Guru baru harap gunakan{' '}
-                <b>username dan password: NIP </b>
+                <b>username dan password. </b>
               </p>
 
               <p>
-                2. <b>PASTIKAN GURU SUDAH AKTIF!! </b>
+                2. Secara default username dan password adalah <b>NIP </b>
+              </p>
+
+              <p>
+                3. <b>PASTIKAN GURU SUDAH AKTIF!! </b>
               </p>
             </>
           }

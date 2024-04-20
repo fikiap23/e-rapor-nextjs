@@ -105,7 +105,7 @@ function PrintAssesmnet({ data }) {
 
                   {/* Deskripsi Dasar Literasi */}
                   <td className="column7 style26 f">
-                    {item.nilaiLiterasiSains === NilaiType.BELUM_MUNCUL
+                    {item.nilaiLiterasiSains === NilaiType.BELUM_BERKEMBANG
                       ? item.deskripsiLiterasiSains
                       : ''}
                   </td>
