@@ -1,7 +1,7 @@
 import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 import { apiUrl } from '@/services/apiUrls'
 
-function StudentIdentity({ murid, kapsek }) {
+function StudentIdentity({ murid, kapsek, sekolah }) {
   return (
     <div>
       <div className="header" style={{ marginTop: '10%' }}>
@@ -135,9 +135,7 @@ function StudentIdentity({ murid, kapsek }) {
         />
         <div className="ttd" style={{ marginLeft: '20px' }}>
           <p style={{ marginBottom: '30%' }}>
-            Kepala TK ERLANGGA CIRACAS
-            <br />
-            ASY SYAMS ISLAMIC SCHOOL
+            {`Kepala ${sekolah.nama.toUpperCase()}`}
           </p>
           <p style={{ fontWeight: 'bold', margin: '0' }}>{kapsek.nama}</p>
           <hr

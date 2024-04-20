@@ -33,7 +33,11 @@ const Raport = ({ data }) => {
 
       <SchoolIdentity semester={semester} sekolah={sekolah}></SchoolIdentity>
 
-      <StudentIdentity murid={murid} kapsek={kapsek}></StudentIdentity>
+      <StudentIdentity
+        murid={murid}
+        kapsek={kapsek}
+        sekolah={sekolah}
+      ></StudentIdentity>
 
       <Narrative
         murid={murid}
