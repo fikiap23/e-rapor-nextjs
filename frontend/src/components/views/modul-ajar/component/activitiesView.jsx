@@ -107,12 +107,12 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
       key: 'action',
       render: (text, record, index) => (
         <Space size={'middle'}>
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => openModalDetail(record)}
             style={{ marginRight: '2px', marginLeft: '2px' }}
             icon={<i className="icon fa fa-eye"></i>}
-          />
+          /> */}
           <Button
             type="primary"
             icon={<i className="icon fa fa-edit"></i>}
