@@ -45,6 +45,12 @@ export default function LoginPage() {
   if (token) {
     push('/')
   }
+
+  const handleLupaPassword = () => {
+    toast.info('Hubungi Admin untuk ubah password', {
+      position: 'top-right',
+    })
+  }
   return (
     <>
       <div className="h-screen md:flex">
@@ -126,8 +132,8 @@ export default function LoginPage() {
             >
               {isLoading ? 'Loading...' : 'Login'}
             </button>
-            <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer">
-              Forgot Password ?
+            <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer" onClick={handleLupaPassword}>
+              Lupa Password ?
             </span>
           </div>
         </div>
