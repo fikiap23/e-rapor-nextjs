@@ -4,7 +4,7 @@ import AddSubjectModal from './addSubjectModal'
 import useAuth from '@/hooks/useAuth'
 import { useModulAjars } from '@/hooks/useModulAjar'
 import { useJadwalAjars } from '@/hooks/useJadwalAjar'
-import { formatDate } from '@/lib/helperDate'
+import { formatDateWithIndonesianMonthAndDay } from '@/lib/helperDate'
 import UpdateJadwalModal from './updateJadwalModal'
 import jadwalAjarService from '@/services/jadwal-ajar.service'
 
@@ -70,20 +70,16 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
 
   const columns = [
     {
-      title: 'Minggu',
+      title: 'Minggu ke-',
       dataIndex: 'minggu',
       key: 'minggu',
     },
     {
-      title: 'Hari',
-      dataIndex: 'hari',
-      key: 'hari',
-    },
-    {
-      title: 'Tanggal',
-      dataIndex: 'tanggal',
-      key: 'tanggal',
-      render: (text, record) => formatDate(new Date(record.tanggal)),
+      title: 'Tanggal Mulai',
+      dataIndex: 'tanggalMulai',
+      key: 'tanggalMulai',
+      render: (text, record) =>
+        formatDateWithIndonesianMonthAndDay(new Date(record.tanggalMulai)),
     },
     {
       title: 'Topik',
@@ -94,20 +90,6 @@ const ActivitiesView = ({ idRombelSemesterGuru }) => {
       title: 'Sub Topik',
       dataIndex: 'subtopik',
       key: 'subtopik',
-    },
-    {
-      title: 'Kegiatan Inti',
-      dataIndex: 'kegiatanInti',
-      key: 'kegiatanInti',
-      render: (text, record, index) => (
-        <div>
-          {text.map((kegiatan, idx) => (
-            <p key={idx}>
-              {idx + 1}. {kegiatan}
-            </p>
-          ))}
-        </div>
-      ),
     },
     {
       title: 'Aksi',

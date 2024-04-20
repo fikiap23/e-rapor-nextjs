@@ -24,7 +24,17 @@ export class JadwalAjarQuery extends DbService {
             }
         })
 
-        return result
+        return result.map(x => {
+            return {
+                id: x.id,
+                idModulAjar: x.idModulAjar,
+                idRombelSemesterGuru: x.idRombelSemesterGuru,
+                minggu: x.modulAjar.minggu,
+                tanggalMulai: x.tanggalHari1,
+                topik: x.modulAjar.topik,
+                subtopik: x.modulAjar.subtopik
+            }
+        })
     }
 
     async findById(id: string) {
@@ -32,7 +42,7 @@ export class JadwalAjarQuery extends DbService {
     }
 
     async findByIdModulAjar(idModulAjar: string) {
-        return await this.prisma.jadwalAjar.findMany({ where: { idModulAjar } })
+        return await this.prisma.jadwalAjar.findFirst({ where: { idModulAjar } })
     }
 
     async create(idRombelSemesterGuru: string, payload: CreateJadwalAjarDto) {

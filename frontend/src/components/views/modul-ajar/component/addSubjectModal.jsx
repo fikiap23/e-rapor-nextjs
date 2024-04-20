@@ -10,37 +10,45 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
 
   const handleSubmit = async () => {
     await form.validateFields()
-    console.log('values', form.getFieldsValue())
-    const tanggalMulai = form.getFieldValue('tanggal')
-    const tanggalList = []
+    const values = await form.getFieldsValue()
+    // console.log('values', values)
+    const tanggalMulai = values.tanggal
+    const tanggalList = {}
 
     // generate 6 days from start date
     for (let i = 0; i < 6; i++) {
       const date = new Date(tanggalMulai)
-      date.setDate(date.getDate() + i)
+      date.setDate(date.getDate() + (i + 1))
       const formattedDate = date.toISOString().slice(0, 10)
-      tanggalList.push(formattedDate)
+      tanggalList['tanggalHari' + (i + 1)] = formattedDate
     }
 
-    console.log(tanggalList)
+    const payload = {
+      ...values,
+      ...tanggalList,
+      idModulAjar: values.idModulAjar,
+    }
 
-    // await jadwalAjarService
-    //   .create(payload, token)
-    //   .then(() => {
-    //     Modal.success({
-    //       title: 'Berhasil',
-    //       content: 'Berhasil menambahkan jadwal ajar',
-    //     })
-    //     form.resetFields()
-    //     refetch()
-    //     closeModal()
-    //   })
-    //   .catch((err) => {
-    //     Modal.error({
-    //       content: err,
-    //       title: 'Oops...',
-    //     })
-    //   })
+    delete payload.tanggal
+    // console.log('payload', tanggalList)
+
+    await jadwalAjarService
+      .create(payload, token)
+      .then(() => {
+        Modal.success({
+          title: 'Berhasil',
+          content: 'Berhasil menambahkan jadwal ajar',
+        })
+        form.resetFields()
+        refetch()
+        closeModal()
+      })
+      .catch((err) => {
+        Modal.error({
+          content: err,
+          title: 'Oops...',
+        })
+      })
   }
 
   return (
@@ -97,7 +105,7 @@ const AddModal = ({ isOpen, closeModal, modulAjars, token, refetch }) => {
             >
               Kegiatan Inti Hari ke {index + 1}
             </label>
-            <Form.List name={`kegiatanInti${index + 1}`}>
+            <Form.List name={`kegiatanIntiHari${index + 1}`}>
               {(fields, { add, remove }) => (
                 <>
                   {fields.length === 0 && (

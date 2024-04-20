@@ -195,7 +195,7 @@ model ModulAjar {
   tujuanKegiatan    String[]
   alatBahan         String[]
   petaKonsep        String[]
-  jadwalAjar        JadwalAjar[]
+  jadwalAjar        JadwalAjar?
 
   // Relation
   idTujuanPembelajaran String
@@ -253,7 +253,7 @@ model JadwalAjar {
   tanggalHari6 DateTime
 
   // Relation
-  idModulAjar          String
+  idModulAjar          String              @unique
   modulAjar            ModulAjar           @relation(fields: [idModulAjar], references: [id], onDelete: Cascade)
   idRombelSemesterGuru String
   rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
