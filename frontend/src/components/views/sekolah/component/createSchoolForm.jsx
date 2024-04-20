@@ -13,13 +13,11 @@ function CreateSchoolForm({ token }) {
     noTelepon: '',
     npsn: '',
     kelurahan: '',
-    nipKepsek: '',
     kecamatan: '',
     kodePos: '',
     kota: '',
     provinsi: '',
     namaDisdik: '',
-    namaKapsek: '',
   })
 
   const [previewOpen, setPreviewOpen] = useState(false)
