@@ -29,7 +29,7 @@ export default function Navbar(props) {
     <nav
       className={
         scroll
-          ? "w-full px-10 py-4 transition duration-[0.7s] bg-white fixed z-10"
+          ? "w-full px-10 py-4 transition duration-[0.7s] bg-[#007C11] fixed z-10"
           : "w-full px-10 py-4 transition duration-[0.7s] bg-transparent fixed"
       }
     >
@@ -39,7 +39,7 @@ export default function Navbar(props) {
             <a
               className={
                 scroll
-                  ? "font-bold w-1/2 md:w-full text-xs md:text-sm md:block"
+                  ? "font-bold w-1/2 md:w-full text-xs md:text-sm md:block text-white"
                   : "font-bold w-1/2 md:w-full text-xs md:text-sm text-white"
               }
               href="/"
