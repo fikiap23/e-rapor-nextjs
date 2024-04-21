@@ -14,4 +14,8 @@ export class UserService {
     async findMe(token: string) {
         return await this.userRepository.findMe(token)
     }
+
+    async getDashboardAdmin() {
+        return await this.userRepository.getDashboardAdmin()
+    }
 }

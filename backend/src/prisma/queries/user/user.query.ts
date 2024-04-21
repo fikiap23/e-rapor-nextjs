@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateUserDto } from '../../../auth/dto/create-user.dto';
 import { UpdateUserDto } from '../../../auth/dto/update-user.dto';
+import { StatusAkun } from '@prisma/client';
 
 
 @Injectable()
@@ -66,6 +67,38 @@ export class UserQuery extends DbService {
 
     async delete(id: string) {
         return await this.prisma.user.delete({ where: { id } })
+    }
+
+    async getDashboardAdmin() {
+        const [totalMurid, totalGuru, totalRombel, totalSemester, totalKelompokUsia] = await this.prisma.$transaction([
+            this.prisma.murid.count(),
+            this.prisma.guru.count(),
+            this.prisma.rombel.count(),
+            this.prisma.semester.count(),
+            this.prisma.kategoriRombel.count()
+        ]);
+
+        const [totalMuridAktif, totalGuruAktif, totalSemesterAktif] = await this.prisma.$transaction([
+            this.prisma.murid.count({
+                where: {
+                    status: StatusAkun.AKTIF
+                }
+            }),
+            this.prisma.guru.count({
+                where: {
+                    user: {
+                        status: StatusAkun.AKTIF
+                    }
+                }
+            }),
+            this.prisma.semester.count({
+                where: {
+                    isAktif: true
+                }
+            })
+        ]);
+
+        return { totalMurid, totalMuridAktif, totalGuru, totalGuruAktif, totalRombel, totalSemester, totalSemesterAktif, totalKelompokUsia };
     }
 
 }

@@ -41,4 +41,12 @@ export class UserController {
         const result = await this.userService.findMe(authorization)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
+
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    @Get('admin/dashboard')
+    async getDashboardAdmin(@Res() res) {
+        const result = await this.userService.getDashboardAdmin()
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
 }

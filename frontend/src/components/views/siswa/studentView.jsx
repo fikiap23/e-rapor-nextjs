@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Table, Button, Input, Tabs, Modal, Flex, Space } from 'antd'
+import { Table, Button, Input, Tabs, Modal, Flex, Space, Tag } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import TabInputSiswa from './TabInputStudent'
@@ -72,6 +72,37 @@ const StudentView = () => {
       },
       onCancel: () => {
         console.log('Cancel')
+      },
+    })
+  }
+
+  const handleStatusChange = (siswa) => {
+    const statusAkun = siswa.status === 'AKTIF' ? 'TIDAK_AKTIF' : 'AKTIF'
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content: `Anda akan ${
+        statusAkun === 'AKTIF' ? 'mengaktifkan' : 'mengnonaktifkan'
+      } akun siswa!`,
+      okText: `Ya, ${statusAkun === 'AKTIF' ? 'aktifkan' : 'nonaktifkan'}!`,
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await siswaService
+          .update(token, siswa.id, { status: statusAkun })
+          .then(() => {
+            refetchStudents()
+            Modal.success({
+              title: 'Success',
+              content: `Data siswa telah di${
+                statusAkun === 'AKTIF' ? 'aktifkan' : 'nonaktifkan'
+              }.`,
+            })
+          })
+          .catch((error) => {
+            Modal.error({
+              content: error,
+              title: 'Oops...',
+            })
+          })
       },
     })
   }
@@ -150,21 +181,47 @@ const StudentView = () => {
       ),
     },
     {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      filters: [
+        { text: 'AKTIF', value: 'AKTIF' },
+        { text: 'TIDAK AKTIF', value: 'TIDAK_AKTIF' },
+      ],
+      onFilter: (value, record) => record.status === value,
+      render: (text) => (
+        <Tag color={text === 'AKTIF' ? 'green' : 'red'}>
+          {' '}
+          {text === 'AKTIF' ? 'AKTIF' : 'TIDAK AKTIF'}
+        </Tag>
+      ),
+    },
+    {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
-        <span>
-          <Button type="primary" onClick={() => handleUpdateSiswa(record)}>
+        <Space size="small">
+          <Button
+            icon={<icons.EditOutlined />}
+            type="primary"
+            onClick={() => handleUpdateSiswa(record)}
+          >
             Edit
           </Button>
           <Button
+            icon={<icons.UserOutlined />}
+            onClick={() => handleStatusChange(record)}
+          >
+            {record.status === 'AKTIF' ? 'Nonaktifkan' : 'Aktifkan'}
+          </Button>
+          <Button
+            icon={<icons.DeleteOutlined />}
             danger
-            style={{ marginLeft: 8 }}
             onClick={() => handleDelete(record.id)}
           >
             Hapus
           </Button>
-        </span>
+        </Space>
       ),
     },
   ]
