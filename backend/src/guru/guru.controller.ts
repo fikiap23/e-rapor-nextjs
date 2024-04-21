@@ -89,6 +89,15 @@ export class GuruController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('dashboard')
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.GURU)
+    async getDashboard(@Res() res, @Headers('authorization') authorization: string,) {
+        const result = await this.guruService.getDashboardGuru(authorization);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
+
 
     @Get(':id')
     @UseGuards(JwtGuard, RoleGuard)

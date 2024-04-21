@@ -46,11 +46,13 @@ export class RaporRepository {
     async create(token: string, dto: CreateRaporDto) {
         try {
             const sekolah = await this.sekolaRepository.findSekolah()
-            const { idsRombelSemesterGuru, idGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+            const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+            const idRombelSemesterGuru = dto.idRombelSemesterGuru;
+
+            if (!idsRombelSemesterGuru.includes(idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
             // check rombel semester guru exist
-            const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruByIdsOrThrow(idsRombelSemesterGuru);
-            const idsRombel = rombelSemesterGuru.map(rombel => rombel.idRombel);
+            const rombelSemesterGuru = await this.rombelQuery.findRombelSemesterGuruById(idRombelSemesterGuru)
 
             // check semester and murid exist
             await this.semesterRepository.findByIdOrThrow(dto.idSemester);
@@ -59,9 +61,9 @@ export class RaporRepository {
             // check rapor exist
             await this.checkIsRaporExist(dto.idMurid, dto.idSemester);
 
-            if (!idsRombel.includes(murid.idRombel)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+            if (rombelSemesterGuru.idRombel !== murid.idRombel) throw new BadRequestException('Anak tidak terdaftar di rombel ini');
 
-            const data = await this.raporQuery.create(sekolah.id, idsRombel[0], idGuru, dto);
+            const data = await this.raporQuery.create(sekolah.id, idRombelSemesterGuru, dto);
             if (!data) throw new BadRequestException('Rapor gagal ditambahkan');
             return data
         } catch (BadRequestException) {
@@ -70,12 +72,15 @@ export class RaporRepository {
     }
 
     async update(token: string, id: string, dto: UpdateRaporDto) {
-        const rapor = await this.findByIdOrThrow(id);
+        await this.findByIdOrThrow(id);
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        const idRombelSemesterGuru = dto.idRombelSemesterGuru;
 
-        if (!idsRombelSemesterGuru.includes(rapor.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        if (!idsRombelSemesterGuru.includes(idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        // check rombel semester guru exist
+        await this.rombelQuery.findRombelSemesterGuruById(idRombelSemesterGuru)
 
-        return await this.raporQuery.updateById(id, dto);
+        return await this.raporQuery.updateById(id, idRombelSemesterGuru, dto);
     }
 
     async findByIdRombelAndSemester(idRombel: string, idSemester: string) {

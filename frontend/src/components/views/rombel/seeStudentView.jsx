@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Table } from 'antd'
+import { Button, Input, Modal, Table, Tag } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import { useOneRombel } from '@/hooks/useOneRombel'
 import siswaService from '@/services/siswa.service'
@@ -86,6 +86,22 @@ export default function SeeStudentView({ id }) {
       dataIndex: 'nama',
       key: 'nama',
       sorter: (a, b) => a.nama.localeCompare(b.nama),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      filters: [
+        { text: 'AKTIF', value: 'AKTIF' },
+        { text: 'TIDAK AKTIF', value: 'TIDAK_AKTIF' },
+      ],
+      onFilter: (value, record) => record.status === value,
+      render: (text) => (
+        <Tag color={text === 'AKTIF' ? 'green' : 'red'}>
+          {' '}
+          {text === 'AKTIF' ? 'AKTIF' : 'TIDAK AKTIF'}
+        </Tag>
+      ),
     },
     {
       title: 'Aksi',

@@ -192,4 +192,57 @@ export class GuruQuery extends DbService {
 
         return rombelAktif
     }
+
+    async getDashboardGuru(id: string) {
+        const rombelSemesterGurus = await this.prisma.rombelSemesterGuru.findMany({
+            where: {
+                idGuru: id,
+                semester: {
+                    isAktif: true
+                }
+            },
+            select: {
+                rombel: {
+                    select: {
+                        id: true,
+                        murid: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                },
+                semester: {
+                    select: {
+                        id: true
+                    }
+                }
+            }
+        });
+
+        const raporCount = await this.prisma.rapor.count({
+            where: {
+                idRombel: {
+                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.rombel.id)
+                },
+                idSemester: {
+                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.semester.id)
+                }
+            }
+        });
+
+        const totalMuridDiampu = rombelSemesterGurus.reduce((total, rombelSemesterGuru) => {
+            return total + rombelSemesterGuru.rombel.murid.length;
+        }, 0);
+
+        const totalRaportTersedia = raporCount;
+        const totalRaportBelumSiap = totalMuridDiampu - raporCount;
+
+        return {
+            totalRaportTersedia,
+            totalRaportBelumSiap,
+            totalMuridDiampu
+        };
+    }
+
 }

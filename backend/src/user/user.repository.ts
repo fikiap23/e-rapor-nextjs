@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { UserQuery } from '../prisma/queries/user/user.query';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { AuthRepository } from '../auth/auth.repository';
@@ -21,8 +21,12 @@ export class UserRepository {
         return await this.userQuery.update(id, dto)
     }
 
-    async findMe (token: string){
+    async findMe(token: string) {
         const { sub } = await this.authRepository.decodeJwtToken(token)
         return await this.userQuery.findMe(sub)
+    }
+
+    async getDashboardAdmin() {
+        return await this.userQuery.getDashboardAdmin()
     }
 }

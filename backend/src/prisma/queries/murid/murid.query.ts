@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import CreateMuridDto from '../../../murid/dto/create-murid.dto';
 import { UpdateMuridDto } from '../../../murid/dto/update-murid.dto';
-import { Agama, JenisKelamin } from '@prisma/client';
+import { Agama, JenisKelamin, StatusAkun } from '@prisma/client';
 import { createDateFromDDMMYYYY } from '../../../helpers/helper-date';
 import BulkMuridDto from '../../../murid/dto/bulk-muri.dto';
 
@@ -35,7 +35,8 @@ export class MuridQuery extends DbService {
     async findByNullIdRombel() {
         return await this.prisma.murid.findMany({
             where: {
-                idRombel: null
+                idRombel: null,
+                status: StatusAkun.AKTIF
             }
         })
     }

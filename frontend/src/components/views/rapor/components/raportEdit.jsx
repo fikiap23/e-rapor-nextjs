@@ -6,7 +6,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import RichTextEditor from '@/components/shared/editor/Editor'
 
 const { confirm } = Modal
-function RaportEdit({ murid, btnBack, refetch }) {
+function RaportEdit({ murid, btnBack, refetch, idRombelSemesterGuru }) {
   const { token } = useAuth()
   const [form] = Form.useForm()
   const rapor = murid?.rapor[0]
@@ -31,6 +31,7 @@ function RaportEdit({ murid, btnBack, refetch }) {
         catatanPertumbuhan: values.catatanPertumbuhan,
         catatanPancasila: values.catatanPancasila,
         catatanGuru: values.catatanGuru,
+        idRombelSemesterGuru,
       }
 
       confirm({

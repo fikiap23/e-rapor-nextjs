@@ -124,13 +124,16 @@ export class RaporQuery extends DbService {
         return result
     }
 
-    async create(idSekolah: string, idRombel: string, idGuru: string, payload: CreateRaporDto) {
-        const rombelSemesterGuruId = await this.prisma.rombelSemesterGuru.findFirstOrThrow({ where: { idRombel, idGuru, idSemester: payload.idSemester } })
-        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel, idGuru, idRombelSemesterGuru: rombelSemesterGuruId.id } })
+    async create(idSekolah: string, idRombelSemesterGuru: string, payload: CreateRaporDto) {
+        delete payload.idRombelSemesterGuru
+        const rombelSemesterGuruId = await this.prisma.rombelSemesterGuru.findFirstOrThrow({ where: { id: idRombelSemesterGuru } })
+        return await this.prisma.rapor.create({ data: { ...payload, idSekolah, idRombel: rombelSemesterGuruId.idRombel, idGuru: rombelSemesterGuruId.idGuru, idRombelSemesterGuru: rombelSemesterGuruId.id } })
     }
 
-    async updateById(id: string, payload: UpdateRaporDto) {
-        return await this.prisma.rapor.update({ where: { id }, data: payload })
+    async updateById(id: string, idRombelSemesterGuru: string, payload: UpdateRaporDto) {
+        delete payload.idRombelSemesterGuru
+        const rombelSemesterGuruId = await this.prisma.rombelSemesterGuru.findFirstOrThrow({ where: { id: idRombelSemesterGuru } })
+        return await this.prisma.rapor.update({ where: { id }, data: { ...payload, idRombel: rombelSemesterGuruId.idRombel, idGuru: rombelSemesterGuruId.idGuru, idRombelSemesterGuru: rombelSemesterGuruId.id } })
     }
 
     async printById(id: string) {

@@ -157,6 +157,10 @@ export class RombelQuery extends DbService {
         return await this.prisma.rombelSemesterGuru.findMany({ where: { id: { in: ids } } })
     }
 
+    async findRombelSemesterGuruById(id: string) {
+        return await this.prisma.rombelSemesterGuru.findUniqueOrThrow({ where: { id } })
+    }
+
     async checkIsRombelSemesterGuruExist(idRombel: string, idSemester: string, idGuru: string) {
         return await this.prisma.rombelSemesterGuru.findFirst({ where: { idRombel, idSemester, idGuru } })
     }
