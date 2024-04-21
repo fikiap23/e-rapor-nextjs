@@ -189,6 +189,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                       semester={semester}
                       btnBack={handleBack}
                       refetch={refetch}
+                      idRombelSemesterGuru={idRombelSemesterGuru[0]}
                     />
                   )}
 
@@ -197,6 +198,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                       murid={selectedMurid}
                       btnBack={handleBack}
                       refetch={refetch}
+                      idRombelSemesterGuru={idRombelSemesterGuru[0]}
                     />
                   )}
                 </>

@@ -127,6 +127,11 @@ export class GuruRepository {
         return await this.guruQuery.findAllRombelDiampu(idGuru)
     }
 
+    async getDashboardGuru(token: string) {
+        const { idGuru } = await this.authRepository.decodeJwtToken(token);
+        return await this.guruQuery.getDashboardGuru(idGuru)
+    }
+
     /*
       |--------------------------------------------------------------------------
       | Helper guru function

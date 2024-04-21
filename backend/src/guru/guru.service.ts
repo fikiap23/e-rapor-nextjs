@@ -31,4 +31,8 @@ export class GuruService {
     async findAllRombelDiampu(token: string) {
         return await this.guruRepository.findAllRombelDiampu(token)
     }
+
+    async getDashboardGuru(token: string) {
+        return await this.guruRepository.getDashboardGuru(token)
+    }
 }

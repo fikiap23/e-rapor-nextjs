@@ -100,5 +100,4 @@ export class UserQuery extends DbService {
 
         return { totalMurid, totalMuridAktif, totalGuru, totalGuruAktif, totalRombel, totalSemester, totalSemesterAktif, totalKelompokUsia };
     }
-
 }

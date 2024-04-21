@@ -1,12 +1,18 @@
 import useAuth from '@/hooks/useAuth'
 import raportService from '@/services/rapor.service'
-import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd'
+import React from 'react'
+import { Button, Col, Form, Input, Modal, Row } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import RichTextEditor from '@/components/shared/editor/Editor'
 
 const { confirm } = Modal
-function RaportInput({ murid, semester, btnBack, refetch }) {
+function RaportInput({
+  murid,
+  semester,
+  btnBack,
+  refetch,
+  idRombelSemesterGuru,
+}) {
   const { token } = useAuth()
   const [form] = Form.useForm()
 
@@ -17,6 +23,7 @@ function RaportInput({ murid, semester, btnBack, refetch }) {
         ...values,
         idMurid: murid.id,
         idSemester: semester.id,
+        idRombelSemesterGuru,
       }
 
       confirm({
