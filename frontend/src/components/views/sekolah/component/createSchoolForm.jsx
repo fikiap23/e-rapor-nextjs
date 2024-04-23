@@ -105,7 +105,7 @@ function CreateSchoolForm({ token }) {
 
   return (
     <div className="box-body">
-      <h3>TAMBAH DATA SEKOLAH</h3>
+      <h3>INPUT DATA RAUDHATUL ATHFAL</h3>
       <div
         style={{
           height: '1px',
@@ -119,7 +119,7 @@ function CreateSchoolForm({ token }) {
           <div className="col-md-6">
             <div className="form-group">
               <label htmlFor="nama" className="control-label">
-                Nama Sekolah
+                Nama Raudhatul Athfal
               </label>
               <input
                 type="text"
@@ -145,7 +145,7 @@ function CreateSchoolForm({ token }) {
             </div>
             <div className="form-group">
               <label htmlFor="alamat" className="control-label">
-                Alamat Sekolah
+                Alamat Raudhatul Athfal
               </label>
               <textarea
                 name="alamat"
@@ -170,7 +170,7 @@ function CreateSchoolForm({ token }) {
             </div>
             <div className="form-group">
               <label htmlFor="noTelepon" className="control-label">
-                No. Telp Sekolah
+                No. Telp Raudhatul Athfal
               </label>
               <input
                 type="number"
@@ -254,7 +254,7 @@ function CreateSchoolForm({ token }) {
 
             <div className="form-group">
               <label htmlFor="logo" className="control-label">
-                Logo Sekolah
+                Logo Raudhatul Athfal
               </label>
               <>
                 <Upload

@@ -110,7 +110,7 @@ function SchoolForm({ sekolahData, token }) {
           <div className="col-md-6">
             <div className="form-group">
               <label htmlFor="nama" className="control-label">
-                Nama Sekolah
+                Nama Raudhatul Athfal
               </label>
               <input
                 type="text"
@@ -138,7 +138,7 @@ function SchoolForm({ sekolahData, token }) {
             </div>
             <div className="form-group">
               <label htmlFor="alamat" className="control-label">
-                Alamat Sekolah
+                Alamat Raudhatul Athfal
               </label>
               <textarea
                 name="alamat"
@@ -165,7 +165,7 @@ function SchoolForm({ sekolahData, token }) {
             </div>
             <div className="form-group">
               <label htmlFor="noTelepon" className="control-label">
-                No. Telp Sekolah
+                No. Telp Raudhatul Athfal
               </label>
               <input
                 type="number"
@@ -255,7 +255,7 @@ function SchoolForm({ sekolahData, token }) {
 
             <div className="form-group">
               <label htmlFor="logo" className="control-label">
-                Logo Sekolah
+                Logo Raudhatul Athfal
               </label>
               <>
                 <Upload

@@ -36,11 +36,12 @@ function SchoolView() {
       <section className="content">
         <div className="callout callout-info">
           <h4>
-            <i className="icon fa fa-info-circle"></i> Portal Sekolah !!!
+            <i className="icon fa fa-info-circle"></i> Portal Raudhatul Athfal
+            !!!
           </h4>
           <p>
-            Ini adalah portal sekolah. Sebagai Admin anda dapat mengelola data
-            sekolah.
+            Ini adalah portal Raudhatul Athfal. Sebagai Admin anda dapat
+            mengelola data Raudhatul Athfal.
           </p>
         </div>
         <div className="row">
