@@ -133,7 +133,7 @@ export class MuridQuery extends DbService {
                                 nis: true,
                                 rapor: {
                                     where: {
-                                        idSemester: checkRombelSemesterGuru.idSemester
+                                        idRombelSemesterGuru: id
                                     }
                                 },
                             }
