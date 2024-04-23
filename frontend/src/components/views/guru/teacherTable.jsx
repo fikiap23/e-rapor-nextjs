@@ -168,7 +168,7 @@ const TeacherTable = () => {
         />
       </div>
       {/* add guru */}
-      {isAddModalOpen && !isFetchingGuruRombel && (
+      {isAddModalOpen && (
         <AddGuruToRombelModal
           isOpen={isAddModalOpen}
           closeModal={closeAddModal}
@@ -179,7 +179,7 @@ const TeacherTable = () => {
         />
       )}
       {/* update guru */}
-      {isUpdateModalOpen && !isFetchingGuruRombel && (
+      {isUpdateModalOpen && (
         <UpdateGuruToRombelModal
           isOpen={isUpdateModalOpen}
           closeModal={closeUpdateModal}

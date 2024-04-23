@@ -65,9 +65,15 @@ export class RombelRepository {
         return
     }
 
+    async checkRombelSemester(idRombel: string, idSemester: string) {
+        const rombel = await this.rombelQuery.checkRombelSemester(idRombel, idSemester)
+        if (rombel) throw new BadRequestException('Sudah ada guru di rombel dan semester ini');
+        return
+    }
+
     async createRombelSemesterGuru(payload: UpdateRombelSemesterGuruDto) {
         // check rombel exist
-        await this.checkRombelSemesterGuruExist(payload.idRombel, payload.idGuru, payload.idSemester)
+        await this.checkRombelSemester(payload.idRombel, payload.idSemester)
         return await this.rombelQuery.createRombelSemesterGuru(payload)
     }
 

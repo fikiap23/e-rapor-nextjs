@@ -165,6 +165,10 @@ export class RombelQuery extends DbService {
         return await this.prisma.rombelSemesterGuru.findFirst({ where: { idRombel, idSemester, idGuru } })
     }
 
+    async checkRombelSemester(idRombel: string, idSemester: string) {
+        return await this.prisma.rombelSemesterGuru.findFirst({ where: { idRombel, idSemester } })
+    }
+
     async findRombelAndSemesterById(idRombelSemesterGuru: string) {
         const result = await this.prisma.rombelSemesterGuru.findUnique({
             where: { id: idRombelSemesterGuru }, include: {

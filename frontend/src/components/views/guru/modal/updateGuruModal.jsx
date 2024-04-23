@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Select, Button } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import teacherService from '@/services/guru.service'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const { Option } = Select
 
@@ -9,18 +9,13 @@ const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
   const { token } = useAuth()
-
-  useEffect(() => {
-    if (isOpen && teacherData) {
-      form.setFieldsValue({
-        nip: teacherData.nip,
-        username: teacherData.username,
-        password: '',
-        nama: teacherData.nama,
-        jenisKelamin: teacherData.jenisKelamin,
-      })
-    }
-  }, [isOpen, teacherData, form])
+  form.setFieldsValue({
+    nip: teacherData.nip,
+    username: teacherData.username,
+    password: '',
+    nama: teacherData.nama,
+    jenisKelamin: teacherData.jenisKelamin,
+  })
 
   const handleSubmit = async () => {
     const values = await form.validateFields()
