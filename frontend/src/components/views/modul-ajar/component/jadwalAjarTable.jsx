@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Table, Tag, Modal, Button } from 'antd'
+import React from 'react'
+import { Table, Modal } from 'antd'
 import { formatDateWithIndonesianMonthAndDay } from '@/lib/helperDate'
 
 const JadwalAjarModal = ({ isOpen, closeModal, JadwalAjar }) => {
@@ -12,19 +12,18 @@ const JadwalAjarModal = ({ isOpen, closeModal, JadwalAjar }) => {
         const date = new Date(text)
         return <span>{formatDateWithIndonesianMonthAndDay(date)}</span>
       },
+      width: 180,
     },
     {
       title: 'Kegiatan Inti',
       dataIndex: 'kegiatanInti',
       key: 'kegiatanInti',
       render: (kegiatanInti) => (
-        <span>
+        <div>
           {kegiatanInti.map((kegiatan, index) => (
-            <Tag color="blue" key={index}>
-              {kegiatan}
-            </Tag>
+            <p> {`${index + 1}. ${kegiatan}`}</p>
           ))}
-        </span>
+        </div>
       ),
     },
   ]
@@ -43,6 +42,7 @@ const JadwalAjarModal = ({ isOpen, closeModal, JadwalAjar }) => {
           dataSource={JadwalAjar?.formatedJadwal}
           pagination={false}
           bordered
+          style={{ overflow: 'auto' }}
         />
       </Modal>
     </>
