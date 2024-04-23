@@ -35,7 +35,7 @@ const Sidebar = () => {
           </li>
           <li className={router === '/admin/sekolah' ? 'active' : ''}>
             <Link href="/admin/sekolah">
-              <i className="fa fa-building"></i> <span>Sekolah</span>
+              <i className="fa fa-building"></i> <span>Raudhatul Athfal</span>
             </Link>
           </li>
           <li className={router === '/admin/guru' ? 'active' : ''}>

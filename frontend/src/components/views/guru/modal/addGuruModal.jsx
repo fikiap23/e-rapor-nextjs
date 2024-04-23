@@ -1,5 +1,4 @@
 import { Modal, Form, Input, Select, Button, Switch, Tooltip } from 'antd'
-import { QuestionCircleOutlined } from '@ant-design/icons'
 import teacherService from '@/services/guru.service'
 import { useState } from 'react'
 

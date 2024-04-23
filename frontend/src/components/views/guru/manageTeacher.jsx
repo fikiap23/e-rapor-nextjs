@@ -235,12 +235,14 @@ const ManageTeacher = () => {
         token={token}
       ></AddGuruModal>
       {/* update guru */}
-      <UpdateGuruModal
-        refetch={refetchTeacher}
-        closeModal={closeUpdateModal}
-        isOpen={isUpdateModalOpen}
-        teacherData={selectedTeacher}
-      ></UpdateGuruModal>
+      {isUpdateModalOpen && (
+        <UpdateGuruModal
+          refetch={refetchTeacher}
+          closeModal={closeUpdateModal}
+          isOpen={isUpdateModalOpen}
+          teacherData={selectedTeacher}
+        ></UpdateGuruModal>
+      )}
     </>
   )
 }

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Modal, Form, Select, Button, message } from 'antd'
+import React from 'react'
+import { Modal, Form, Select, Button } from 'antd'
 import { useGetAllSemesterData } from '@/hooks/useSemester'
 import rombelService from '@/services/rombel.service'
 
@@ -20,16 +20,6 @@ const AddGuruToRombelModal = ({
     error: errorSemester,
     isFetching: isFetchingSemester,
   } = useGetAllSemesterData(token, true)
-
-  useEffect(() => {
-    if (listGuruRombel && listSemester) {
-      form.setFieldsValue({
-        idRombel: '',
-        idGuru: '',
-        idSemester: '',
-      })
-    }
-  }, [listGuruRombel, listSemester])
 
   const handleSubmit = async () => {
     const values = await form.validateFields()
