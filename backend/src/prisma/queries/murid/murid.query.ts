@@ -131,10 +131,15 @@ export class MuridQuery extends DbService {
                                 id: true,
                                 nama: true,
                                 nis: true,
+                                penilaianMingguan: {
+                                    where: {
+                                        idRombelSemesterGuru: id
+                                    },
+                                },
                                 rapor: {
                                     where: {
                                         idRombelSemesterGuru: id
-                                    }
+                                    },
                                 },
                             }
                         }
@@ -151,6 +156,9 @@ export class MuridQuery extends DbService {
             }
 
         })
+
+        const tp = await this.prisma.tujuanPembelajaran.count()
+
         const newData = {
             ...originalData,
             rombel: {
@@ -165,7 +173,54 @@ export class MuridQuery extends DbService {
                 name: `${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester})`
 
             },
-            murid: originalData.rombel.murid
+            murid: originalData.rombel.murid.map((murid) => {
+                const penilaianMingguan = murid.penilaianMingguan.length === tp ? true : false
+                let templateRapor: {
+                    catatanAgamaBudipekerti: any,
+                    catatanJatiDiri: any,
+                    catatanLiterasiSains: any
+                } = null
+                if (penilaianMingguan) {
+                    const nilaiMentah = murid.penilaianMingguan.reduce((acc, obj) => {
+                        acc.nilaiAgamaBudipekerti[obj.nilaiAgamaBudipekerti.toLowerCase()].push(obj.deskripsiAgamaBudipekerti);
+                        acc.nilaiJatiDiri[obj.nilaiJatiDiri.toLowerCase()].push(obj.deskripsiJatiDiri);
+                        acc.nilaiLiterasiSains[obj.nilaiLiterasiSains.toLowerCase()].push(obj.deskripsiLiterasiSains);
+                        return acc;
+                    }, {
+                        nilaiAgamaBudipekerti: {
+                            belum_berkembang: [],
+                            mulai_berkembang: [],
+                            sudah_berkembang: []
+                        },
+                        nilaiJatiDiri: {
+                            belum_berkembang: [],
+                            mulai_berkembang: [],
+                            sudah_berkembang: []
+                        },
+                        nilaiLiterasiSains: {
+                            belum_berkembang: [],
+                            mulai_berkembang: [],
+                            sudah_berkembang: []
+                        }
+                    });
+
+                    const { nilaiAgamaBudipekerti, nilaiJatiDiri, nilaiLiterasiSains } = nilaiMentah;
+
+
+
+                    templateRapor = {
+                        catatanAgamaBudipekerti: [...Object.values(nilaiAgamaBudipekerti).sort((a, b) => b.length - a.length)[0], ...Object.values(nilaiAgamaBudipekerti).sort((a, b) => b.length - a.length)[1]],
+                        catatanJatiDiri: [...Object.values(nilaiJatiDiri).sort((a, b) => b.length - a.length)[0], ...Object.values(nilaiJatiDiri).sort((a, b) => b.length - a.length)[1]],
+                        catatanLiterasiSains: [...Object.values(nilaiLiterasiSains).sort((a, b) => b.length - a.length)[0], ...Object.values(nilaiLiterasiSains).sort((a, b) => b.length - a.length)[1]],
+                    }
+                }
+                return {
+                    ...murid,
+                    penilaianMingguan: penilaianMingguan,
+                    templateRapor,
+                    rapor: murid.rapor
+                }
+            })
         };
 
         return newData;
