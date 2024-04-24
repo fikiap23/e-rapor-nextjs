@@ -249,6 +249,10 @@ export class MuridQuery extends DbService {
                 return {
                     ...murid,
                     penilaianMingguan: penilaianMingguan,
+                    nilaiAgamaBudipekerti: templateRapor?.catatanAgamaBudipekerti || null,
+                    nilaiJatiDiri: templateRapor?.catatanJatiDiri || null,
+                    nilaiLiterasiSains: templateRapor?.catatanLiterasiSains || null,
+                    pertumbuhan,
                     rapor: murid.rapor,
                 };
             })
