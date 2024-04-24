@@ -164,6 +164,7 @@ export class MuridQuery extends DbService {
             }
         })
         const tp = await this.prisma.tujuanPembelajaran.count();
+        const cp = await this.prisma.capaianPembelajarn.findFirst();
         const newData = {
             ...originalData,
             rombel: {
@@ -244,14 +245,88 @@ export class MuridQuery extends DbService {
                             }, {})
                     }
                 }
-                const pertumbuhan = getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan);
+                const pertumbuhan = `Berdasarkan hasil pengukuran pertumbuhan dan perkembangan ananda ${murid.nama} pada ${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester}) ini, yang sehat secara fisik, mental, sosial dan rohani, Adapun hasil pencapaian pertumbuhan ananda saat ini dengan berat badan ${murid.beratBadan} Kg, Lingkar Kepala Selebar ${murid.lingkar} Cm, dan TInggi Badan mencapai ${murid.tinggiBadan} Cm.
+                Hal ini menunjukan bahwa Berat Badan ${murid.nama} ${getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan)} `;
+
+                let resultNilaiAgamaBudipekerti: any = null
+                let resultNilaiJatiDiri: any = null
+                let resultNilaiLiterasiSains: any = null
+
+                if (templateRapor?.catatanAgamaBudipekerti) {
+                    const belumBerkembang = templateRapor?.catatanAgamaBudipekerti['belum_berkembang']
+                        ? 'Di rumah, orangtua dapat mengajak ananda melakukan kegiatan-kegiatan yang masih memerlukan bimbingan lebih intens lagi. Hal yang perlu dikembangkan lagi, bahwa ' +
+                        templateRapor?.catatanAgamaBudipekerti['belum_berkembang'].join(', ') +
+                        ', dan hal ini supaya semua aspek perkembangan nilai agama dan budi pekerti yang lainnya dapat berkembang secara maksimal sebagaimana yang diharapkan.'
+                        : null
+
+                    const mulaiBerkembang = templateRapor?.catatanAgamaBudipekerti['mulai_berkembang']
+                        ? `Pada semester nanti, guru dapat mengajak bahkan membiasakan ${murid.nama} dalam melakukan tindakan-tindakan yang mencerminkan perilaku positif, sehingga betul-betul akan menjadi karakter yang lebih baik lagi.  Adapun hal tersebut diantaranya dapat terlihat dari beberapa kegiatan yang sudah mulai muncul yaitu ` +
+                        templateRapor?.catatanAgamaBudipekerti['mulai_berkembang'].join(', ') +
+                        ', yang semua itu diharapkan akan lebih optimal lagi.'
+                        : null
+
+                    const sudahBerkembang = templateRapor?.catatanAgamaBudipekerti['sudah_berkembang']
+                        ? `Pada Semester ini Perkembangan Aspek ${cp.capaianPembelajaranAgama} Ananda ${murid.nama} sudah menunjukkan perkembangan yang sangat baik. Ada beberapa tujuan pembelajaran yang sudah muncul dalam diri ananda dan hal ini dapat terlihat dari kegiatan-kegiatan yang telah dilakukan ananda. Hal yang sudah muncul tersebut yaitu: bahwasanya ` +
+                        templateRapor?.catatanAgamaBudipekerti['sudah_berkembang'].join(', ') +
+                        ', dan semua pencapaian ini perlu dipertahankan sehingga menjadi suatu pembiasaan yang positif'
+                        : null
+
+                    resultNilaiAgamaBudipekerti = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                        .filter(Boolean)
+                }
+
+                if (templateRapor?.catatanJatiDiri) {
+                    const belumBerkembang = templateRapor?.catatanJatiDiri['belum_berkembang']
+                        ? 'Di rumah, orangtua dapat mengajak ananda melakukan kegiatan-kegiatan yang masih memerlukan bimbingan lebih intens lagi. Hal yang perlu dikembangkan lagi, bahwa ' +
+                        templateRapor?.catatanJatiDiri['belum_berkembang'].join(', ') +
+                        ', dan hal ini supaya semua aspek perkembangan jati diri lainnya dapat berkembang secara optimal.'
+                        : null
+
+                    const mulaiBerkembang = templateRapor?.catatanJatiDiri['mulai_berkembang']
+                        ? `Pada semester nanti, guru dapat mengajak bahkan membiasakan ananda ${murid.nama} dalam melakukan tindakan-tindakan yang mencerminkan perilaku positif, sehingga betul-betul akan menjadi karakter yang lebih baik lagi.  Adapun hal tersebut diantaranya dapat terlihat dari beberapa kegiatan yang sudah mulai muncul yaitu  ` +
+                        templateRapor?.catatanJatiDiri['mulai_berkembang'].join(', ') +
+                        ', sehingga semua itu diharapkan akan lebih optimal lagi.'
+                        : null
+
+                    const sudahBerkembang = templateRapor?.catatanJatiDiri['sudah_berkembang']
+                        ? `Pada Semester ini Perkembangan Aspek ${cp.capaianPembelajaranJatiDiri} Ananda ${murid.nama} sudah menunjukkan perkembangan yang sangat baik. Ada beberapa tujuan pembelajaran yang sudah muncul dalam diri ananda dan hal ini dapat terlihat dari kegiatan-kegiatan yang telah dilakukan ananda. Hal yang sudah muncul tersebut yaitu: bahwasanya ` +
+                        templateRapor?.catatanJatiDiri['sudah_berkembang'].join(', ') +
+                        ', dan hal ini perlu dipertahankan bahkan menjadikan anak semakin memiliki jati diri yang baik dan kuat.'
+                        : null
+
+                    resultNilaiJatiDiri = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                        .filter(Boolean)
+                }
+
+                if (templateRapor?.catatanLiterasiSains) {
+                    const belumBerkembang = templateRapor?.catatanLiterasiSains['belum_berkembang']
+                        ? 'Di rumah, orangtua dapat mengajak ananda melakukan kegiatan-kegiatan yang masih memerlukan bimbingan lebih intens lagi. Hal yang perlu dikembangkan lagi, bahwa ' +
+                        templateRapor?.catatanLiterasiSains['belum_berkembang'].join(', ') +
+                        ', dan hal ini supaya semua aspek perkembangan ananda lainnya dapat berkembang secara maksimal lagi.'
+                        : null
+
+                    const mulaiBerkembang = templateRapor?.catatanLiterasiSains['mulai_berkembang']
+                        ? `Pada semester nanti, guru dapat mengajak bahkan membiasakan ananda ${murid.nama} dalam melakukan tindakan-tindakan yang mencerminkan perilaku positif, sehingga betul-betul akan menjadi karakter yang lebih baik lagi.  Adapun hal tersebut diantaranya dapat terlihat dari beberapa kegiatan yang sudah mulai muncul yaitu ` +
+                        templateRapor?.catatanLiterasiSains['mulai_berkembang'].join(', ') +
+                        ', sehingga semua itu diharapkan akan lebih optimal lagi.'
+                        : null
+
+                    const sudahBerkembang = templateRapor?.catatanLiterasiSains['sudah_berkembang']
+                        ? `Pada Semester ini Perkembangan Aspek ${cp.capaianPembelajaranLiterasiSains} Ananda ${murid.nama} sudah menunjukkan perkembangan yang sangat baik. Ada beberapa tujuan pembelajaran yang sudah muncul dalam diri ananda dan hal ini dapat terlihat dari kegiatan-kegiatan yang telah dilakukan ananda. Hal yang sudah muncul tersebut yaitu: bahwasanya ` +
+                        templateRapor?.catatanLiterasiSains['sudah_berkembang'].join(', ') +
+                        ', dan hal ini perlu dipertahankan.'
+                        : null
+
+                    resultNilaiLiterasiSains = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                        .filter(Boolean)
+                }
 
                 return {
                     ...murid,
                     penilaianMingguan: penilaianMingguan,
-                    nilaiAgamaBudipekerti: templateRapor?.catatanAgamaBudipekerti || null,
-                    nilaiJatiDiri: templateRapor?.catatanJatiDiri || null,
-                    nilaiLiterasiSains: templateRapor?.catatanLiterasiSains || null,
+                    nilaiAgamaBudipekerti: resultNilaiAgamaBudipekerti,
+                    nilaiJatiDiri: resultNilaiJatiDiri,
+                    nilaiLiterasiSains: resultNilaiLiterasiSains,
                     pertumbuhan,
                     rapor: murid.rapor,
                 };
@@ -428,10 +503,10 @@ function getStatusPertemubuhan(tb: number, bb: number): string {
     if (data <= 17) {
         return 'kurang dan perlu ditambah.'
     } else if (data <= 29) {
-        return 'ideal/ normal dan perlu dipertahankan.'
+        return 'ideal/normal dan perlu dipertahankan.'
     } else if (data <= 34) {
         return 'kegemukan dan perlu dikurangi.'
     } else {
-        return ' obesitas dan sebaiknya dikonsultasikan kepada dokter'
+        return 'obesitas dan sebaiknya dikonsultasikan kepada dokter'
     }
 }
