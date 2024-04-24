@@ -16,8 +16,6 @@ function RaportInput({
   const { token } = useAuth()
   const [form] = Form.useForm()
 
-  console.log(murid.nilaiAgamaBudipekerti.join('\n'))
-
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
@@ -26,6 +24,10 @@ function RaportInput({
         idMurid: murid.id,
         idSemester: semester.id,
         idRombelSemesterGuru,
+        catatanAgamaBudipekerti: murid.nilaiAgamaBudipekerti.join('\n\n'),
+        catatanJatiDiri: murid.nilaiJatiDiri.join('\n\n'),
+        catatanLiterasiSains: murid.nilaiLiterasiSains.join('\n\n'),
+        catatanPertumbuhan: murid.pertumbuhan,
       }
 
       confirm({
