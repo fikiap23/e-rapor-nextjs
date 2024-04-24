@@ -189,6 +189,7 @@ export class MuridQuery extends DbService {
                     catatanJatiDiri: any;
                     catatanLiterasiSains: any;
                 } = null;
+                const categories = ["belum_berkembang", "mulai_berkembang", "sudah_berkembang"];
                 if (penilaianMingguan) {
                     const nilaiMentah = murid.penilaianMingguan.reduce(
                         (acc, obj) => {
@@ -226,31 +227,25 @@ export class MuridQuery extends DbService {
                         nilaiMentah;
 
                     templateRapor = {
-                        catatanAgamaBudipekerti: [
-                            ...Object.values(nilaiAgamaBudipekerti).sort(
-                                (a, b) => b.length - a.length,
-                            )[0],
-                            ...Object.values(nilaiAgamaBudipekerti).sort(
-                                (a, b) => b.length - a.length,
-                            )[1],
-                        ],
-                        catatanJatiDiri: [
-                            ...Object.values(nilaiJatiDiri).sort(
-                                (a, b) => b.length - a.length,
-                            )[0],
-                            ...Object.values(nilaiJatiDiri).sort(
-                                (a, b) => b.length - a.length,
-                            )[1],
-                        ],
-                        catatanLiterasiSains: [
-                            ...Object.values(nilaiLiterasiSains).sort(
-                                (a, b) => b.length - a.length,
-                            )[0],
-                            ...Object.values(nilaiLiterasiSains).sort(
-                                (a, b) => b.length - a.length,
-                            )[1],
-                        ],
-                    };
+                        catatanAgamaBudipekerti: categories.sort((a, b) => nilaiAgamaBudipekerti[b].length - nilaiAgamaBudipekerti[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiAgamaBudipekerti[category];
+                                return acc;
+                            }, {}),
+                        catatanJatiDiri: categories.sort((a, b) => nilaiJatiDiri[b].length - nilaiJatiDiri[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiJatiDiri[category];
+                                return acc;
+                            }, {}),
+                        catatanLiterasiSains: categories.sort((a, b) => nilaiLiterasiSains[b].length - nilaiLiterasiSains[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiLiterasiSains[category];
+                                return acc;
+                            }, {})
+                    }
                 }
                 const catatanPertumbuhan = `Berdasarkan hasil pengukuran pertumbuhan dan perkembangan ananda ${murid.nama} pada ${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester}) ini, yang sehat secara fisik, mental, sosial dan rohani, Adapun hasil pencapaian pertumbuhan ananda saat ini dengan berat badan ${murid.beratBadan} Kg, Lingkar Kepala Selebar ${murid.lingkar} Cm, dan Tinggi Badan mencapai ${murid.tinggiBadan} Cm.
                 Hal ini menunjukan bahwa Berat Badan ${murid.nama} ${getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan)}`;
