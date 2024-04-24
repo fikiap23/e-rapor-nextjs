@@ -22,6 +22,7 @@ import { HttpHelper } from '../helpers/http-helper';
 import { UpdateMuridDto } from './dto/update-murid.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import BulkMuridDto from './dto/bulk-muri.dto';
+import GetMuridWithNilaiDto from './dto/get-murid-with-nilai.dto';
 
 
 @Controller('murid')
@@ -82,9 +83,15 @@ export class MuridController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('with-nilai')
+    async findOneStudentByIdRombelSemesterGuruAndIdMurid(@Res() res, @Query() dto: GetMuridWithNilaiDto) {
+        const result = await this.muridService.findOneStudentByIdRombelSemesterGuruAndIdMurid(dto.idRombelSemesterGuru, dto.idMurid);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
     @Get('rombel-semester-guru/:id')
     async findOneStudentByIdRombel(@Res() res, @Param('id') id) {
-        const result = await this.muridService.findOneStudentByIdRombelSemesterGuru(id);
+        const result = await this.muridService.getStudentsSemesterRombelByIdRombelSemesterGuru(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 

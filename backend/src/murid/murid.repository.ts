@@ -134,8 +134,8 @@ export class MuridRepository {
         return await this.muridQuery.createMany(data)
     }
 
-    async findOneStudentByIdRombelSemesterGuru(id: string) {
-        const murid = await this.muridQuery.findOneStudentByIdRombelSemesterGuru(id);
+    async getStudentsSemesterRombelByIdRombelSemesterGuru(id: string) {
+        const murid = await this.muridQuery.getStudentsSemesterRombelByIdRombelSemesterGuru(id);
         if (!murid) {
             throw new BadRequestException('Data gagal dimuat');
         }
@@ -144,5 +144,10 @@ export class MuridRepository {
 
     async findManyStudentByIdRombelSemesterGuru(id: string) {
         return await this.muridQuery.findStudentByIdRombelSemesterGuru(id);
+    }
+
+    async findOneStudentByIdRombelSemesterGuruAndIdMurid(id: string, idMurid: string) {
+        await this.findByIdOrThrow(idMurid);
+        return await this.muridQuery.findOneStudentByIdRombelSemesterGuruAndIdMurid(id, idMurid);
     }
 }

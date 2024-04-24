@@ -40,11 +40,15 @@ export class MuridService {
         return await this.muridRepository.createMany(data);
     }
 
-    async findOneStudentByIdRombelSemesterGuru(id: string) {
-        return await this.muridRepository.findOneStudentByIdRombelSemesterGuru(id);
+    async getStudentsSemesterRombelByIdRombelSemesterGuru(id: string) {
+        return await this.muridRepository.getStudentsSemesterRombelByIdRombelSemesterGuru(id);
     }
 
     async findManyStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
         return await this.muridRepository.findManyStudentByIdRombelSemesterGuru(idRombelSemesterGuru);
+    }
+
+    async findOneStudentByIdRombelSemesterGuruAndIdMurid(id: string, idMurid: string) {
+        return await this.muridRepository.findOneStudentByIdRombelSemesterGuruAndIdMurid(id, idMurid);
     }
 }
