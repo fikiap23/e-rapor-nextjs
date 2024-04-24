@@ -270,7 +270,7 @@ export class MuridQuery extends DbService {
                         ', dan semua pencapaian ini perlu dipertahankan sehingga menjadi suatu pembiasaan yang positif'
                         : null
 
-                    resultNilaiAgamaBudipekerti = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                    resultNilaiAgamaBudipekerti = [sudahBerkembang, mulaiBerkembang, belumBerkembang]
                         .filter(Boolean)
                 }
 
@@ -293,7 +293,7 @@ export class MuridQuery extends DbService {
                         ', dan hal ini perlu dipertahankan bahkan menjadikan anak semakin memiliki jati diri yang baik dan kuat.'
                         : null
 
-                    resultNilaiJatiDiri = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                    resultNilaiJatiDiri = [sudahBerkembang, mulaiBerkembang, belumBerkembang]
                         .filter(Boolean)
                 }
 
@@ -316,7 +316,7 @@ export class MuridQuery extends DbService {
                         ', dan hal ini perlu dipertahankan.'
                         : null
 
-                    resultNilaiLiterasiSains = [belumBerkembang, mulaiBerkembang, sudahBerkembang]
+                    resultNilaiLiterasiSains = [sudahBerkembang, mulaiBerkembang, belumBerkembang]
                         .filter(Boolean)
                 }
 
