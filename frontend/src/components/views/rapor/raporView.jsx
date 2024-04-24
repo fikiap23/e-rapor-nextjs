@@ -64,6 +64,18 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       sorter: (a, b) => a.nama.localeCompare(b.nama),
     },
     {
+      title: 'Status Penilaian',
+      dataIndex: 'penilaianMingguan',
+      key: 'penilaianMingguan',
+      render: (text, record) => {
+        if (!record.penilaianMingguan) {
+          return <Tag color="yellow">Belum lengkap</Tag>
+        } else {
+          return <Tag color="green">Sudah lengkap</Tag>
+        }
+      },
+    },
+    {
       title: 'Status Raport',
       dataIndex: 'statusSemester',
       key: 'statusSemester',
@@ -80,31 +92,46 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       key: 'action',
       render: (text, record) => (
         <span>
-          {record.rapor && record.rapor.length === 0 ? (
-            <Button
-              type="primary"
-              onClick={() => {
-                setSelectedMurid(record)
-                handleTabChange('inputCatatanRaportTab')
-              }}
-              style={{ marginRight: 8 }}
+          {record.rapor &&
+            record.penilaianMingguan &&
+            record.rapor.length === 0 && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  setSelectedMurid(record)
+                  handleTabChange('inputCatatanRaportTab')
+                }}
+                style={{ marginRight: 8 }}
+              >
+                <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
+                Input Catatan Raport
+              </Button>
+            )}
+          {!record.penilaianMingguan && (
+            <Link
+              href={`/guru/penilaian/${idRombelSemesterGuru}`}
+              target="_blank"
             >
-              <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
-              Input Catatan Raport
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={() => {
-                setSelectedMurid(record)
-                setActiveTab('editCatatanRaportTab')
-              }}
-            >
-              Edit Catatan Raport
-            </Button>
+              <Button style={{ backgroundColor: 'red', color: 'white' }}>
+                Lengkapi Penilaian
+              </Button>
+            </Link>
           )}
 
+          {record.rapor &&
+            record.penilaianMingguan &&
+            record.rapor.length !== 0 && (
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setSelectedMurid(record)
+                  setActiveTab('editCatatanRaportTab')
+                }}
+              >
+                Edit Catatan Raport
+              </Button>
+            )}
           {record.rapor && record.rapor.length !== 0 && (
             <Link href={`/raport_print/${record.rapor[0].id}`} target="_blank">
               <Button
