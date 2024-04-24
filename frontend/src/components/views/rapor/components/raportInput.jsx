@@ -16,6 +16,8 @@ function RaportInput({
   const { token } = useAuth()
   const [form] = Form.useForm()
 
+  console.log(murid.nilaiAgamaBudipekerti.join('\n'))
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields()
@@ -93,92 +95,32 @@ function RaportInput({
             </Col>
           </Row>
 
-          <Form.Item
-            label="NILAI AGAMA DAN BUDIPEKERTI"
-            name="catatanAgamaBudipekerti"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor />
+          <Form.Item label="NILAI AGAMA DAN BUDIPEKERTI">
+            <Input.TextArea
+              value={murid.nilaiAgamaBudipekerti.join('\n\n')}
+              readOnly
+              rows={8}
+            />
           </Form.Item>
 
-          <Form.Item
-            label="JATI DIRI"
-            name="catatanJatiDiri"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor />
+          <Form.Item label="JATI DIRI">
+            <Input.TextArea
+              value={murid.nilaiJatiDiri.join('\n\n')}
+              readOnly
+              rows={8}
+            />
           </Form.Item>
 
-          <Form.Item
-            label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI"
-            name="catatanLiterasiSains"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor />
+          <Form.Item label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI">
+            <Input.TextArea
+              value={murid.nilaiLiterasiSains.join('\n\n')}
+              readOnly
+              rows={8}
+            />
           </Form.Item>
 
-          <Form.Item
-            label="CATATAN PERTUMBUHAN ANAK"
-            name="catatanPertumbuhan"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor />
+          <Form.Item label="CATATAN PERTUMBUHAN ANAK">
+            <Input.TextArea value={murid.pertumbuhan} readOnly rows={8} />
           </Form.Item>
 
           <Form.Item
