@@ -136,6 +136,9 @@ export class MuridQuery extends DbService {
                                 id: true,
                                 nama: true,
                                 nis: true,
+                                tinggiBadan: true,
+                                beratBadan: true,
+                                lingkar: true,
                                 rapor: {
                                     where: {
                                         idRombelSemesterGuru: id
@@ -176,8 +179,72 @@ export class MuridQuery extends DbService {
 
             },
             murid: originalData.rombel.murid.map(murid => {
-                const penilaianMingguan =
-                    murid.penilaianMingguan.length === tp ? true : false;
+                const penilaianMingguan = murid.penilaianMingguan.length === tp ? true : false;
+
+                let templateRapor: {
+                    catatanAgamaBudipekerti: any;
+                    catatanJatiDiri: any;
+                    catatanLiterasiSains: any;
+                } = null;
+                const categories = ["belum_berkembang", "mulai_berkembang", "sudah_berkembang"];
+                if (penilaianMingguan) {
+                    const nilaiMentah = murid.penilaianMingguan.reduce(
+                        (acc, obj) => {
+                            acc.nilaiAgamaBudipekerti[
+                                obj.nilaiAgamaBudipekerti.toLowerCase()
+                            ].push(obj.deskripsiAgamaBudipekerti);
+                            acc.nilaiJatiDiri[obj.nilaiJatiDiri.toLowerCase()].push(
+                                obj.deskripsiJatiDiri,
+                            );
+                            acc.nilaiLiterasiSains[obj.nilaiLiterasiSains.toLowerCase()].push(
+                                obj.deskripsiLiterasiSains,
+                            );
+                            return acc;
+                        },
+                        {
+                            nilaiAgamaBudipekerti: {
+                                belum_berkembang: [],
+                                mulai_berkembang: [],
+                                sudah_berkembang: [],
+                            },
+                            nilaiJatiDiri: {
+                                belum_berkembang: [],
+                                mulai_berkembang: [],
+                                sudah_berkembang: [],
+                            },
+                            nilaiLiterasiSains: {
+                                belum_berkembang: [],
+                                mulai_berkembang: [],
+                                sudah_berkembang: [],
+                            },
+                        },
+                    );
+
+                    const { nilaiAgamaBudipekerti, nilaiJatiDiri, nilaiLiterasiSains } =
+                        nilaiMentah;
+
+                    templateRapor = {
+                        catatanAgamaBudipekerti: categories.sort((a, b) => nilaiAgamaBudipekerti[b].length - nilaiAgamaBudipekerti[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiAgamaBudipekerti[category];
+                                return acc;
+                            }, {}),
+                        catatanJatiDiri: categories.sort((a, b) => nilaiJatiDiri[b].length - nilaiJatiDiri[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiJatiDiri[category];
+                                return acc;
+                            }, {}),
+                        catatanLiterasiSains: categories.sort((a, b) => nilaiLiterasiSains[b].length - nilaiLiterasiSains[a].length)
+                            .slice(0, 2)
+                            .reduce((acc, category) => {
+                                acc[category] = nilaiLiterasiSains[category];
+                                return acc;
+                            }, {})
+                    }
+                }
+                const pertumbuhan = getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan);
 
                 return {
                     ...murid,
