@@ -264,6 +264,83 @@ export class MuridQuery extends DbService {
         return newData;
     }
 
+    async getStudentsSemesterRombelByIdRombelSemesterGuru(id: string) {
+        const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!checkRombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
+        const originalData = await this.prisma.rombelSemesterGuru.findUnique({
+            where: {
+                id
+            },
+            select: {
+                rombel: {
+                    select: {
+                        id: true,
+                        name: true,
+                        murid: {
+                            select: {
+                                id: true,
+                                nama: true,
+                                nis: true,
+                                rapor: {
+                                    where: {
+                                        idRombelSemesterGuru: id
+                                    }
+                                },
+                                penilaianMingguan: {
+                                    where: {
+                                        idRombelSemesterGuru: id,
+                                    },
+                                },
+                            }
+                        }
+                    }
+                },
+                semester: {
+                    select: {
+                        id: true,
+                        tahunAjaranAwal: true,
+                        tahunAjaranAkhir: true,
+                        jenisSemester: true,
+                    }
+                },
+            }
+        })
+        const tp = await this.prisma.tujuanPembelajaran.count();
+        const newData = {
+            ...originalData,
+            rombel: {
+                id: originalData.rombel.id,
+                name: originalData.rombel.name,
+            },
+            semester: {
+                id: originalData.semester.id,
+                tahunAjaranAwal: originalData.semester.tahunAjaranAwal,
+                tahunAjaranAkhir: originalData.semester.tahunAjaranAkhir,
+                jenisSemester: originalData.semester.jenisSemester,
+                name: `${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester})`
+
+            },
+            murid: originalData.rombel.murid.map(murid => {
+                const penilaianMingguan =
+                    murid.penilaianMingguan.length === tp ? true : false;
+
+                return {
+                    ...murid,
+                    penilaianMingguan: penilaianMingguan,
+                    rapor: murid.rapor,
+                };
+            })
+        };
+
+        return newData;
+    }
+
     async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
         const checkRombelSemesterGuru =
             await this.prisma.rombelSemesterGuru.findUnique({

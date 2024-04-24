@@ -84,7 +84,7 @@ export class MuridController {
 
     @Get('rombel-semester-guru/:id')
     async findOneStudentByIdRombel(@Res() res, @Param('id') id) {
-        const result = await this.muridService.findOneStudentByIdRombelSemesterGuru(id);
+        const result = await this.muridService.getStudentsSemesterRombelByIdRombelSemesterGuru(id);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
