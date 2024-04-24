@@ -145,4 +145,9 @@ export class MuridRepository {
     async findManyStudentByIdRombelSemesterGuru(id: string) {
         return await this.muridQuery.findStudentByIdRombelSemesterGuru(id);
     }
+
+    async findOneStudentByIdRombelSemesterGuruAndIdMurid(id: string, idMurid: string) {
+        await this.findByIdOrThrow(idMurid);
+        return await this.muridQuery.findOneStudentByIdRombelSemesterGuruAndIdMurid(id, idMurid);
+    }
 }

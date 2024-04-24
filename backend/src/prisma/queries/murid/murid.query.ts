@@ -113,157 +113,6 @@ export class MuridQuery extends DbService {
         }
     }
 
-    async findOneStudentByIdRombelSemesterGuru(id: string) {
-        const checkRombelSemesterGuru =
-            await this.prisma.rombelSemesterGuru.findUnique({
-                where: {
-                    id,
-                },
-            });
-        if (!checkRombelSemesterGuru) {
-            throw new BadRequestException('Rombel tidak ditemukan');
-        }
-        const originalData = await this.prisma.rombelSemesterGuru.findUnique({
-            where: {
-                id,
-            },
-            select: {
-                rombel: {
-                    select: {
-                        id: true,
-                        name: true,
-                        murid: {
-                            select: {
-                                id: true,
-                                nama: true,
-                                nis: true,
-                                tinggiBadan: true,
-                                beratBadan: true,
-                                lingkar: true,
-                                penilaianMingguan: {
-                                    where: {
-                                        idRombelSemesterGuru: id,
-                                    },
-                                },
-                                rapor: {
-                                    where: {
-                                        idRombelSemesterGuru: id,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                semester: {
-                    select: {
-                        id: true,
-                        tahunAjaranAwal: true,
-                        tahunAjaranAkhir: true,
-                        jenisSemester: true,
-                    },
-                },
-            },
-        });
-
-        const tp = await this.prisma.tujuanPembelajaran.count();
-
-        const newData = {
-            ...originalData,
-            rombel: {
-                id: originalData.rombel.id,
-                name: originalData.rombel.name,
-            },
-            semester: {
-                id: originalData.semester.id,
-                tahunAjaranAwal: originalData.semester.tahunAjaranAwal,
-                tahunAjaranAkhir: originalData.semester.tahunAjaranAkhir,
-                jenisSemester: originalData.semester.jenisSemester,
-                name: `${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester})`,
-            },
-            murid: originalData.rombel.murid.map((murid) => {
-                const penilaianMingguan =
-                    murid.penilaianMingguan.length === tp ? true : false;
-
-                let templateRapor: {
-                    catatanAgamaBudipekerti: any;
-                    catatanJatiDiri: any;
-                    catatanLiterasiSains: any;
-                } = null;
-                const categories = ["belum_berkembang", "mulai_berkembang", "sudah_berkembang"];
-                if (penilaianMingguan) {
-                    const nilaiMentah = murid.penilaianMingguan.reduce(
-                        (acc, obj) => {
-                            acc.nilaiAgamaBudipekerti[
-                                obj.nilaiAgamaBudipekerti.toLowerCase()
-                            ].push(obj.deskripsiAgamaBudipekerti);
-                            acc.nilaiJatiDiri[obj.nilaiJatiDiri.toLowerCase()].push(
-                                obj.deskripsiJatiDiri,
-                            );
-                            acc.nilaiLiterasiSains[obj.nilaiLiterasiSains.toLowerCase()].push(
-                                obj.deskripsiLiterasiSains,
-                            );
-                            return acc;
-                        },
-                        {
-                            nilaiAgamaBudipekerti: {
-                                belum_berkembang: [],
-                                mulai_berkembang: [],
-                                sudah_berkembang: [],
-                            },
-                            nilaiJatiDiri: {
-                                belum_berkembang: [],
-                                mulai_berkembang: [],
-                                sudah_berkembang: [],
-                            },
-                            nilaiLiterasiSains: {
-                                belum_berkembang: [],
-                                mulai_berkembang: [],
-                                sudah_berkembang: [],
-                            },
-                        },
-                    );
-
-                    const { nilaiAgamaBudipekerti, nilaiJatiDiri, nilaiLiterasiSains } =
-                        nilaiMentah;
-
-                    templateRapor = {
-                        catatanAgamaBudipekerti: categories.sort((a, b) => nilaiAgamaBudipekerti[b].length - nilaiAgamaBudipekerti[a].length)
-                            .slice(0, 2)
-                            .reduce((acc, category) => {
-                                acc[category] = nilaiAgamaBudipekerti[category];
-                                return acc;
-                            }, {}),
-                        catatanJatiDiri: categories.sort((a, b) => nilaiJatiDiri[b].length - nilaiJatiDiri[a].length)
-                            .slice(0, 2)
-                            .reduce((acc, category) => {
-                                acc[category] = nilaiJatiDiri[category];
-                                return acc;
-                            }, {}),
-                        catatanLiterasiSains: categories.sort((a, b) => nilaiLiterasiSains[b].length - nilaiLiterasiSains[a].length)
-                            .slice(0, 2)
-                            .reduce((acc, category) => {
-                                acc[category] = nilaiLiterasiSains[category];
-                                return acc;
-                            }, {})
-                    }
-                }
-                const catatanPertumbuhan = `Berdasarkan hasil pengukuran pertumbuhan dan perkembangan ananda ${murid.nama} pada ${originalData.semester.tahunAjaranAwal}-${originalData.semester.tahunAjaranAkhir} (${originalData.semester.jenisSemester}) ini, yang sehat secara fisik, mental, sosial dan rohani, Adapun hasil pencapaian pertumbuhan ananda saat ini dengan berat badan ${murid.beratBadan} Kg, Lingkar Kepala Selebar ${murid.lingkar} Cm, dan Tinggi Badan mencapai ${murid.tinggiBadan} Cm.
-                Hal ini menunjukan bahwa Berat Badan ${murid.nama} ${getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan)}`;
-                return {
-                    ...murid,
-                    penilaianMingguan: penilaianMingguan,
-                    templateRapor: {
-                        ...templateRapor,
-                        catatanPertumbuhan
-                    },
-                    rapor: murid.rapor,
-                };
-            }),
-        };
-
-        return newData;
-    }
-
     async getStudentsSemesterRombelByIdRombelSemesterGuru(id: string) {
         const checkRombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
             where: {
@@ -374,6 +223,130 @@ export class MuridQuery extends DbService {
         });
 
         return originalData.rombel?.murid || [];
+    }
+
+    async findOneStudentByIdRombelSemesterGuruAndIdMurid(id: string, idMurid: string) {
+        const checkRombelSemesterGuru =
+            await this.prisma.rombelSemesterGuru.findUnique({
+                where: {
+                    id,
+                },
+                select: {
+                    id: true,
+                    semester: true,
+                }
+            });
+        if (!checkRombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan');
+        }
+        const semester = `${checkRombelSemesterGuru.semester.tahunAjaranAwal}-${checkRombelSemesterGuru.semester.tahunAjaranAkhir} (${checkRombelSemesterGuru.semester.jenisSemester})`
+        const tp = await this.prisma.tujuanPembelajaran.count();
+        const murid = await this.prisma.murid.findUnique({
+            where: {
+                id: idMurid,
+            },
+            select: {
+                id: true,
+                nama: true,
+                nis: true,
+                foto: true,
+                tinggiBadan: true,
+                beratBadan: true,
+                lingkar: true,
+                rapor: {
+                    where: {
+                        idRombelSemesterGuru: id,
+                    },
+                },
+                penilaianMingguan: {
+                    where: {
+                        idRombelSemesterGuru: id,
+                    },
+                }
+            },
+        })
+
+        const penilaianMingguan = murid.penilaianMingguan.length === tp ? true : false;
+        if (!penilaianMingguan) throw new BadRequestException('Lengkapi penilaian terlebih dahulu');
+        let templateRapor: {
+            catatanAgamaBudipekerti: any;
+            catatanJatiDiri: any;
+            catatanLiterasiSains: any;
+        } = null;
+        const categories = ["belum_berkembang", "mulai_berkembang", "sudah_berkembang"];
+        if (penilaianMingguan) {
+            const nilaiMentah = murid.penilaianMingguan.reduce(
+                (acc, obj) => {
+                    acc.nilaiAgamaBudipekerti[
+                        obj.nilaiAgamaBudipekerti.toLowerCase()
+                    ].push(obj.deskripsiAgamaBudipekerti);
+                    acc.nilaiJatiDiri[obj.nilaiJatiDiri.toLowerCase()].push(
+                        obj.deskripsiJatiDiri,
+                    );
+                    acc.nilaiLiterasiSains[obj.nilaiLiterasiSains.toLowerCase()].push(
+                        obj.deskripsiLiterasiSains,
+                    );
+                    return acc;
+                },
+                {
+                    nilaiAgamaBudipekerti: {
+                        belum_berkembang: [],
+                        mulai_berkembang: [],
+                        sudah_berkembang: [],
+                    },
+                    nilaiJatiDiri: {
+                        belum_berkembang: [],
+                        mulai_berkembang: [],
+                        sudah_berkembang: [],
+                    },
+                    nilaiLiterasiSains: {
+                        belum_berkembang: [],
+                        mulai_berkembang: [],
+                        sudah_berkembang: [],
+                    },
+                },
+            );
+
+            const { nilaiAgamaBudipekerti, nilaiJatiDiri, nilaiLiterasiSains } =
+                nilaiMentah;
+
+            templateRapor = {
+                catatanAgamaBudipekerti: categories.sort((a, b) => nilaiAgamaBudipekerti[b].length - nilaiAgamaBudipekerti[a].length)
+                    .slice(0, 2)
+                    .reduce((acc, category) => {
+                        acc[category] = nilaiAgamaBudipekerti[category];
+                        return acc;
+                    }, {}),
+                catatanJatiDiri: categories.sort((a, b) => nilaiJatiDiri[b].length - nilaiJatiDiri[a].length)
+                    .slice(0, 2)
+                    .reduce((acc, category) => {
+                        acc[category] = nilaiJatiDiri[category];
+                        return acc;
+                    }, {}),
+                catatanLiterasiSains: categories.sort((a, b) => nilaiLiterasiSains[b].length - nilaiLiterasiSains[a].length)
+                    .slice(0, 2)
+                    .reduce((acc, category) => {
+                        acc[category] = nilaiLiterasiSains[category];
+                        return acc;
+                    }, {})
+            }
+        }
+        const pertumbuhan = getStatusPertemubuhan(murid.tinggiBadan, murid.beratBadan);
+        return {
+            id: murid.id,
+            nama: murid.nama,
+            nis: murid.nis,
+            tinggiBadan: murid.tinggiBadan,
+            beratBadan: murid.beratBadan,
+            lingkar: murid.lingkar,
+            semester,
+            penilaianMingguan: penilaianMingguan,
+            nilaiAgamaBudipekerti: templateRapor?.catatanAgamaBudipekerti,
+            nilaiJatiDiri: templateRapor?.catatanJatiDiri,
+            nilaiLiterasiSains: templateRapor?.catatanLiterasiSains,
+            pertumbuhan
+            // rapor: murid.rapor,
+        };
     }
 
 }
