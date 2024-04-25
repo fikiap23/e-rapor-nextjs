@@ -21,7 +21,7 @@ const JadwalAjarModal = ({ isOpen, closeModal, JadwalAjar }) => {
       render: (kegiatanInti) => (
         <div>
           {kegiatanInti.map((kegiatan, index) => (
-            <p> {`${index + 1}. ${kegiatan}`}</p>
+            <p key={index}> {`${index + 1}. ${kegiatan}`}</p>
           ))}
         </div>
       ),

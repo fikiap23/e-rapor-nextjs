@@ -103,89 +103,23 @@ function RaportEdit({ murid, btnBack, refetch, idRombelSemesterGuru }) {
           <Form.Item
             label="NILAI AGAMA DAN BUDIPEKERTI"
             name="catatanAgamaBudipekerti"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
           >
-            <RichTextEditor initialData={rapor?.catatanAgamaBudipekerti} />
+            <Input.TextArea readOnly rows={8} />
           </Form.Item>
 
-          <Form.Item
-            label="JATI DIRI"
-            name="catatanJatiDiri"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor initialData={rapor?.catatanJatiDiri} />
+          <Form.Item label="JATI DIRI" name="catatanJatiDiri">
+            <Input.TextArea readOnly rows={8} />
           </Form.Item>
 
           <Form.Item
             label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI"
             name="catatanLiterasiSains"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
           >
-            <RichTextEditor initialData={rapor?.catatanLiterasiSains} />
+            <Input.TextArea readOnly rows={8} />
           </Form.Item>
 
-          <Form.Item
-            label="CATATAN PERTUMBUHAN ANAK"
-            name="catatanPertumbuhan"
-            rules={[
-              {
-                required: true,
-                message: 'Catatan harus diisi',
-                whitespace: true,
-              },
-              {
-                validator: (_, value) => {
-                  if (value === '<p></p>\n') {
-                    return Promise.reject('Catatan harus diisi')
-                  }
-                  return Promise.resolve()
-                },
-              },
-            ]}
-          >
-            <RichTextEditor initialData={rapor?.catatanPertumbuhan} />
+          <Form.Item label="CATATAN PERTUMBUHAN ANAK" name="catatanPertumbuhan">
+            <Input.TextArea readOnly rows={8} />
           </Form.Item>
 
           <Form.Item

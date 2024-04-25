@@ -32,11 +32,29 @@ export class NilaiMingguanQuery extends DbService {
     }
 
     async updateById(id: string, payload: UpdatePenilaianMingguanDto) {
-        return await this.prisma.penilaianMingguan.update({ where: { id }, data: payload })
+        const penilaianMingguan = await this.prisma.penilaianMingguan.update({ where: { id }, data: payload })
+        // reset rapor
+        await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
+        return penilaianMingguan
     }
 
     async deleteById(id: string) {
+        const penilaianMingguan = await this.prisma.penilaianMingguan.findUnique({ where: { id } })
+        if (!penilaianMingguan) {
+            throw new BadRequestException('Penilaian mingguan Tidak ditemukan')
+        }
+        // reset rapor
+        await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
         return await this.prisma.penilaianMingguan.delete({ where: { id } })
+    }
+
+    async deleteRaporByIdMuridAndIdRombelSemesterGuru(idMurid: string, idRombelSemesterGuru: string) {
+        // check rapor exist
+        const rapor = await this.prisma.rapor.findFirst({ where: { idMurid, idRombelSemesterGuru } })
+        if (rapor) {
+            await this.prisma.rapor.deleteMany({ where: { idMurid, idRombelSemesterGuru } })
+        }
+        return
     }
 
     async findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {

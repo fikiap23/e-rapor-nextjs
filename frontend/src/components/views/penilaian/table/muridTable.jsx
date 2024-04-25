@@ -33,9 +33,21 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   }
 
   const handleOpenEditModal = (nilai, idMurid) => {
-    setSelectedIdMurid(idMurid)
-    setSelectedNilai(nilai)
-    setIsOpenEditModal(true)
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content:
+        'Anda akan mengubah data penilaian? Jika anda mengubah, maka data rapor anak ini akan ikut TERESET!',
+      okText: 'Ya, ubah!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        setIsOpenEditModal(true)
+        setSelectedNilai(nilai)
+        setSelectedIdMurid(idMurid)
+      },
+      onCancel: () => {
+        setIsOpenEditModal(false)
+      },
+    })
   }
 
   const handleCloseEditModal = () => {
@@ -45,7 +57,8 @@ const MuridTable = ({ idRombelSemesterGuru, tp, token }) => {
   const handleDelete = (id) => {
     Modal.confirm({
       title: 'Apakah Anda yakin?',
-      content: 'Anda akan menghapus data penilaian!',
+      content:
+        'Anda akan menghapus data penilaian? Jika anda menghapus, maka data rapor anak ini akan ikut TERHAPUS!',
       okText: 'Ya, hapus!',
       cancelText: 'Tidak, batalkan!',
       onOk: async () => {
