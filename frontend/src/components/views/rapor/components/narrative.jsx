@@ -14,7 +14,7 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
   console.log('Tumbuh ' + rapor.catatanPertumbuhan.length)
   console.log(rapor.catatanGuru.length)
   const pointBLogic =
-    (rapor.catatanAgamaBudipekerti.length > 2500 &&
+    (rapor.catatanAgamaBudipekerti.length > 1800 &&
       rapor.catatanJatiDiri.length > 700) ||
     (rapor.catatanAgamaBudipekerti.length <= 800 &&
       rapor.catatanJatiDiri.length > 2000)
@@ -54,32 +54,26 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
       rapor.catatanLiterasiSains.length <= 2000 &&
       rapor.catatanPancasila.length <= 2000 &&
       rapor.catatanPertumbuhan.length > 2000)
-  const note_growth_child = `note_growth_child ${
-    noteGrowthChild ? 'extra-margin' : ''
-  }`
+  const note_growth_child = `note_growth_child ${noteGrowthChild ? 'extra-margin' : ''
+    }`
 
   const noteTeacher =
-    (rapor.catatanAgamaBudipekerti.length > 1500 &&
-      rapor.catatanLiterasiSains.length > 1500 &&
-      rapor.catatanPancasila.length > 1500 &&
-      rapor.catatanPertumbuhan.length > 1500) ||
-    (rapor.catatanAgamaBudipekerti.length > 1500 &&
-      rapor.catatanLiterasiSains.length <= 2500 &&
-      rapor.catatanPancasila.length <= 2500 &&
-      rapor.catatanGuru.length > 2000)
+    (rapor.catatanLiterasiSains.length > 1500 &&
+      rapor.catatanPancasila.length > 200 &&
+      rapor.catatanPertumbuhan.length > 200)
   const note_teacher = `note_teacher ${noteTeacher ? 'extra-margin' : ''}`
 
   const comment =
-    (rapor.catatanAgamaBudipekerti.length > 1500 &&
-      rapor.catatanLiterasiSains.length > 1500 &&
-      rapor.catatanPancasila.length > 1500 &&
-      rapor.catatanPertumbuhan.length > 1500) ||
-    (rapor.catatanAgamaBudipekerti.length > 1500 &&
-      rapor.catatanLiterasiSains.length <= 2500 &&
-      rapor.catatanPancasila.length <= 2500 &&
-      rapor.catatanGuru.length > 3000)
+    (rapor.catatanPancasila.length > 300 &&
+      rapor.catatanPertumbuhan.length > 400 &&
+      rapor.catatanGuru.length > 300)
   const coment = `comment ${comment ? 'extra-margin' : ''}`
 
+  const totalAlpa = parseInt(rapor.totalAlpa);
+  const totalIzin = parseInt(rapor.totalIzin);
+  const totalSakit = parseInt(rapor.totalSakit);
+
+  const jumlah_kehadiran = totalAlpa + totalIzin + totalSakit;
   return (
     <>
       <div style={{ pageBreakBefore: 'always', marginTop: '8%' }}>
@@ -121,6 +115,29 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
         <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
 
         <div className="point">
+          <div className="pendahuluan">
+            <p style={{ fontSize: '20px' }}>
+              <b>PENDAHULUAN</b>
+            </p>
+            <div
+              style={{
+                padding: '5px',
+                border: '2px solid black',
+                marginBottom: '10px',
+                textAlign: 'justify',
+                textIndent: '2em',
+              }}
+            >
+              Perkembangan Ananda {murid.nama.toUpperCase()} pada {semester} ini,
+              sungguh merupakan pengalaman yang menyenangkan. Ananda telah terbiasa
+              dengan segala rutinitas yang ada di sekolah, bahkan telah tampak kemandirian
+              dalam mengerjakan dan menyelesaikan tugas yang diberikan. Tingkat kehadiran
+              ke sekolah cukup, {jumlah_kehadiran} hari pada {semester} ini Ananda
+              tidak masuk sekolah. {rapor.totalSakit} hari sakit, {rapor.totalIzin} hari izin, dan {rapor.totalAlpa} hari
+              tanpa keterangan
+            </div>
+          </div>
+
           <div className="point_a">
             <p style={{ fontSize: '20px' }}>
               <b>A. NILAI AGAMA DAN BUDI PEKERTI</b>
@@ -143,14 +160,11 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             className={point_b_logic}
             style={{
               pageBreakBefore:
-                rapor.catatanAgamaBudipekerti.length > 2500 &&
-                rapor.catatanJatiDiri.length > 700
-                  ? 'always'
-                  : rapor.catatanAgamaBudipekerti.length <= 800 &&
-                    rapor.catatanJatiDiri.length > 2000
-                  ? 'always'
-                  : // rapor.catatanAgamaBudipekerti.length > 2000 && rapor.catatanJatiDiri.length > 2000 ? 'always' :
-                    'auto',
+                rapor.catatanAgamaBudipekerti.length > 1800 &&
+                  rapor.catatanJatiDiri.length > 700 ? 'always' :
+                  rapor.catatanAgamaBudipekerti.length <= 1000 &&
+                    rapor.catatanJatiDiri.length > 2000 ? 'always' :
+                    'auto'
             }}
           >
             <p style={{ fontSize: '20px' }}>
@@ -173,22 +187,22 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             style={{
               pageBreakBefore:
                 rapor.catatanAgamaBudipekerti.length > 1500 &&
-                rapor.catatanLiterasiSains.length > 1500 &&
-                rapor.catatanJatiDiri.length > 1500
+                  rapor.catatanLiterasiSains.length > 1500 &&
+                  rapor.catatanJatiDiri.length > 1500
                   ? 'always'
                   : (rapor.catatanAgamaBudipekerti.length > 1500 &&
-                      rapor.catatanLiterasiSains.length > 1500) ||
+                    rapor.catatanLiterasiSains.length > 1500) ||
                     rapor.catatanLiterasiSains.length <= 800
-                  ? 'always'
-                  : rapor.catatanAgamaBudipekerti.length <= 1500 &&
-                    rapor.catatanLiterasiSains.length > 2000 &&
-                    rapor.catatanJatiDiri.length <= 800
-                  ? 'always'
-                  : rapor.catatanAgamaBudipekerti.length <= 1500 &&
-                    rapor.catatanLiterasiSains.length > 2000 &&
-                    rapor.catatanJatiDiri.length > 1800
-                  ? 'always'
-                  : 'auto',
+                    ? 'always'
+                    : rapor.catatanAgamaBudipekerti.length <= 1500 &&
+                      rapor.catatanLiterasiSains.length > 2000 &&
+                      rapor.catatanJatiDiri.length <= 800
+                      ? 'always'
+                      : rapor.catatanAgamaBudipekerti.length <= 1500 &&
+                        rapor.catatanLiterasiSains.length > 2000 &&
+                        rapor.catatanJatiDiri.length > 1800
+                        ? 'always'
+                        : 'auto',
             }}
           >
             <p style={{ fontSize: '20px' }}>
@@ -214,15 +228,15 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
             style={{
               pageBreakBefore:
                 rapor.catatanAgamaBudipekerti.length <= 1500 &&
-                rapor.catatanLiterasiSains.length <= 1500 &&
-                rapor.catatanJatiDiri.length > 1000
+                  rapor.catatanLiterasiSains.length <= 1500 &&
+                  rapor.catatanJatiDiri.length > 1000
                   ? 'always'
                   : rapor.catatanAgamaBudipekerti.length <= 3400 &&
                     rapor.catatanLiterasiSains.length <= 2000 &&
                     rapor.catatanJatiDiri.length <= 2900 &&
                     rapor.catatanPancasila.length > 2000
-                  ? 'always'
-                  : 'auto',
+                    ? 'always'
+                    : 'auto',
             }}
           >
             <p style={{ fontSize: '20px' }}>
@@ -246,16 +260,16 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
           style={{
             pageBreakBefore:
               rapor.catatanAgamaBudipekerti.length > 1500 &&
-              rapor.catatanLiterasiSains.length > 1500 &&
-              rapor.catatanPancasila.length > 1500 &&
-              rapor.catatanPertumbuhan.length > 1500
+                rapor.catatanLiterasiSains.length > 1500 &&
+                rapor.catatanPancasila.length > 1500 &&
+                rapor.catatanPertumbuhan.length > 1500
                 ? 'always'
                 : rapor.catatanAgamaBudipekerti.length > 1500 &&
                   rapor.catatanLiterasiSains.length <= 2000 &&
                   rapor.catatanPancasila.length <= 2000 &&
                   rapor.catatanPertumbuhan.length > 2000
-                ? 'always'
-                : 'auto',
+                  ? 'always'
+                  : 'auto',
           }}
         >
           <p style={{ fontSize: '20px' }}>
@@ -288,15 +302,9 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
           className={note_teacher}
           style={{
             pageBreakBefore:
-              rapor.catatanAgamaBudipekerti.length > 1500 &&
               rapor.catatanLiterasiSains.length > 1500 &&
-              rapor.catatanPancasila.length > 1500 &&
-              rapor.catatanPertumbuhan.length > 1500
-                ? 'always'
-                : rapor.catatanAgamaBudipekerti.length > 1500 &&
-                  rapor.catatanLiterasiSains.length <= 2500 &&
-                  rapor.catatanPancasila.length <= 2500 &&
-                  rapor.catatanGuru.length > 2000
+                rapor.catatanPancasila.length > 200 &&
+                rapor.catatanPertumbuhan.length > 200
                 ? 'always'
                 : 'auto',
           }}
@@ -331,20 +339,10 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
           className={coment}
           style={{
             pageBreakBefore:
-              rapor.catatanAgamaBudipekerti.length > 1500 &&
-              rapor.catatanLiterasiSains.length > 1500 &&
-              rapor.catatanPancasila.length > 1500 &&
-              rapor.catatanPertumbuhan.length > 1500
-                ? 'always'
-                : rapor.catatanAgamaBudipekerti.length > 1500 &&
-                  rapor.catatanLiterasiSains.length <= 2500 &&
-                  rapor.catatanPancasila.length <= 2500 &&
-                  rapor.catatanGuru.length > 3000
-                ? 'always'
-                : rapor.catatanAgamaBudipekerti.length > 1500 &&
-                  rapor.catatanLiterasiSains.length > 1500 &&
-                  rapor.catatanPancasila.length <= 1500 &&
-                  rapor.catatanGuru.length <= 1000
+              rapor.catatanPancasila.length > 300 &&
+                rapor.catatanPertumbuhan.length > 400 &&
+                rapor.catatanGuru.length > 300
+
                 ? 'always'
                 : 'auto',
             marginTop: '5%',
