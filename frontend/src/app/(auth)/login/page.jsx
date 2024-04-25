@@ -32,7 +32,7 @@ export default function LoginPage() {
         position: 'top-right',
       })
       // Redirect to home
-      push(`/${jwtPayload.role.toLowerCase()}`)
+      window.location.href = `/${jwtPayload.role.toLowerCase()}`
       setIsLoading(false)
     } catch (error) {
       toast.error(error, {
@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   if (token) {
     const jwtPayload = getTokenData(token)
-    push(`/${jwtPayload.role.toLowerCase()}`)
+    window.location.href = `/${jwtPayload.role.toLowerCase()}`
   }
 
   const handleLupaPassword = () => {
@@ -134,7 +134,10 @@ export default function LoginPage() {
             >
               {isLoading ? 'Loading...' : 'Login'}
             </button>
-            <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer" onClick={handleLupaPassword}>
+            <span
+              className="text-sm ml-2 hover:text-blue-500 cursor-pointer"
+              onClick={handleLupaPassword}
+            >
               Lupa Password ?
             </span>
           </div>
