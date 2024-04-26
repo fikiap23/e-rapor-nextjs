@@ -82,7 +82,7 @@ export default function Navbar(props) {
                 Login
               </a>
             )}
-            <div className="bg-white flex gap-2 p-2 rounded-l-3xl rounded-tr-3xl rounded-br-lg">
+            <div className="bg-white md:flex gap-2 p-2 rounded-l-3xl rounded-tr-3xl rounded-br-lg hidden">
               <img
                 src="/images/images__1_-removebg.png"
                 alt=""
@@ -117,30 +117,50 @@ export default function Navbar(props) {
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden w-full bg-white my-4 rounded-2xl">
-          <div className="px-2 py-6 sm:px-3 w-fit">
+        <div className="md:hidden w-full my-4 rounded-2xl">
+          <div className="px-2 py-6 sm:px-3 w-fit flex items-center gap-20">
             {role === "ADMIN" ? (
               <a
-                className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6"
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                }
                 href="/admin"
               >
                 Dashboard
               </a>
             ) : role === "TEACHER" ? (
               <a
-                className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6"
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                }
                 href="/teacher"
               >
                 Dashboard
               </a>
             ) : (
               <a
-                className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 block md:hidden"
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 block md:hidden"
+                }
                 href="/login"
               >
                 Log in
               </a>
             )}
+            <div className="bg-white flex gap-2 p-2 rounded-l-3xl rounded-tr-3xl rounded-br-lg md:hidden">
+              <img
+                src="/images/images__1_-removebg.png"
+                alt=""
+                className="w-12"
+              />
+              <img src="/images/logo.png" alt="" className="w-8" />
+            </div>
           </div>
         </div>
       )}
