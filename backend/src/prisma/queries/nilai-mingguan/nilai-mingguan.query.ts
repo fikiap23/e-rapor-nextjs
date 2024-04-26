@@ -153,11 +153,11 @@ export class NilaiMingguanQuery extends DbService {
         const murids = await this.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran)
 
         return {
-            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
-            nameRombel: checkRombelSemesterGuru.rombel.name,
+            namaSekolah: sekolah?.nama || 'Belum ada sekolah',
+            namaRombel: checkRombelSemesterGuru.rombel.name,
             kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
             semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
-            nameGuru: checkRombelSemesterGuru.guru.nama,
+            namaGuru: checkRombelSemesterGuru.guru.nama,
             nipGuru: checkRombelSemesterGuru.guru.nip,
             namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
             nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
@@ -243,11 +243,11 @@ export class NilaiMingguanQuery extends DbService {
         })
 
         return {
-            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
-            nameRombel: checkRombelSemesterGuru.rombel.name,
+            namaSekolah: sekolah?.nama || 'Belum ada sekolah',
+            namaRombel: checkRombelSemesterGuru.rombel.name,
             kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
             semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
-            nameGuru: checkRombelSemesterGuru.guru.nama,
+            namaGuru: checkRombelSemesterGuru.guru.nama,
             nipGuru: checkRombelSemesterGuru.guru.nip,
             namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
             nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
