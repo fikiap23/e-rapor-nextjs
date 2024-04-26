@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { useRombelWithSemester } from '@/hooks/useRombelWithSemester'
-import { Table, Button, Input } from 'antd'
+import { Table, Button, Input, Space, Tag, Modal } from 'antd'
 import { useSiswasByIdSemesterGuru } from '@/hooks/useSiswasByIdRombelSemesterGuru'
 import { apiUrl } from '@/services/apiUrls'
 import Link from 'next/link'
@@ -21,6 +21,16 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
         value.toLowerCase().includes(searchText.toLowerCase())
     )
   )
+
+  const handleValidasiPenilaian = (idSiswa, idRombelSemesterGuru) => {
+    Modal.confirm({
+      title: 'Apakah Anda yakin?',
+      content: 'Data siswa ini akan di validasi',
+      onOk() {
+        window.location.href = `${apiUrl}/penilaian/validasi/${idSiswa}/${idRombelSemesterGuru}`
+      },
+    })
+  }
 
   const columns = [
     {
@@ -61,19 +71,40 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
         />
       ),
     },
-
+    {
+      title: 'Status Penilaian',
+      key: 'analisisPenilaian',
+      render: (text, record) => (
+        <Tag color={record.analisisPenilaian.length > 0 ? 'green' : 'red'}>
+          {record.analisisPenilaian.length > 0
+            ? 'Sudah divalidasi'
+            : 'Belum divalidasi'}
+        </Tag>
+      ),
+    },
     {
       title: 'Aksi',
       key: 'aksi',
       render: (text, record) => (
-        <Link
-          href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
-          target="_blank"
-        >
-          <Button type="primary" icon={<i className="fa fa-print"></i>}>
-            Cetak Analisis
-          </Button>
-        </Link>
+        <Space size="middle">
+          <Link
+            href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
+            target="_blank"
+          >
+            <Button
+              style={{ backgroundColor: 'green', color: 'white' }}
+              icon={<i className="fa fa-print"></i>}
+            >
+              Cetak Analisis
+            </Button>
+          </Link>
+
+          {record.analisisPenilaian.length === 0 && (
+            <Button type="primary" icon={<i className="fa fa-check"></i>}>
+              Validasi
+            </Button>
+          )}
+        </Space>
       ),
     },
   ]

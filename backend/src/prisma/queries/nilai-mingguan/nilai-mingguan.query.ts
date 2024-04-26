@@ -270,6 +270,10 @@ export class NilaiMingguanQuery extends DbService {
         const penilaian = payload.penilaian as unknown as Prisma.JsonArray
         delete payload.penilaian
         const checkIsStaticAnalisisPenilaianExist = await this.checkIsStaticAnalisisPenilaianExist(payload.idRombelSemesterGuru, payload.idMurid)
+        const tp = await this.prisma.tujuanPembelajaran.count()
+        if (penilaian.length < tp) {
+            throw new BadRequestException('Penilaian Belum Lengkap')
+        }
         if (checkIsStaticAnalisisPenilaianExist) {
             return await this.prisma.analisisPenilaian.update({
                 where: {
