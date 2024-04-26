@@ -49,12 +49,6 @@ const SidebarTeacher = () => {
               <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
           </li>
-
-          <li>
-            <Link href="/guru/validation">
-              <i className="fa fa-check"></i> <span>Validasi Nilai</span>
-            </Link>
-          </li>
         </ul>
       </section>
     </aside>
