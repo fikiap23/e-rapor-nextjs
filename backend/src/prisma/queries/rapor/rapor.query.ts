@@ -142,10 +142,10 @@ export class RaporQuery extends DbService {
             where: { id }, data: {
                 ...payload,
                 // idMurid: null,
-                idGuru: null,
-                idRombel: null,
-                idSekolah: null,
-                idSemester: null,
+                // idGuru: null,
+                // idRombel: null,
+                // idSekolah: null,
+                // idSemester: null,
                 isValidated: true
             }
         })

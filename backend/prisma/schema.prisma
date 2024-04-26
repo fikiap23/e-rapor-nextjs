@@ -365,15 +365,15 @@ model Rapor {
 
   // Relation
   idSekolah  String?
-  sekolah    Sekolah?  @relation(fields: [idSekolah], references: [id])
+  sekolah    Sekolah?  @relation(fields: [idSekolah], references: [id], onDelete: SetNull)
   idSemester String?
-  semester   Semester? @relation(fields: [idSemester], references: [id])
+  semester   Semester? @relation(fields: [idSemester], references: [id], onDelete: SetNull)
   idMurid    String?
   murid      Murid?    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
   idGuru     String?
-  guru       Guru?     @relation(fields: [idGuru], references: [id])
+  guru       Guru?     @relation(fields: [idGuru], references: [id], onDelete: SetNull)
   idRombel   String?
-  rombel     Rombel?   @relation(fields: [idRombel], references: [id])
+  rombel     Rombel?   @relation(fields: [idRombel], references: [id], onDelete: SetNull)
 
   idRombelSemesterGuru String?
   rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: SetNull)
