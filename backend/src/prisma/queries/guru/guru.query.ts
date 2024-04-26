@@ -202,6 +202,7 @@ export class GuruQuery extends DbService {
                 }
             },
             select: {
+                id: true,
                 rombel: {
                     select: {
                         id: true,
@@ -222,11 +223,9 @@ export class GuruQuery extends DbService {
 
         const raporCount = await this.prisma.rapor.count({
             where: {
-                idRombel: {
-                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.rombel.id)
-                },
-                idSemester: {
-                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.semester.id)
+                isValidated: true,
+                idRombelSemesterGuru: {
+                    in: rombelSemesterGurus.map((rombelSemesterGuru) => rombelSemesterGuru.id)
                 }
             }
         });
