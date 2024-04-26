@@ -144,8 +144,9 @@ model Murid {
   penilaianMingguan PenilaianMingguan[]
 
   // Relation
-  idRombel String?
-  rombel   Rombel? @relation(fields: [idRombel], references: [id])
+  idRombel          String?
+  rombel            Rombel?             @relation(fields: [idRombel], references: [id])
+  analisisPenilaian AnalisisPenilaian[]
 
   // index
   @@index([id, nis])
@@ -413,6 +414,31 @@ model RombelSemesterGuru {
   modulAjar         ModulAjar[]
   jadwalAjar        JadwalAjar[]
   penilaianMingguan PenilaianMingguan[]
+  analisisPenilaian AnalisisPenilaian[]
 
   @@index([id, idRombel, idSemester, idGuru])
+}
+
+model AnalisisPenilaian {
+  id   String @id @default(uuid())
+  nama String
+  nis  String
+
+  namaSekolah  String
+  namaRombel   String
+  kelompokUsia String
+  semester     String
+  namaGuru     String
+  nipGuru      String
+  namaKapsek   String
+  nipKapsek    String
+
+  penilaian Json[]
+
+  idMurid              String
+  murid                Murid              @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idRombelSemesterGuru String
+  rombelSemesterGuru   RombelSemesterGuru @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
+
+  @@index([id, idMurid, idRombelSemesterGuru])
 }
