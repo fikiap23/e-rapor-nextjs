@@ -47,29 +47,51 @@ export default function Navbar(props) {
               {` RA. Daarun Na'im Ambon`}
             </a>
           </div>
+          <div className="flex gap-7 items-center">
+            {role === "ADMIN" ? (
+              <a
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                }
+                href="/admin"
+              >
+                Dashboard
+              </a>
+            ) : role === "TEACHER" ? (
+              <a
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                }
+                href="/teacher"
+              >
+                Dashboard
+              </a>
+            ) : (
+              <a
+                className={
+                  scroll
+                    ? "bg-white text-[#007C11] font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                    : "bg-[#007C11] text-white font-semibold transition duration-[0.7s] rounded-full py-2 px-6 md:block hidden"
+                }
+                href="/login"
+              >
+                Login
+              </a>
+            )}
+            <div className="bg-white flex gap-2 p-2 rounded-l-3xl rounded-tr-3xl rounded-br-lg">
+              <img
+                src="/images/images__1_-removebg.png"
+                alt=""
+                className="w-16"
+              />
+              <img src="/images/logo.png" alt="" className="w-12" />
+            </div>
+          </div>
 
-          {role === "ADMIN" ? (
-            <a
-              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
-              href="/admin"
-            >
-              Dashboard
-            </a>
-          ) : role === "TEACHER" ? (
-            <a
-              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
-              href="/teacher"
-            >
-              Dashboard
-            </a>
-          ) : (
-            <a
-              className="bg-[#007C11] text-white font-semibold rounded-full py-2 px-6 md:block hidden"
-              href="/login"
-            >
-              Log in
-            </a>
-          )}
           <div className="-mr-2 flex md:hidden">
             <button
               type="button"
