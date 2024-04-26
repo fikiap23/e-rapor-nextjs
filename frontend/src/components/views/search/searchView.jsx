@@ -92,7 +92,7 @@ export default function SearchView() {
         id="hero"
         className="hero-content flex-col lg:flex-row-reverse bg-no-repeat bg-right md:bg-cover md:bg-center bg-hero-pattern h-full min-h-[700px] w-full"
       >
-        <div className="h-full w-full min-h-[700px] flex flex-col justify-center items-center gap-14 bg-[#002E1A]/50 px-10 py-24">
+        <div className="h-full w-full min-h-[700px] flex flex-col justify-center items-center gap-14 bg-[#002E1A]/50 px-10">
           {/* <div className="flex justify-end pr-28">
             <div className="bg-white flex gap-2 p-2 rounded-l-3xl rounded-tr-3xl rounded-br-lg">
               <img
@@ -115,13 +115,13 @@ export default function SearchView() {
               efisien. Cukup akses melalui platform online, dan akses raport
               dengan cepat
             </p>
-            <a
-              href="#cek"
-              className="px-5 py-2 bg-[#007C11] text-white text-sm rounded-lg font-semibold transition-all duration-[1s]"
-            >
-              Cek Raport Online
-            </a>
           </div>
+          <a
+            href="#cek"
+            className="px-5 py-2 bg-[#007C11] text-white text-sm rounded-lg font-semibold transition-all duration-[1s]"
+          >
+            Cek Raport Online
+          </a>
         </div>
       </section>
       <header
