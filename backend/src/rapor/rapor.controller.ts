@@ -56,6 +56,14 @@ export class RaporController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
 
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.GURU)
+    @Put('static/:id')
+    async updateToStatic(@Res() res, @Request() req, @Param('id') id) {
+        await this.raporService.updateToStaticById(id)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, {})
+    }
+
 
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.GURU)

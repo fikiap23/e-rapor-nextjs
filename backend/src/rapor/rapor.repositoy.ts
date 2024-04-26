@@ -8,6 +8,7 @@ import { MuridRepository } from '../murid/murid.repository';
 import { SemesterRepository } from '../semester/semester.repository';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
 import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
+import { UpdateRaporStatic } from '../prisma/queries/rapor/interfaces/rapor';
 
 @Injectable()
 export class RaporRepository {
@@ -95,4 +96,70 @@ export class RaporRepository {
         return await this.raporQuery.findByNisNamaMuridAndSemester(nis, nama, idSemester)
     }
 
+    async updateToStaticById(id: string) {
+        const data = await this.printById(id);
+        if (!data) throw new BadRequestException('Rapor tidak ditemukan');
+        const semester = data.semester
+        const semesterTahun = data.semesterTahun
+        const sekolah = data.sekolah
+        // const murid = data.murid
+        const guru = data.guru
+        const rombel = data.rombel
+        const kapsek = data.kapsek
+        const rapor = data.rapor
+
+        const payloadUpdate: UpdateRaporStatic = {
+            // // static value murid
+            // nama: murid.nama,
+            // nis: murid.nis,
+            // tempatLahir: murid.tempatLahir,
+            // tanggalLahir: murid.tanggalLahir,
+            // jenisKelamin: murid.jenisKelamin,
+            // agama: murid.agama,
+            // anakKe: murid.anakKe,
+            // foto: murid.foto,
+
+            // // static value orang tua
+            // namaAyah: murid.namaAyah,
+            // pekerjaanAyah: murid.pekerjaanAyah,
+            // namaIbu: murid.namaIbu,
+            // pekerjaanIbu: murid.pekerjaanIbu,
+            // jalan: murid.jalan,
+            // kelurahan: murid.kelurahan,
+            // kecamatan: murid.kecamatan,
+            // kota: murid.kota,
+            // provinsi: murid.provinsi,
+
+            // static value guru
+            namaGuru: guru.nama,
+            nipGuru: guru.nip,
+            namaKapsek: kapsek.nama,
+            nipKapsek: kapsek.nip,
+
+            // static value rombel
+            namaRombel: rombel.nama,
+            kelompokUsia: rombel.kelompokUsia,
+
+            // static value sekolah
+            namaSekolah: sekolah.nama,
+            npsnSekolah: sekolah.npsn,
+            alamatSekolah: sekolah.alamat,
+            kodePosSekolah: sekolah.kodePos,
+            noTeleponSekolah: sekolah.noTelepon,
+            kelurahanSekolah: sekolah.kelurahan,
+            kecamatanSekolah: sekolah.kecamatan,
+            kotaSekolah: sekolah.kota,
+            provinsiSekolah: sekolah.provinsi,
+            namaDisdikSekolah: sekolah.namaDisdik,
+            logoSekolah: sekolah.logo,
+
+            // static value semester
+            namaSemester: semester,
+            semesterTahun: semesterTahun,
+            tanggalBagiRapor: rapor.tanggalBagiRapor
+
+        }
+
+        return await this.raporQuery.updateToStatic(id, payloadUpdate)
+    }
 }

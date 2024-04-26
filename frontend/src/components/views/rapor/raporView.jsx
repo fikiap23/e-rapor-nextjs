@@ -69,7 +69,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       key: 'penilaianMingguan',
       render: (text, record) => {
         if (!record.penilaianMingguan) {
-          return <Tag color="yellow">Belum lengkap</Tag>
+          return <Tag color="red">Belum lengkap</Tag>
         } else {
           return <Tag color="green">Sudah lengkap</Tag>
         }
@@ -80,10 +80,10 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       dataIndex: 'statusSemester',
       key: 'statusSemester',
       render: (text, record) => {
-        if (record.rapor && record.rapor.length === 0) {
-          return <Tag color="yellow">Belum Bisa Dicetak</Tag>
+        if (record.rapor && record.rapor[0]?.isValidated) {
+          return <Tag color="green">Sudah Divalidasi</Tag>
         } else {
-          return <Tag color="green">Tersedia</Tag>
+          return <Tag color="yellow">Belum Divalidasi</Tag>
         }
       },
     },
@@ -94,7 +94,8 @@ const RaporView = ({ idRombelSemesterGuru }) => {
         <span>
           {record.rapor &&
             record.penilaianMingguan &&
-            record.rapor.length === 0 && (
+            record.rapor.length === 0 &&
+            !record.rapor[0]?.isValidated && (
               <Button
                 type="primary"
                 onClick={() => {
@@ -107,6 +108,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                 Input Catatan Raport
               </Button>
             )}
+
           {!record.penilaianMingguan && (
             <Link
               href={`/guru/penilaian/${idRombelSemesterGuru}`}
@@ -120,7 +122,8 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
           {record.rapor &&
             record.penilaianMingguan &&
-            record.rapor.length !== 0 && (
+            record.rapor.length !== 0 &&
+            !record.rapor[0]?.isValidated && (
               <Button
                 type="primary"
                 icon={<EditOutlined />}
