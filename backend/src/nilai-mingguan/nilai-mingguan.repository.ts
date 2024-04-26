@@ -8,6 +8,7 @@ import { MuridRepository } from '../murid/murid.repository';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
 import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 import { CpTpRepository } from '../cp-tp/cp-tp.repository';
+import { CreateAnalisisPenilaianType } from '../prisma/queries/nilai-mingguan/interfaces/analisisPenilaian';
 
 @Injectable()
 export class NilaiMingguanRepository {
@@ -73,5 +74,30 @@ export class NilaiMingguanRepository {
 
     async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
         return await this.nilaiMingguanQuery.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
+
+    async createStaticAnalisisPenilaian(token: string, idRombelSemesterGuru: string, idMurid: string) {
+        // get decode payload jwt token
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        if (!idsRombelSemesterGuru.includes(idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        await this.muridRepository.findByIdOrThrow(idMurid);
+        await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(idRombelSemesterGuru);
+        const data = await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
+        const payload: CreateAnalisisPenilaianType = {
+            idMurid: idMurid,
+            idRombelSemesterGuru: idRombelSemesterGuru,
+            nama: data.murid.name,
+            nis: data.murid.nis,
+            kelompokUsia: data.kelompokUsia,
+            namaRombel: data.namaRombel,
+            namaGuru: data.namaGuru,
+            nipGuru: data.nipGuru,
+            namaKapsek: data.namaKapsek,
+            nipKapsek: data.nipKapsek,
+            namaSekolah: data.namaSekolah,
+            semester: data.semester,
+            penilaian: data.penilaian
+        }
+        return await this.nilaiMingguanQuery.createStaticAnalisisPenilaian(payload);
     }
 }

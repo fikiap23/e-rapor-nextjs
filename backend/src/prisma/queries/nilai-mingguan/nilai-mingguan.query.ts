@@ -2,7 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/update-nilai-mingguan.dto';
-import { SemesterType } from '@prisma/client';
+import { Prisma, SemesterType } from '@prisma/client';
+import { CreateAnalisisPenilaianType } from './interfaces/analisisPenilaian';
 
 @Injectable()
 export class NilaiMingguanQuery extends DbService {
@@ -222,6 +223,11 @@ export class NilaiMingguanQuery extends DbService {
                                                 minggu: true
                                             }
                                         }
+                                    },
+                                    orderBy: {
+                                        tujuanPembelajaran: {
+                                            minggu: 'asc'
+                                        }
                                     }
                                 },
                             }
@@ -258,5 +264,45 @@ export class NilaiMingguanQuery extends DbService {
             },
             penilaian: penilaianMingguan
         }
+    }
+
+    async createStaticAnalisisPenilaian(payload: CreateAnalisisPenilaianType) {
+        const penilaian = payload.penilaian as unknown as Prisma.JsonArray
+        delete payload.penilaian
+        const checkIsStaticAnalisisPenilaianExist = await this.checkIsStaticAnalisisPenilaianExist(payload.idRombelSemesterGuru, payload.idMurid)
+        if (checkIsStaticAnalisisPenilaianExist) {
+            return await this.prisma.analisisPenilaian.update({
+                where: {
+                    id: checkIsStaticAnalisisPenilaianExist.id
+                },
+                data: {
+                    ...payload,
+                    penilaian
+                }
+            })
+        }
+        return await this.prisma.analisisPenilaian.create({
+            data: {
+                ...payload,
+                penilaian
+            }
+        })
+    }
+
+    async findStaticAnalisisPenilaianByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        return await this.prisma.analisisPenilaian.findMany({
+            where: {
+                idRombelSemesterGuru
+            }
+        })
+    }
+
+    async checkIsStaticAnalisisPenilaianExist(idRombelSemesterGuru: string, idMurid: string) {
+        return await this.prisma.analisisPenilaian.findFirst({
+            where: {
+                idRombelSemesterGuru,
+                idMurid
+            }
+        })
     }
 }

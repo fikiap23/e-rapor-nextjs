@@ -360,6 +360,14 @@ export class MuridQuery extends DbService {
                                 nama: true,
                                 nis: true,
                                 foto: true,
+                                analisisPenilaian: {
+                                    where: {
+                                        idRombelSemesterGuru: idRombelSemesterGuru
+                                    },
+                                    select: {
+                                        id: true,
+                                    }
+                                }
                             },
                         },
                     },
