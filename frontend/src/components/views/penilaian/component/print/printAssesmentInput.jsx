@@ -6,9 +6,9 @@ import { formatDateWithIndonesianMonth } from '@/lib/helperDate'
 
 function PrintAssesmnetInput({ data }) {
   useEffect(() => {
-    window.print()
+    // window.print()
   }, [])
-  // console.log(`from print assesment input ${JSON.stringify(data)}`)
+  console.log(data.murids.map(index => index.penilaianMingguan))
 
   return (
     <div>

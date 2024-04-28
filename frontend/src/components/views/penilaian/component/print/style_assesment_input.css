@@ -498,14 +498,14 @@ table.sheet0 tr.row4 {
 
 @media print {
   @page {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 0.3in !important;
+    margin-bottom: 0.3in !important;
     size: landscape;
   }
 
   body {
     padding-top: 72px;
-    padding-bottom: 72px;
+    padding-bottom: 30px;
   }
 
   .sheet0 {
