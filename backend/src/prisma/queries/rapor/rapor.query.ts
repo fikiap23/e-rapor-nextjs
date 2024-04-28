@@ -3,6 +3,7 @@ import { DbService } from '../../db.service';
 import { CreateRaporDto } from '../../../rapor/dto/create-rapor.dto';
 import { UpdateRaporDto } from '../../../rapor/dto/update-rapor.dto';
 import { SemesterType } from '@prisma/client';
+import { UpdateRaporStatic } from './interfaces/rapor';
 
 @Injectable()
 export class RaporQuery extends DbService {
@@ -136,34 +137,95 @@ export class RaporQuery extends DbService {
         return await this.prisma.rapor.update({ where: { id }, data: { ...payload, idRombel: rombelSemesterGuruId.idRombel, idGuru: rombelSemesterGuruId.idGuru, idRombelSemesterGuru: rombelSemesterGuruId.id } })
     }
 
+    async updateToStatic(id: string, payload: UpdateRaporStatic) {
+        return await this.prisma.rapor.update({
+            where: { id }, data: {
+                ...payload,
+                // idMurid: null,
+                // idGuru: null,
+                // idRombel: null,
+                // idSekolah: null,
+                // idSemester: null,
+                isValidated: true
+            }
+        })
+    }
+
     async printById(id: string) {
         const result = await this.prisma.rapor.findUnique({ where: { id }, include: { murid: true, semester: true, guru: true, sekolah: true, rombel: { include: { kategoriRombel: true } } } })
         if (!result) return null
-        return {
-            semester: `Semester ${result.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir}`,
-            sekolah: result.sekolah,
-            murid: result.murid,
-            guru: result.guru,
-            rombel: {
-                nama: result.rombel.name,
-                kelompokUsia: result.rombel.kategoriRombel.kelompokUsia
-            },
-            kapsek: {
-                nama: result.semester.namaKepsek,
-                nip: result.semester.nipKepsek
-            },
-            rapor: {
-                id: result.id,
-                tanggalBagiRapor: result.semester.tglBagiRapor,
-                catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,
-                catatanGuru: result.catatanGuru,
-                catatanJatiDiri: result.catatanJatiDiri,
-                catatanLiterasiSains: result.catatanLiterasiSains,
-                catatanPancasila: result.catatanPancasila,
-                catatanPertumbuhan: result.catatanPertumbuhan,
-                totalAlpa: result.totalAlpa,
-                totalIzin: result.totalIzin,
-                totalSakit: result.totalSakit
+        if (result.isValidated) {
+            return {
+                semester: result.namaSemester,
+                semesterTahun: result.semesterTahun,
+                sekolah: {
+                    nama: result.namaSekolah,
+                    npsn: result.npsnSekolah,
+                    alamat: result.alamatSekolah,
+                    kodePos: result.kodePosSekolah,
+                    noTelepon: result.noTeleponSekolah,
+                    provinsi: result.provinsiSekolah,
+                    kota: result.kotaSekolah,
+                    kecamatan: result.kecamatanSekolah,
+                    kelurahan: result.kelurahanSekolah,
+                    namaDisdik: result.namaDisdikSekolah,
+                    logo: result.logoSekolah
+                },
+                murid: result.murid,
+                guru: {
+                    nama: result.namaGuru,
+                    nip: result.nipGuru
+                },
+                rombel: {
+                    nama: result.namaRombel,
+                    kelompokUsia: result.kelompokUsia
+                },
+                kapsek: {
+                    nama: result.namaKapsek,
+                    nip: result.nipKapsek
+                },
+                rapor: {
+                    id: result.id,
+                    tanggalBagiRapor: result.tanggalBagiRapor,
+                    catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,
+                    catatanGuru: result.catatanGuru,
+                    catatanJatiDiri: result.catatanJatiDiri,
+                    catatanLiterasiSains: result.catatanLiterasiSains,
+                    catatanPancasila: result.catatanPancasila,
+                    catatanPertumbuhan: result.catatanPertumbuhan,
+                    totalAlpa: result.totalAlpa,
+                    totalIzin: result.totalIzin,
+                    totalSakit: result.totalSakit
+                }
+            }
+        } else {
+            return {
+                semester: `Semester ${result.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir}`,
+                semesterTahun: `${result.semester.tahunAjaranAwal}/${result.semester.tahunAjaranAkhir} (${result.semester.jenisSemester})`,
+                sekolah: result.sekolah,
+                murid: result.murid,
+                guru: result.guru,
+                rombel: {
+                    nama: result.rombel.name,
+                    kelompokUsia: result.rombel.kategoriRombel.kelompokUsia
+                },
+                kapsek: {
+                    nama: result.semester.namaKepsek,
+                    nip: result.semester.nipKepsek
+                },
+                rapor: {
+                    id: result.id,
+                    tanggalBagiRapor: result.semester.tglBagiRapor,
+                    catatanAgamaBudipekerti: result.catatanAgamaBudipekerti,
+                    catatanGuru: result.catatanGuru,
+                    catatanJatiDiri: result.catatanJatiDiri,
+                    catatanLiterasiSains: result.catatanLiterasiSains,
+                    catatanPancasila: result.catatanPancasila,
+                    catatanPertumbuhan: result.catatanPertumbuhan,
+                    totalAlpa: result.totalAlpa,
+                    totalIzin: result.totalIzin,
+                    totalSakit: result.totalSakit
+                }
             }
         }
     }

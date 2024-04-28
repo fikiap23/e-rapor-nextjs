@@ -2,7 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/create-nilai-mingguan.dto';
 import { UpdatePenilaianMingguanDto } from '../../../nilai-mingguan/dto/update-nilai-mingguan.dto';
-import { SemesterType } from '@prisma/client';
+import { Prisma, SemesterType } from '@prisma/client';
+import { CreateAnalisisPenilaianType } from './interfaces/analisisPenilaian';
 
 @Injectable()
 export class NilaiMingguanQuery extends DbService {
@@ -33,6 +34,10 @@ export class NilaiMingguanQuery extends DbService {
 
     async updateById(id: string, payload: UpdatePenilaianMingguanDto) {
         const penilaianMingguan = await this.prisma.penilaianMingguan.update({ where: { id }, data: payload })
+        const rapor = await this.prisma.rapor.findFirst({ where: { idMurid: penilaianMingguan.idMurid, idRombelSemesterGuru: penilaianMingguan.idRombelSemesterGuru } })
+        if (rapor && rapor.isValidated) {
+            throw new BadRequestException('Tidak Bisa Mengubah Penilaian Yang Telah Tervalidasi')
+        }
         // reset rapor
         await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
         return penilaianMingguan
@@ -42,6 +47,10 @@ export class NilaiMingguanQuery extends DbService {
         const penilaianMingguan = await this.prisma.penilaianMingguan.findUnique({ where: { id } })
         if (!penilaianMingguan) {
             throw new BadRequestException('Penilaian mingguan Tidak ditemukan')
+        }
+        const rapor = await this.prisma.rapor.findFirst({ where: { idMurid: penilaianMingguan.idMurid, idRombelSemesterGuru: penilaianMingguan.idRombelSemesterGuru } })
+        if (rapor && rapor.isValidated) {
+            throw new BadRequestException('Tidak Bisa Menghapus Penilaian Yang Telah Tervalidasi')
         }
         // reset rapor
         await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
@@ -55,6 +64,10 @@ export class NilaiMingguanQuery extends DbService {
             await this.prisma.rapor.deleteMany({ where: { idMurid, idRombelSemesterGuru } })
         }
         return
+    }
+
+    async findRaporByIdMuridAndIdRombelSemesterGuru(idMurid: string, idRombelSemesterGuru: string) {
+        return await this.prisma.rapor.findFirst({ where: { idMurid, idRombelSemesterGuru } })
     }
 
     async findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
@@ -153,11 +166,11 @@ export class NilaiMingguanQuery extends DbService {
         const murids = await this.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran)
 
         return {
-            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
-            nameRombel: checkRombelSemesterGuru.rombel.name,
+            namaSekolah: sekolah?.nama || 'Belum ada sekolah',
+            namaRombel: checkRombelSemesterGuru.rombel.name,
             kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
             semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
-            nameGuru: checkRombelSemesterGuru.guru.nama,
+            namaGuru: checkRombelSemesterGuru.guru.nama,
             nipGuru: checkRombelSemesterGuru.guru.nip,
             namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
             nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
@@ -222,6 +235,11 @@ export class NilaiMingguanQuery extends DbService {
                                                 minggu: true
                                             }
                                         }
+                                    },
+                                    orderBy: {
+                                        tujuanPembelajaran: {
+                                            minggu: 'asc'
+                                        }
                                     }
                                 },
                             }
@@ -243,20 +261,79 @@ export class NilaiMingguanQuery extends DbService {
         })
 
         return {
-            nameSekolah: sekolah?.nama || 'Belum ada sekolah',
-            nameRombel: checkRombelSemesterGuru.rombel.name,
+            namaSekolah: sekolah?.nama || 'Belum ada sekolah',
+            namaRombel: checkRombelSemesterGuru.rombel.name,
             kelompokUsia: checkRombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
             semester: `Semester ${checkRombelSemesterGuru.semester.jenisSemester === SemesterType.GANJIL ? '1' : '2'} Tahun Pelajaran ${checkRombelSemesterGuru.semester.tahunAjaranAwal}/${checkRombelSemesterGuru.semester.tahunAjaranAkhir}`,
-            nameGuru: checkRombelSemesterGuru.guru.nama,
+            namaGuru: checkRombelSemesterGuru.guru.nama,
             nipGuru: checkRombelSemesterGuru.guru.nip,
             namaKapsek: checkRombelSemesterGuru.semester.namaKepsek,
             nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
             murid: {
                 id: muridWithPenilaian.rombel.murid[0].id,
-                name: muridWithPenilaian.rombel.murid[0].nama,
+                nama: muridWithPenilaian.rombel.murid[0].nama,
                 nis: muridWithPenilaian.rombel.murid[0].nis,
             },
             penilaian: penilaianMingguan
+        }
+    }
+
+    async createStaticAnalisisPenilaian(payload: CreateAnalisisPenilaianType) {
+        const penilaian = payload.penilaian as unknown as Prisma.JsonArray
+        delete payload.penilaian
+        const checkIsStaticAnalisisPenilaianExist = await this.checkIsStaticAnalisisPenilaianExist(payload.idRombelSemesterGuru, payload.idMurid)
+        const tp = await this.prisma.tujuanPembelajaran.count()
+        if (penilaian.length < tp) {
+            throw new BadRequestException('Penilaian Belum Lengkap')
+        }
+        if (checkIsStaticAnalisisPenilaianExist) {
+            return await this.prisma.analisisPenilaian.update({
+                where: {
+                    id: checkIsStaticAnalisisPenilaianExist.id
+                },
+                data: {
+                    ...payload,
+                    penilaian
+                }
+            })
+        }
+        return await this.prisma.analisisPenilaian.create({
+            data: {
+                ...payload,
+                penilaian
+            }
+        })
+    }
+
+    async findStaticAnalisisPenilaianByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        return await this.prisma.analisisPenilaian.findMany({
+            where: {
+                idRombelSemesterGuru
+            }
+        })
+    }
+
+    async checkIsStaticAnalisisPenilaianExist(idRombelSemesterGuru: string, idMurid: string) {
+        return await this.prisma.analisisPenilaian.findFirst({
+            where: {
+                idRombelSemesterGuru,
+                idMurid
+            }
+        })
+    }
+
+    async printStaticAnalisisPenilaian(idRombelSemesterGuru: string, idMurid: string) {
+        const analisisPenilaian = await this.checkIsStaticAnalisisPenilaianExist(idRombelSemesterGuru, idMurid)
+        if (!analisisPenilaian) {
+            return this.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid)
+        }
+
+        return {
+            ...analisisPenilaian,
+            murid: {
+                nama: analisisPenilaian.nama,
+                nis: analisisPenilaian.nis,
+            }
         }
     }
 }

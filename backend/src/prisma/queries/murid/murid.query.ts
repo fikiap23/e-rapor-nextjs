@@ -360,6 +360,14 @@ export class MuridQuery extends DbService {
                                 nama: true,
                                 nis: true,
                                 foto: true,
+                                analisisPenilaian: {
+                                    where: {
+                                        idRombelSemesterGuru: idRombelSemesterGuru
+                                    },
+                                    select: {
+                                        id: true,
+                                    }
+                                }
                             },
                         },
                     },
@@ -494,6 +502,48 @@ export class MuridQuery extends DbService {
         };
     }
 
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        const murids = await this.prisma.murid.findMany({
+            where: {
+                rapor: {
+                    some: {
+                        isValidated: true,
+                        idRombelSemesterGuru
+                    }
+                }
+            },
+            select: {
+                id: true,
+                nama: true,
+                nis: true,
+                rapor: {
+                    where: {
+                        idRombelSemesterGuru,
+                        isValidated: true
+                    },
+                    select: {
+                        id: true,
+                        namaRombel: true,
+                        kelompokUsia: true,
+                        semesterTahun: true
+                    }
+                }
+            }
+        })
+        return {
+            namaRombel: murids[0].rapor[0].namaRombel,
+            kelompokUsia: murids[0].rapor[0].kelompokUsia,
+            semester: murids[0].rapor[0].semesterTahun,
+            murids: murids.map(murid => {
+                return {
+                    id: murid.id,
+                    nama: murid.nama,
+                    nis: murid.nis,
+                    rapor: murid.rapor[0].id,
+                }
+            })
+        }
+    }
 }
 
 function getStatusPertemubuhan(tb: number, bb: number): string {

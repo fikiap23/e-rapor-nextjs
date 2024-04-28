@@ -150,4 +150,8 @@ export class MuridRepository {
         await this.findByIdOrThrow(idMurid);
         return await this.muridQuery.findOneStudentByIdRombelSemesterGuruAndIdMurid(id, idMurid);
     }
+
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(id: string) {
+        return await this.muridQuery.findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(id);
+    }
 }

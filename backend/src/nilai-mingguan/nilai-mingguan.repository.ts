@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { NilaiMingguanQuery } from '../prisma/queries/nilai-mingguan/nilai-mingguan.query';
 import { CreatePenilaianMingguanDto } from './dto/create-nilai-mingguan.dto';
-import { ModulAjarRepository } from '../modul-ajar/modul-ajar.repository';
 import { AuthRepository } from '../auth/auth.repository';
 import { PayloadToken } from '../auth/type';
 import { MuridRepository } from '../murid/murid.repository';
 import { UpdatePenilaianMingguanDto } from './dto/update-nilai-mingguan.dto';
 import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 import { CpTpRepository } from '../cp-tp/cp-tp.repository';
+import { CreateAnalisisPenilaianType } from '../prisma/queries/nilai-mingguan/interfaces/analisisPenilaian';
 
 @Injectable()
 export class NilaiMingguanRepository {
@@ -29,7 +29,7 @@ export class NilaiMingguanRepository {
         return nilaiMingguan
     }
 
-    async findByIdWithModulAjarOrThrow(id: string) {
+    async findByIdWithTp(id: string) {
         const nilaiMingguan = await this.nilaiMingguanQuery.findByIdWithTp(id);
         if (!nilaiMingguan) throw new BadRequestException('Nilai Mingguan tidak ditemukan');
         return nilaiMingguan
@@ -57,7 +57,7 @@ export class NilaiMingguanRepository {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         if (dto.idMurid && dto.idTujuanPembelajaran) throw new BadRequestException('Tidak boleh memasukkan idMurid dan idModulAjar');
-        const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
+        const nilaiMingguan = await this.findByIdWithTp(id);
 
         if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.updateById(id, dto)
@@ -66,12 +66,59 @@ export class NilaiMingguanRepository {
     async deleteById(token: string, id: string) {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
+        const nilaiMingguan = await this.findByIdWithTp(id);
         if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.deleteById(id)
     }
 
     async findStudentByIdRombelSemesterGuru(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {
         return await this.nilaiMingguanQuery.findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru, idTujuanPembelajaran);
+    }
+
+    async createStaticAnalisisPenilaian(token: string, idRombelSemesterGuru: string, idMurid: string) {
+        // get decode payload jwt token
+        const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
+        if (!idsRombelSemesterGuru.includes(idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
+        await this.muridRepository.findByIdOrThrow(idMurid);
+        await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(idRombelSemesterGuru);
+        const data = await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
+        const payload: CreateAnalisisPenilaianType = {
+            idMurid: idMurid,
+            idRombelSemesterGuru: idRombelSemesterGuru,
+            nama: data.murid.nama,
+            nis: data.murid.nis,
+            kelompokUsia: data.kelompokUsia,
+            namaRombel: data.namaRombel,
+            namaGuru: data.namaGuru,
+            nipGuru: data.nipGuru,
+            namaKapsek: data.namaKapsek,
+            nipKapsek: data.nipKapsek,
+            namaSekolah: data.namaSekolah,
+            semester: data.semester,
+            penilaian: data.penilaian
+        }
+        return await this.nilaiMingguanQuery.createStaticAnalisisPenilaian(payload);
+    }
+
+    async createStaticAnalisisPenilaianByIdRombelSemesterGuru(idRombelSemesterGuru: string, idMurid: string) {
+        await this.muridRepository.findByIdOrThrow(idMurid);
+        await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(idRombelSemesterGuru);
+        const data = await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
+        const payload: CreateAnalisisPenilaianType = {
+            idMurid: idMurid,
+            idRombelSemesterGuru: idRombelSemesterGuru,
+            nama: data.murid.nama,
+            nis: data.murid.nis,
+            kelompokUsia: data.kelompokUsia,
+            namaRombel: data.namaRombel,
+            namaGuru: data.namaGuru,
+            nipGuru: data.nipGuru,
+            namaKapsek: data.namaKapsek,
+            nipKapsek: data.nipKapsek,
+            namaSekolah: data.namaSekolah,
+            semester: data.semester,
+            penilaian: data.penilaian
+        }
+        return await this.nilaiMingguanQuery.createStaticAnalisisPenilaian(payload);
     }
 }

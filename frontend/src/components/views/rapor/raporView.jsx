@@ -1,14 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useOneStudentByIdSemesterGuru } from '@/hooks/useOneStudentByIdSemesterGuru'
-import { Button, Input, Table, Tabs, Tag } from 'antd'
+import { Button, Input, Modal, Space, Table, Tabs, Tag } from 'antd'
 import TabPane from 'antd/es/tabs/TabPane'
 import Link from 'next/link'
-import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
+import { CheckOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons'
 import RaportInput from './components/raportInput'
 import RaportEdit from './components/raportEdit'
+import raportService from '@/services/rapor.service'
+import useAuth from '@/hooks/useAuth'
 
 const RaporView = ({ idRombelSemesterGuru }) => {
+  const { token } = useAuth()
   const [rombel, setRombel] = useState('')
   const [semester, setSemester] = useState('')
   const [murid, setMurid] = useState([])
@@ -34,6 +37,33 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
   const handleBack = () => {
     setActiveTab('daftarSiswaTab')
+  }
+
+  const handleValidationRapor = (idRapor) => {
+    Modal.confirm({
+      title: 'Apakah Anda yakin akan memvalidasi rapor ini?',
+      content:
+        'Setelah validasi, rapor ini tidak dapat diubah kembali. Apakah Anda yakin?',
+      okText: 'Ya, validasi rapor!',
+      cancelText: 'Tidak, batalkan!',
+      onOk: async () => {
+        await raportService
+          .validation(token, idRapor)
+          .then(() => {
+            Modal.success({
+              title: 'Berhasil',
+              content: 'Data rapor telah di validasi!',
+            })
+            refetch()
+          })
+          .catch((error) => {
+            Modal.error({
+              title: 'Oops...',
+              content: 'Terjadi kesalahan: ' + error,
+            })
+          })
+      },
+    })
   }
 
   const columns = [
@@ -69,7 +99,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       key: 'penilaianMingguan',
       render: (text, record) => {
         if (!record.penilaianMingguan) {
-          return <Tag color="yellow">Belum lengkap</Tag>
+          return <Tag color="red">Belum lengkap</Tag>
         } else {
           return <Tag color="green">Sudah lengkap</Tag>
         }
@@ -80,10 +110,10 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       dataIndex: 'statusSemester',
       key: 'statusSemester',
       render: (text, record) => {
-        if (record.rapor && record.rapor.length === 0) {
-          return <Tag color="yellow">Belum Bisa Dicetak</Tag>
+        if (record.rapor && record.rapor[0]?.isValidated) {
+          return <Tag color="green">Sudah Divalidasi</Tag>
         } else {
-          return <Tag color="green">Tersedia</Tag>
+          return <Tag color="yellow">Belum Divalidasi</Tag>
         }
       },
     },
@@ -91,22 +121,23 @@ const RaporView = ({ idRombelSemesterGuru }) => {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
-        <span>
+        <Space size="middle">
           {record.rapor &&
             record.penilaianMingguan &&
-            record.rapor.length === 0 && (
+            record.rapor.length === 0 &&
+            !record.rapor[0]?.isValidated && (
               <Button
                 type="primary"
                 onClick={() => {
                   setSelectedMurid(record)
                   handleTabChange('inputCatatanRaportTab')
                 }}
-                style={{ marginRight: 8 }}
               >
                 <i className="fa fa-plus" style={{ marginRight: '8px' }}></i>
                 Input Catatan Raport
               </Button>
             )}
+
           {!record.penilaianMingguan && (
             <Link
               href={`/guru/penilaian/${idRombelSemesterGuru}`}
@@ -120,7 +151,8 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
           {record.rapor &&
             record.penilaianMingguan &&
-            record.rapor.length !== 0 && (
+            record.rapor.length !== 0 &&
+            !record.rapor[0]?.isValidated && (
               <Button
                 type="primary"
                 icon={<EditOutlined />}
@@ -132,6 +164,7 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                 Edit Catatan Raport
               </Button>
             )}
+
           {record.rapor && record.rapor.length !== 0 && (
             <Link href={`/raport_print/${record.rapor[0].id}`} target="_blank">
               <Button
@@ -142,7 +175,19 @@ const RaporView = ({ idRombelSemesterGuru }) => {
               </Button>
             </Link>
           )}
-        </span>
+
+          {record.rapor &&
+            record.rapor.length !== 0 &&
+            !record.rapor[0]?.isValidated && (
+              <Button
+                icon={<CheckOutlined />}
+                style={{ backgroundColor: 'grey', color: 'white' }}
+                onClick={() => handleValidationRapor(record.rapor[0].id)}
+              >
+                Validasi
+              </Button>
+            )}
+        </Space>
       ),
     },
   ]

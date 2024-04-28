@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { useRombelWithSemester } from '@/hooks/useRombelWithSemester'
-import { Table, Button, Input } from 'antd'
+import { Table, Button, Input, Space } from 'antd'
 import { useSiswasByIdSemesterGuru } from '@/hooks/useSiswasByIdRombelSemesterGuru'
 import { apiUrl } from '@/services/apiUrls'
 import Link from 'next/link'
@@ -66,14 +66,19 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
       title: 'Aksi',
       key: 'aksi',
       render: (text, record) => (
-        <Link
-          href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
-          target="_blank"
-        >
-          <Button type="primary" icon={<i className="fa fa-print"></i>}>
-            Cetak Analisis
-          </Button>
-        </Link>
+        <Space size="middle">
+          <Link
+            href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
+            target="_blank"
+          >
+            <Button
+              style={{ backgroundColor: 'green', color: 'white' }}
+              icon={<i className="fa fa-print"></i>}
+            >
+              Cetak Analisis
+            </Button>
+          </Link>
+        </Space>
       ),
     },
   ]
