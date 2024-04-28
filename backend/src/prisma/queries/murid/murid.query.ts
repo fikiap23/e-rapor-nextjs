@@ -502,6 +502,59 @@ export class MuridQuery extends DbService {
         };
     }
 
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        const murids = await this.prisma.murid.findMany({
+            where: {
+                AND: [
+                    {
+                        rapor: {
+                            some: {
+                                isValidated: true,
+                                idRombelSemesterGuru
+                            }
+                        }
+                    },
+                    {
+                        analisisPenilaian: {
+                            some: {
+                                idRombelSemesterGuru
+                            }
+                        }
+                    }
+                ]
+            },
+            select: {
+                id: true,
+                nama: true,
+                nis: true,
+                rapor: {
+                    where: {
+                        idRombelSemesterGuru
+                    },
+                    select: {
+                        id: true,
+                    }
+                },
+                analisisPenilaian: {
+                    where: {
+                        idRombelSemesterGuru
+                    },
+                    select: {
+                        id: true
+                    }
+                }
+            }
+        })
+        return murids.map(murid => {
+            return {
+                id: murid.id,
+                nama: murid.nama,
+                nis: murid.nis,
+                rapor: murid.rapor[0].id,
+                analisisPenilaian: murid.analisisPenilaian[0].id
+            }
+        })
+    }
 }
 
 function getStatusPertemubuhan(tb: number, bb: number): string {

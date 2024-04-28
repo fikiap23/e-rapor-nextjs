@@ -101,6 +101,12 @@ export class MuridController {
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
+    @Get('rombel-semester-guru/arsip/:id')
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(@Res() res, @Param('id') id) {
+        const result = await this.muridService.findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(id);
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
+    }
+
     @Get(':id')
     async findOne(@Res() res, @Param('id') id) {
         const result = await this.muridService.findOne(id);

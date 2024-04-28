@@ -51,4 +51,8 @@ export class MuridService {
     async findOneStudentByIdRombelSemesterGuruAndIdMurid(id: string, idMurid: string) {
         return await this.muridRepository.findOneStudentByIdRombelSemesterGuruAndIdMurid(id, idMurid);
     }
+
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        return await this.muridRepository.findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru);
+    }
 }
