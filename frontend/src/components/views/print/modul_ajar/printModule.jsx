@@ -8,17 +8,22 @@ import {
 
 function PrintModule({ data }) {
   useEffect(() => {
-    // window.print()
+    window.print()
   }, [])
 
   const modulAjar = data?.modulAjar
   const jadwalAjar = data?.modulAjar?.jadwalAjar || []
 
-  // const indexDataKegiatanInti = data.modulAjar.jadwalAjar.map(index => index.kegiatanInti.length);
-  const indexDataKegiatanInti = data.modulAjar.jadwalAjar[0].kegiatanInti.length;
-  console.log(indexDataKegiatanInti);
-  const kegiatanPenutupLogic = (indexDataKegiatanInti >= 4)
+  const lengths = data.modulAjar.jadwalAjar.map(arr => arr.kegiatanInti.length); // output [5, 2, 2, 3, 3, 2]
+  const maxIndex = lengths.indexOf(Math.max(...lengths));
+  const arrayTerbesar = data.modulAjar.jadwalAjar[maxIndex].kegiatanInti.length;
+
+  const kegiatanPenutupLogic = (arrayTerbesar >= 4)
   const kegiatan_penutup_logic = `${kegiatanPenutupLogic ? 'extra-margin' : ''}`
+
+
+
+
 
   return (
     <div className="body">
@@ -199,7 +204,7 @@ function PrintModule({ data }) {
         className={kegiatan_penutup_logic}
         style={{
           pageBreakBefore:
-            indexDataKegiatanInti >= 4 ? 'always' :
+            arrayTerbesar >= 4 ? 'always' :
               'auto'
         }}
       >
