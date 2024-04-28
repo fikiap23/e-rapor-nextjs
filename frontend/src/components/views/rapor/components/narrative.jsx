@@ -7,12 +7,6 @@ String.prototype.toCapitalEachWord = function () {
 }
 
 function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
-  console.log(rapor.catatanAgamaBudipekerti.length)
-  console.log('jati ' + rapor.catatanJatiDiri.length)
-  console.log('literasi ' + rapor.catatanLiterasiSains.length)
-  console.log(rapor.catatanPancasila.length)
-  console.log('Tumbuh ' + rapor.catatanPertumbuhan.length)
-  console.log(rapor.catatanGuru.length)
   const pointBLogic =
     (rapor.catatanAgamaBudipekerti.length > 1800 &&
       rapor.catatanJatiDiri.length > 700) ||

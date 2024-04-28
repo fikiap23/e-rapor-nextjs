@@ -8,12 +8,17 @@ import {
 
 function PrintModule({ data }) {
   useEffect(() => {
-    window.print()
+    // window.print()
   }, [])
 
   const modulAjar = data?.modulAjar
   const jadwalAjar = data?.modulAjar?.jadwalAjar || []
-  console.log(`Data for printing:`, jadwalAjar)
+
+  // const indexDataKegiatanInti = data.modulAjar.jadwalAjar.map(index => index.kegiatanInti.length);
+  const indexDataKegiatanInti = data.modulAjar.jadwalAjar[0].kegiatanInti.length;
+  console.log(indexDataKegiatanInti);
+  const kegiatanPenutupLogic = (indexDataKegiatanInti >= 4)
+  const kegiatan_penutup_logic = `${kegiatanPenutupLogic ? 'extra-margin' : ''}`
 
   return (
     <div className="body">
@@ -180,52 +185,32 @@ function PrintModule({ data }) {
         </tbody>
       </table>
 
-      <h6 className="tbl">III. Istirahat</h6>
-      <div style={{ display: 'flex', marginTop: '10px' }}>
-        <div
-          className="ttd"
-          dangerouslySetInnerHTML={{ __html: modulAjar.istirahat }}
-        />
+      <div style={{ marginTop: '30px' }}>
+        <h6 className="tbl">III. Istirahat</h6>
+        <div style={{ display: 'flex', marginTop: '10px' }}>
+          <div
+            className="ttd"
+            dangerouslySetInnerHTML={{ __html: modulAjar.istirahat }}
+          />
+        </div>
       </div>
 
-      <h6 className="tbl ">IV. Kegiatan Penutup</h6>
-      <div style={{ display: 'flex', marginTop: '10px' }}>
-        <div
-          className="ttd"
-          dangerouslySetInnerHTML={{ __html: modulAjar.kegiatanPenutupan }}
-        />
-      </div>
-
-      {/* <h6 className="tbl">V. Rencana Penilaian</h6>
-      <table
-        className="weekly"
-        border={3}
-        style={{ border: '1px solid black' }}
+      <div
+        className={kegiatan_penutup_logic}
+        style={{
+          pageBreakBefore:
+            indexDataKegiatanInti >= 4 ? 'always' :
+              'auto'
+        }}
       >
-        <thead>
-          <tr>
-            <th scope="col" rowSpan={2}>
-              PENGAMATAN
-            </th>
-            <th scope="col" colSpan={2}>
-              NAMA ANAK
-            </th>
-          </tr>
-          <tr>
-            <th scope="col">SUDAH MUNCUL</th>
-            <th scope="col">BELUM/MULAI MUNCUL</th>
-          </tr>
-        </thead>
-        <tbody>
-          {modulAjar.tujuanKegiatan.map((tujuan) => (
-            <tr key={tujuan}>
-              <td>{tujuan}</td>
-              <td></td>
-              <td></td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
+        <h6 className="tbl ">IV. Kegiatan Penutup</h6>
+        <div style={{ display: 'flex', marginTop: '10px' }}>
+          <div
+            className="ttd"
+            dangerouslySetInnerHTML={{ __html: modulAjar.kegiatanPenutupan }}
+          />
+        </div>
+      </div>
 
       <table width="100%" style={{ marginTop: '20px', marginBottom: '20px' }}>
         <tr>
