@@ -34,6 +34,10 @@ export class NilaiMingguanQuery extends DbService {
 
     async updateById(id: string, payload: UpdatePenilaianMingguanDto) {
         const penilaianMingguan = await this.prisma.penilaianMingguan.update({ where: { id }, data: payload })
+        const rapor = await this.prisma.rapor.findFirst({ where: { idMurid: penilaianMingguan.idMurid, idRombelSemesterGuru: penilaianMingguan.idRombelSemesterGuru } })
+        if (rapor && rapor.isValidated) {
+            throw new BadRequestException('Tidak Bisa Mengubah Penilaian Yang Telah Tervalidasi')
+        }
         // reset rapor
         await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
         return penilaianMingguan
@@ -43,6 +47,10 @@ export class NilaiMingguanQuery extends DbService {
         const penilaianMingguan = await this.prisma.penilaianMingguan.findUnique({ where: { id } })
         if (!penilaianMingguan) {
             throw new BadRequestException('Penilaian mingguan Tidak ditemukan')
+        }
+        const rapor = await this.prisma.rapor.findFirst({ where: { idMurid: penilaianMingguan.idMurid, idRombelSemesterGuru: penilaianMingguan.idRombelSemesterGuru } })
+        if (rapor && rapor.isValidated) {
+            throw new BadRequestException('Tidak Bisa Menghapus Penilaian Yang Telah Tervalidasi')
         }
         // reset rapor
         await this.deleteRaporByIdMuridAndIdRombelSemesterGuru(penilaianMingguan.idMurid, penilaianMingguan.idRombelSemesterGuru)
@@ -56,6 +64,10 @@ export class NilaiMingguanQuery extends DbService {
             await this.prisma.rapor.deleteMany({ where: { idMurid, idRombelSemesterGuru } })
         }
         return
+    }
+
+    async findRaporByIdMuridAndIdRombelSemesterGuru(idMurid: string, idRombelSemesterGuru: string) {
+        return await this.prisma.rapor.findFirst({ where: { idMurid, idRombelSemesterGuru } })
     }
 
     async findStudentByIdRombelSemesterGuruAndIdTp(idRombelSemesterGuru: string, idTujuanPembelajaran: string) {

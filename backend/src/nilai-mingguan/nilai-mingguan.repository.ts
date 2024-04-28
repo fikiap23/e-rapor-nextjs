@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { NilaiMingguanQuery } from '../prisma/queries/nilai-mingguan/nilai-mingguan.query';
 import { CreatePenilaianMingguanDto } from './dto/create-nilai-mingguan.dto';
-import { ModulAjarRepository } from '../modul-ajar/modul-ajar.repository';
 import { AuthRepository } from '../auth/auth.repository';
 import { PayloadToken } from '../auth/type';
 import { MuridRepository } from '../murid/murid.repository';
@@ -30,7 +29,7 @@ export class NilaiMingguanRepository {
         return nilaiMingguan
     }
 
-    async findByIdWithModulAjarOrThrow(id: string) {
+    async findByIdWithTp(id: string) {
         const nilaiMingguan = await this.nilaiMingguanQuery.findByIdWithTp(id);
         if (!nilaiMingguan) throw new BadRequestException('Nilai Mingguan tidak ditemukan');
         return nilaiMingguan
@@ -58,7 +57,7 @@ export class NilaiMingguanRepository {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
         if (dto.idMurid && dto.idTujuanPembelajaran) throw new BadRequestException('Tidak boleh memasukkan idMurid dan idModulAjar');
-        const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
+        const nilaiMingguan = await this.findByIdWithTp(id);
 
         if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.updateById(id, dto)
@@ -67,7 +66,7 @@ export class NilaiMingguanRepository {
     async deleteById(token: string, id: string) {
         // get decode payload jwt token
         const { idsRombelSemesterGuru } = (await this.authRepository.decodeJwtToken(token)) as PayloadToken;
-        const nilaiMingguan = await this.findByIdWithModulAjarOrThrow(id);
+        const nilaiMingguan = await this.findByIdWithTp(id);
         if (!idsRombelSemesterGuru.includes(nilaiMingguan.idRombelSemesterGuru)) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
         return await this.nilaiMingguanQuery.deleteById(id)
     }
