@@ -17,11 +17,11 @@ function PrintAssesmnet({ data }) {
         <div className="header">
           <h4 className="tbl">ANALISIS HASIL BELAJAR/BERMAIN ANAK</h4>
           <h5 className="tbl">{data?.semester}</h5>
-          <h5 className="tbl">{data?.nameSekolah}</h5>
+          <h5 className="tbl">{data?.namaSekolah}</h5>
           <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
         </div>
         <div>
-          <h6 className="tbl">{`NAMA: ${murid.name}`}</h6>
+          <h6 className="tbl">{`NAMA: ${murid.nama}`}</h6>
           <h6 className="tbl">{`NOMOR INDUK: ${murid.nis}`}</h6>
         </div>
         <table

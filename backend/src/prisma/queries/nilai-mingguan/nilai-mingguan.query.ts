@@ -271,7 +271,7 @@ export class NilaiMingguanQuery extends DbService {
             nipKapsek: checkRombelSemesterGuru.semester.nipKepsek,
             murid: {
                 id: muridWithPenilaian.rombel.murid[0].id,
-                name: muridWithPenilaian.rombel.murid[0].nama,
+                nama: muridWithPenilaian.rombel.murid[0].nama,
                 nis: muridWithPenilaian.rombel.murid[0].nis,
             },
             penilaian: penilaianMingguan
@@ -320,5 +320,20 @@ export class NilaiMingguanQuery extends DbService {
                 idMurid
             }
         })
+    }
+
+    async printStaticAnalisisPenilaian(idRombelSemesterGuru: string, idMurid: string) {
+        const analisisPenilaian = await this.checkIsStaticAnalisisPenilaianExist(idRombelSemesterGuru, idMurid)
+        if (!analisisPenilaian) {
+            return this.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid)
+        }
+
+        return {
+            ...analisisPenilaian,
+            murid: {
+                nama: analisisPenilaian.nama,
+                nis: analisisPenilaian.nis,
+            }
+        }
     }
 }

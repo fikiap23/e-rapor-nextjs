@@ -85,7 +85,7 @@ export class NilaiMingguanRepository {
         const payload: CreateAnalisisPenilaianType = {
             idMurid: idMurid,
             idRombelSemesterGuru: idRombelSemesterGuru,
-            nama: data.murid.name,
+            nama: data.murid.nama,
             nis: data.murid.nis,
             kelompokUsia: data.kelompokUsia,
             namaRombel: data.namaRombel,
@@ -107,7 +107,7 @@ export class NilaiMingguanRepository {
         const payload: CreateAnalisisPenilaianType = {
             idMurid: idMurid,
             idRombelSemesterGuru: idRombelSemesterGuru,
-            nama: data.murid.name,
+            nama: data.murid.nama,
             nis: data.murid.nis,
             kelompokUsia: data.kelompokUsia,
             namaRombel: data.namaRombel,

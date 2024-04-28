@@ -37,7 +37,7 @@ export class NilaiMingguanService {
     }
 
     async printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru: string, idMurid: string) {
-        return await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
+        return await this.nilaiMingguanQuery.printStaticAnalisisPenilaian(idRombelSemesterGuru, idMurid);
     }
 
     async createStaticAnalisisPenilaian(token: string, idRombelSemesterGuru: string, idMurid: string) {
