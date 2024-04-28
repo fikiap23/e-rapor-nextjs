@@ -99,4 +99,26 @@ export class NilaiMingguanRepository {
         }
         return await this.nilaiMingguanQuery.createStaticAnalisisPenilaian(payload);
     }
+
+    async createStaticAnalisisPenilaianByIdRombelSemesterGuru(idRombelSemesterGuru: string, idMurid: string) {
+        await this.muridRepository.findByIdOrThrow(idMurid);
+        await this.rombelQuery.findRombelSemesterGuruByIdOrThrow(idRombelSemesterGuru);
+        const data = await this.nilaiMingguanQuery.printPenilaianByIdRombelSemesterGuruAndIdMurid(idRombelSemesterGuru, idMurid);
+        const payload: CreateAnalisisPenilaianType = {
+            idMurid: idMurid,
+            idRombelSemesterGuru: idRombelSemesterGuru,
+            nama: data.murid.name,
+            nis: data.murid.nis,
+            kelompokUsia: data.kelompokUsia,
+            namaRombel: data.namaRombel,
+            namaGuru: data.namaGuru,
+            nipGuru: data.nipGuru,
+            namaKapsek: data.namaKapsek,
+            nipKapsek: data.nipKapsek,
+            namaSekolah: data.namaSekolah,
+            semester: data.semester,
+            penilaian: data.penilaian
+        }
+        return await this.nilaiMingguanQuery.createStaticAnalisisPenilaian(payload);
+    }
 }

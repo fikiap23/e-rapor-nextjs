@@ -9,6 +9,7 @@ import { SemesterRepository } from '../semester/semester.repository';
 import { UpdateRaporDto } from './dto/update-rapor.dto';
 import { RombelQuery } from '../prisma/queries/rombel/rombel.query';
 import { UpdateRaporStatic } from '../prisma/queries/rapor/interfaces/rapor';
+import { NilaiMingguanRepository } from '../nilai-mingguan/nilai-mingguan.repository';
 
 @Injectable()
 export class RaporRepository {
@@ -18,7 +19,8 @@ export class RaporRepository {
         private readonly sekolaRepository: SekolahRepository,
         private readonly muridRepository: MuridRepository,
         private readonly semesterRepository: SemesterRepository,
-        private readonly rombelQuery: RombelQuery
+        private readonly rombelQuery: RombelQuery,
+        private readonly nilaiMingguanRepository: NilaiMingguanRepository,
     ) { }
 
     async findByIdOrThrow(id: string) {
@@ -97,8 +99,8 @@ export class RaporRepository {
     }
 
     async updateToStaticById(id: string) {
+        const checkRapor = await this.findByIdOrThrow(id);
         const data = await this.printById(id);
-        if (!data) throw new BadRequestException('Rapor tidak ditemukan');
         const semester = data.semester
         const semesterTahun = data.semesterTahun
         const sekolah = data.sekolah
@@ -159,7 +161,7 @@ export class RaporRepository {
             tanggalBagiRapor: rapor.tanggalBagiRapor
 
         }
-
+        await this.nilaiMingguanRepository.createStaticAnalisisPenilaianByIdRombelSemesterGuru(checkRapor.idRombelSemesterGuru, checkRapor.idMurid)
         return await this.raporQuery.updateToStatic(id, payloadUpdate)
     }
 }
