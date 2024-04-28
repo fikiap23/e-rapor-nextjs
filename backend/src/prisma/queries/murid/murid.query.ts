@@ -503,6 +503,13 @@ export class MuridQuery extends DbService {
     }
 
     async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        const rombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: { id: idRombelSemesterGuru },
+            include: { rombel: { select: { id: true, name: true, kategoriRombel: true } }, semester: true }
+        })
+        if (!rombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
         const murids = await this.prisma.murid.findMany({
             where: {
                 rapor: {
@@ -530,10 +537,18 @@ export class MuridQuery extends DbService {
                 }
             }
         })
+        if (murids.length === 0) {
+
+            return {
+                namaRombel: rombelSemesterGuru.rombel.name,
+                kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+                semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`
+            }
+        }
         return {
-            namaRombel: murids[0].rapor[0].namaRombel,
-            kelompokUsia: murids[0].rapor[0].kelompokUsia,
-            semester: murids[0].rapor[0].semesterTahun,
+            namaRombel: rombelSemesterGuru.rombel.name,
+            kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`,
             murids: murids.map(murid => {
                 return {
                     id: murid.id,
