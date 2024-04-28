@@ -1,7 +1,7 @@
 'use client'
 import TableArsipSiswa from './table/tableSiswa'
 
-const ArsipSiswaView = () => {
+const ArsipSiswaView = ({ idRombelSemesterGuru }) => {
   return (
     <>
       <div className="content-wrapper">
@@ -17,7 +17,9 @@ const ArsipSiswaView = () => {
 
                 <div className="box-body">
                   <>
-                    <TableArsipSiswa />
+                    <TableArsipSiswa
+                      idRombelSemesterGuru={idRombelSemesterGuru}
+                    />
                   </>
                 </div>
               </div>

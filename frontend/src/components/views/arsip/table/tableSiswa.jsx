@@ -2,26 +2,11 @@ import React from 'react'
 import { Button, Input, Space, Table, Tag } from 'antd'
 import Link from 'next/link'
 import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
+import { useArsipSiswasByIdSemesterGuru } from '@/hooks/useSiswaArsip'
 
-const TableArsipSiswa = () => {
-  const rombel = 'A1'
-  const semester = '2022/2023'
-  const murid = [
-    {
-      index: 1,
-      nis: '12345',
-      nama: 'John Doe',
-      penilaianMingguan: true,
-      rapor: [{ isValidated: false, id: 1 }],
-    },
-    {
-      index: 2,
-      nis: '54321',
-      nama: 'Jane Doe',
-      penilaianMingguan: false,
-      rapor: [],
-    },
-  ]
+const TableArsipSiswa = ({ idRombelSemesterGuru }) => {
+  const { data: arsipSiswas, isFetching: isFetchingArsipSiswas } =
+    useArsipSiswasByIdSemesterGuru(idRombelSemesterGuru)
 
   const columns = [
     {
@@ -45,15 +30,22 @@ const TableArsipSiswa = () => {
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" icon={<EditOutlined />}>
-            Cetak Analisis Nilai
-          </Button>
-          <Button
-            style={{ backgroundColor: 'green', color: 'white' }}
-            icon={<PrinterOutlined />}
+          <Link
+            href={`/assesment_analysis_print/${idRombelSemesterGuru}/${record.id}`}
+            target="_blank"
           >
-            Cetak Raport
-          </Button>
+            <Button type="primary" icon={<EditOutlined />}>
+              Cetak Analisis Nilai
+            </Button>
+          </Link>
+          <Link href={`/raport_print/${record.rapor}`} target="_blank">
+            <Button
+              style={{ backgroundColor: 'green', color: 'white' }}
+              icon={<PrinterOutlined />}
+            >
+              Cetak Raport
+            </Button>
+          </Link>
         </Space>
       ),
     },
@@ -73,9 +65,9 @@ const TableArsipSiswa = () => {
           </Link>
           <h4>
             <i className="icon fa fa-info-circle"></i> Data Penilaian Rombel{' '}
-            {rombel}
+            {arsipSiswas?.namaRombel}
           </h4>
-          <p>{`Tahun Ajaran ${semester}`}</p>
+          <p>{`Tahun Ajaran ${arsipSiswas?.semester}`}</p>
         </div>
         <div style={{ width: '30%' }}>
           <Input.Search
@@ -84,7 +76,11 @@ const TableArsipSiswa = () => {
           />
         </div>
 
-        <Table columns={columns} dataSource={murid} />
+        <Table
+          columns={columns}
+          dataSource={arsipSiswas?.murids}
+          loading={isFetchingArsipSiswas}
+        />
       </div>
     </>
   )

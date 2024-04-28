@@ -505,23 +505,12 @@ export class MuridQuery extends DbService {
     async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
         const murids = await this.prisma.murid.findMany({
             where: {
-                AND: [
-                    {
-                        rapor: {
-                            some: {
-                                isValidated: true,
-                                idRombelSemesterGuru
-                            }
-                        }
-                    },
-                    {
-                        analisisPenilaian: {
-                            some: {
-                                idRombelSemesterGuru
-                            }
-                        }
+                rapor: {
+                    some: {
+                        isValidated: true,
+                        idRombelSemesterGuru
                     }
-                ]
+                }
             },
             select: {
                 id: true,
@@ -529,31 +518,31 @@ export class MuridQuery extends DbService {
                 nis: true,
                 rapor: {
                     where: {
-                        idRombelSemesterGuru
+                        idRombelSemesterGuru,
+                        isValidated: true
                     },
                     select: {
                         id: true,
-                    }
-                },
-                analisisPenilaian: {
-                    where: {
-                        idRombelSemesterGuru
-                    },
-                    select: {
-                        id: true
+                        namaRombel: true,
+                        kelompokUsia: true,
+                        semesterTahun: true
                     }
                 }
             }
         })
-        return murids.map(murid => {
-            return {
-                id: murid.id,
-                nama: murid.nama,
-                nis: murid.nis,
-                rapor: murid.rapor[0].id,
-                analisisPenilaian: murid.analisisPenilaian[0].id
-            }
-        })
+        return {
+            namaRombel: murids[0].rapor[0].namaRombel,
+            kelompokUsia: murids[0].rapor[0].kelompokUsia,
+            semester: murids[0].rapor[0].semesterTahun,
+            murids: murids.map(murid => {
+                return {
+                    id: murid.id,
+                    nama: murid.nama,
+                    nis: murid.nis,
+                    rapor: murid.rapor[0].id,
+                }
+            })
+        }
     }
 }
 
