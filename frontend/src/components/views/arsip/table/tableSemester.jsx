@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Button, Table, Space, Input } from 'antd'
+import { Button, Table, Input } from 'antd'
 import useAuth from '@/hooks/useAuth'
 import { useGetAllRombelWithGuru } from '@/hooks/useRombelGuru'
+import Link from 'next/link'
 
 const TableSemesterGuruRombel = () => {
   const { token } = useAuth()
@@ -81,11 +82,11 @@ const TableSemesterGuruRombel = () => {
       title: 'Aksi',
       key: 'action',
       render: (text, record) => (
-        <Space size="middle">
+        <Link href={`/admin/arsip/${record.id}`}>
           <Button type="primary" icon={<i className="fa fa-eye"></i>}>
             Lihat Penilaian
           </Button>
-        </Space>
+        </Link>
       ),
     },
   ]
