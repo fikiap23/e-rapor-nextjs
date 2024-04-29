@@ -28,8 +28,8 @@ export class GuruService {
         return await this.guruRepository.deleteByAdmin(id)
     }
 
-    async findAllRombelDiampu(token: string) {
-        return await this.guruRepository.findAllRombelDiampu(token)
+    async findAllRombelDiampu(token: string, status: string = "ACTIVE") {
+        return await this.guruRepository.findAllRombelDiampu(token, status)
     }
 
     async getDashboardGuru(token: string) {
