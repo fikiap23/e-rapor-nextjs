@@ -144,8 +144,9 @@ model Murid {
   penilaianMingguan PenilaianMingguan[]
 
   // Relation
-  idRombel String?
-  rombel   Rombel? @relation(fields: [idRombel], references: [id])
+  idRombel          String?
+  rombel            Rombel?             @relation(fields: [idRombel], references: [id])
+  analisisPenilaian AnalisisPenilaian[]
 
   // index
   @@index([id, nis])
@@ -302,7 +303,7 @@ model Semester {
 }
 
 model Rapor {
-  id                      String @id @default(uuid())
+  id                      String  @id @default(uuid())
   totalSakit              Int?
   totalIzin               Int?
   totalAlpa               Int?
@@ -312,21 +313,71 @@ model Rapor {
   catatanPertumbuhan      String
   catatanPancasila        String
   catatanGuru             String
+  isValidated             Boolean @default(false)
+
+  // //static value murid
+  // nama         String?
+  // nis          String?
+  // tempatLahir  String?
+  // tanggalLahir DateTime?
+  // jenisKelamin String?
+  // agama        String?
+  // anakKe       Int?
+
+  // // static value orang tua
+  // namaAyah      String?
+  // namaIbu       String?
+  // pekerjaanAyah String?
+  // pekerjaanIbu  String?
+  // jalan         String?
+  // kelurahan     String?
+  // kecamatan     String?
+  // kota          String?
+  // provinsi      String?
+  // foto          String?
+
+  // static value guru
+  namaGuru   String?
+  nipGuru    String?
+  namaKapsek String?
+  nipKapsek  String?
+
+  // static value rombel
+  namaRombel   String?
+  kelompokUsia String?
+
+  // static value sekolah
+  namaSekolah       String?
+  npsnSekolah       String?
+  alamatSekolah     String?
+  kodePosSekolah    String?
+  noTeleponSekolah  String?
+  kelurahanSekolah  String?
+  kecamatanSekolah  String?
+  kotaSekolah       String?
+  provinsiSekolah   String?
+  namaDisdikSekolah String?
+  logoSekolah       String?
+
+  // static value semester
+  namaSemester     String?
+  semesterTahun    String?
+  tanggalBagiRapor DateTime?
 
   // Relation
-  idSekolah  String
-  sekolah    Sekolah  @relation(fields: [idSekolah], references: [id])
-  idSemester String
-  semester   Semester @relation(fields: [idSemester], references: [id])
-  idMurid    String
-  murid      Murid    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
-  idGuru     String
-  guru       Guru     @relation(fields: [idGuru], references: [id])
-  idRombel   String
-  rombel     Rombel   @relation(fields: [idRombel], references: [id])
+  idSekolah  String?
+  sekolah    Sekolah?  @relation(fields: [idSekolah], references: [id], onDelete: SetNull)
+  idSemester String?
+  semester   Semester? @relation(fields: [idSemester], references: [id], onDelete: SetNull)
+  idMurid    String?
+  murid      Murid?    @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idGuru     String?
+  guru       Guru?     @relation(fields: [idGuru], references: [id], onDelete: SetNull)
+  idRombel   String?
+  rombel     Rombel?   @relation(fields: [idRombel], references: [id], onDelete: SetNull)
 
   idRombelSemesterGuru String?
-  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id])
+  rombelSemesterGuru   RombelSemesterGuru? @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: SetNull)
 
   // index
   @@index([id, idSekolah, idSemester, idMurid, idGuru, idRombel])
@@ -363,6 +414,31 @@ model RombelSemesterGuru {
   modulAjar         ModulAjar[]
   jadwalAjar        JadwalAjar[]
   penilaianMingguan PenilaianMingguan[]
+  analisisPenilaian AnalisisPenilaian[]
 
   @@index([id, idRombel, idSemester, idGuru])
+}
+
+model AnalisisPenilaian {
+  id   String @id @default(uuid())
+  nama String
+  nis  String
+
+  namaSekolah  String
+  namaRombel   String
+  kelompokUsia String
+  semester     String
+  namaGuru     String
+  nipGuru      String
+  namaKapsek   String
+  nipKapsek    String
+
+  penilaian Json[]
+
+  idMurid              String
+  murid                Murid              @relation(fields: [idMurid], references: [id], onDelete: Cascade)
+  idRombelSemesterGuru String
+  rombelSemesterGuru   RombelSemesterGuru @relation(fields: [idRombelSemesterGuru], references: [id], onDelete: Cascade)
+
+  @@index([id, idMurid, idRombelSemesterGuru])
 }

@@ -360,6 +360,14 @@ export class MuridQuery extends DbService {
                                 nama: true,
                                 nis: true,
                                 foto: true,
+                                analisisPenilaian: {
+                                    where: {
+                                        idRombelSemesterGuru: idRombelSemesterGuru
+                                    },
+                                    select: {
+                                        id: true,
+                                    }
+                                }
                             },
                         },
                     },
@@ -494,6 +502,63 @@ export class MuridQuery extends DbService {
         };
     }
 
+    async findStaticRaporAndAnalisisNilaiByIdRombelSemesterGuru(idRombelSemesterGuru: string) {
+        const rombelSemesterGuru = await this.prisma.rombelSemesterGuru.findUnique({
+            where: { id: idRombelSemesterGuru },
+            include: { rombel: { select: { id: true, name: true, kategoriRombel: true } }, semester: true }
+        })
+        if (!rombelSemesterGuru) {
+            throw new BadRequestException('Rombel tidak ditemukan')
+        }
+        const murids = await this.prisma.murid.findMany({
+            where: {
+                rapor: {
+                    some: {
+                        isValidated: true,
+                        idRombelSemesterGuru
+                    }
+                }
+            },
+            select: {
+                id: true,
+                nama: true,
+                nis: true,
+                rapor: {
+                    where: {
+                        idRombelSemesterGuru,
+                        isValidated: true
+                    },
+                    select: {
+                        id: true,
+                        namaRombel: true,
+                        kelompokUsia: true,
+                        semesterTahun: true
+                    }
+                }
+            }
+        })
+        if (murids.length === 0) {
+
+            return {
+                namaRombel: rombelSemesterGuru.rombel.name,
+                kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+                semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`
+            }
+        }
+        return {
+            namaRombel: rombelSemesterGuru.rombel.name,
+            kelompokUsia: rombelSemesterGuru.rombel.kategoriRombel.kelompokUsia,
+            semester: `${rombelSemesterGuru.semester.tahunAjaranAwal}-${rombelSemesterGuru.semester.tahunAjaranAkhir} (${rombelSemesterGuru.semester.jenisSemester})`,
+            murids: murids.map(murid => {
+                return {
+                    id: murid.id,
+                    nama: murid.nama,
+                    nis: murid.nis,
+                    rapor: murid.rapor[0].id,
+                }
+            })
+        }
+    }
 }
 
 function getStatusPertemubuhan(tb: number, bb: number): string {

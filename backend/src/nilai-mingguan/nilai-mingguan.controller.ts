@@ -72,4 +72,12 @@ export class NilaiMingguanController {
         const result = await this.nilaiMingguanService.printPenilaianByIdRombelSemesterGuruAndIdMurid(dto.idRombelSemesterGuru, dto.idMurid)
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
     }
+
+    @UseGuards(JwtGuard, RoleGuard)
+    @Roles(Role.GURU)
+    @Post('validate/analysis')
+    async createStaticAnalisisPenilaian(@Res() res, @Request() req, @Body() dto: GetNilaiByMuridSemesterDto,) {
+        const result = await this.nilaiMingguanService.createStaticAnalisisPenilaian(req.headers.authorization, dto.idRombelSemesterGuru, dto.idMurid)
+        return this.httpHelper.formatResponse(res, HttpStatus.OK, result)
+    }
 }

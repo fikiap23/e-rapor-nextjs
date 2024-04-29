@@ -13,6 +13,7 @@ import { SekolahModule } from '../sekolah/sekolah.module';
 import { MuridModule } from '../murid/murid.module';
 import { SemesterModule } from '../semester/semester.module';
 import { RombelModule } from '../rombel/rombel.module';
+import { NilaiMingguanModule } from '../nilai-mingguan/nilai-mingguan.module';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { RombelModule } from '../rombel/rombel.module';
         SekolahModule,
         MuridModule,
         SemesterModule,
-        RombelModule
+        RombelModule,
+        NilaiMingguanModule
     ],
     providers: [RaporService, RaporRepository, RaporQuery],
     controllers: [RaporController],

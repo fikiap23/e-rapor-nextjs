@@ -16,7 +16,7 @@ function PrintAssesmnetInput({ data }) {
         <div className="header">
           <h4 className="tbl">{`PENILAIAN HARIAN ANAK MINGGU KE ${data.tp?.minggu}`}</h4>
           <h5 className="tbl text-red">
-            {`Kelompok Kelompok Usia ${data.kelompokUsia} ${data.nameSekolah}`}
+            {`Kelompok Kelompok Usia ${data.kelompokUsia} ${data.namaSekolah}`}
           </h5>
           <h5 className="tbl">{data.semester}</h5>
           <hr style={{ borderTop: '5px solid black', margin: '20px 0' }} />
@@ -160,9 +160,9 @@ function PrintAssesmnetInput({ data }) {
           <tr>
             <td width="5%" style={{ textAlign: 'center' }}>
               Mengetahui :
-              <p style={{ marginTop: '5px' }}>
-                {`Kepala Sekolah ${data.nameSekolah}`}
-              </p>
+              <p
+                style={{ marginTop: '5px' }}
+              >{`Kepala ${data.namaSekolah?.toUpperCase()}`}</p>
               <div style={{ marginTop: '20%' }}>
                 <p style={{ margin: '-15px' }}>
                   <b>{data.namaKapsek}</b>
@@ -181,7 +181,7 @@ function PrintAssesmnetInput({ data }) {
               <p style={{ marginTop: '5px' }}>Guru Kelompok</p>
               <div style={{ marginTop: '25%' }}>
                 <p style={{ margin: '-15px' }}>
-                  <b>{data.nameGuru}</b>
+                  <b>{data.namaGuru}</b>
                 </p>
                 <hr style={{ color: 'black' }} />
                 <p style={{ margin: '-15px' }}>

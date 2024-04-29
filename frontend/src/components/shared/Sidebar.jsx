@@ -68,6 +68,12 @@ const Sidebar = () => {
               <i className="fa fa-pencil"></i> <span>Isian CP/TP</span>
             </Link>
           </li>
+
+          <li className={router === '/admin/arsip' ? 'active' : ''}>
+            <Link href="/admin/arsip">
+              <i className="fa fa-archive"></i> <span>Arsip Penilaian</span>
+            </Link>
+          </li>
         </ul>
       </section>
     </aside>

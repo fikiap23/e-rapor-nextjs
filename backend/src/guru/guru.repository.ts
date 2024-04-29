@@ -121,10 +121,10 @@ export class GuruRepository {
         return await this.userQuery.delete(guru.idUser)
     }
 
-    async findAllRombelDiampu(token) {
+    async findAllRombelDiampu(token: string, status: string) {
         // decaode
         const { idGuru } = await this.authRepository.decodeJwtToken(token);
-        return await this.guruQuery.findAllRombelDiampu(idGuru)
+        return await this.guruQuery.findAllRombelDiampu(idGuru, status)
     }
 
     async getDashboardGuru(token: string) {

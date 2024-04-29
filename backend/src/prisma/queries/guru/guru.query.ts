@@ -157,7 +157,7 @@ export class GuruQuery extends DbService {
         }
     }
 
-    async findAllRombelDiampu(id: string) {
+    async findAllRombelDiampu(id: string, status: string = "ACTIVE") {
         const data = await this.prisma.rombelSemesterGuru.findMany({
             where: { idGuru: id },
             select: {
@@ -174,23 +174,68 @@ export class GuruQuery extends DbService {
             }
         })
 
-        const rombelAktif = []
+        const rombels = []
 
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].semester.isAktif) {
-                rombelAktif.push({
-                    id: data[i].id,
-                    idRombel: data[i].rombel.id,
-                    idSemester: data[i].semester.id,
-                    name: data[i].rombel.name,
-                    semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
-                    statusSemester: data[i].semester.isAktif,
-                    kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
-                })
-            }
+        switch (status) {
+            case "ACTIVE":
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].semester.isAktif) {
+                        rombels.push({
+                            id: data[i].id,
+                            idRombel: data[i].rombel.id,
+                            idSemester: data[i].semester.id,
+                            name: data[i].rombel.name,
+                            semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
+                            statusSemester: data[i].semester.isAktif,
+                            kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
+                        })
+                    }
+                }
+                break;
+            case "INACTIVE":
+                for (let i = 0; i < data.length; i++) {
+                    if (!data[i].semester.isAktif) {
+                        rombels.push({
+                            id: data[i].id,
+                            idRombel: data[i].rombel.id,
+                            idSemester: data[i].semester.id,
+                            name: data[i].rombel.name,
+                            semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
+                            statusSemester: data[i].semester.isAktif,
+                            kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
+                        })
+                    }
+                }
+                break;
+            case "ALL":
+                for (let i = 0; i < data.length; i++) {
+                    rombels.push({
+                        id: data[i].id,
+                        idRombel: data[i].rombel.id,
+                        idSemester: data[i].semester.id,
+                        name: data[i].rombel.name,
+                        semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
+                        statusSemester: data[i].semester.isAktif,
+                        kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
+                    })
+                }
+                break;
+            default:
+                for (let i = 0; i < data.length; i++) {
+                    rombels.push({
+                        id: data[i].id,
+                        idRombel: data[i].rombel.id,
+                        idSemester: data[i].semester.id,
+                        name: data[i].rombel.name,
+                        semester: `${data[i].semester.tahunAjaranAwal}-${data[i].semester.tahunAjaranAkhir} (${data[i].semester.jenisSemester})`,
+                        statusSemester: data[i].semester.isAktif,
+                        kelompokUsia: data[i].rombel.kategoriRombel.kelompokUsia
+                    })
+                }
+                break;
         }
 
-        return rombelAktif
+        return rombels
     }
 
     async getDashboardGuru(id: string) {
@@ -202,6 +247,7 @@ export class GuruQuery extends DbService {
                 }
             },
             select: {
+                id: true,
                 rombel: {
                     select: {
                         id: true,
@@ -222,11 +268,9 @@ export class GuruQuery extends DbService {
 
         const raporCount = await this.prisma.rapor.count({
             where: {
-                idRombel: {
-                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.rombel.id)
-                },
-                idSemester: {
-                    in: rombelSemesterGurus.map(rombelSemesterGuru => rombelSemesterGuru.semester.id)
+                isValidated: true,
+                idRombelSemesterGuru: {
+                    in: rombelSemesterGurus.map((rombelSemesterGuru) => rombelSemesterGuru.id)
                 }
             }
         });

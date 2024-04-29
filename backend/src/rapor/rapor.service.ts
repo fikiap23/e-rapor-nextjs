@@ -38,4 +38,8 @@ export class RaporService {
     async findByNisNamaMuridAndSemester(nis: string, nama: string, idSemester: string) {
         return await this.raporRepository.findByNisNamaMuridAndSemester(nis, nama, idSemester)
     }
+
+    async updateToStaticById(id: string) {
+        return await this.raporRepository.updateToStaticById(id)
+    }
 }
