@@ -20,6 +20,7 @@ import CreateGuruDto from './dto/create-guru.dto';
 import { GuruService } from './guru.service';
 import { HttpHelper } from '../helpers/http-helper';
 import { GuruQueryDto } from './dto/guru.query.dto';
+import { RombelDiampuQueryDto } from './dto/rombel-diampu.query.dto';
 
 
 @Controller('guru')
@@ -84,8 +85,8 @@ export class GuruController {
     @Get('rombel-semester-guru')
     @UseGuards(JwtGuard, RoleGuard)
     @Roles(Role.GURU)
-    async findAllRombel(@Res() res, @Headers('authorization') authorization: string,) {
-        const result = await this.guruService.findAllRombelDiampu(authorization);
+    async findAllRombel(@Res() res, @Headers('authorization') authorization: string, @Query() dto: RombelDiampuQueryDto) {
+        const result = await this.guruService.findAllRombelDiampu(authorization, dto.status);
         return this.httpHelper.formatResponse(res, HttpStatus.OK, result);
     }
 
