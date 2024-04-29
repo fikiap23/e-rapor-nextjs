@@ -33,6 +33,12 @@ const SidebarTeacher = () => {
           </li>
 
           <li>
+            <Link href="/guru/riwayat-mengajar">
+              <i className="fa fa-bookmark"></i> <span>Riwayat Mengajar</span>
+            </Link>
+          </li>
+
+          <li>
             <Link href="/guru/modul-ajar">
               <i className="fa fa-edit"></i> <span>Modul Ajar</span>
             </Link>
