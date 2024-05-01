@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import { apiUrl } from '@/services/apiUrls'
-import { getBase64 } from '@/lib/helper'
+import { blobToFile, compressImage, getBase64 } from '@/lib/helper'
 const { Option } = Select
 
 const TabUpdateSiswa = ({ dataSiswa, refetch, btnBack }) => {
@@ -50,6 +50,7 @@ const TabUpdateSiswa = ({ dataSiswa, refetch, btnBack }) => {
       tanggalMasuk: moment(dataSiswa.tanggalMasuk),
       tinggiBadan: dataSiswa.tinggiBadan,
       beratBadan: dataSiswa.beratBadan,
+      lingkar: dataSiswa.lingkar,
       status: dataSiswa.status,
     })
     setFileList(
@@ -63,10 +64,15 @@ const TabUpdateSiswa = ({ dataSiswa, refetch, btnBack }) => {
       // Mengambil binary data foto dari getBase64
       let payload
       if (fileList[0]?.originFileObj) {
-        const fotoBinary = fileList[0].originFileObj
+        const fotoBinary = await compressImage(
+          fileList[0]?.originFileObj,
+          800,
+          600,
+          0.7
+        )
         payload = {
           ...values,
-          foto: fotoBinary, // Menggunakan binary data foto
+          foto: blobToFile(fotoBinary, 'fotosBinary.jpeg'), // Menggunakan binary data foto
         }
       } else {
         payload = {
