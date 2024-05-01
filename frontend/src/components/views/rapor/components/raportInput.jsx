@@ -29,32 +29,33 @@ function RaportInput({
         catatanLiterasiSains: murid.nilaiLiterasiSains,
         catatanPertumbuhan: murid.pertumbuhan,
       }
+      console.log(payload)
 
-      confirm({
-        title: 'Apakah Catatan Sudah Benar?',
-        icon: <ExclamationCircleOutlined />,
-        content: 'Anda akan memasukan catatan!',
-        onOk: async () => {
-          await raportService
-            .create(payload, token)
-            .then((res) => {
-              Modal.success({
-                title: 'Data Rapor Ditambahkan!',
-                content: 'Data Rapor Telah Ditambahkan',
-              })
-              form.resetFields()
-              refetch()
-              btnBack()
-            })
-            .catch((err) => {
-              Modal.error({
-                title: 'Oops...',
-                content: err,
-              })
-            })
-        },
-        onCancel() {},
-      })
+      // confirm({
+      //   title: 'Apakah Catatan Sudah Benar?',
+      //   icon: <ExclamationCircleOutlined />,
+      //   content: 'Anda akan memasukan catatan!',
+      //   onOk: async () => {
+      //     await raportService
+      //       .create(payload, token)
+      //       .then((res) => {
+      //         Modal.success({
+      //           title: 'Data Rapor Ditambahkan!',
+      //           content: 'Data Rapor Telah Ditambahkan',
+      //         })
+      //         form.resetFields()
+      //         refetch()
+      //         btnBack()
+      //       })
+      //       .catch((err) => {
+      //         Modal.error({
+      //           title: 'Oops...',
+      //           content: err,
+      //         })
+      //       })
+      //   },
+      //   onCancel() {},
+      // })
     } catch (error) {
       Modal.error({ content: 'Ada masalah, silahkan simpan lagi' })
     }

@@ -4,6 +4,7 @@ import {
   EditorState,
   convertFromHTML,
   convertToRaw,
+  Modifier,
 } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
@@ -30,10 +31,28 @@ const RichTextEditor = ({ onChange, initialData }) => {
     }
   }
 
+  const handlePastedText = (text, html, editorState) => {
+    // Menghapus gaya teks yang disalin
+    const strippedText = text.replace(/<[^>]*>/g, '')
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      strippedText
+    )
+    const newEditorState = EditorState.push(
+      editorState,
+      contentState,
+      'insert-characters'
+    )
+    setEditorState(newEditorState)
+    return 'handled'
+  }
+
   return (
     <Editor
       editorState={editorState}
       onEditorStateChange={onEditorStateChange}
+      handlePastedText={handlePastedText}
       wrapperClassName="wrapper-class"
       editorClassName="editor-class"
       toolbarClassName="toolbar-class"
