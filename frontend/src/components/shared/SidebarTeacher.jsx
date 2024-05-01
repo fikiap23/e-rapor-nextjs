@@ -1,10 +1,13 @@
 import useAuth from '@/hooks/useAuth'
 import { useMe } from '@/hooks/useMe'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const SidebarTeacher = () => {
   const { token } = useAuth()
   const { data } = useMe(token)
+  const router = usePathname()
+
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
@@ -25,32 +28,32 @@ const SidebarTeacher = () => {
         </div>
 
         <ul className="sidebar-menu" data-widget="tree">
-          <li>
+          <li className={router === '/guru' ? 'active' : ''}>
             <Link href="/guru">
               {' '}
               <i className="fa fa-dashboard"></i> <span>Dashboard</span>
             </Link>
           </li>
 
-          <li>
+          <li className={router === '/guru/riwayat-mengajar' ? 'active' : ''}>
             <Link href="/guru/riwayat-mengajar">
               <i className="fa fa-bookmark"></i> <span>Riwayat Mengajar</span>
             </Link>
           </li>
 
-          <li>
+          <li className={router === '/guru/modul-ajar' ? 'active' : ''}>
             <Link href="/guru/modul-ajar">
               <i className="fa fa-edit"></i> <span>Modul Ajar</span>
             </Link>
           </li>
 
-          <li>
+          <li className={router === '/guru/penilaian' ? 'active' : ''}>
             <Link href="/guru/penilaian">
               <i className="fa fa-pencil"></i> <span>Penilaian</span>
             </Link>
           </li>
 
-          <li>
+          <li className={router === '/guru/rapor' ? 'active' : ''}>
             <Link href="/guru/rapor">
               <i className="fa fa-book"></i> <span>Raport</span>
             </Link>
