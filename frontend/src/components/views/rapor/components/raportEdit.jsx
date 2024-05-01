@@ -25,10 +25,10 @@ function RaportEdit({ murid, btnBack, refetch, idRombelSemesterGuru }) {
         totalSakit: values.totalSakit,
         totalIzin: values.totalIzin,
         totalAlpa: values.totalAlpa,
-        catatanAgamaBudipekerti: values.catatanAgamaBudipekerti,
-        catatanJatiDiri: values.catatanJatiDiri,
-        catatanLiterasiSains: values.catatanLiterasiSains,
-        catatanPertumbuhan: values.catatanPertumbuhan,
+        // catatanAgamaBudipekerti: values.catatanAgamaBudipekerti,
+        // catatanJatiDiri: values.catatanJatiDiri,
+        // catatanLiterasiSains: values.catatanLiterasiSains,
+        // catatanPertumbuhan: values.catatanPertumbuhan,
         catatanPancasila: values.catatanPancasila,
         catatanGuru: values.catatanGuru,
         idRombelSemesterGuru,
@@ -100,26 +100,36 @@ function RaportEdit({ murid, btnBack, refetch, idRombelSemesterGuru }) {
             </Col>
           </Row>
 
-          <Form.Item
-            label="NILAI AGAMA DAN BUDIPEKERTI"
-            name="catatanAgamaBudipekerti"
-          >
-            <Input.TextArea readOnly rows={8} />
+          <Form.Item label="NILAI AGAMA DAN BUDIPEKERTI">
+            <Input.TextArea
+              readOnly
+              rows={8}
+              value={rapor.nilaiAgamaBudipekerti.join('\n\n')}
+            />
           </Form.Item>
 
-          <Form.Item label="JATI DIRI" name="catatanJatiDiri">
-            <Input.TextArea readOnly rows={8} />
+          <Form.Item label="JATI DIRI">
+            <Input.TextArea
+              readOnly
+              rows={8}
+              value={rapor.catatanJatiDiri.join('\n\n')}
+            />
           </Form.Item>
 
-          <Form.Item
-            label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI"
-            name="catatanLiterasiSains"
-          >
-            <Input.TextArea readOnly rows={8} />
+          <Form.Item label="DASAR LITERASI, MATAMATIK DAN SAINS, SAINS, TEKNOLOGI DAN SENI">
+            <Input.TextArea
+              readOnly
+              rows={8}
+              value={rapor.catatanLiterasiSains.join('\n\n')}
+            />
           </Form.Item>
 
-          <Form.Item label="CATATAN PERTUMBUHAN ANAK" name="catatanPertumbuhan">
-            <Input.TextArea readOnly rows={8} />
+          <Form.Item label="CATATAN PERTUMBUHAN ANAK">
+            <Input.TextArea
+              readOnly
+              rows={8}
+              value={rapor.catatanPertumbuhan}
+            />
           </Form.Item>
 
           <Form.Item

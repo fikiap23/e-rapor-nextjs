@@ -24,9 +24,9 @@ function RaportInput({
         idMurid: murid.id,
         idSemester: semester.id,
         idRombelSemesterGuru,
-        catatanAgamaBudipekerti: murid.nilaiAgamaBudipekerti.join('\n\n'),
-        catatanJatiDiri: murid.nilaiJatiDiri.join('\n\n'),
-        catatanLiterasiSains: murid.nilaiLiterasiSains.join('\n\n'),
+        catatanAgamaBudipekerti: murid.nilaiAgamaBudipekerti,
+        catatanJatiDiri: murid.nilaiJatiDiri,
+        catatanLiterasiSains: murid.nilaiLiterasiSains,
         catatanPertumbuhan: murid.pertumbuhan,
       }
 
