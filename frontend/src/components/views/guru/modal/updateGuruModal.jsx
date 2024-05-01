@@ -66,10 +66,10 @@ const UpdateGuruModal = ({ isOpen, closeModal, refetch, teacherData }) => {
       <Form form={form} layout="vertical">
         <Form.Item
           name="nip"
-          label="NIP atau NIK"
-          rules={[{ required: true, message: 'Masukan Nip atau Nik' }]}
+          label="NIP/NPK"
+          rules={[{ required: true, message: 'Masukan NIP/NPK' }]}
         >
-          <Input type="number" placeholder="Masukan Nip atau Nik" />
+          <Input type="number" placeholder="Masukan NIP/NPK" />
         </Form.Item>
         <Form.Item
           name="nama"

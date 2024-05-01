@@ -29,6 +29,7 @@ function RaportInput({
         catatanLiterasiSains: murid.nilaiLiterasiSains,
         catatanPertumbuhan: murid.pertumbuhan,
       }
+      console.log(payload)
 
       confirm({
         title: 'Apakah Catatan Sudah Benar?',

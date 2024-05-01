@@ -59,10 +59,10 @@ const AddModal = ({ isOpen, closeModal, refetch, token }) => {
       <Form form={form} layout="vertical">
         <Form.Item
           name="nip"
-          label="NIP"
-          rules={[{ required: true, message: 'Masukan NIP' }]}
+          label="NIP/NPK"
+          rules={[{ required: true, message: 'Masukan NIP/NPK' }]}
         >
-          <Input type="number" placeholder="Masukan NIP" />
+          <Input type="number" placeholder="Masukan NIP/NPK" />
         </Form.Item>
         <Form.Item
           name="nama"

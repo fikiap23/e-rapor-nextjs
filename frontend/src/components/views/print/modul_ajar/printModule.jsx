@@ -14,16 +14,14 @@ function PrintModule({ data }) {
   const modulAjar = data?.modulAjar
   const jadwalAjar = data?.modulAjar?.jadwalAjar || []
 
-  const lengths = data.modulAjar.jadwalAjar.map(arr => arr.kegiatanInti.length); // output [5, 2, 2, 3, 3, 2]
-  const maxIndex = lengths.indexOf(Math.max(...lengths));
-  const arrayTerbesar = data.modulAjar.jadwalAjar[maxIndex].kegiatanInti.length;
+  const lengths = data.modulAjar.jadwalAjar.map(
+    (arr) => arr.kegiatanInti.length
+  ) // output [5, 2, 2, 3, 3, 2]
+  const maxIndex = lengths.indexOf(Math.max(...lengths))
+  const arrayTerbesar = data.modulAjar.jadwalAjar[maxIndex].kegiatanInti.length
 
-  const kegiatanPenutupLogic = (arrayTerbesar >= 4)
+  const kegiatanPenutupLogic = arrayTerbesar >= 4
   const kegiatan_penutup_logic = `${kegiatanPenutupLogic ? 'extra-margin' : ''}`
-
-
-
-
 
   return (
     <div className="body">
@@ -203,9 +201,7 @@ function PrintModule({ data }) {
       <div
         className={kegiatan_penutup_logic}
         style={{
-          pageBreakBefore:
-            arrayTerbesar >= 4 ? 'always' :
-              'auto'
+          pageBreakBefore: arrayTerbesar >= 4 ? 'always' : 'auto',
         }}
       >
         <h6 className="tbl ">IV. Kegiatan Penutup</h6>
@@ -216,6 +212,37 @@ function PrintModule({ data }) {
           />
         </div>
       </div>
+
+      <h6 className="tbl">V. Rencana Penilaian</h6>
+      <table
+        className="weekly"
+        border={3}
+        style={{ border: '1px solid black' }}
+      >
+        <thead>
+          <tr>
+            <th scope="col" rowSpan={2}>
+              PENGAMATAN
+            </th>
+            <th scope="col" colSpan={2}>
+              NAMA ANAK
+            </th>
+          </tr>
+          <tr>
+            <th scope="col">SUDAH MUNCUL</th>
+            <th scope="col">BELUM/MULAI MUNCUL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {modulAjar.tujuanKegiatan.map((tujuan) => (
+            <tr key={tujuan}>
+              <td>{tujuan}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <table width="100%" style={{ marginTop: '20px', marginBottom: '20px' }}>
         <tr>

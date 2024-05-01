@@ -14,7 +14,7 @@ import useAuth from '@/hooks/useAuth'
 import siswaService from '@/services/siswa.service'
 import { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
-import { getBase64 } from '@/lib/helper'
+import { blobToFile, compressImage, getBase64 } from '@/lib/helper'
 const { Option } = Select
 
 function TabInputSiswa({ refetch }) {
@@ -31,10 +31,15 @@ function TabInputSiswa({ refetch }) {
       // Mengambil binary data foto dari getBase64
       let payload
       if (fileList[0]?.originFileObj) {
-        const fotoBinary = fileList[0].originFileObj
+        const fotoBinary = await compressImage(
+          fileList[0]?.originFileObj,
+          800,
+          600,
+          0.7
+        )
         payload = {
           ...values,
-          foto: fotoBinary, // Menggunakan binary data foto
+          foto: blobToFile(fotoBinary, 'fotosBinary.jpeg'), // Menggunakan binary data foto
         }
       } else {
         payload = {
