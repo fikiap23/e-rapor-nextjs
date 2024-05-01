@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateRaporDto {
     @IsOptional()
@@ -13,17 +13,17 @@ export class CreateRaporDto {
     @IsInt()
     totalAlpa?: number;
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    catatanAgamaBudipekerti: string;
+    catatanAgamaBudipekerti: string[];
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    catatanJatiDiri: string;
+    catatanJatiDiri: string[];
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    catatanLiterasiSains: string;
+    catatanLiterasiSains: string[];
 
     @IsString()
     @IsNotEmpty()

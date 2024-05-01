@@ -303,17 +303,17 @@ model Semester {
 }
 
 model Rapor {
-  id                      String  @id @default(uuid())
+  id                      String   @id @default(uuid())
   totalSakit              Int?
   totalIzin               Int?
   totalAlpa               Int?
-  catatanAgamaBudipekerti String
-  catatanJatiDiri         String
-  catatanLiterasiSains    String
+  catatanAgamaBudipekerti String[]
+  catatanJatiDiri         String[]
+  catatanLiterasiSains    String[]
   catatanPertumbuhan      String
   catatanPancasila        String
   catatanGuru             String
-  isValidated             Boolean @default(false)
+  isValidated             Boolean  @default(false)
 
   // //static value murid
   // nama         String?
