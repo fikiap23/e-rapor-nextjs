@@ -20,6 +20,7 @@ const StudentView = () => {
   const [activeTab, setActiveTab] = useState('view')
   const [searchText, setSearchText] = useState('')
   const [selectedSiswa, setSelectedSiswa] = useState(null)
+  const [startIndex, setStartIndex] = useState(0)
   const {
     data: listStudent,
     error: errorStudent,
@@ -140,12 +141,17 @@ const StudentView = () => {
     XLSX.writeFile(workbook, 'data_siswa.xlsx')
   }
 
+  // Handle pagination change
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
+
   const columns = [
     {
       title: 'No.',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => <span>{index + 1}</span>,
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -281,6 +287,11 @@ const StudentView = () => {
                         columns={columns}
                         dataSource={filteredSiswa}
                         loading={isFetchingStudent}
+                        pagination={{
+                          onChange: handlePaginationChange,
+                          showTotal: (total, range) =>
+                            `${range[0]}-${range[1]} dari ${total} anak`,
+                        }}
                       />
                     </div>
                   </TabPane>
