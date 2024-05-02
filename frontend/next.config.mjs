@@ -2,8 +2,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'http://82.180.160.55:5000',
+        protocol: 'https',
+        hostname: 'https://api.radarunaim.com',
       },
     ],
   },
