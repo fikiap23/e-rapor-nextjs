@@ -348,14 +348,15 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
           className={coment}
           style={{
             pageBreakBefore:
-              rapor.catatanPancasila.length > 200 &&
+              catGabunganLiterasiSains > 1500 &&
+                rapor.catatanPancasila.length > 200 &&
                 rapor.catatanPertumbuhan.length > 300 &&
-                rapor.catatanGuru.length > 200
+                rapor.catatanGuru.length > 2000
                 ? 'always'
                 : catGabunganLiterasiSains > 1500 &&
-                rapor.catatanPertumbuhan.length > 300 &&
-                rapor.catatanGuru.length <= 200 ? 'always' : 
-                'auto',
+                  rapor.catatanPertumbuhan.length > 300 &&
+                  rapor.catatanGuru.length <= 200 ? 'always' :
+                  'auto',
             marginTop: '5%',
           }}
         >
