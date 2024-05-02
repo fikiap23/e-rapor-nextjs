@@ -104,7 +104,7 @@ function RaportEdit({ murid, btnBack, refetch, idRombelSemesterGuru }) {
             <Input.TextArea
               readOnly
               rows={8}
-              value={rapor.nilaiAgamaBudipekerti.join('\n\n')}
+              value={rapor.catatanAgamaBudipekerti.join('\n\n')}
             />
           </Form.Item>
 
