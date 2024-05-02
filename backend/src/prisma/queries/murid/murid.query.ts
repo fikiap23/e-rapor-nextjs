@@ -153,6 +153,9 @@ export class MuridQuery extends DbService {
                                         idRombelSemesterGuru: id,
                                     },
                                 },
+                            },
+                            orderBy: {
+                                nis: 'asc',
                             }
                         }
                     }

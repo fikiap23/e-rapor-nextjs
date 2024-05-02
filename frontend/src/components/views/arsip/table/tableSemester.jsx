@@ -14,6 +14,7 @@ const TableSemesterGuruRombel = () => {
   } = useGetAllRombelWithGuru(token)
 
   const [searchText, setSearchText] = useState('')
+  const [startIndex, setStartIndex] = useState(0)
   const filteredRombels = listRombel.filter((rombel) => {
     const rombelValues = Object.values(rombel)
     const guruValues = rombel?.guru ? Object.values(rombel.guru) : []
@@ -32,12 +33,15 @@ const TableSemesterGuruRombel = () => {
     )
   })
 
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
+      title: 'No.',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => <span>{index + 1}</span>,
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'Rombel',
@@ -101,11 +105,15 @@ const TableSemesterGuruRombel = () => {
         />
       </div>
       <Table
-        scroll={{ x: 1000 }}
         dataSource={filteredRombels}
         columns={columns}
         rowKey="id"
-        pagination={{ pageSize: 10 }}
+        pagination={{
+          onChange: handlePaginationChange,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} dari ${total} data`,
+        }}
+        scroll={{ x: 1000 }}
         loading={isFetchingRombel}
       />
     </>

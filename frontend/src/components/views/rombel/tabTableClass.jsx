@@ -22,6 +22,7 @@ export default function TabTableClass({
   const [selectedRombel, setSelectedRombel] = useState(null)
   const { token } = useAuth()
   const [searchText, setSearchText] = useState('')
+  const [startIndex, setStartIndex] = useState(0)
 
   const filteredRombels = rombels.filter((rombel) =>
     Object.values(rombel).some(
@@ -62,13 +63,15 @@ export default function TabTableClass({
       onCancel() {},
     })
   }
-
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'Kelompok Usia',
@@ -152,9 +155,13 @@ export default function TabTableClass({
         columns={columns}
         rowKey="id"
         bordered
-        scroll={{ x: 1000 }}
         loading={isLoading}
-        pagination={{ pageSize: 10 }}
+        pagination={{
+          onChange: handlePaginationChange,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} dari ${total} rombel`,
+        }}
+        scroll={{ x: 1000 }}
       />
 
       <UpdateClassModal

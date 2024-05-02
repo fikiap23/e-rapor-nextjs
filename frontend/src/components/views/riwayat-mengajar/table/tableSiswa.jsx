@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Input, Space, Table, Tag } from 'antd'
 import Link from 'next/link'
 import { EditOutlined, PrinterOutlined } from '@ant-design/icons'
@@ -8,12 +8,16 @@ const TableArsipSiswa = ({ idRombelSemesterGuru }) => {
   const { data: arsipSiswas, isFetching: isFetchingArsipSiswas } =
     useArsipSiswasByIdSemesterGuru(idRombelSemesterGuru)
 
+  const [startIndex, setStartIndex] = useState(0)
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -80,6 +84,12 @@ const TableArsipSiswa = ({ idRombelSemesterGuru }) => {
           columns={columns}
           dataSource={arsipSiswas?.murids}
           loading={isFetchingArsipSiswas}
+          pagination={{
+            onChange: handlePaginationChange,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} dari ${total} data`,
+          }}
+          scroll={{ x: 1000 }}
         />
       </div>
     </>

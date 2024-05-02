@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 export default function SeeStudentView({ id }) {
   const { token } = useAuth()
   const [siswas, setSiswas] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
 
   const {
     data: rombelData,
@@ -67,13 +68,15 @@ export default function SeeStudentView({ id }) {
       cancelText: 'Batal',
     })
   }
-
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
       title: 'No.',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -158,8 +161,15 @@ export default function SeeStudentView({ id }) {
                     <Table
                       columns={columns}
                       dataSource={filteredSiswas}
-                      pagination={{ pageSize: 10 }}
+                      rowKey="id"
+                      // bordered
                       loading={isFetchingRombel}
+                      pagination={{
+                        onChange: handlePaginationChange,
+                        showTotal: (total, range) =>
+                          `${range[0]}-${range[1]} dari ${total} anak`,
+                      }}
+                      scroll={{ x: 1000 }}
                     />
                   </div>
                 </div>

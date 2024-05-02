@@ -23,14 +23,16 @@ const RombelDiampuPage = () => {
         value.toLowerCase().includes(searchKeyword.toLowerCase())
     )
   )
-
+  const [startIndex, setStartIndex] = useState(0)
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
-      sorter: (a, b) => a.index - b.index,
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'Kelompok Usia',
@@ -108,6 +110,11 @@ const RombelDiampuPage = () => {
                       columns={columns}
                       dataSource={filteredRombel}
                       loading={isFetching}
+                      pagination={{
+                        onChange: handlePaginationChange,
+                        showTotal: (total, range) =>
+                          `${range[0]}-${range[1]} dari ${total} data`,
+                      }}
                       scroll={{ x: 1000 }}
                     />
                   </>

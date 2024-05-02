@@ -18,6 +18,10 @@ const RaporView = ({ idRombelSemesterGuru }) => {
   const [selectedMurid, setSelectedMurid] = useState(null)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [activeTab, setActiveTab] = useState('daftarSiswaTab')
+  const [startIndex, setStartIndex] = useState(0)
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const {
     data: listRombelSemesterMurid,
     error,
@@ -68,10 +72,10 @@ const RaporView = ({ idRombelSemesterGuru }) => {
 
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -248,6 +252,11 @@ const RaporView = ({ idRombelSemesterGuru }) => {
                             columns={columns}
                             dataSource={murid}
                             loading={isFetching}
+                            pagination={{
+                              onChange: handlePaginationChange,
+                              showTotal: (total, range) =>
+                                `${range[0]}-${range[1]} dari ${total} anak`,
+                            }}
                             scroll={{ x: 1000 }}
                           />
                         </div>

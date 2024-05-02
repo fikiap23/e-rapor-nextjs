@@ -292,6 +292,7 @@ const StudentView = () => {
                           showTotal: (total, range) =>
                             `${range[0]}-${range[1]} dari ${total} anak`,
                         }}
+                        scroll={{ x: 1000 }}
                       />
                     </div>
                   </TabPane>

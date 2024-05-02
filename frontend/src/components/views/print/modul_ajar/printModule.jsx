@@ -248,7 +248,7 @@ function PrintModule({ data }) {
         <tr>
           <td width="5%" style={{ textAlign: 'center' }}>
             Mengetahui :
-            <p style={{ marginTop: '5px' }}>{`Kepala Tk ${data.sekolah}`}</p>
+            <p style={{ marginTop: '5px' }}>{`Kepala ${data.sekolah}`}</p>
             <div style={{ marginTop: '20%' }}>
               <p style={{ margin: '-15px' }}>
                 <b>{data.namaKepsek}</b>

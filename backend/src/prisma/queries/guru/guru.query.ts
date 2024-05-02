@@ -89,6 +89,9 @@ export class GuruQuery extends DbService {
                             username: true
                         }
                     }
+                },
+                orderBy: {
+                    nip: 'asc'
                 }
             })
             // format data
