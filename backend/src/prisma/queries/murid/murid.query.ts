@@ -9,7 +9,11 @@ import BulkMuridDto from '../../../murid/dto/bulk-muri.dto';
 @Injectable()
 export class MuridQuery extends DbService {
     async findAll() {
-        return await this.prisma.murid.findMany();
+        return await this.prisma.murid.findMany({
+            orderBy: {
+                nis: 'asc',
+            }
+        });
     }
 
     async findById(id: string) {

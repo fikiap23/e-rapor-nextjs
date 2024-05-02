@@ -53,6 +53,7 @@ export class AuthRepository {
       */
     async login(dto: LoginUserDto) {
         try {
+            dto.username = dto.username.toLowerCase().trim();
             const user = await this.findUserByUsernameOrEmailOrThrow(dto.username || dto.email);
             const validPassword = await bcrypt.compare(dto.password, user.password);
 
@@ -188,6 +189,7 @@ export class AuthRepository {
     }
 
     async register(dto: CreateUserDto, role: RoleEnum) {
+        dto.username = dto.username.toLowerCase().trim();
         // hashing password from body dto
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(dto.password, salt);
