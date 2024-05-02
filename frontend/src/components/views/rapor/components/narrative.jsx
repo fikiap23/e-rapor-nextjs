@@ -66,9 +66,9 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
   const note_teacher = `note_teacher ${noteTeacher ? 'extra-margin' : ''}`
 
   const comment =
-    rapor.catatanPancasila.length > 300 &&
-    rapor.catatanPertumbuhan.length > 400 &&
-    rapor.catatanGuru.length > 300
+    rapor.catatanPancasila.length > 200 &&
+    rapor.catatanPertumbuhan.length > 300 &&
+    rapor.catatanGuru.length > 200
   const coment = `comment ${comment ? 'extra-margin' : ''}`
 
   const totalAlpa = parseInt(rapor.totalAlpa)
@@ -355,7 +355,10 @@ function Narrative({ murid, rombel, sekolah, semester, rapor, guru, kapsek }) {
                 rapor.catatanPertumbuhan.length > 300 &&
                 rapor.catatanGuru.length > 200
                 ? 'always'
-                : 'auto',
+                : catGabunganLiterasiSains > 1500 &&
+                rapor.catatanPertumbuhan.length > 300 &&
+                rapor.catatanGuru.length <= 200 ? 'always' : 
+                'auto',
             marginTop: '5%',
           }}
         >
