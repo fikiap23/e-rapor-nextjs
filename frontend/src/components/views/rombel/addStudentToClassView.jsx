@@ -22,6 +22,7 @@ export default function AddStudentToClassView({ id }) {
   } = useOneRombel(token, id)
 
   const [searchText, setSearchText] = useState('')
+  const [startIndex, setStartIndex] = useState(0)
   const filteredSiswas = allSiswa.filter((siswa) =>
     Object.values(siswa).some(
       (value) =>
@@ -71,13 +72,15 @@ export default function AddStudentToClassView({ id }) {
       cancelText: 'Batal',
     })
   }
-
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
       title: 'No.',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -142,8 +145,12 @@ export default function AddStudentToClassView({ id }) {
                     <Table
                       columns={columns}
                       dataSource={filteredSiswas}
-                      pagination={{ pageSize: 10 }}
                       loading={isFetchingSiswa}
+                      pagination={{
+                        onChange: handlePaginationChange,
+                        showTotal: (total, range) =>
+                          `${range[0]}-${range[1]} dari ${total} anak`,
+                      }}
                     />
                   </div>
                 </div>

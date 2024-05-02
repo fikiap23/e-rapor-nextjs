@@ -25,6 +25,7 @@ const TeacherTable = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [selectedData, setSelectedData] = useState(null)
   const [searchText, setSearchText] = useState('')
+  const [startIndex, setStartIndex] = useState(0)
   const filteredRombels = listRombel.filter((rombel) => {
     const rombelValues = Object.values(rombel)
     const guruValues = rombel?.guru ? Object.values(rombel.guru) : []
@@ -76,12 +77,15 @@ const TeacherTable = () => {
     })
   }
 
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
+      title: 'No.',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => <span>{index + 1}</span>,
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'Rombel',
@@ -159,12 +163,15 @@ const TeacherTable = () => {
           </div>
         </Flex>
         <Table
-          scroll={{ x: 1000 }}
           dataSource={filteredRombels}
           columns={columns}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
           loading={isFetchingRombel || isFetchingGuruRombel}
+          pagination={{
+            onChange: handlePaginationChange,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} dari ${total} data`,
+          }}
+          scroll={{ x: 1000 }}
         />
       </div>
       {/* add guru */}

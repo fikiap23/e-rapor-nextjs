@@ -20,6 +20,7 @@ const SemesterView = () => {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
   const [searchText, setSearchText] = useState('')
+  const [startIndex, setStartIndex] = useState(0)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const filteredSemesters = listSemester.filter((semester) =>
     Object.values(semester).some(
@@ -72,12 +73,15 @@ const SemesterView = () => {
     })
   }
 
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
+      title: 'No.',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => index + 1,
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'Tahun',
@@ -177,11 +181,15 @@ const SemesterView = () => {
 
                   <Table
                     bordered
-                    scroll={{ x: 1000 }}
                     columns={columns}
                     dataSource={filteredSemesters}
                     loading={isFetchingSemester}
-                    pagination={{ pageSize: 10 }}
+                    pagination={{
+                      onChange: handlePaginationChange,
+                      showTotal: (total, range) =>
+                        `${range[0]}-${range[1]} dari ${total} semester`,
+                    }}
+                    scroll={{ x: 1000 }}
                     rowKey="id"
                   />
                 </div>

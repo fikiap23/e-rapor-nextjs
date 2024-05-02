@@ -22,12 +22,16 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
     )
   )
 
+  const [startIndex, setStartIndex] = useState(0)
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
   const columns = [
     {
-      title: 'No',
+      title: 'No.',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => index + 1,
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIS',
@@ -103,7 +107,7 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
                 </div>
 
                 <div className="box-body">
-                  <Input
+                  <Input.Search
                     placeholder="Cari siswa..."
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
@@ -113,6 +117,11 @@ const AnalisisPenilaianView = ({ idRombelSemesterGuru }) => {
                     dataSource={filteredSiswa}
                     columns={columns}
                     loading={isFetchingSiswas}
+                    pagination={{
+                      onChange: handlePaginationChange,
+                      showTotal: (total, range) =>
+                        `${range[0]}-${range[1]} dari ${total} data`,
+                    }}
                   />
                 </div>
               </div>

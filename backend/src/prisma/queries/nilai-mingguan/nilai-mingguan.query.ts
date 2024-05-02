@@ -100,6 +100,9 @@ export class NilaiMingguanQuery extends DbService {
                                     },
                                     take: 1
                                 }
+                            },
+                            orderBy: {
+                                nis: 'asc'
                             }
                         }
                     }

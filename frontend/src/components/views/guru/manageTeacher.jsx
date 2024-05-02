@@ -14,6 +14,7 @@ const ManageTeacher = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [selectedTeacher, setSelectedTeacher] = useState(null)
   const { token } = useAuth()
+  const [startIndex, setStartIndex] = useState(0)
   const {
     data: listTeacher,
     error: errorTeacher,
@@ -101,12 +102,16 @@ const ManageTeacher = () => {
     )
   }
 
+  const handlePaginationChange = (page, pageSize) => {
+    setStartIndex(pageSize * (page - 1))
+  }
+
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
+      title: 'No.',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text, record, index) => <span>{startIndex + index + 1}</span>,
     },
     {
       title: 'NIP',
@@ -224,6 +229,11 @@ const ManageTeacher = () => {
           columns={columns}
           dataSource={filteredTeachers}
           loading={isFetchingTeacher}
+          pagination={{
+            onChange: handlePaginationChange,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} dari ${total} guru`,
+          }}
           scroll={{ x: 1000 }}
         />
       </div>
