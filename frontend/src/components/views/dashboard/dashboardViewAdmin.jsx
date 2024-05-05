@@ -8,7 +8,9 @@ import Loading from '@/components/shared/Loading'
 const DashboardViewAdmin = () => {
   const { token } = useAuth()
   const [murid, setMurid] = useState(0)
+  const [muridAktif, setMuridAktif] = useState(0)
   const [guru, setGuru] = useState(0)
+  const [guruAktif, setGuruAktif] = useState(0)
   const [rombel, setRombel] = useState(0)
   const [semester, setSemester] = useState(0)
 
@@ -26,7 +28,9 @@ const DashboardViewAdmin = () => {
       isFetchingDashboardAdmin === false
     ) {
       setMurid(dashboardAdmin?.totalMurid)
+      setMuridAktif(dashboardAdmin?.totalMuridAktif)
       setGuru(dashboardAdmin?.totalGuru)
+      setGuruAktif(dashboardAdmin?.totalGuruAktif)
       setRombel(dashboardAdmin?.totalRombel)
       setSemester(dashboardAdmin?.totalSemester)
     }
@@ -280,6 +284,126 @@ const DashboardViewAdmin = () => {
               )}
             </p>
             <p className="stat-label">Jumlah Semester</p>
+          </div>
+
+          <div className="stat-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="5em"
+              height="5em"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill="#47a6ff"
+                d="M10 9a3 3 0 1 0 0-6a3 3 0 0 0 0 6M6 8a2 2 0 1 1-4 0a2 2 0 0 1 4 0m-4.51 7.326a.78.78 0 0 1-.358-.442a3 3 0 0 1 4.308-3.516a6.484 6.484 0 0 0-1.905 3.959c-.023.222-.014.442.025.654a4.97 4.97 0 0 1-2.07-.655m14.95.654a4.97 4.97 0 0 0 2.07-.654a.78.78 0 0 0 .357-.442a3 3 0 0 0-4.308-3.517a6.484 6.484 0 0 1 1.907 3.96a2.32 2.32 0 0 1-.026.654M18 8a2 2 0 1 1-4 0a2 2 0 0 1 4 0M5.304 16.19a.844.844 0 0 1-.277-.71a5 5 0 0 1 9.947 0a.843.843 0 0 1-.277.71A6.975 6.975 0 0 1 10 18a6.974 6.974 0 0 1-4.696-1.81"
+              />
+            </svg>
+            <p className="stat-value">
+              {isFetchingDashboardAdmin ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="4" cy="12" r="3" fill="#009411">
+                    <animate
+                      id="svgSpinners3DotsBounce0"
+                      attributeName="cy"
+                      begin="0;svgSpinners3DotsBounce1.end+0.25s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                  <circle cx="12" cy="12" r="3" fill="#009411">
+                    <animate
+                      attributeName="cy"
+                      begin="svgSpinners3DotsBounce0.begin+0.1s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                  <circle cx="20" cy="12" r="3" fill="#009411">
+                    <animate
+                      id="svgSpinners3DotsBounce1"
+                      attributeName="cy"
+                      begin="svgSpinners3DotsBounce0.begin+0.2s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                </svg>
+              ) : (
+                muridAktif
+              )}
+            </p>
+            <p className="stat-label">Jumlah Murid Aktif</p>
+          </div>
+
+          <div className="stat-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="5em"
+              height="5em"
+              viewBox="0 0 640 512"
+            >
+              <path
+                fill="#abb800"
+                d="M208 352c-2.39 0-4.78.35-7.06 1.09C187.98 357.3 174.35 360 160 360c-14.35 0-27.98-2.7-40.95-6.91c-2.28-.74-4.66-1.09-7.05-1.09C49.94 352-.33 402.48 0 464.62C.14 490.88 21.73 512 48 512h224c26.27 0 47.86-21.12 48-47.38c.33-62.14-49.94-112.62-112-112.62m-48-32c53.02 0 96-42.98 96-96s-42.98-96-96-96s-96 42.98-96 96s42.98 96 96 96M592 0H208c-26.47 0-48 22.25-48 49.59V96c23.42 0 45.1 6.78 64 17.8V64h352v288h-64v-64H384v64h-76.24c19.1 16.69 33.12 38.73 39.69 64H592c26.47 0 48-22.25 48-49.59V49.59C640 22.25 618.47 0 592 0"
+              />
+            </svg>
+            <p className="stat-value">
+              {isFetchingDashboardAdmin ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="4" cy="12" r="3" fill="#009411">
+                    <animate
+                      id="svgSpinners3DotsBounce0"
+                      attributeName="cy"
+                      begin="0;svgSpinners3DotsBounce1.end+0.25s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                  <circle cx="12" cy="12" r="3" fill="#009411">
+                    <animate
+                      attributeName="cy"
+                      begin="svgSpinners3DotsBounce0.begin+0.1s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                  <circle cx="20" cy="12" r="3" fill="#009411">
+                    <animate
+                      id="svgSpinners3DotsBounce1"
+                      attributeName="cy"
+                      begin="svgSpinners3DotsBounce0.begin+0.2s"
+                      calcMode="spline"
+                      dur="0.6s"
+                      keySplines=".33,.66,.66,1;.33,0,.66,.33"
+                      values="12;6;12"
+                    />
+                  </circle>
+                </svg>
+              ) : (
+                guruAktif
+              )}
+            </p>
+            <p className="stat-label">Jumlah Guru Aktif</p>
           </div>
         </div>
       </section>
