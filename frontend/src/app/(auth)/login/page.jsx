@@ -59,7 +59,7 @@ export default function LoginPage() {
         <div className="relative overflow-hidden md:flex w-1/2 bg-[url('/images/banner.jpeg')] bg-no-repeat bg-cover bg-center justify-around items-center hidden">
           <div className="bg-white/30 backdrop-blur-sm p-8 rounded-xl drop-shadow-xl w-[400px]">
             <h1 className="text-indigo-800 font-bold text-4xl font-sans">
-              Taman Karya
+              Raudhatul Athfal
             </h1>
             <p className="text-indigo-800 mt-4 font-medium">
               {`RA. Daarun Na'im Ambon`}
