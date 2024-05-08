@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import { CreateSemesterDto } from '../../../semester/dto/create-semester.dto';
 import { UpdateSemesterDto } from '../../../semester/dto/update-semester.dto';
@@ -24,5 +24,21 @@ export class SemesterQuery extends DbService {
 
     async deleteById(id: string) {
         return await this.prisma.semester.delete({ where: { id } })
+    }
+
+    async findAndcheckIsPossibleDelete(id: string) {
+        const result = await this.prisma.semester.findUnique(
+            {
+                where: { id },
+                include: {
+                    rapor: true,
+                    rombelSemesterGuru: true
+                }
+            },)
+
+        if (result?.rapor?.length > 0 || result?.rombelSemesterGuru?.length > 0) {
+            throw new BadRequestException('Tidak bisa menghapus semester yang sudah terhubung dengan guru dan nilai')
+        }
+        return result
     }
 }

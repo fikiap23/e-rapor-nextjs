@@ -24,6 +24,24 @@ export class MuridQuery extends DbService {
         });
     }
 
+    async checkMuridIsPossibleDelete(id: string) {
+        const murid = await this.prisma.murid.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                rapor: true,
+                analisisPenilaian: true,
+                penilaianMingguan: true,
+            },
+        })
+        if (!murid) throw new BadRequestException('Anak tidak ditemukan');
+        if (murid?.rapor?.length > 0 || murid?.analisisPenilaian?.length > 0 || murid?.penilaianMingguan?.length > 0) {
+            throw new BadRequestException('Tidak bisa menghapus murid yang sudah memiliki penilaian');
+        }
+        return murid
+    }
+
     async findByNis(nis: string) {
         return await this.prisma.murid.findUnique({
             where: {

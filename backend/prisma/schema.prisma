@@ -407,9 +407,9 @@ model RombelSemesterGuru {
   idRombel          String
   idSemester        String
   idGuru            String
-  guru              Guru                @relation(fields: [idGuru], references: [id], onDelete: Cascade)
-  rombel            Rombel              @relation(fields: [idRombel], references: [id], onDelete: Cascade)
-  semester          Semester            @relation(fields: [idSemester], references: [id], onDelete: Cascade)
+  guru              Guru                @relation(fields: [idGuru], references: [id])
+  rombel            Rombel              @relation(fields: [idRombel], references: [id])
+  semester          Semester            @relation(fields: [idSemester], references: [id])
   rapor             Rapor[]
   modulAjar         ModulAjar[]
   jadwalAjar        JadwalAjar[]

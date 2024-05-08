@@ -112,7 +112,7 @@ export class MuridRepository {
     }
 
     async deleteById(id: string) {
-        const murid = await this.findByIdOrThrow(id);
+        const murid = await this.muridQuery.checkMuridIsPossibleDelete(id);
         if (murid.foto) {
             await deleteFileImageHelper(
                 `./public`,

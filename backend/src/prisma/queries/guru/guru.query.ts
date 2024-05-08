@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from '../../db.service';
 import CreateGuruDto from '../../../guru/dto/create-guru.dto';
 import { UpdateGuruDto } from '../../../guru/dto/update-guru.dto';
@@ -75,6 +75,29 @@ export class GuruQuery extends DbService {
                 id
             },
         })
+    }
+
+    async findAndCheckIsPossibleDelete(id: string) {
+        const guru = await this.prisma.guru.findUnique({
+            where: {
+                id
+            },
+            include: {
+                user: true,
+                rapor: true,
+                rombelSemesterGuru: true,
+            }
+        })
+
+        if (!guru) {
+            throw new BadRequestException('Guru tidak ditemukan')
+        }
+
+        if (guru.rapor?.length > 0 || guru.rombelSemesterGuru?.length > 0) {
+            throw new BadRequestException('Tidak bisa menghapus guru yang sudah pernah menginput nilai')
+        }
+
+        return guru
     }
 
     async findAll(dto: GuruQueryDto) {

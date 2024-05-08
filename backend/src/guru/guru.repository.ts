@@ -117,7 +117,7 @@ export class GuruRepository {
 
     async deleteByAdmin(id: string) {
         // check guru exist
-        const guru = await this.findGuruByIdOrThrow(id);
+        const guru = await this.guruQuery.findAndCheckIsPossibleDelete(id);
         return await this.userQuery.delete(guru.idUser)
     }
 

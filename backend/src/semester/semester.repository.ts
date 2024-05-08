@@ -27,7 +27,7 @@ export class SemesterRepository {
     }
 
     async deleteById(id: string) {
-        await this.findByIdOrThrow(id);
+        await this.semesterQuery.findAndcheckIsPossibleDelete(id);
         return await this.semesterQuery.deleteById(id);
     }
 }
