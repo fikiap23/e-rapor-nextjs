@@ -4,7 +4,6 @@ import authService from '@/services/auth.service'
 import '../../tailwind.css'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/navigation'
 import useAuth from '@/hooks/useAuth'
 import getTokenData from '@/lib/getTokenData'
 import Link from 'next/link'
@@ -13,7 +12,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { push } = useRouter()
   const { token, setToken } = useAuth()
   const handleSubmit = async () => {
     try {
@@ -44,8 +42,18 @@ export default function LoginPage() {
   }
 
   if (token) {
-    const jwtPayload = getTokenData(token)
-    window.location.href = `/${jwtPayload.role.toLowerCase()}`
+    // Mengambil semua cookie dan memisahkan mereka menjadi array
+    const cookies = document.cookie.split(';').map((cookie) => cookie.trim())
+    const accessToken = cookies.find((cookie) => cookie.startsWith('token='))
+
+    // console.log(`Cookie: ${cookies}`)
+    // console.log(`AccessToken: ${accessToken}`)
+    if (accessToken) {
+      const jwtPayload = getTokenData(accessToken)
+      window.location.href = `/${jwtPayload.role.toLowerCase()}`
+    } else {
+      setToken(null)
+    }
   }
 
   const handleLupaPassword = () => {
