@@ -108,7 +108,7 @@ export default function SearchView() {
               SIAR - RA
             </h1>
             <p className="font-medium text-lg md:text-[21px]">
-              Sistem Informasi Assesment Raport - Raudhatul Athfal
+              System Information Assesment Report - Raudhatul Athfal
             </p>
             <p className="text-sm">
               Raport Online, pelaporan nilai siswa menjadi lebih mudah dan
