@@ -235,12 +235,12 @@ const InputModulAjar = ({
                   label="Peta Konsep"
                   name={[0]}
                   fieldKey={[0]}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Peta Konsep harus diisi',
-                    },
-                  ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: 'Peta Konsep harus diisi',
+                //   },
+                // ]}
                 >
                   <Input.TextArea
                     rows={2}
@@ -255,12 +255,12 @@ const InputModulAjar = ({
                     label={`Peta Konsep ${index + 1}`}
                     name={[field.name]}
                     fieldKey={[field.fieldKey]}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Peta Konsep harus diisi',
-                      },
-                    ]}
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: 'Peta Konsep harus diisi',
+                  //   },
+                  // ]}
                   >
                     <Input placeholder={`Masukkan Peta Konsep ${index + 1}`} />
                   </Form.Item>

@@ -26,7 +26,7 @@ class CreateModulAjarDto {
     @IsArray()
     alatBahan: string[];
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsArray()
     petaKonsep: string[];
 

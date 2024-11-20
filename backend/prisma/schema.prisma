@@ -192,10 +192,10 @@ model ModulAjar {
   kegiatanPembukaan String?
   istirahat         String?
   kegiatanPenutupan String?
-  katakunci         String[]
-  tujuanKegiatan    String[]
-  alatBahan         String[]
-  petaKonsep        String[]
+  katakunci         String[]              @default([])
+  tujuanKegiatan    String[]              @default([])
+  alatBahan         String[]              @default([])
+  petaKonsep        String[]              @default([])
   jadwalAjar        JadwalAjar?
 
   // Relation
