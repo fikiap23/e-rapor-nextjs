@@ -78,7 +78,7 @@ function PrintModule({ data }) {
             </td>
             <td className="tbl">:</td>
             <td className="tbl">
-              {modulAjar.katakunci.map((kata) => `${kata}, `)}
+              {modulAjar?.katakunci?.map((kata) => `${kata}, `)}
             </td>
           </tr>
         </table>
@@ -110,7 +110,7 @@ function PrintModule({ data }) {
         <tr>
           <td width={120}>Alat dan Bahan</td>
           <td width={25}>:</td>
-          <td>{modulAjar.alatBahan.map((alat) => `${alat}, `)}</td>
+          <td>{modulAjar?.alatBahan?.map((alat) => `${alat}, `)}</td>
         </tr>
       </table>
 
@@ -178,12 +178,12 @@ function PrintModule({ data }) {
         <tbody>
           {Array.from({
             length: Math.max(
-              ...jadwalAjar.map((day) => day.kegiatanInti.length)
+              ...jadwalAjar.map((day) => day?.kegiatanInti?.length)
             ),
           }).map((_, index) => (
             <tr key={index}>
               {jadwalAjar.map((day) => (
-                <td key={day.tanggal}>{day.kegiatanInti[index] || ''}</td>
+                <td key={day.tanggal}>{day?.kegiatanInti[index] || ''}</td>
               ))}
             </tr>
           ))}
