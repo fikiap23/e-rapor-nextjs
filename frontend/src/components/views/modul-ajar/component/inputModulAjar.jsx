@@ -36,8 +36,8 @@ const InputModulAjar = ({
     // console.log('values', values)
     const payload = {
       ...values,
-      katakunci: values?.katakunci.split(',').map((kata) => kata.trim()),
-      alatBahan: values?.alatBahan.split(',').map((alat) => alat.trim()),
+      katakunci: values?.katakunci?.split(',').map((kata) => kata.trim()),
+      alatBahan: values?.alatBahan?.split(',').map((alat) => alat.trim()),
       idTujuanPembelajaran: selectedTp.id,
       idRombelSemesterGuru,
     }
