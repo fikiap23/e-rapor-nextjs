@@ -14,7 +14,7 @@ class CreateModulAjarDto {
     @IsString()
     subtopik: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsArray()
     katakunci: string[];
 
@@ -22,7 +22,7 @@ class CreateModulAjarDto {
     @IsArray()
     tujuanKegiatan: string[];
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsArray()
     alatBahan: string[];
 

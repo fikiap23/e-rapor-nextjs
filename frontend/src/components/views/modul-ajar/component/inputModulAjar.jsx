@@ -36,8 +36,8 @@ const InputModulAjar = ({
     // console.log('values', values)
     const payload = {
       ...values,
-      katakunci: values.katakunci.split(',').map((kata) => kata.trim()),
-      alatBahan: values.alatBahan.split(',').map((alat) => alat.trim()),
+      katakunci: values?.katakunci.split(',').map((kata) => kata.trim()),
+      alatBahan: values?.alatBahan.split(',').map((alat) => alat.trim()),
       idTujuanPembelajaran: selectedTp.id,
       idRombelSemesterGuru,
     }
@@ -145,7 +145,7 @@ const InputModulAjar = ({
         <Form.Item
           label="Kata Kunci"
           name="katakunci"
-          rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
+        // rules={[{ required: true, message: 'Masukkan Kata Kunci' }]}
         >
           <Input placeholder="Pisahkan kata kunci dengan koma. Contoh: Namaku, identitasku" />
         </Form.Item>
@@ -215,7 +215,7 @@ const InputModulAjar = ({
         <Form.Item
           label="Alat dan Bahan"
           name="alatBahan"
-          rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
+        // rules={[{ required: true, message: 'Masukkan Alat dan Bahan' }]}
         >
           <Input.TextArea placeholder="Pisahkan alat dan bahan dengan koma. Contoh: Pena, pensil, buku" />
         </Form.Item>
