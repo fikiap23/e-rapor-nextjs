@@ -15,10 +15,10 @@ function PrintModule({ data }) {
   const jadwalAjar = data?.modulAjar?.jadwalAjar || []
 
   const lengths = data.modulAjar.jadwalAjar.map(
-    (arr) => arr.kegiatanInti.length
+    (arr) => arr.kegiatanInti?.length
   ) // output [5, 2, 2, 3, 3, 2]
   const maxIndex = lengths.indexOf(Math.max(...lengths))
-  const arrayTerbesar = data.modulAjar.jadwalAjar[maxIndex].kegiatanInti.length
+  const arrayTerbesar = data.modulAjar.jadwalAjar[maxIndex].kegiatanInti?.length
 
   const kegiatanPenutupLogic = arrayTerbesar >= 4
   const kegiatan_penutup_logic = `${kegiatanPenutupLogic ? 'extra-margin' : ''}`
