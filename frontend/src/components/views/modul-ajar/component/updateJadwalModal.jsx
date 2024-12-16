@@ -129,12 +129,12 @@ const UpdateModal = ({
                         label={`Tujuan Kegiatan ${index + 1}`}
                         name={[field.name]}
                         fieldKey={[field.fieldKey]}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Tujuan Kegiatan harus diisi',
-                          },
-                        ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: 'Tujuan Kegiatan harus diisi',
+                      //   },
+                      // ]}
                       >
                         <Input.TextArea
                           rows={2}
