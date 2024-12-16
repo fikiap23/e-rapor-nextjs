@@ -2,27 +2,21 @@ import { IsString, IsDate, IsNotEmpty, IsArray } from 'class-validator';
 export class CreateJadwalAjarDto {
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari1: string[];
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari2: string[];
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari3: string[];
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari4: string[];
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari5: string[];
 
     @IsArray()
-    @IsNotEmpty()
     kegiatanIntiHari6: string[];
 
     @IsDate()
@@ -44,6 +38,5 @@ export class CreateJadwalAjarDto {
     tanggalHari6: Date;
 
     @IsString()
-    @IsNotEmpty()
     idModulAjar: string;
 }
