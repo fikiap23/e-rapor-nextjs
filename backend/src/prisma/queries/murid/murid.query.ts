@@ -167,6 +167,13 @@ export class MuridQuery extends DbService {
                                     }
                                 },
                                 penilaianMingguan: {
+                                    include: {
+                                        tujuanPembelajaran: {
+                                            select: {
+                                                minggu: true
+                                            }
+                                        }
+                                    },
                                     where: {
                                         idRombelSemesterGuru: id,
                                     },
