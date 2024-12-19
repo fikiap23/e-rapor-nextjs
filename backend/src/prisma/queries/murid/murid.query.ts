@@ -353,6 +353,7 @@ export class MuridQuery extends DbService {
                     nilaiLiterasiSains: resultNilaiLiterasiSains,
                     pertumbuhan,
                     rapor: murid.rapor,
+                    listPenilaianMingguan: murid.penilaianMingguan
                 };
             })
         };
