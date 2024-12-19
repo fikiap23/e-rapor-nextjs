@@ -51,7 +51,7 @@ export class NilaiMingguanRepository {
         if (rombelSemesterGuru.idRombel !== murid.idRombel) throw new BadRequestException('Akun tidak terdaftar di rombel ini');
 
         // chek is tp already exits
-        const penilaian = await this.nilaiMingguanQuery.findByIdTP(dto.idTujuanPembelajaran)
+        const penilaian = await this.nilaiMingguanQuery.findByIdTP(dto.idTujuanPembelajaran, dto.idRombelSemesterGuru, dto.idMurid)
         if (penilaian) throw new BadRequestException('Penilaian Minggu ini sudah ada')
 
         return await this.nilaiMingguanQuery.create(dto)

@@ -28,10 +28,12 @@ export class NilaiMingguanQuery extends DbService {
         return await this.prisma.penilaianMingguan.findMany({ where: { idMurid: id } })
     }
 
-    async findByIdTP(idTujuanPembelajaran: string) {
+    async findByIdTP(idTujuanPembelajaran: string, idRombelSemesterGuru: string, idMurid: string) {
         return await this.prisma.penilaianMingguan.findFirst({
             where: {
-                idTujuanPembelajaran
+                idRombelSemesterGuru,
+                idTujuanPembelajaran,
+                idMurid
             }
         })
     }
