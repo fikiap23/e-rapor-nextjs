@@ -28,6 +28,14 @@ export class NilaiMingguanQuery extends DbService {
         return await this.prisma.penilaianMingguan.findMany({ where: { idMurid: id } })
     }
 
+    async findByIdTP(idTujuanPembelajaran: string) {
+        return await this.prisma.penilaianMingguan.findFirst({
+            where: {
+                idTujuanPembelajaran
+            }
+        })
+    }
+
     async create(payload: CreatePenilaianMingguanDto) {
         return await this.prisma.penilaianMingguan.create({ data: payload })
     }
