@@ -587,13 +587,13 @@ export class MuridQuery extends DbService {
 }
 
 function getStatusPertemubuhan(tb: number, bb: number): string {
-    const data = (bb * 10000) / (tb * tb)
+    // const data = (bb * 10000) / (tb * tb)
 
-    if (data <= 17) {
+    if (bb <= 17) {
         return 'kurang dan perlu ditambah.'
-    } else if (data <= 29) {
+    } else if (bb <= 29) {
         return 'ideal/normal dan perlu dipertahankan.'
-    } else if (data <= 34) {
+    } else if (bb <= 34) {
         return 'kegemukan dan perlu dikurangi.'
     } else {
         return 'obesitas dan sebaiknya dikonsultasikan kepada dokter'
