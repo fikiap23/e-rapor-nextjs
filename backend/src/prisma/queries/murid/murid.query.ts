@@ -163,7 +163,7 @@ export class MuridQuery extends DbService {
                                 lingkar: true,
                                 rapor: {
                                     where: {
-                                        idRombelSemesterGuru: id
+                                        idSemester: checkRombelSemesterGuru.idSemester
                                     }
                                 },
                                 penilaianMingguan: {
