@@ -14,13 +14,17 @@ import * as icons from '@ant-design/icons'
 import UploadSiswaExcel from './cetak/importSiswaView'
 
 const { TabPane } = Tabs
-
+const StatusEnum = {
+  AKTIF: 'AKTIF',
+  TIDAK_AKTIF: 'TIDAK_AKTIF',
+};
 const StudentView = () => {
   const { token } = useAuth()
   const [activeTab, setActiveTab] = useState('view')
   const [searchText, setSearchText] = useState('')
   const [selectedSiswa, setSelectedSiswa] = useState(null)
   const [startIndex, setStartIndex] = useState(0)
+  const [activeStatus, setActiveStatus] = useState(StatusEnum.AKTIF);
   const {
     data: listStudent,
     error: errorStudent,
@@ -81,9 +85,8 @@ const StudentView = () => {
     const statusAkun = siswa.status === 'AKTIF' ? 'TIDAK_AKTIF' : 'AKTIF'
     Modal.confirm({
       title: 'Apakah Anda yakin?',
-      content: `Anda akan ${
-        statusAkun === 'AKTIF' ? 'mengaktifkan' : 'mengnonaktifkan'
-      } akun siswa!`,
+      content: `Anda akan ${statusAkun === 'AKTIF' ? 'mengaktifkan' : 'mengnonaktifkan'
+        } akun siswa!`,
       okText: `Ya, ${statusAkun === 'AKTIF' ? 'aktifkan' : 'nonaktifkan'}!`,
       cancelText: 'Tidak, batalkan!',
       onOk: async () => {
@@ -93,9 +96,8 @@ const StudentView = () => {
             refetchStudents()
             Modal.success({
               title: 'Success',
-              content: `Data siswa telah di${
-                statusAkun === 'AKTIF' ? 'aktifkan' : 'nonaktifkan'
-              }.`,
+              content: `Data siswa telah di${statusAkun === 'AKTIF' ? 'aktifkan' : 'nonaktifkan'
+                }.`,
             })
           })
           .catch((error) => {
@@ -283,9 +285,23 @@ const StudentView = () => {
                           </Button>
                         </Space>
                       </Flex>
+
+                      {/* Tabs for AKTIF and TIDAK_AKTIF */}
+                      <Tabs
+                        activeKey={activeStatus}
+                        onChange={setActiveStatus}
+                        type="card"
+                        style={{ marginBottom: 10 }}
+                      >
+                        <TabPane tab="Aktif" key="AKTIF" />
+                        <TabPane tab="Tidak Aktif" key="TIDAK_AKTIF" />
+                      </Tabs>
+
                       <Table
                         columns={columns}
-                        dataSource={filteredSiswa}
+                        dataSource={filteredSiswa.filter(
+                          (siswa) => siswa.status === activeStatus
+                        )}
                         loading={isFetchingStudent}
                         pagination={{
                           onChange: handlePaginationChange,
@@ -328,7 +344,8 @@ const StudentView = () => {
         </div>
       </section>
     </div>
-  )
+  );
+
 }
 
 export default StudentView
